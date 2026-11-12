@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Hũ Kẹo Của Sún 💕 Góc Nhỏ Hà Nội ↔ Hải Phòng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top HUD -->
+    <header class="hud-header pixel-box">
+      <div class="hud-top-row">
+        <div class="brand-area">
+          <div class="game-title">
+            <span class="candy-badge" aria-hidden="true">🍬</span>
+            <h1>Hũ Kẹo Của Sún</h1>
+          </div>
+          <div class="love-counter" id="loveCounter">
+            <span class="pulse-heart">♥</span>
+            <span id="daysTogetherText">Ngày thứ 1 bên nhau</span>
+            <span class="route-tag">HN ↔ HP</span>
+          </div>
+        </div>
+        <div class="hud-controls">
+          <button id="btnAudio" class="icon-btn pixel-btn" title="Bật/tắt nhạc & âm thanh" aria-label="Bật tắt âm thanh">
+            <span id="audioIcon">🔇</span>
+          </button>
+          <button id="btnSettings" class="icon-btn pixel-btn" title="Tùy chọn & Giờ phòng" aria-label="Cài đặt">
+            ⚙️
+          </button>
+        </div>
+      </div>
+
+      <div class="hud-stats-row">
+        <div class="stat-pill level-pill">
+          <span class="stat-label" id="levelBadge">Cấp 1</span>
+          <div class="xp-bar-wrap" title="Độ thân mật">
+            <div class="xp-bar-fill" id="xpBarFill" style="width: 0%"></div>
+          </div>
+          <span class="xp-text" id="xpText">0/50</span>
+        </div>
+
+        <div class="stat-pill candy-pill" title="Hũ kẹo của em iu">
+          <span>🍬</span>
+          <span id="candyCount">0</span>
+        </div>
+      </div>
+
+      <div class="greeting-banner" id="greetingBanner">
+        Chào em iu! Vào góc nhỏ chơi với anh & bé Bông nha 💕
+      </div>
+    </header>
+
+    <!-- Main Interactive Room Canvas -->
+    <main class="room-stage-wrap">
+      <div class="room-frame pixel-box">
+        <canvas id="roomCanvas" width="240" height="200"></canvas>
+
+        <!-- Floating speech bubble overlay (crisp Vietnamese text) -->
+        <div id="speechBubble" class="speech-bubble hidden" role="status">
+          <span class="speech-speaker" id="speechSpeaker">Anh Khánh</span>
+          <p class="speech-text" id="speechText"></p>
+        </div>
+
+        <!-- Room quick floating badge -->
+        <div class="room-cozy-badge" id="cozyBadge">
+          🏡 Ấm cúng: <span id="decorCountBadge">0/8</span>
+        </div>
+
+        <!-- Quick Hint -->
+        <div class="room-hint" id="roomHint">
+          Chạm vào anh hoặc bé Bông để trò chuyện nè ✨
+        </div>
+      </div>
+
+      <!-- Quick Action Strip right below room -->
+      <section class="quick-actions" aria-label="Tương tác nhanh">
+        <button class="action-card pixel-btn btn-pink" id="btnHug">
+          <span class="action-emoji">🤗</span>
+          <span class="action-name">Ôm anh</span>
+        </button>
+        <button class="action-card pixel-btn btn-cream" id="btnPetSun">
+          <span class="action-emoji">🐱</span>
+          <span class="action-name">Vuốt Bông</span>
+        </button>
+        <button class="action-card pixel-btn btn-cream" id="btnFeed">
+          <span class="action-emoji">🥖</span>
+          <span class="action-name">Cho ăn</span>
+        </button>
+        <button class="action-card pixel-btn btn-gold" id="btnPlayMiniGame">
+          <span class="action-emoji">🎮</span>
+          <span class="action-name">Chơi Game</span>
+        </button>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation Dock -->
+    <nav class="bottom-nav pixel-box" aria-label="Menu chính">
+      <button class="nav-btn" id="navJars">
+        <span class="nav-icon">🫙</span>
+        <span class="nav-label">Lọ Lời Nhắn</span>
+      </button>
+      <button class="nav-btn" id="navShop">
+        <span class="nav-icon">🛋️</span>
+        <span class="nav-label">Trang Trí</span>
+      </button>
+      <button class="nav-btn" id="navLetters">
+        <span class="nav-icon">💌</span>
+        <span class="nav-label">Thư Bí Mật</span>
+        <span class="unread-dot hidden" id="letterDot">!</span>
+      </button>
+      <button class="nav-btn" id="navAchieve">
+        <span class="nav-icon">🏆</span>
+        <span class="nav-label">Thành Tựu</span>
+        <span class="unread-dot hidden" id="achieveDot">!</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- MODAL: Food Tray -->
+  <div class="modal-backdrop hidden" id="modalFood">
+    <div class="modal-card pixel-box">
+      <div class="modal-header">
+        <h2>🍽️ Bữa Ngon Đất Cảng & Quà Vặt</h2>
+        <button class="close-btn pixel-btn" data-close="modalFood">✕</button>
+      </div>
+      <p class="modal-subtitle">Chọn món ngon cho anh Khánh & bé Bông cùng măm măm nha em iu!</p>
+      <div class="food-grid" id="foodGrid"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Arcade Mini-Games Hub -->
+  <div class="modal-backdrop hidden" id="modalMiniGame">
+    <div class="modal-card modal-game pixel-box">
+      <div class="modal-header">
+        <div class="arcade-title-wrap">
+          <button class="pixel-btn btn-cream btn-sm hidden" id="btnBackArcade">◀ Đổi game</button>
+          <h2 id="arcadeTitle">🎮 Khu Trò Chơi Đất Cảng</h2>
+        </div>
+        <button class="close-btn pixel-btn" id="btnCloseMiniGame">✕</button>
+      </div>
+
+      <!-- Arcade Menu (4 Games) -->
+      <div id="arcadeMenu" class="arcade-menu">
+        <p class="modal-subtitle">Chọn trò em iu thích để chơi kiếm kẹo & giải trí lúc rảnh nè:</p>
+
+        <button class="arcade-card pixel-btn btn-cream" data-game="catch">
+          <span class="arcade-icon">🍬</span>
+          <div class="arcade-info">
+            <span class="arcade-name">Hứng Kẹo & Quà Đất Cảng</span>
+            <span class="arcade-desc">Hứng kẹo, tim, đồ ăn Hải Phòng — nhớ né cục cứt 💩!</span>
+            <span class="arcade-best" id="bestCatchText">Kỷ lục: 0</span>
+          </div>
+          <span class="arcade-play-tag">Chơi ▶</span>
+        </button>
+
+        <button class="arcade-card pixel-btn btn-cream" data-game="crossing">
+          <span class="arcade-icon">🚗</span>
+          <div class="arcade-info">
+            <span class="arcade-name">Qua Đường Đi Bông!</span>
+            <span class="arcade-desc">Nhảy qua đường phố & sông Cảng né xe, nhảy lên thuyền gỗ.</span>
+            <span class="arcade-best" id="bestCrossingText">Kỷ lục: 0</span>
+          </div>
+          <span class="arcade-play-tag">Chơi ▶</span>
+        </button>
+
+        <button class="arcade-card pixel-btn btn-cream" data-game="flappy">
+          <span class="arcade-icon">🪽</span>
+          <div class="arcade-info">
+            <span class="arcade-name">Bay Qua Đất Cảng</span>
+            <span class="arcade-desc">"Yên tâm không lo, tôi bay mà!" — Chạm để Bông bay né cột hoa phượng.</span>
+            <span class="arcade-best" id="bestFlappyText">Kỷ lục: 0</span>
+          </div>
+          <span class="arcade-play-tag">Chơi ▶</span>
+        </button>
+
+        <button class="arcade-card pixel-btn btn-pink" data-game="nonla">
+          <span class="arcade-icon">👒</span>
+          <div class="arcade-info">
+            <span class="arcade-name">Nón Lá L-N (Chữa Ngọng!)</span>
+            <span class="arcade-desc">Đọc to bằng Mic (hoặc bấm chọn im lặng) chuẩn L / N để nhảy qua cọc!</span>
+            <span class="arcade-best" id="bestNonlaText">Kỷ lục: 0</span>
+          </div>
+          <span class="arcade-play-tag">Chơi ▶</span>
+        </button>
+      </div>
+
+      <!-- Active Game Stage -->
+      <div id="arcadeStage" class="arcade-stage hidden">
+        <div class="game-hud-bar">
+          <span>Điểm: <strong id="mgScore">0</strong></span>
+          <span>Kẹo: <strong id="mgCandy">0</strong> 🍬</span>
+          <span>Mạng: <strong id="mgLives">❤️❤️❤️</strong></span>
+          <span>Kỷ lục: <strong id="mgBest">0</strong></span>
+        </div>
+
+        <div class="minigame-canvas-wrap">
+          <canvas id="miniGameCanvas" width="240" height="280"></canvas>
+
+          <!-- Start / Game Over Overlay -->
+          <div class="mg-overlay" id="mgOverlay">
+            <h3 id="mgOverlayTitle">Sẵn Sàng Chưa!</h3>
+            <p id="mgOverlayDesc"></p>
+            <div class="mg-result-box hidden" id="mgResultBox"></div>
+            <button class="pixel-btn btn-pink btn-large" id="btnStartMiniGame">Bắt Đầu Chơi!</button>
+          </div>
+        </div>
+
+        <!-- Crossing Road D-pad -->
+        <div id="crossingControls" class="crossing-dpad hidden">
+          <button class="pixel-btn btn-cream dpad-btn" id="dpadLeft">◀</button>
+          <div class="dpad-mid">
+            <button class="pixel-btn btn-pink dpad-btn" id="dpadUp">▲</button>
+            <button class="pixel-btn btn-cream dpad-btn" id="dpadDown">▼</button>
+          </div>
+          <button class="pixel-btn btn-cream dpad-btn" id="dpadRight">▶</button>
+        </div>
+
+        <!-- Non La L-N Controls -->
+        <div id="nonlaControls" class="nonla-controls hidden">
+          <div class="nonla-top-bar">
+            <span id="nonlaMicStatus" class="nonla-mic-badge">🎤 Đang chờ mic...</span>
+            <button class="pixel-btn btn-cream btn-sm" id="btnToggleNonlaMode">Đổi sang Im lặng 🤫</button>
+          </div>
+          <div id="nonlaHeardBox" class="nonla-heard">Nghe thấy: <em>...</em></div>
+          <div id="nonlaQuietChoices" class="nonla-choices hidden">
+            <button class="pixel-btn btn-cream nonla-choice-btn" id="nonlaChoiceA">A</button>
+            <button class="pixel-btn btn-cream nonla-choice-btn" id="nonlaChoiceB">B</button>
+          </div>
+        </div>
+
+        <div class="mg-touch-hint" id="mgTouchHint"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Mood Message Jars -->
+  <div class="modal-backdrop hidden" id="modalJars">
+    <div class="modal-card pixel-box">
+      <div class="modal-header">
+        <h2>🫙 Lọ Lời Nhắn Của Anh</h2>
+        <button class="close-btn pixel-btn" data-close="modalJars">✕</button>
+      </div>
+      <p class="modal-subtitle">Hôm nay em iu đang thấy thế nào? Chọn một chiếc lọ để rút lời nhắn từ anh nhé:</p>
+
+      <div class="jar-grid" id="jarGrid">
+        <button class="jar-btn pixel-btn" data-jar="miss">
+          <span class="jar-emoji">💕</span>
+          <span class="jar-title">Khi em nhớ anh</span>
+        </button>
+        <button class="jar-btn pixel-btn" data-jar="tired">
+          <span class="jar-emoji">☁️</span>
+          <span class="jar-title">Khi em mệt</span>
+        </button>
+        <button class="jar-btn pixel-btn" data-jar="sad">
+          <span class="jar-emoji">🌧️</span>
+          <span class="jar-title">Khi em buồn</span>
+        </button>
+        <button class="jar-btn pixel-btn" data-jar="playful">
+          <span class="jar-emoji">😜</span>
+          <span class="jar-title">Góc Nhí Nhố</span>
+        </button>
+      </div>
+
+      <div class="note-paper hidden" id="notePaper">
+        <div class="note-tag" id="noteTag">💕 Gửi em iu</div>
+        <p class="note-content" id="noteContent"></p>
+        <div class="note-footer">
+          <span class="note-sign">— Khánh (Hà Nội) —</span>
+          <button class="pixel-btn btn-cream btn-sm" id="btnNextNote">Rút tờ khác ↻</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Room Shop -->
+  <div class="modal-backdrop hidden" id="modalShop">
+    <div class="modal-card pixel-box">
+      <div class="modal-header">
+        <h2>🛋️ Cửa Hàng Trang Trí Phòng</h2>
+        <button class="close-btn pixel-btn" data-close="modalShop">✕</button>
+      </div>
+      <p class="modal-subtitle">Dùng kẹo kiếm được để sắm đồ làm đẹp góc nhỏ chung của tụi mình nha (có <strong id="shopCandyText">0</strong> 🍬):</p>
+      <div class="shop-list" id="shopList"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Secret Letters -->
+  <div class="modal-backdrop hidden" id="modalLetters">
+    <div class="modal-card pixel-box">
+      <div class="modal-header">
+        <h2>💌 Hộp Thư Bí Mật</h2>
+        <button class="close-btn pixel-btn" data-close="modalLetters">✕</button>
+      </div>
+      <p class="modal-subtitle">Lên cấp độ thân mật hoặc trang trí phòng để mở khóa những bức thư anh viết riêng cho Ngọc.</p>
+
+      <div class="letter-list" id="letterList"></div>
+
+      <div class="letter-reader hidden" id="letterReader">
+        <button class="pixel-btn btn-cream btn-sm" id="btnBackLetters">◀ Quay lại danh sách</button>
+        <div class="letter-sheet">
+          <h3 id="letterReaderTitle"></h3>
+          <div class="letter-body" id="letterReaderBody"></div>
+          <div class="letter-sign" id="letterReaderSign"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Achievements -->
+  <div class="modal-backdrop hidden" id="modalAchieve">
+    <div class="modal-card pixel-box">
+      <div class="modal-header">
+        <h2>🏆 Kỷ Niệm & Thành Tựu</h2>
+        <button class="close-btn pixel-btn" data-close="modalAchieve">✕</button>
+      </div>
+      <p class="modal-subtitle">Mỗi cột mốc nhỏ đều có kẹo thưởng dành cho "trẻ hiểu chuyện" đó!</p>
+      <div class="achieve-list" id="achieveList"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Settings / Time Preview -->
+  <div class="modal-backdrop hidden" id="modalSettings">
+    <div class="modal-card pixel-box">
+      <div class="modal-header">
+        <h2>⚙️ Góc Tùy Chỉnh</h2>
+        <button class="close-btn pixel-btn" data-close="modalSettings">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="setting-block">
+          <label class="setting-label">🌅 Khung cảnh ngoài cửa sổ:</label>
+          <p class="setting-help">Mặc định tự đổi theo giờ thật (Sáng / Chiều / Đêm), hoặc em có thể xem thử các buổi khác:</p>
+          <div class="time-modes" id="timeModes">
+            <button class="pixel-btn btn-cream btn-sm" data-time="auto">Theo giờ thật</button>
+            <button class="pixel-btn btn-cream btn-sm" data-time="morning">Buổi sáng</button>
+            <button class="pixel-btn btn-cream btn-sm" data-time="sunset">Hoàng hôn</button>
+            <button class="pixel-btn btn-cream btn-sm" data-time="night">Ban đêm</button>
+          </div>
+        </div>
+
+        <div class="setting-block danger-zone">
+          <button class="pixel-btn btn-danger btn-sm" id="btnResetSave">Chơi lại từ đầu (Xóa dữ liệu lưu)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script defer src="js/data.js"></script>
+  <script defer src="js/audio.js"></script>
+  <script defer src="js/sprites.js"></script>
+  <script defer src="js/room.js"></script>
+  <script defer src="js/minigame.js"></script>
+  <script defer src="js/game_crossing.js"></script>
+  <script defer src="js/game_flappy.js"></script>
+  <script defer src="js/game_nonla.js"></script>
+  <script defer src="js/app.js"></script>
+</body>
+</html>
