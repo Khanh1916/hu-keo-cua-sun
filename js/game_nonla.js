@@ -39,12 +39,16 @@ window.NonLaGame = (() => {
   let recognition = null;
   let recGeneration = 0;
   let restartTimer = null;
+  let captureRetries = 0;
   let lastSpeechActivity = 0;
   let wordResultOffset = 0;
   let currentResultLen = 0;
   let micPulse = 0;
   let speechDetected = false;
   let lastHeard = "";
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || "") ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
   let hatY = 216;
   let hatVy = 0;
@@ -197,6 +201,17 @@ window.NonLaGame = (() => {
     }
   }
 
+  async function primeMicHardware() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Immediately release tracks so SpeechRecognition owns the iOS audio session cleanly
+      stream.getTracks().forEach((t) => t.stop());
+    } catch {
+      // Ignore; SpeechRecognition error handler will decide fallback
+    }
+  }
+
   function spawnFreshRecognizer() {
     if (!running || mode !== "voice" || !hasSpeechAPI()) return;
     clearTimeout(restartTimer);
@@ -209,7 +224,11 @@ window.NonLaGame = (() => {
         oldRec.onresult = null;
         oldRec.onerror = null;
         oldRec.onend = null;
-        oldRec.abort();
+        if (isIOS) {
+          oldRec.stop();
+        } else {
+          oldRec.abort();
+        }
       } catch {
         // ignore
       }
@@ -221,7 +240,8 @@ window.NonLaGame = (() => {
     try {
       const rec = new SpeechRec();
       rec.lang = "vi-VN";
-      rec.continuous = true;
+      // iOS WebKit bugs out with continuous=true (freezes / audio-capture lockup)
+      rec.continuous = !isIOS;
       rec.interimResults = true;
       rec.maxAlternatives = 5;
 
@@ -232,12 +252,14 @@ window.NonLaGame = (() => {
 
       rec.onstart = () => {
         if (myGen !== recGeneration) return;
+        captureRetries = 0;
         lastSpeechActivity = Date.now();
         if (callbacks.onMicState) callbacks.onMicState(true);
       };
 
       rec.onaudiostart = () => {
         if (myGen !== recGeneration) return;
+        captureRetries = 0;
         lastSpeechActivity = Date.now();
       };
 
@@ -255,6 +277,7 @@ window.NonLaGame = (() => {
 
       rec.onresult = (event) => {
         if (myGen !== recGeneration) return;
+        captureRetries = 0;
         handleSpeechResults(event);
       };
 
@@ -263,11 +286,26 @@ window.NonLaGame = (() => {
         if (err.error === "not-allowed" || err.error === "service-not-allowed") {
           setMode("quiet", "Tab này chưa cấp quyền Micro → chuyển sang Im lặng 🤫");
         } else if (err.error === "audio-capture") {
-          setMode("quiet", "Không tìm thấy Micro → chuyển sang Im lặng 🤫");
+          // On iOS PWA reopen after force-quit, AVAudioSession may need 1-2 brief retries to reclaim mic
+          if (captureRetries < 2) {
+            captureRetries++;
+            if (callbacks.onMicState) {
+              callbacks.onMicState(false, `🎤 Đang kết nối lại Micro (${captureRetries}/2)...`);
+            }
+            clearTimeout(restartTimer);
+            restartTimer = setTimeout(async () => {
+              if (!running || mode !== "voice" || myGen !== recGeneration) return;
+              await primeMicHardware();
+              if (running && mode === "voice" && myGen === recGeneration) {
+                spawnFreshRecognizer();
+              }
+            }, 450);
+          } else {
+            setMode("quiet", "Micro đang bận trên máy → chuyển tạm sang Im lặng 🤫");
+          }
         } else if (err.error === "network") {
-          setMode("quiet", "Nhận diện giọng nói cần mạng Chrome → chuyển sang Im lặng 🤫");
+          setMode("quiet", "Nhận diện giọng nói cần mạng → chuyển sang Im lặng 🤫");
         }
-        // Note: "no-speech" and "aborted" are normal; let onend cleanly respawn!
       };
 
       rec.onend = () => {
@@ -279,7 +317,7 @@ window.NonLaGame = (() => {
             if (running && mode === "voice" && myGen === recGeneration) {
               spawnFreshRecognizer();
             }
-          }, 120);
+          }, isIOS ? 260 : 120);
         } else if (callbacks.onMicState) {
           callbacks.onMicState(false);
         }
@@ -297,7 +335,17 @@ window.NonLaGame = (() => {
       setMode("quiet", "Trình duyệt chưa hỗ trợ Speech API → dùng Im lặng 🤫");
       return;
     }
-    spawnFreshRecognizer();
+    captureRetries = 0;
+    if (isIOS) {
+      // Prime iOS AVAudioSession cleanly on user tap before launching SpeechRecognition
+      primeMicHardware().then(() => {
+        if (running && mode === "voice") {
+          spawnFreshRecognizer();
+        }
+      });
+    } else {
+      spawnFreshRecognizer();
+    }
   }
 
   function stopSpeech() {
@@ -311,7 +359,11 @@ window.NonLaGame = (() => {
         recognition.onresult = null;
         recognition.onerror = null;
         recognition.onend = null;
-        recognition.abort();
+        if (isIOS) {
+          recognition.stop();
+        } else {
+          recognition.abort();
+        }
       } catch {
         // ignore
       }

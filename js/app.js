@@ -848,10 +848,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Ensure save flushes when leaving or backgrounding on mobile
-  window.addEventListener("pagehide", saveState);
+  // Ensure save flushes & mic releases cleanly when leaving or backgrounding on mobile (prevents iOS mic lock!)
+  window.addEventListener("pagehide", () => {
+    saveState();
+    stopAllGames();
+  });
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") saveState();
+    if (document.visibilityState === "hidden") {
+      saveState();
+      if (NonLaGame.isRunning()) {
+        NonLaGame.stop();
+        document.getElementById("mgOverlay").classList.remove("hidden");
+      }
+    }
   });
 
   // Show WebView tip if opened inside QR scanner / Zalo / Messenger in-app browser
