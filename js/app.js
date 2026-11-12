@@ -782,6 +782,60 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Backup & Restore helpers (UTF-8 safe Base64)
+  function encodeSaveCode() {
+    const json = JSON.stringify(state);
+    return btoa(unescape(encodeURIComponent(json)));
+  }
+
+  function decodeSaveCode(code) {
+    const json = decodeURIComponent(escape(atob(code.trim())));
+    const parsed = JSON.parse(json);
+    if (!parsed || typeof parsed !== "object" || typeof parsed.candy !== "number") {
+      throw new Error("invalid");
+    }
+    return { ...DEFAULT_STATE, ...parsed };
+  }
+
+  function isInAppBrowser() {
+    const ua = navigator.userAgent || "";
+    return /Zalo|FBAN|FBAV|Messenger|Instagram|Line|; wv\)/i.test(ua);
+  }
+
+  document.getElementById("btnCopySave").addEventListener("click", async () => {
+    AudioManager.playClick();
+    saveState();
+    const code = encodeSaveCode();
+    try {
+      await navigator.clipboard.writeText(code);
+      showToast("📋 Đã sao chép mã lưu tiến trình!");
+    } catch {
+      document.getElementById("restoreCodeInput").value = code;
+      showToast("Đã hiện mã lưu ở ô bên dưới để bạn copy nhé!");
+    }
+  });
+
+  document.getElementById("btnRestoreSave").addEventListener("click", () => {
+    AudioManager.playClick();
+    const input = document.getElementById("restoreCodeInput");
+    const rawCode = input.value.trim();
+    if (!rawCode) {
+      showToast("Hãy dán mã lưu vào ô trước nha!");
+      return;
+    }
+    try {
+      state = decodeSaveCode(rawCode);
+      saveState();
+      updateGreetingBanner();
+      renderHUD();
+      input.value = "";
+      closeModal("modalSettings");
+      showToast("✨ Đã khôi phục tiến trình thành công!");
+    } catch {
+      showToast("Mã lưu không hợp lệ, kiểm tra lại giúp mình nha!");
+    }
+  });
+
   // Reset Save
   document.getElementById("btnResetSave").addEventListener("click", () => {
     if (confirm("Bạn có chắc muốn xóa dữ liệu lưu để chơi lại từ đầu không?")) {
@@ -792,6 +846,20 @@ document.addEventListener("DOMContentLoaded", () => {
       closeModal("modalSettings");
       showToast("Đã đặt lại từ đầu!");
     }
+  });
+
+  // Ensure save flushes when leaving or backgrounding on mobile
+  window.addEventListener("pagehide", saveState);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") saveState();
+  });
+
+  // Show WebView tip if opened inside QR scanner / Zalo / Messenger in-app browser
+  if (isInAppBrowser()) {
+    document.getElementById("webviewTip").classList.remove("hidden");
+  }
+  document.getElementById("btnDismissTip").addEventListener("click", () => {
+    document.getElementById("webviewTip").classList.add("hidden");
   });
 
   // Boot

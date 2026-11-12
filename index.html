@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Hũ Kẹo Của Sún 💕 Góc Nhỏ Hà Nội ↔ Hải Phòng</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f7e6ea" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Hũ Kẹo Sún" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,6 +17,12 @@
 </head>
 <body>
   <div class="app-shell">
+    <!-- In-App Browser / QR Scanner Tip (only visible inside Zalo/Messenger/WebView) -->
+    <div id="webviewTip" class="webview-tip pixel-box hidden">
+      <span>💡 Đang mở trong app quét QR/Zalo! Bấm <strong>⋮ → Mở bằng Chrome / Safari</strong> rồi <strong>Thêm vào màn hình chính</strong> để không bị mất điểm kẹo nhé.</span>
+      <button class="pixel-btn btn-cream btn-sm" id="btnDismissTip">✕</button>
+    </div>
+
     <!-- Top HUD -->
     <header class="hud-header pixel-box">
       <div class="hud-top-row">
@@ -341,6 +351,18 @@
             <button class="pixel-btn btn-cream btn-sm" data-time="morning">Buổi sáng</button>
             <button class="pixel-btn btn-cream btn-sm" data-time="sunset">Hoàng hôn</button>
             <button class="pixel-btn btn-cream btn-sm" data-time="night">Ban đêm</button>
+          </div>
+        </div>
+
+        <div class="setting-block">
+          <label class="setting-label">💾 Sao lưu & Khôi phục tiến trình:</label>
+          <p class="setting-help">Dùng khi muốn chuyển sang máy mới hoặc mở sang trình duyệt khác không bị mất kẹo & đồ trang trí:</p>
+          <div class="backup-actions">
+            <button class="pixel-btn btn-gold btn-sm" id="btnCopySave">📋 Sao chép mã lưu</button>
+          </div>
+          <div class="backup-row">
+            <input type="text" id="restoreCodeInput" class="backup-input" placeholder="Dán mã lưu vào đây để khôi phục..." />
+            <button class="pixel-btn btn-pink btn-sm" id="btnRestoreSave">Khôi phục</button>
           </div>
         </div>
 

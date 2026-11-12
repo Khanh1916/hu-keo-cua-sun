@@ -954,6 +954,41 @@ body {
   align-items: flex-start;
 }
 
+.webview-tip {
+  background: #fff7db;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.backup-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.backup-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.backup-input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 7px;
+  background: #fffdf9;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* Toast */
 .toast {
   position: fixed;

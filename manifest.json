@@ -1,0 +1,19 @@
+{
+  "name": "Hũ Kẹo Của Sún",
+  "short_name": "Hũ Kẹo Sún",
+  "description": "Góc nhỏ Hà Nội ↔ Hải Phòng dành tặng Ngọc",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7e6ea",
+  "theme_color": "#f7e6ea",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
