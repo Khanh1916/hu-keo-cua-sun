@@ -286,22 +286,30 @@ window.NonLaGame = (() => {
         if (err.error === "not-allowed" || err.error === "service-not-allowed") {
           setMode("quiet", "Tab này chưa cấp quyền Micro → chuyển sang Im lặng 🤫");
         } else if (err.error === "audio-capture") {
-          // On iOS PWA reopen after force-quit, AVAudioSession may need 1-2 brief retries to reclaim mic
-          if (captureRetries < 2) {
+          // Escalating iOS AVAudioSession recovery retries (450ms -> 1100ms -> 2200ms)
+          const delays = [450, 1100, 2200];
+          if (captureRetries < delays.length) {
+            const waitMs = delays[captureRetries];
+            const usePrimer = captureRetries === 1;
             captureRetries++;
             if (callbacks.onMicState) {
-              callbacks.onMicState(false, `🎤 Đang kết nối lại Micro (${captureRetries}/2)...`);
+              callbacks.onMicState(false, `🎤 Đang kết nối lại Micro (${captureRetries}/${delays.length})...`);
             }
             clearTimeout(restartTimer);
             restartTimer = setTimeout(async () => {
               if (!running || mode !== "voice" || myGen !== recGeneration) return;
-              await primeMicHardware();
+              if (usePrimer) await primeMicHardware();
               if (running && mode === "voice" && myGen === recGeneration) {
                 spawnFreshRecognizer();
               }
-            }, 450);
+            }, waitMs);
           } else {
-            setMode("quiet", "Micro đang bận trên máy → chuyển tạm sang Im lặng 🤫");
+            const isStandalone = Boolean(window.navigator.standalone) ||
+              (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+            const msg = isStandalone && isIOS
+              ? "iPhone chưa nhả Mic sau khi vuốt tắt app — thử bấm 'Đổi sang Mic' hoặc mở bằng Safari nha!"
+              : "Micro đang bận trên máy → chuyển tạm sang Im lặng 🤫";
+            setMode("quiet", msg);
           }
         } else if (err.error === "network") {
           setMode("quiet", "Nhận diện giọng nói cần mạng → chuyển sang Im lặng 🤫");
@@ -336,16 +344,11 @@ window.NonLaGame = (() => {
       return;
     }
     captureRetries = 0;
-    if (isIOS) {
-      // Prime iOS AVAudioSession cleanly on user tap before launching SpeechRecognition
-      primeMicHardware().then(() => {
-        if (running && mode === "voice") {
-          spawnFreshRecognizer();
-        }
-      });
-    } else {
-      spawnFreshRecognizer();
+    if (isIOS && window.AudioManager && AudioManager.suspendForMic) {
+      AudioManager.suspendForMic();
     }
+    // Call synchronously inside user tap so iOS Safari/PWA keeps the gesture token!
+    spawnFreshRecognizer();
   }
 
   function stopSpeech() {
@@ -368,6 +371,9 @@ window.NonLaGame = (() => {
         // ignore
       }
       recognition = null;
+    }
+    if (isIOS && window.AudioManager && AudioManager.resumeAfterMic) {
+      AudioManager.resumeAfterMic();
     }
     if (callbacks.onMicState) callbacks.onMicState(false);
   }
