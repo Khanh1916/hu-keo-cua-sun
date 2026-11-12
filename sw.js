@@ -1,4 +1,4 @@
-const CACHE_NAME = "hu-keo-sun-v7";
+const CACHE_NAME = "hu-keo-sun-v8";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -6,16 +6,16 @@ const CORE_ASSETS = [
   "./favicon.svg",
   "./icon-180.png",
   "./icon-512.png",
-  "./css/style.css?v=7",
-  "./js/data.js?v=7",
-  "./js/audio.js?v=7",
-  "./js/sprites.js?v=7",
-  "./js/room.js?v=7",
-  "./js/minigame.js?v=7",
-  "./js/game_crossing.js?v=7",
-  "./js/game_flappy.js?v=7",
-  "./js/game_nonla.js?v=7",
-  "./js/app.js?v=7"
+  "./css/style.css?v=8",
+  "./js/data.js?v=8",
+  "./js/audio.js?v=8",
+  "./js/sprites.js?v=8",
+  "./js/room.js?v=8",
+  "./js/minigame.js?v=8",
+  "./js/game_crossing.js?v=8",
+  "./js/game_flappy.js?v=8",
+  "./js/game_nonla.js?v=8",
+  "./js/app.js?v=8"
 ];
 
 self.addEventListener("install", (event) => {
@@ -40,7 +40,7 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request.mode === "navigate" ? new Request(event.request, { cache: "no-store" }) : event.request)
       .then((res) => {
         if (res && res.status === 200) {
           const copy = res.clone();

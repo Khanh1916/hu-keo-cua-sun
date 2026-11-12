@@ -40,6 +40,7 @@ window.NonLaGame = (() => {
   let recGeneration = 0;
   let restartTimer = null;
   let captureRetries = 0;
+  let pendingErrorRetry = false;
   let lastSpeechActivity = 0;
   let wordResultOffset = 0;
   let currentResultLen = 0;
@@ -125,11 +126,12 @@ window.NonLaGame = (() => {
     score += 15 + Math.min(15, (streak - 1) * 3);
     candies += bonusCandy;
 
+    const silentAudioLock = isIOS && mode === "voice";
     if (streak >= 3) {
-      AudioManager.playCombo(streak);
+      if (!silentAudioLock && window.AudioManager) AudioManager.playCombo(streak);
       statusBanner = `🔥 Chuỗi chuẩn x${streak}! +${bonusCandy} 🍬`;
     } else {
-      AudioManager.playCandy();
+      if (!silentAudioLock && window.AudioManager) AudioManager.playCandy();
       statusBanner = msg || `Chuẩn L-N! 👒 +${bonusCandy} 🍬`;
     }
     statusTimer = 55;
@@ -197,7 +199,7 @@ window.NonLaGame = (() => {
       streak = 0;
       statusBanner = `Nghe thành "${currentWord.ngong}" rồi kìa 😂`;
       statusTimer = 45;
-      AudioManager.playBonk();
+      if (!(isIOS && mode === "voice") && window.AudioManager) AudioManager.playBonk();
     }
   }
 
@@ -212,27 +214,35 @@ window.NonLaGame = (() => {
     }
   }
 
+  function forceKillRecognition(rec) {
+    if (!rec) return;
+    rec.onstart = null;
+    rec.onaudiostart = null;
+    rec.onspeechstart = null;
+    rec.onspeechend = null;
+    rec.onresult = null;
+    rec.onerror = null;
+    rec.onend = null;
+    try {
+      rec.abort();
+    } catch {
+      // ignore
+    }
+    try {
+      rec.stop();
+    } catch {
+      // ignore
+    }
+  }
+
   function spawnFreshRecognizer() {
     if (!running || mode !== "voice" || !hasSpeechAPI()) return;
     clearTimeout(restartTimer);
+    pendingErrorRetry = false;
 
     const oldRec = recognition;
     recognition = null;
-    if (oldRec) {
-      try {
-        oldRec.onstart = null;
-        oldRec.onresult = null;
-        oldRec.onerror = null;
-        oldRec.onend = null;
-        if (isIOS) {
-          oldRec.stop();
-        } else {
-          oldRec.abort();
-        }
-      } catch {
-        // ignore
-      }
-    }
+    forceKillRecognition(oldRec);
 
     const myGen = ++recGeneration;
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -253,6 +263,7 @@ window.NonLaGame = (() => {
       rec.onstart = () => {
         if (myGen !== recGeneration) return;
         captureRetries = 0;
+        pendingErrorRetry = false;
         lastSpeechActivity = Date.now();
         if (callbacks.onMicState) callbacks.onMicState(true);
       };
@@ -260,6 +271,7 @@ window.NonLaGame = (() => {
       rec.onaudiostart = () => {
         if (myGen !== recGeneration) return;
         captureRetries = 0;
+        pendingErrorRetry = false;
         lastSpeechActivity = Date.now();
       };
 
@@ -278,19 +290,22 @@ window.NonLaGame = (() => {
       rec.onresult = (event) => {
         if (myGen !== recGeneration) return;
         captureRetries = 0;
+        pendingErrorRetry = false;
         handleSpeechResults(event);
       };
 
       rec.onerror = (err) => {
         if (myGen !== recGeneration) return;
         if (err.error === "not-allowed" || err.error === "service-not-allowed") {
+          pendingErrorRetry = true;
           setMode("quiet", "Tab này chưa cấp quyền Micro → chuyển sang Im lặng 🤫");
         } else if (err.error === "audio-capture") {
-          // Escalating iOS AVAudioSession recovery retries (450ms -> 1100ms -> 2200ms)
-          const delays = [450, 1100, 2200];
+          // Critical: prevent immediate onend() from cancelling our escalating retry timer!
+          pendingErrorRetry = true;
+          const delays = [500, 1200, 2200];
           if (captureRetries < delays.length) {
             const waitMs = delays[captureRetries];
-            const usePrimer = captureRetries === 1;
+            const usePrimer = captureRetries >= 1;
             captureRetries++;
             if (callbacks.onMicState) {
               callbacks.onMicState(false, `🎤 Đang kết nối lại Micro (${captureRetries}/${delays.length})...`);
@@ -312,6 +327,7 @@ window.NonLaGame = (() => {
             setMode("quiet", msg);
           }
         } else if (err.error === "network") {
+          pendingErrorRetry = true;
           setMode("quiet", "Nhận diện giọng nói cần mạng → chuyển sang Im lặng 🤫");
         }
       };
@@ -319,13 +335,15 @@ window.NonLaGame = (() => {
       rec.onend = () => {
         if (myGen !== recGeneration) return;
         speechDetected = false;
+        // Never overwrite an active error-recovery timer scheduled by rec.onerror!
+        if (pendingErrorRetry) return;
         if (running && mode === "voice") {
           clearTimeout(restartTimer);
           restartTimer = setTimeout(() => {
             if (running && mode === "voice" && myGen === recGeneration) {
               spawnFreshRecognizer();
             }
-          }, isIOS ? 260 : 120);
+          }, isIOS ? 280 : 120);
         } else if (callbacks.onMicState) {
           callbacks.onMicState(false);
         }
@@ -354,24 +372,12 @@ window.NonLaGame = (() => {
   function stopSpeech() {
     recGeneration++;
     clearTimeout(restartTimer);
+    pendingErrorRetry = false;
     speechDetected = false;
     micPulse = 0;
-    if (recognition) {
-      try {
-        recognition.onstart = null;
-        recognition.onresult = null;
-        recognition.onerror = null;
-        recognition.onend = null;
-        if (isIOS) {
-          recognition.stop();
-        } else {
-          recognition.abort();
-        }
-      } catch {
-        // ignore
-      }
-      recognition = null;
-    }
+    const oldRec = recognition;
+    recognition = null;
+    forceKillRecognition(oldRec);
     if (isIOS && window.AudioManager && AudioManager.resumeAfterMic) {
       AudioManager.resumeAfterMic();
     }

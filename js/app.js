@@ -696,7 +696,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btnStartMiniGame").addEventListener("click", () => {
-    AudioManager.playClick();
+    if (!(activeGameKey === "nonla" && NonLaGame.getMode() === "voice")) {
+      AudioManager.playClick();
+    }
     document.getElementById("mgOverlay").classList.add("hidden");
     ARCADE_META[activeGameKey].mod().start();
   });
@@ -714,8 +716,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Non La L-N controls
   document.getElementById("btnToggleNonlaMode").addEventListener("click", () => {
-    AudioManager.playClick();
     const next = NonLaGame.getMode() === "voice" ? "quiet" : "voice";
+    if (next !== "voice") {
+      AudioManager.playClick();
+    }
     const actual = NonLaGame.setMode(next);
     if (next === "voice" && actual === "quiet") {
       showToast("Trình duyệt này chưa hỗ trợ Mic tiếng Việt, dùng Im lặng nha!");
@@ -848,18 +852,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Ensure save flushes & mic releases cleanly when leaving or backgrounding on mobile (prevents iOS mic lock!)
-  window.addEventListener("pagehide", () => {
+  // Ensure save flushes & mic releases cleanly when leaving, switching apps, or locking iPhone!
+  function handleAppExitOrHide() {
     saveState();
+    const wasRunningNonla = NonLaGame.isRunning();
     stopAllGames();
-  });
+    if (wasRunningNonla) {
+      document.getElementById("mgOverlay").classList.remove("hidden");
+    }
+  }
+
+  window.addEventListener("pagehide", handleAppExitOrHide);
+  window.addEventListener("beforeunload", handleAppExitOrHide);
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
-      saveState();
-      if (NonLaGame.isRunning()) {
-        NonLaGame.stop();
-        document.getElementById("mgOverlay").classList.remove("hidden");
-      }
+      handleAppExitOrHide();
     }
   });
 
