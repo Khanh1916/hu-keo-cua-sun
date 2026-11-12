@@ -37,10 +37,13 @@ window.NonLaGame = (() => {
 
   let mode = "voice"; // "voice" | "quiet"
   let recognition = null;
-  let micStream = null;
-  let audioCtx = null;
-  let analyser = null;
-  let micVolume = 0;
+  let recGeneration = 0;
+  let restartTimer = null;
+  let lastSpeechActivity = 0;
+  let wordResultOffset = 0;
+  let currentResultLen = 0;
+  let micPulse = 0;
+  let speechDetected = false;
   let lastHeard = "";
 
   let hatY = 216;
@@ -67,9 +70,17 @@ window.NonLaGame = (() => {
     return (str || "")
       .toLowerCase()
       .normalize("NFC")
-      .replace(/[.,!?;:"'()]/g, " ")
+      .replace(/[.,!?;:"'()\-]/g, " ")
       .replace(/\s+/g, " ")
       .trim();
+  }
+
+  // Strip ONLY Vietnamese tone marks (sắc/huyền/hỏi/ngã/nặng), keeping L/N & base vowels (ă,â,ê,ô,ơ,ư,đ) exact!
+  function stripTonesKeepLN(str) {
+    return normalizeVN(str)
+      .normalize("NFD")
+      .replace(/[\u0300\u0301\u0303\u0309\u0323]/g, "")
+      .normalize("NFC");
   }
 
   function pickNextWord() {
@@ -80,6 +91,8 @@ window.NonLaGame = (() => {
     lastTarget = chosen.target;
     obstacleX = 248;
     obstacleCleared = false;
+    wordResultOffset = currentResultLen;
+
     if (callbacks.onWordUpdate) {
       callbacks.onWordUpdate({ word: currentWord, mode, lastHeard });
     }
@@ -102,7 +115,6 @@ window.NonLaGame = (() => {
     isJumping = true;
     spawnDust();
     obstacleCleared = true;
-    // Bring far obstacle close enough so the Nón Lá visibly leaps right over it!
     if (obstacleX > 115) obstacleX = 115;
     streak++;
     const bonusCandy = streak >= 4 ? 3 : 2;
@@ -122,130 +134,189 @@ window.NonLaGame = (() => {
     }
   }
 
-  function handleTranscript(transcript) {
+  function matchesTarget(candidates, target) {
+    const targetExact = normalizeVN(target);
+    const targetToneFree = stripTonesKeepLN(target);
+    const targetTokens = targetToneFree.split(" ");
+
+    for (const raw of candidates) {
+      const exact = normalizeVN(raw);
+      const toneFree = stripTonesKeepLN(raw);
+      if (exact.includes(targetExact) || toneFree.includes(targetToneFree)) {
+        return true;
+      }
+      const heardTokens = toneFree.split(" ");
+      if (targetTokens.every((t) => heardTokens.includes(t))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function handleSpeechResults(event) {
     if (!running || mode !== "voice" || !currentWord || obstacleCleared) return;
-    const clean = normalizeVN(transcript);
-    lastHeard = clean;
-    if (callbacks.onHeardUpdate) callbacks.onHeardUpdate(clean);
+    currentResultLen = event.results.length;
+    lastSpeechActivity = Date.now();
+    micPulse = 1;
 
-    const targetNorm = normalizeVN(currentWord.target);
-    const ngongNorm = normalizeVN(currentWord.ngong);
+    const startIdx = Math.max(wordResultOffset, event.results.length - 3);
+    const candidates = [];
+    let latestDisplay = "";
 
-    // Match full phrase or all key tokens in order
-    const targetWords = targetNorm.split(" ");
-    const hitAll = targetWords.every((w) => clean.split(" ").includes(w));
+    // Build per-alternative combined strings across recent result window
+    const altDepth = 5;
+    for (let alt = 0; alt < altDepth; alt++) {
+      let chunk = "";
+      for (let i = startIdx; i < event.results.length; i++) {
+        const res = event.results[i];
+        const pick = res[alt] ? res[alt].transcript : res[0].transcript;
+        chunk += " " + pick;
+      }
+      if (chunk.trim()) candidates.push(chunk.trim());
+    }
 
-    if (clean.includes(targetNorm) || hitAll) {
+    // Also inspect individual latest result alternatives
+    const latestRes = event.results[event.results.length - 1];
+    if (latestRes) {
+      latestDisplay = normalizeVN(latestRes[0].transcript);
+      for (let alt = 0; alt < latestRes.length; alt++) {
+        candidates.push(latestRes[alt].transcript);
+      }
+    }
+
+    lastHeard = latestDisplay || normalizeVN(candidates[0] || "");
+    if (callbacks.onHeardUpdate) callbacks.onHeardUpdate(lastHeard);
+
+    if (matchesTarget(candidates, currentWord.target)) {
       triggerJump("Phát âm chuẩn! 👒");
-    } else if (clean.includes(ngongNorm)) {
+    } else if (matchesTarget(candidates, currentWord.ngong)) {
       streak = 0;
-      statusBanner = `Nghe thành "${ngongNorm}" rồi kìa 😂`;
+      statusBanner = `Nghe thành "${currentWord.ngong}" rồi kìa 😂`;
       statusTimer = 45;
       AudioManager.playBonk();
     }
   }
 
-  async function initMicMeter() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      throw new Error("no-media-devices");
-    }
-    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (AudioCtx) {
-      audioCtx = new AudioCtx();
-      const src = audioCtx.createMediaStreamSource(micStream);
-      analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 256;
-      src.connect(analyser);
-    }
-  }
+  function spawnFreshRecognizer() {
+    if (!running || mode !== "voice" || !hasSpeechAPI()) return;
+    clearTimeout(restartTimer);
 
-  function stopMicMeter() {
-    micVolume = 0;
-    if (micStream) {
-      micStream.getTracks().forEach((t) => t.stop());
-      micStream = null;
-    }
-    if (audioCtx) {
-      audioCtx.close().catch(() => {});
-      audioCtx = null;
-    }
-    analyser = null;
-  }
-
-  async function startSpeech() {
-    if (mode !== "voice") return;
-    if (!hasSpeechAPI()) {
-      setMode("quiet", "Trình duyệt chưa hỗ trợ Speech API → dùng Im lặng 🤫");
-      return;
-    }
-    stopSpeech();
-
-    try {
-      await initMicMeter();
-    } catch {
-      setMode("quiet", "Tab này chặn quyền Micro → mở bằng Chrome/Edge hoặc chơi Im lặng 🤫");
-      return;
+    const oldRec = recognition;
+    recognition = null;
+    if (oldRec) {
+      try {
+        oldRec.onstart = null;
+        oldRec.onresult = null;
+        oldRec.onerror = null;
+        oldRec.onend = null;
+        oldRec.abort();
+      } catch {
+        // ignore
+      }
     }
 
+    const myGen = ++recGeneration;
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    try {
-      recognition = new SpeechRec();
-      recognition.lang = "vi-VN";
-      recognition.continuous = true;
-      recognition.interimResults = true;
 
-      recognition.onstart = () => {
+    try {
+      const rec = new SpeechRec();
+      rec.lang = "vi-VN";
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.maxAlternatives = 5;
+
+      recognition = rec;
+      wordResultOffset = 0;
+      currentResultLen = 0;
+      lastSpeechActivity = Date.now();
+
+      rec.onstart = () => {
+        if (myGen !== recGeneration) return;
+        lastSpeechActivity = Date.now();
         if (callbacks.onMicState) callbacks.onMicState(true);
       };
 
-      recognition.onresult = (event) => {
-        let combined = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          combined += " " + event.results[i][0].transcript;
-        }
-        handleTranscript(combined);
+      rec.onaudiostart = () => {
+        if (myGen !== recGeneration) return;
+        lastSpeechActivity = Date.now();
       };
 
-      recognition.onerror = (err) => {
-        if (err.error === "not-allowed" || err.error === "service-not-allowed" || err.error === "audio-capture") {
-          setMode("quiet", "Không truy cập được Micro → chuyển sang Im lặng 🤫");
+      rec.onspeechstart = () => {
+        if (myGen !== recGeneration) return;
+        speechDetected = true;
+        micPulse = 1;
+        lastSpeechActivity = Date.now();
+      };
+
+      rec.onspeechend = () => {
+        if (myGen !== recGeneration) return;
+        speechDetected = false;
+      };
+
+      rec.onresult = (event) => {
+        if (myGen !== recGeneration) return;
+        handleSpeechResults(event);
+      };
+
+      rec.onerror = (err) => {
+        if (myGen !== recGeneration) return;
+        if (err.error === "not-allowed" || err.error === "service-not-allowed") {
+          setMode("quiet", "Tab này chưa cấp quyền Micro → chuyển sang Im lặng 🤫");
+        } else if (err.error === "audio-capture") {
+          setMode("quiet", "Không tìm thấy Micro → chuyển sang Im lặng 🤫");
         } else if (err.error === "network") {
           setMode("quiet", "Nhận diện giọng nói cần mạng Chrome → chuyển sang Im lặng 🤫");
         }
+        // Note: "no-speech" and "aborted" are normal; let onend cleanly respawn!
       };
 
-      recognition.onend = () => {
+      rec.onend = () => {
+        if (myGen !== recGeneration) return;
+        speechDetected = false;
         if (running && mode === "voice") {
-          setTimeout(() => {
-            if (running && mode === "voice" && recognition) {
-              try {
-                recognition.start();
-              } catch {
-                // ignore
-              }
+          clearTimeout(restartTimer);
+          restartTimer = setTimeout(() => {
+            if (running && mode === "voice" && myGen === recGeneration) {
+              spawnFreshRecognizer();
             }
-          }, 250);
+          }, 120);
+        } else if (callbacks.onMicState) {
+          callbacks.onMicState(false);
         }
       };
 
-      recognition.start();
+      rec.start();
     } catch {
       setMode("quiet", "Không bật được Mic → chuyển sang Im lặng 🤫");
     }
   }
 
+  function startSpeech() {
+    if (mode !== "voice") return;
+    if (!hasSpeechAPI()) {
+      setMode("quiet", "Trình duyệt chưa hỗ trợ Speech API → dùng Im lặng 🤫");
+      return;
+    }
+    spawnFreshRecognizer();
+  }
+
   function stopSpeech() {
+    recGeneration++;
+    clearTimeout(restartTimer);
+    speechDetected = false;
+    micPulse = 0;
     if (recognition) {
       try {
+        recognition.onstart = null;
+        recognition.onresult = null;
+        recognition.onerror = null;
         recognition.onend = null;
-        recognition.stop();
+        recognition.abort();
       } catch {
         // ignore
       }
       recognition = null;
     }
-    stopMicMeter();
     if (callbacks.onMicState) callbacks.onMicState(false);
   }
 
@@ -344,16 +415,18 @@ window.NonLaGame = (() => {
   function update() {
     frame++;
     if (statusTimer > 0) statusTimer--;
-
-    // Sample mic volume bar
-    if (analyser && mode === "voice") {
-      const data = new Uint8Array(analyser.frequencyBinCount);
-      analyser.getByteFrequencyData(data);
-      let sum = 0;
-      for (let i = 0; i < data.length; i++) sum += data[i];
-      micVolume = Math.min(1, (sum / data.length) / 55);
+    if (speechDetected) {
+      micPulse = 0.65 + Math.abs(Math.sin(frame * 0.25)) * 0.35;
+    } else if (micPulse > 0.05) {
+      micPulse *= 0.9;
     } else {
-      micVolume = 0;
+      micPulse = 0.08;
+    }
+
+    // Watchdog: if voice mode is silent/stalled for > 7s without activity, refresh recognizer cleanly
+    if (mode === "voice" && lastSpeechActivity && Date.now() - lastSpeechActivity > 7000) {
+      lastSpeechActivity = Date.now();
+      spawnFreshRecognizer();
     }
 
     if (isJumping || hatY < 216) {
@@ -367,9 +440,8 @@ window.NonLaGame = (() => {
     }
 
     const baseSpeed = mode === "voice"
-      ? Math.min(0.68, 0.26 + score * 0.0008)
+      ? Math.min(0.55, 0.22 + score * 0.0007)
       : Math.min(0.88, 0.38 + score * 0.0010);
-    // When cleared, glide the post smoothly underneath the airborne Nón Lá!
     obstacleX -= obstacleCleared ? 4.4 : baseSpeed;
 
     if (!obstacleCleared && Math.abs(obstacleX - 46) < 12 && hatY > 192) {
@@ -463,7 +535,6 @@ window.NonLaGame = (() => {
     dust.forEach((d) => px(ctx, d.x, d.y, 2, 2, "#E8D3BD"));
     drawNonLa(46, hatY);
 
-    // Streak & Mic Volume meter
     if (streak >= 2) {
       ctx.fillStyle = "#E46B94";
       ctx.font = "bold 10px monospace";
@@ -471,13 +542,12 @@ window.NonLaGame = (() => {
     }
     if (mode === "voice") {
       px(ctx, 156, 8, 76, 8, "#FFFDF7");
-      px(ctx, 157, 9, Math.round(74 * micVolume), 6, micVolume > 0.2 ? "#67B374" : "#F7B6CC");
+      px(ctx, 157, 9, Math.round(74 * micPulse), 6, speechDetected || micPulse > 0.3 ? "#67B374" : "#F7B6CC");
       ctx.strokeStyle = "#4A302C";
       ctx.lineWidth = 1;
       ctx.strokeRect(156, 8, 76, 8);
     }
 
-    // Prompt Card
     if (currentWord && !obstacleCleared) {
       ctx.fillStyle = "#FFFDF7";
       ctx.fillRect(20, 32, 200, 58);
@@ -504,7 +574,6 @@ window.NonLaGame = (() => {
       drawWrappedText(displayStr, 120, 65, 184, 16);
       ctx.textAlign = "left";
 
-      // Visual urgency progress bar (Tension & Release indicator)
       const pct = Math.max(0, Math.min(1, (obstacleX - 58) / (248 - 58)));
       const barColor = pct > 0.5 ? "#67B374" : (pct > 0.25 ? "#F7B32B" : "#E46B94");
       px(ctx, 22, 85, Math.round(196 * pct), 3, barColor);
