@@ -897,4 +897,9 @@ document.addEventListener("DOMContentLoaded", () => {
   syncClockAndEvents();
   // Auto-switch decorations, banner & music right when crossing 00:00 into/out of special dates!
   setInterval(syncClockAndEvents, 5000);
+
+  // Register offline-capable Service Worker for iPhone/Android Home Screen app experience
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  }
 });
