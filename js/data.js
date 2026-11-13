@@ -62,7 +62,7 @@ window.GAME_DATA = {
       name: "Bánh mì cay HP",
       emoji: "🥖",
       cost: 2,
-      xp: 15,
+      xp: 5,
       reaction: "Cay giòn đúng điệu Hải Phòng luôn. Ăn ngon quá em 🥖"
     },
     {
@@ -70,7 +70,7 @@ window.GAME_DATA = {
       name: "Trà cúc mật ong",
       emoji: "🍵",
       cost: 2,
-      xp: 15,
+      xp: 5,
       reaction: "Ấm bụng ghê. Hôm nào rảnh anh xuống hai đứa đi ngồi quán thật nha!"
     },
     {
@@ -78,7 +78,7 @@ window.GAME_DATA = {
       name: "Matcha ô long dừa dầm",
       emoji: "🧋",
       cost: 3,
-      xp: 22,
+      xp: 7,
       reaction: "Chuẩn vị Cing House Thủy Nguyên rồi! Món tủ của em có khác 💚"
     },
     {
@@ -86,7 +86,7 @@ window.GAME_DATA = {
       name: "Bánh đa cua Lạch Tray",
       emoji: "🍜",
       cost: 3,
-      xp: 22,
+      xp: 7,
       reaction: "Bát bánh đa cua đầy đặn ghê, ăn no lấy sức làm việc nha em 🍜"
     },
     {
@@ -94,7 +94,7 @@ window.GAME_DATA = {
       name: "Cuốn Thủy Nguyên",
       emoji: "🥬",
       cost: 3,
-      xp: 20,
+      xp: 7,
       reaction: "Cuốn Thủy Nguyên ngon thật đấy, hôm nào em nhớ dẫn anh đi ăn nhé!"
     },
     {
@@ -102,7 +102,7 @@ window.GAME_DATA = {
       name: "Canh củ Hải Phòng",
       emoji: "🥣",
       cost: 2,
-      xp: 16,
+      xp: 5,
       reaction: "Bát canh củ thanh mát chuẩn cơm nhà luôn, cảm ơn em 🥰"
     },
     {
@@ -110,7 +110,7 @@ window.GAME_DATA = {
       name: "Ốc xào me / luộc",
       emoji: "🐚",
       cost: 3,
-      xp: 22,
+      xp: 7,
       reaction: "Nhìn thèm ghê, hôm nào anh xuống Hải Phòng dẫn em đi ăn ốc nhé 🐚"
     },
     {
@@ -118,7 +118,7 @@ window.GAME_DATA = {
       name: "Bánh mì kẹp đầy đặn",
       emoji: "🥪",
       cost: 2,
-      xp: 15,
+      xp: 5,
       reaction: "Ăn sáng đầy đủ vào nha em, đừng bỏ bữa đấy."
     },
     {
@@ -126,7 +126,7 @@ window.GAME_DATA = {
       name: "Dừa dầm béo ngậy",
       emoji: "🥥",
       cost: 3,
-      xp: 20,
+      xp: 7,
       reaction: "Dừa dầm mát lạnh ngọt lịm luôn!"
     },
     {
@@ -134,7 +134,7 @@ window.GAME_DATA = {
       name: "Bim bim & Kẹo ngọt",
       emoji: "🍬",
       cost: 2,
-      xp: 15,
+      xp: 5,
       reaction: "Kẹo ngọt cho Sún nè, ăn ít thôi không sâu răng nha 🍬"
     }
   ],

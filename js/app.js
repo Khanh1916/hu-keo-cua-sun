@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bestCrossing: 0,
     bestFlappy: 0,
     bestNonla: 0,
+    bestMemory: 0,
     ownedDecor: [],
     placedDecor: [],
     unlockedAchieve: [],
@@ -22,6 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
     timeOverride: "auto",
     freeMealsDate: "",
     freeMealsLeft: 3,
+    chineseDailyDoneDate: "",
+    dailyInteractions: {
+      date: "",
+      hugCount: 0,
+      petCount: 0
+    },
     dailyQuests: {
       date: "",
       hugDone: false,
@@ -43,6 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!raw) return { ...DEFAULT_STATE };
       const parsed = JSON.parse(raw);
       const merged = { ...DEFAULT_STATE, ...parsed };
+      if (!merged.dailyInteractions || typeof merged.dailyInteractions !== "object") {
+        merged.dailyInteractions = { ...DEFAULT_STATE.dailyInteractions };
+      }
       if (!merged.dailyQuests || typeof merged.dailyQuests !== "object") {
         merged.dailyQuests = { ...DEFAULT_STATE.dailyQuests };
       }
@@ -59,6 +69,13 @@ document.addEventListener("DOMContentLoaded", () => {
       // Ignore storage quota errors
     }
   }
+
+  window.GameState = {
+    get: () => state,
+    save: saveState,
+    renderHUD: () => renderHUD(),
+    addXP: (amt) => addRewards(amt, 0)
+  };
 
   function xpNeededForLevel(lvl) {
     // Polynomial cozy progression curve: 50 + 35*lvl + 12*lvl^1.55
@@ -275,6 +292,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (state.freeMealsDate !== todayStr) {
       state.freeMealsDate = todayStr;
       state.freeMealsLeft = 3;
+      changed = true;
+    }
+    if (!state.dailyInteractions || state.dailyInteractions.date !== todayStr) {
+      state.dailyInteractions = {
+        date: todayStr,
+        hugCount: 0,
+        petCount: 0
+      };
       changed = true;
     }
     if (!state.dailyQuests || state.dailyQuests.date !== todayStr) {
@@ -658,15 +683,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Room & Character Interactions (Cozy Rested Bonus & Natural Soft Cooldowns)
+  // Room & Character Interactions (Strict Anti-Spam & Daily Rested Limit)
   let lastHugTime = 0;
-  let dailyHugsToday = 0;
-  let lastHugDate = "";
 
   function handleHug() {
     AudioManager.playHug();
     RoomScene.triggerKhanhHappy("happy");
     state.hugCount++;
+
+    syncDailyReset();
 
     if (state.dailyQuests && !state.dailyQuests.hugDone) {
       state.dailyQuests.hugDone = true;
@@ -674,52 +699,62 @@ document.addEventListener("DOMContentLoaded", () => {
       updateQuestDot();
     }
 
-    const todayStr = new Date().toDateString();
-    if (lastHugDate !== todayStr) {
-      lastHugDate = todayStr;
-      dailyHugsToday = 0;
-    }
-
     const now = Date.now();
     const elapsed = now - lastHugTime;
     let speech = "";
 
-    if (dailyHugsToday === 0) {
-      dailyHugsToday++;
+    const hCount = state.dailyInteractions ? state.dailyInteractions.hugCount : 0;
+
+    if (hCount === 0) {
+      state.dailyInteractions.hugCount++;
       lastHugTime = now;
+      saveState();
       speech = "Cái ôm chào ngày mới nè! Chúc em một ngày thật vui nha 🤗";
-      addRewards(25, 3);
-    } else if (elapsed > 75000) {
-      dailyHugsToday++;
-      lastHugTime = now;
-      const lines = [
-        "Ôm cái cho đỡ mệt nào. Hôm nay mọi chuyện ổn chứ em? 🤗",
-        "Nạp xíu năng lượng rồi làm việc tiếp nha Ngọc!",
-        "Đứng yên anh ôm cái nào, lúc nào rảnh nhắn tin cho anh nha."
-      ];
-      speech = pickRandom(lines).item;
-      addRewards(10, 1);
+      addRewards(12, 1);
+    } else if (hCount < 3) {
+      if (elapsed > 60000) {
+        state.dailyInteractions.hugCount++;
+        lastHugTime = now;
+        saveState();
+        const lines = [
+          "Ôm cái cho đỡ mệt nào. Hôm nay mọi chuyện ổn chứ em? 🤗",
+          "Nạp xíu năng lượng rồi làm việc tiếp nha Ngọc!",
+          "Đứng yên anh ôm cái nào, lúc nào rảnh nhắn tin cho anh nha."
+        ];
+        speech = pickRandom(lines).item;
+        addRewards(4, 0);
+      } else {
+        const quickLines = [
+          "Vừa ôm xong mà, nhớ anh đến thế cơ à? 🥰",
+          "Ôm thêm cái nữa nè, đứng yên một lát cho ấm nào!",
+          "Vẫn đang ôm em đây mà, đừng lo nha."
+        ];
+        speech = pickRandom(quickLines).item;
+        // 0 XP / 0 Candy on quick spam
+      }
     } else {
-      const quickLines = [
-        "Vừa ôm xong mà, nhớ anh đến thế cơ à? 🥰",
-        "Ôm thêm cái nữa nè, thích nhõng nhẽo rồi đúng không?",
-        "Vẫn đang ôm em đây mà, đừng lo nha."
+      // 4th hug or more today: strictly 0 XP & 0 Candy
+      const limitLines = [
+        "Hôm nay ôm nhiều thế cơ à, định cày thân mật đấy à? Đừng hòng nhé, nhưng mà anh vẫn thích được em ôm 🥰",
+        "Ôm em bao nhiêu lần cũng không chán, nhưng hôm nay hết điểm thân mật rồi đó nha cô nương 😜",
+        "Vẫn đang ôm em đây mà, thích nhõng nhẽo rồi đúng không?",
+        "Mỗi ngày được ôm em thế này là anh vui cả ngày rồi."
       ];
-      speech = pickRandom(quickLines).item;
-      addRewards(1, 0);
+      speech = pickRandom(limitLines).item;
+      // 0 XP / 0 Candy
     }
 
     showSpeech("Anh Khánh", speech);
   }
 
   let lastPetTime = 0;
-  let dailyPetToday = 0;
-  let lastPetDate = "";
 
   function handlePetBong() {
     AudioManager.playMeow();
     RoomScene.triggerBongHappy();
     state.petCount++;
+
+    syncDailyReset();
 
     if (state.dailyQuests && !state.dailyQuests.feedDone) {
       state.dailyQuests.feedDone = true;
@@ -727,34 +762,44 @@ document.addEventListener("DOMContentLoaded", () => {
       updateQuestDot();
     }
 
-    const todayStr = new Date().toDateString();
-    if (lastPetDate !== todayStr) {
-      lastPetDate = todayStr;
-      dailyPetToday = 0;
-    }
-
     const now = Date.now();
     const elapsed = now - lastPetTime;
     let speech = "";
 
-    if (dailyPetToday === 0) {
-      dailyPetToday++;
+    const pCount = state.dailyInteractions ? state.dailyInteractions.petCount : 0;
+
+    if (pCount === 0) {
+      state.dailyInteractions.petCount++;
       lastPetTime = now;
+      saveState();
       speech = "Meooo~ (Bông dụi đầu vào tay em chào ngày mới rừ rừ 🐱)";
-      addRewards(20, 2);
-    } else if (elapsed > 60000) {
-      dailyPetToday++;
-      lastPetTime = now;
-      speech = pickRandom(DATA.bongDialogues).item;
-      addRewards(8, 1);
+      addRewards(10, 1);
+    } else if (pCount < 3) {
+      if (elapsed > 60000) {
+        state.dailyInteractions.petCount++;
+        lastPetTime = now;
+        saveState();
+        speech = pickRandom(DATA.bongDialogues).item;
+        addRewards(3, 0);
+      } else {
+        const restingBong = [
+          "(Bông ngáp một cái thật to, thỏa mãn cuộn tròn nằm ngủ tiếp)",
+          "(Bông liếm nhẹ mu bàn tay em rồi lim dim mắt)",
+          "Rừ rừ... (Bông đang nằm êm ru, không thèm mở mắt luôn)"
+        ];
+        speech = pickRandom(restingBong).item;
+        // 0 XP / 0 Candy on quick spam
+      }
     } else {
-      const restingBong = [
-        "(Bông ngáp một cái thật to, thỏa mãn cuộn tròn nằm ngủ tiếp)",
-        "(Bông liếm nhẹ mu bàn tay em rồi lim dim mắt)",
-        "Rừ rừ... (Bông đang nằm êm ru, không thèm mở mắt luôn)"
+      // 4th pet or more today: strictly 0 XP & 0 Candy
+      const limitBong = [
+        "Meo~ (Bông ngửa bụng: 'Hôm nay vuốt đủ 3 lần rồi nha sen, hết kẹo rồi đó!' 🐱)",
+        "Rừ rừ... (Bông thỏa mãn nhắm tịt mắt, không thèm nhúc nhích)",
+        "Meo meo! (Bông liếm ngón tay em một cái rồi lại ngủ khò)",
+        "(Bông lim dim ngủ say sưa, được vuốt ve nhiều quá thích mê)"
       ];
-      speech = pickRandom(restingBong).item;
-      addRewards(1, 0);
+      speech = pickRandom(limitBong).item;
+      // 0 XP / 0 Candy
     }
 
     showSpeech("Bé Bông 🐱", speech);
@@ -829,6 +874,15 @@ document.addEventListener("DOMContentLoaded", () => {
       bestKey: "bestNonla",
       defaultLives: "❤️❤️❤️",
       mod: () => NonLaGame
+    },
+    memory: {
+      title: "🃏 Ghép Cặp Kỷ Niệm",
+      overlayTitle: "Ghép Đôi Kỷ Niệm Đất Cảng 💕",
+      overlayDesc: `Lật mở từng cặp thẻ bài <strong>Hải Phòng & Kỷ Niệm 2 Đứa</strong> (Bánh mì cay, Trà cúc, Bé Bông, Đĩa than MCK 99%...)!<br />Tìm đủ 8 cặp trước khi hết 20 lượt lật để ẵm kẹo nhé!`,
+      hint: "Chạm lật từng cặp thẻ • Nhớ vị trí từng hình để không tốn lượt ✨",
+      bestKey: "bestMemory",
+      defaultLives: "20 lượt",
+      mod: () => MemoryGame
     }
   };
 
@@ -837,6 +891,7 @@ document.addEventListener("DOMContentLoaded", () => {
     CrossingGame.stop();
     FlappyGame.stop();
     NonLaGame.stop();
+    if (window.MemoryGame) MemoryGame.stop();
   }
 
   function handleArcadeHud({ score, candies, lives, livesText }) {
@@ -855,8 +910,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isNewBest) state[meta.bestKey] = score;
     document.getElementById("mgBest").textContent = state[meta.bestKey];
 
-    const xpEarned = Math.max(8, Math.floor(score / 12));
-    addRewards(xpEarned, candies);
+    // Rebalanced economy: candies capped 0-3 (+1 bonus if new best), XP 2-5
+    let finalCandies = Math.max(0, Math.min(3, candies || 0));
+    if (isNewBest && score > 0) finalCandies = Math.min(4, finalCandies + 1);
+    const xpEarned = Math.max(2, Math.min(5, Math.floor(score / 35)));
+    addRewards(xpEarned, finalCandies);
 
     if (score >= 50 && state.dailyQuests && !state.dailyQuests.gameDone) {
       state.dailyQuests.gameDone = true;
@@ -879,8 +937,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("mgOverlayDesc").textContent = descText;
 
     resultBox.innerHTML = `
-      Điểm số: <strong>${score}</strong> ${isNewBest ? "🏆" : ""}<br />
-      Thu hoạch: <strong>+${candies} 🍬</strong> và <strong>+${xpEarned} thân mật</strong>!
+      Điểm số: <strong>${score}</strong> ${isNewBest ? "🏆 (Kỷ lục mới!)" : ""}<br />
+      Thu hoạch: <strong>+${finalCandies} 🍬</strong> và <strong>+${xpEarned} thân mật</strong>!
     `;
     resultBox.classList.remove("hidden");
     document.getElementById("btnStartMiniGame").textContent = "Chơi Lại Nhé!";
@@ -953,12 +1011,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  if (window.MemoryGame) {
+    MemoryGame.init(mgCanvas, {
+      onHudUpdate: handleArcadeHud,
+      onGameOver: (res) => handleArcadeGameOver("memory", res)
+    });
+  }
+
   function showArcadeMenu() {
     stopAllGames();
     document.getElementById("bestCatchText").textContent = `Kỷ lục: ${state.bestScore}`;
     document.getElementById("bestCrossingText").textContent = `Kỷ lục: ${state.bestCrossing}`;
     document.getElementById("bestFlappyText").textContent = `Kỷ lục: ${state.bestFlappy}`;
     document.getElementById("bestNonlaText").textContent = `Kỷ lục: ${state.bestNonla}`;
+    const bestMemEl = document.getElementById("bestMemoryText");
+    if (bestMemEl) bestMemEl.textContent = `Kỷ lục: ${state.bestMemory || 0}`;
     document.getElementById("arcadeTitle").textContent = "🎮 Vườn Trẻ Kim Đồng";
     document.getElementById("btnBackArcade").classList.add("hidden");
     document.getElementById("arcadeMenu").classList.remove("hidden");
@@ -1090,6 +1157,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("btnClaimQuests").addEventListener("click", claimDailyQuests);
   document.getElementById("btnSettings").addEventListener("click", () => openModal("modalSettings"));
+
+  const btnChinese = document.getElementById("btnChinese");
+  if (btnChinese) {
+    btnChinese.addEventListener("click", () => {
+      AudioManager.playClick();
+      if (window.ChineseApp) {
+        ChineseApp.open();
+      } else {
+        openModal("modalChinese");
+      }
+    });
+  }
 
   // Close buttons & backdrop click
   document.querySelectorAll("[data-close]").forEach((btn) => {
@@ -1327,6 +1406,9 @@ document.addEventListener("DOMContentLoaded", () => {
   syncClockAndEvents();
   if (window.WeatherEngine) {
     WeatherEngine.init();
+  }
+  if (window.ChineseApp) {
+    ChineseApp.init();
   }
   // Auto-switch decorations, banner & music right when crossing 00:00 into/out of special dates!
   setInterval(syncClockAndEvents, 5000);

@@ -1169,6 +1169,423 @@ body {
   text-align: center;
 }
 
+/* Chinese HSK Learning Modal */
+.modal-chinese {
+  max-width: 440px;
+  width: 95%;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.chinese-tabs-nav {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.chinese-nav-tab {
+  flex: 1;
+  min-width: 78px;
+  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1.5px solid var(--ink);
+  background: var(--cream-soft);
+  color: var(--ink);
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.chinese-nav-tab.active {
+  background: var(--pink-hot);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+.chinese-tab-content {
+  overflow-y: auto;
+  max-height: 68vh;
+  padding-right: 2px;
+}
+
+.chinese-level-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pixel-select {
+  padding: 4px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chinese-help-text {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.chinese-daily-list, .love-quotes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chinese-word-card, .love-quote-card {
+  padding: 10px;
+  background: #fffdf9;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cwc-top, .lqc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cwc-hanzi {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.cwc-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  margin-left: 6px;
+}
+
+.cwc-pinyin {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--pink-hot);
+}
+
+.cwc-type {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
+
+.cwc-meaning {
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.cwc-example {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.35;
+  background: var(--pink-soft);
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px dashed var(--ink);
+}
+
+.chinese-daily-finish-box {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--pink-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cdf-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+}
+
+/* Flashcard */
+.chinese-flashcard-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.flashcard-box {
+  width: 100%;
+  min-height: 220px;
+  background: #fffdf6;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.flashcard-box:active {
+  transform: scale(0.98);
+}
+
+.fc-front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.fc-hanzi {
+  font-size: 54px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.fc-hint {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+
+.fc-back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.fc-pinyin {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--pink-hot);
+}
+
+.fc-meaning {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.fc-type-badge {
+  font-size: 11px;
+  background: var(--cream-soft);
+  border: 1px solid var(--ink);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+.fc-example-box {
+  margin-top: 6px;
+  background: var(--pink-soft);
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px dashed var(--ink);
+  font-size: 12px;
+  line-height: 1.35;
+  width: 100%;
+}
+
+.fc-ex-hanzi {
+  font-weight: 700;
+}
+
+.fc-ex-pinyin {
+  color: var(--pink-hot);
+  font-size: 11px;
+}
+
+.fc-ex-vi {
+  color: var(--ink);
+  margin-top: 2px;
+}
+
+.fc-nav-controls {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.fc-counter {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+/* Quiz */
+.chinese-quiz-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.quiz-question-card {
+  padding: 14px;
+  background: #fffdf9;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.qq-prompt {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.qq-hanzi {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+  margin: 4px 0;
+}
+
+.quiz-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quiz-opt-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 13px;
+  width: 100%;
+}
+
+.q-opt-label {
+  font-weight: 700;
+  color: var(--pink-hot);
+}
+
+.q-opt-text {
+  font-weight: 600;
+}
+
+.quiz-opt-btn.btn-correct {
+  background: #d4edda !important;
+  border-color: #28a745 !important;
+  color: #155724 !important;
+}
+
+.quiz-opt-btn.btn-wrong {
+  background: #f8d7da !important;
+  border-color: #dc3545 !important;
+  color: #721c24 !important;
+}
+
+.quiz-feedback-box {
+  padding: 10px 12px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.quiz-result-wrap {
+  padding: 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fffdf6;
+}
+
+.quiz-score-text {
+  font-size: 15px;
+}
+
+.quiz-cheer {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+/* Love Quotes */
+.love-quote-card {
+  padding: 12px;
+}
+
+.lqc-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--pink-hot);
+}
+
+.lqc-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.lqc-hanzi {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.lqc-pinyin {
+  font-size: 12px;
+  color: var(--pink-hot);
+  font-weight: 600;
+}
+
+.lqc-meaning {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.lqc-note {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
 .hidden {
   display: none !important;
 }

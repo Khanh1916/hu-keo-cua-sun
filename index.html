@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=17" />
+  <link rel="stylesheet" href="css/style.css?v=18" />
 </head>
 <body>
   <div class="app-shell">
@@ -39,6 +39,9 @@
           </div>
         </div>
         <div class="hud-controls">
+          <button id="btnChinese" class="icon-btn pixel-btn" title="Sổ Tay Tiếng Trung HSK" aria-label="Học Tiếng Trung HSK">
+            🇨🇳
+          </button>
           <button id="btnAudio" class="icon-btn pixel-btn" title="Bật/tắt nhạc & âm thanh" aria-label="Bật tắt âm thanh">
             <span id="audioIcon">🔇</span>
           </button>
@@ -222,6 +225,16 @@
           </div>
           <span class="arcade-play-tag">Chơi ▶</span>
         </button>
+
+        <button class="arcade-card pixel-btn btn-cream" data-game="memory">
+          <span class="arcade-icon">🃏</span>
+          <div class="arcade-info">
+            <span class="arcade-name">Ghép Cặp Kỷ Niệm</span>
+            <span class="arcade-desc">Lật tìm các cặp thẻ bài kỷ niệm Hải Phòng - Hà Nội, rèn luyện trí nhớ!</span>
+            <span class="arcade-best" id="bestMemoryText">Kỷ lục: 0</span>
+          </div>
+          <span class="arcade-play-tag">Chơi ▶</span>
+        </button>
       </div>
 
       <!-- Active Game Stage -->
@@ -380,6 +393,23 @@
     </div>
   </div>
 
+  <!-- MODAL: Chinese HSK Learning -->
+  <div class="modal-backdrop hidden" id="modalChinese">
+    <div class="modal-card modal-chinese pixel-box">
+      <div class="modal-header">
+        <h2>📖 Sổ Tay Tiếng Trung HSK</h2>
+        <button class="close-btn pixel-btn" data-close="modalChinese">✕</button>
+      </div>
+      <div class="chinese-tabs-nav">
+        <button class="chinese-nav-tab active" data-tab="daily">🎯 5 Từ Hôm Nay</button>
+        <button class="chinese-nav-tab" data-tab="flashcard">📇 Flashcard</button>
+        <button class="chinese-nav-tab" data-tab="quiz">✍️ Trắc Nghiệm</button>
+        <button class="chinese-nav-tab" data-tab="love">💌 Lời Yêu Thương</button>
+      </div>
+      <div id="chineseTabContent" class="chinese-tab-content"></div>
+    </div>
+  </div>
+
   <!-- MODAL: Settings / Time Preview -->
   <div class="modal-backdrop hidden" id="modalSettings">
     <div class="modal-card pixel-box">
@@ -421,16 +451,18 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=17"></script>
-  <script defer src="js/lunar.js?v=17"></script>
-  <script defer src="js/weather.js?v=17"></script>
-  <script defer src="js/audio.js?v=17"></script>
-  <script defer src="js/sprites.js?v=17"></script>
-  <script defer src="js/room.js?v=17"></script>
-  <script defer src="js/minigame.js?v=17"></script>
-  <script defer src="js/game_crossing.js?v=17"></script>
-  <script defer src="js/game_flappy.js?v=17"></script>
-  <script defer src="js/game_nonla.js?v=17"></script>
-  <script defer src="js/app.js?v=17"></script>
+  <script defer src="js/data.js?v=18"></script>
+  <script defer src="js/lunar.js?v=18"></script>
+  <script defer src="js/weather.js?v=18"></script>
+  <script defer src="js/audio.js?v=18"></script>
+  <script defer src="js/sprites.js?v=18"></script>
+  <script defer src="js/room.js?v=18"></script>
+  <script defer src="js/minigame.js?v=18"></script>
+  <script defer src="js/game_crossing.js?v=18"></script>
+  <script defer src="js/game_flappy.js?v=18"></script>
+  <script defer src="js/game_nonla.js?v=18"></script>
+  <script defer src="js/game_memory.js?v=18"></script>
+  <script defer src="js/chinese.js?v=18"></script>
+  <script defer src="js/app.js?v=18"></script>
 </body>
 </html>
