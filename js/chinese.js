@@ -2205,28 +2205,65 @@ window.ChineseApp = (() => {
     );
   }
 
-  function fallbackWebSpeech(text) {
-    if (!("speechSynthesis" in window)) return;
+  let speechSeq = 0;
+
+  function stopAllSpeech() {
+    if (activeAudio) {
+      try {
+        activeAudio.pause();
+        activeAudio.src = "";
+        activeAudio.currentTime = 0;
+      } catch {}
+      activeAudio = null;
+    }
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {}
+    }
+  }
+
+  function fallbackWebSpeech(text, onDone = null) {
+    if (!("speechSynthesis" in window)) {
+      if (onDone) onDone();
+      return;
+    }
     try {
       window.speechSynthesis.cancel();
       window.speechSynthesis.resume();
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = "zh-CN";
-      utter.rate = 0.82;
+      utter.rate = 0.85;
       const zhVoice = getBestMandarinVoice();
       if (zhVoice) utter.voice = zhVoice;
+
+      utter.onend = () => {
+        if (onDone) onDone();
+      };
+      utter.onerror = () => {
+        if (onDone) onDone();
+      };
+
       window.speechSynthesis.speak(utter);
-    } catch {}
+    } catch {
+      if (onDone) onDone();
+    }
   }
 
-  // High-fidelity Multi-Engine Mandarin Pronunciation:
-  // 1. Baidu High-Definition Mandarin TTS (Direct MP3, Open CORS: *)
-  // 2. Youdao Native Dictionary Voice (Vocabulary words)
-  // 3. Browser Native SpeechSynthesis (Web Speech API fallback)
+  // Pure Single-Stream Mandarin Audio Engine (Zero Echo / Zero Overlap):
+  // 1. Vocabulary words (<= 6 chars): Pristine native studio MP3 human voice (Youdao Dict)
+  // 2. Sentences & Quotes: Clean native SpeechSynthesis (Web Speech API)
+  // Strict Mutex & speechSeq guarantees only ONE audio instance ever plays at a time.
   function speak(text, triggerBtn = null) {
     if (!text) return;
     const cleanText = text.replace(/["'“”‘’]/g, "").trim();
     if (!cleanText) return;
+
+    // Increment speech sequence token; invalidates any previous pending callbacks
+    const thisSpeechId = ++speechSeq;
+
+    // Immediately kill any currently playing audio/speech
+    stopAllSpeech();
 
     // Visual button feedback
     let originalHtml = "";
@@ -2236,64 +2273,50 @@ window.ChineseApp = (() => {
       triggerBtn.innerHTML = `🔊 Đang đọc...`;
     }
     const resetBtn = () => {
-      if (triggerBtn) {
+      if (thisSpeechId === speechSeq && triggerBtn) {
         triggerBtn.classList.remove("speaking");
         triggerBtn.innerHTML = originalHtml;
       }
     };
 
-    if (activeAudio) {
-      try {
-        activeAudio.pause();
-        activeAudio.currentTime = 0;
-      } catch {}
-      activeAudio = null;
-    }
+    // Determine strategy:
+    // Single vocabulary words (<= 6 chars, no sentence punctuation) use pristine studio MP3
+    const isVocab = cleanText.length <= 6 && !/[，。！？\s]/.test(cleanText);
 
-    const baiduUrl = `https://tts.baidu.com/text2audio?tex=${encodeURIComponent(cleanText)}&cuid=baike&lan=ZH&ctp=1&pdt=301&vol=9&rate=32`;
-    const youdaoUrl = cleanText.length <= 6 
-      ? `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanText)}&le=zh` 
-      : null;
+    if (isVocab) {
+      const youdaoUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanText)}&le=zh`;
+      const audio = new Audio(youdaoUrl);
+      audio.playbackRate = 0.95;
+      activeAudio = audio;
 
-    const audio = new Audio(baiduUrl);
-    audio.playbackRate = 0.92;
-    activeAudio = audio;
+      let fallbackHandled = false;
+      const doFallbackOnce = () => {
+        if (fallbackHandled || thisSpeechId !== speechSeq) return;
+        fallbackHandled = true;
+        stopAllSpeech();
+        fallbackWebSpeech(cleanText, resetBtn);
+      };
 
-    const onAudioEnd = () => {
-      resetBtn();
-      activeAudio = null;
-    };
+      audio.onended = () => {
+        if (thisSpeechId === speechSeq) {
+          resetBtn();
+          activeAudio = null;
+        }
+      };
 
-    audio.onended = onAudioEnd;
+      audio.onerror = () => {
+        doFallbackOnce();
+      };
 
-    const tryYoudaoOrFallback = () => {
-      if (youdaoUrl) {
-        const uAudio = new Audio(youdaoUrl);
-        activeAudio = uAudio;
-        uAudio.onended = onAudioEnd;
-        uAudio.onerror = () => {
-          fallbackWebSpeech(cleanText);
-          setTimeout(resetBtn, 1200);
-        };
-        uAudio.play().catch(() => {
-          fallbackWebSpeech(cleanText);
-          setTimeout(resetBtn, 1200);
+      const p = audio.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          doFallbackOnce();
         });
-      } else {
-        fallbackWebSpeech(cleanText);
-        setTimeout(resetBtn, 1200);
       }
-    };
-
-    audio.onerror = () => {
-      tryYoudaoOrFallback();
-    };
-
-    const p = audio.play();
-    if (p !== undefined) {
-      p.catch(() => {
-        tryYoudaoOrFallback();
-      });
+    } else {
+      // Long sentences or quotes: direct clean single Web Speech API
+      fallbackWebSpeech(cleanText, resetBtn);
     }
   }
 
