@@ -2219,9 +2219,29 @@ window.ChineseApp = (() => {
     } catch {}
   }
 
-  // Reliable Dual Audio: Native online stream audio + Web Speech API fallback
-  function speak(text) {
+  // High-fidelity Multi-Engine Mandarin Pronunciation:
+  // 1. Baidu High-Definition Mandarin TTS (Direct MP3, Open CORS: *)
+  // 2. Youdao Native Dictionary Voice (Vocabulary words)
+  // 3. Browser Native SpeechSynthesis (Web Speech API fallback)
+  function speak(text, triggerBtn = null) {
     if (!text) return;
+    const cleanText = text.replace(/["'“”‘’]/g, "").trim();
+    if (!cleanText) return;
+
+    // Visual button feedback
+    let originalHtml = "";
+    if (triggerBtn) {
+      originalHtml = triggerBtn.innerHTML;
+      triggerBtn.classList.add("speaking");
+      triggerBtn.innerHTML = `🔊 Đang đọc...`;
+    }
+    const resetBtn = () => {
+      if (triggerBtn) {
+        triggerBtn.classList.remove("speaking");
+        triggerBtn.innerHTML = originalHtml;
+      }
+    };
+
     if (activeAudio) {
       try {
         activeAudio.pause();
@@ -2230,19 +2250,50 @@ window.ChineseApp = (() => {
       activeAudio = null;
     }
 
-    try {
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob&q=${encodeURIComponent(text)}`;
-      const audio = new Audio(url);
-      audio.playbackRate = 0.9;
-      activeAudio = audio;
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          fallbackWebSpeech(text);
+    const baiduUrl = `https://tts.baidu.com/text2audio?tex=${encodeURIComponent(cleanText)}&cuid=baike&lan=ZH&ctp=1&pdt=301&vol=9&rate=32`;
+    const youdaoUrl = cleanText.length <= 6 
+      ? `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanText)}&le=zh` 
+      : null;
+
+    const audio = new Audio(baiduUrl);
+    audio.playbackRate = 0.92;
+    activeAudio = audio;
+
+    const onAudioEnd = () => {
+      resetBtn();
+      activeAudio = null;
+    };
+
+    audio.onended = onAudioEnd;
+
+    const tryYoudaoOrFallback = () => {
+      if (youdaoUrl) {
+        const uAudio = new Audio(youdaoUrl);
+        activeAudio = uAudio;
+        uAudio.onended = onAudioEnd;
+        uAudio.onerror = () => {
+          fallbackWebSpeech(cleanText);
+          setTimeout(resetBtn, 1200);
+        };
+        uAudio.play().catch(() => {
+          fallbackWebSpeech(cleanText);
+          setTimeout(resetBtn, 1200);
         });
+      } else {
+        fallbackWebSpeech(cleanText);
+        setTimeout(resetBtn, 1200);
       }
-    } catch {
-      fallbackWebSpeech(text);
+    };
+
+    audio.onerror = () => {
+      tryYoudaoOrFallback();
+    };
+
+    const p = audio.play();
+    if (p !== undefined) {
+      p.catch(() => {
+        tryYoudaoOrFallback();
+      });
     }
   }
 
@@ -2434,7 +2485,7 @@ window.ChineseApp = (() => {
 
     document.querySelectorAll(".btn-speak").forEach((btn) => {
       btn.addEventListener("click", () => {
-        speak(btn.dataset.text);
+        speak(btn.dataset.text, btn);
       });
     });
 
@@ -2661,7 +2712,7 @@ window.ChineseApp = (() => {
     document.querySelectorAll(".btn-speak-card").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        speak(btn.dataset.text);
+        speak(btn.dataset.text, btn);
       });
     });
 
@@ -2835,9 +2886,12 @@ window.ChineseApp = (() => {
       });
     }
 
-    document.getElementById("btnSpeakQuiz").addEventListener("click", () => {
-      speak(q.target.hanzi);
-    });
+    const btnSpeakQuiz = document.getElementById("btnSpeakQuiz");
+    if (btnSpeakQuiz) {
+      btnSpeakQuiz.addEventListener("click", () => {
+        speak(q.target.hanzi, btnSpeakQuiz);
+      });
+    }
 
     document.querySelectorAll(".quiz-opt-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -3147,7 +3201,7 @@ window.ChineseApp = (() => {
     `;
 
     document.querySelectorAll(".btn-speak").forEach((btn) => {
-      btn.addEventListener("click", () => speak(btn.dataset.text));
+      btn.addEventListener("click", () => speak(btn.dataset.text, btn));
     });
 
     document.querySelectorAll(".btn-star-love").forEach((btn) => {
@@ -3276,7 +3330,7 @@ window.ChineseApp = (() => {
     }
 
     document.querySelectorAll(".btn-speak").forEach((btn) => {
-      btn.addEventListener("click", () => speak(btn.dataset.text));
+      btn.addEventListener("click", () => speak(btn.dataset.text, btn));
     });
 
     document.querySelectorAll(".btn-star-remove").forEach((btn) => {
