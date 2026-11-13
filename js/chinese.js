@@ -1363,6 +1363,84 @@ window.ChineseApp = (() => {
     }
   }
 
+  // ==========================================
+  // SPACED REPETITION SYSTEM (SM-2 / Leitner Algorithm)
+  // Track retention, review intervals, and mistakes to eliminate blind repetition
+  // ==========================================
+  const SRS_KEY = "hu_keo_sun_hsk_srs";
+
+  function getSRSMap() {
+    try {
+      const raw = localStorage.getItem(SRS_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function saveSRSMap(map) {
+    try {
+      localStorage.setItem(SRS_KEY, JSON.stringify(map));
+    } catch {}
+  }
+
+  function getSRSItem(hanzi) {
+    const map = getSRSMap();
+    return map[hanzi] || {
+      repetition: 0,
+      interval: 0,
+      efactor: 2.5,
+      dueDate: 0,
+      mistakes: 0,
+      lastReviewed: 0
+    };
+  }
+
+  function recordSRSReview(hanzi, isCorrect, rating = null) {
+    const map = getSRSMap();
+    const item = map[hanzi] || {
+      repetition: 0,
+      interval: 0,
+      efactor: 2.5,
+      dueDate: 0,
+      mistakes: 0,
+      lastReviewed: 0
+    };
+
+    item.lastReviewed = Date.now();
+
+    if (isCorrect) {
+      if (item.repetition === 0) item.interval = 1;
+      else if (item.repetition === 1) item.interval = 3;
+      else if (item.repetition === 2) item.interval = 7;
+      else item.interval = Math.round(item.interval * (item.efactor || 2.4));
+
+      item.repetition++;
+      if (rating === "easy") {
+        item.efactor = Math.min(2.8, (item.efactor || 2.5) + 0.15);
+      }
+      item.dueDate = Date.now() + item.interval * 86400000;
+    } else {
+      item.repetition = 0;
+      item.interval = 1;
+      item.dueDate = Date.now(); // Due immediately
+      item.mistakes = (item.mistakes || 0) + 1;
+      item.efactor = Math.max(1.3, (item.efactor || 2.5) - 0.2);
+    }
+
+    map[hanzi] = item;
+    saveSRSMap(map);
+    return item;
+  }
+
+  function getSRSBadge(hanzi) {
+    const item = getSRSItem(hanzi);
+    if (item.repetition >= 3) return { text: "Đã thuộc", cls: "srs-mastered" };
+    if (item.repetition >= 1) return { text: `Cấp ${item.repetition}`, cls: "srs-reviewing" };
+    if (item.mistakes > 0) return { text: "Cần ôn lại", cls: "srs-weak" };
+    return { text: "Mới", cls: "srs-new" };
+  }
+
   let activeAudio = null;
 
   function fallbackWebSpeech(text) {
