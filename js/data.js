@@ -40,8 +40,8 @@ window.GAME_DATA = {
     "Ai bảo hiểu chuyện là không được chiều? Ở đây thích gì cứ bảo anh 🍬",
     "Bé Bông đang nằm dòm em kìa, lại chuẩn bị đòi ăn rồi.",
     "Mệt thì nghỉ xíu đi em, đừng có cố quá sức nha.",
-    "Hôm nào rảnh anh lại phi từ Hà Nội xuống Hải Phòng đón đi lượn nhé!",
-    "Hôm nay em nghe nhạc MCK chưa? Nghe 'Chìm Sâu' lại thấy nhớ cô gái Đất Cảng ghê 🎵",
+    "Hôm nào rảnh anh lại phi xuống đón em đi lượn nhé!",
+    "Hôm nay em nghe nhạc MCK chưa? Nghe 'Chìm Sâu' lại thấy nhớ em ghê 🎵",
     "Bật máy đĩa than góc phòng lên nghe Album 99% cùng anh nhé em.",
     "Thấy em thích MCK nên anh cũng nghe theo, riết rồi nghiện luôn cả list nhạc của người ta.",
     "Hôm nào anh xuống, bật nhạc MCK trên xe rồi hai đứa mình lượn phố Hải Phòng nha."
@@ -166,7 +166,7 @@ window.GAME_DATA = {
       name: "Chậu hoa bên cửa sổ",
       emoji: "🪴",
       price: 380,
-      desc: "Thêm chút xanh mát ngay bậu cửa sổ ngắm hoa phượng đỏ Đất Cảng."
+      desc: "Thêm chút xanh mát ngay bậu cửa sổ ngắm những nhành hoa phượng nở đỏ."
     },
     {
       id: "cat_tree",
@@ -422,7 +422,7 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
     {
       id: "flappy_50",
       name: "Yên tâm, tôi bay mà!",
-      desc: "Đạt từ 50 điểm trong Bay Qua Đất Cảng",
+      desc: "Đạt từ 50 điểm trong Bông Bay Tìm Kẹo",
       reward: 35,
       emoji: "🪽"
     },

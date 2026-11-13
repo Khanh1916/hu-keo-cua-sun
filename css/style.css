@@ -1,10 +1,12 @@
 :root {
   --bg-page: #f7e6ea;
   --cream: #fffaf3;
+  --cream-soft: #fff5eb;
   --cream-dark: #f4e6d8;
   --pink-soft: #fde2ec;
   --pink-mid: #f7b6cc;
   --pink-accent: #e46b94;
+  --pink-hot: #d6336c;
   --gold-soft: #ffe7a8;
   --gold-dark: #d99b26;
   --ink: #4a302c;
@@ -461,8 +463,8 @@ body {
 /* Quick Actions */
 .quick-actions {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
 }
 
 .action-card {
@@ -471,17 +473,19 @@ body {
   align-items: center;
   justify-content: center;
   gap: 3px;
-  padding: 8px 4px;
+  padding: 8px 2px;
+  min-width: 0;
 }
 
 .action-emoji {
-  font-size: 20px;
+  font-size: 19px;
   line-height: 1;
 }
 
 .action-name {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 /* Bottom Navigation */
@@ -1179,33 +1183,53 @@ body {
 }
 
 .chinese-tabs-nav {
-  display: flex;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
   margin-top: 6px;
-  margin-bottom: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .chinese-nav-tab {
-  flex: 1;
-  min-width: 78px;
-  padding: 6px 4px;
+  padding: 8px 4px;
   font-size: 11px;
   font-weight: 700;
   border: 1.5px solid var(--ink);
   background: var(--cream-soft);
-  color: var(--ink);
-  border-radius: 6px;
+  color: var(--ink) !important;
+  border-radius: 8px;
   cursor: pointer;
-  white-space: nowrap;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  line-height: 1.2;
+  box-shadow: 0 2px 0 var(--ink);
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s ease, transform 0.08s ease;
+}
+
+.chinese-nav-tab:hover {
+  background: var(--pink-soft);
+}
+
+.chinese-nav-tab:active {
+  transform: translateY(1px);
 }
 
 .chinese-nav-tab.active {
-  background: var(--pink-hot);
-  color: #fff;
+  background: #d6336c !important;
+  color: #ffffff !important;
   border-color: var(--ink);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.18), 0 2px 0 var(--ink);
 }
 
 .chinese-tab-content {
@@ -1221,6 +1245,51 @@ body {
   gap: 8px;
   margin-bottom: 8px;
   font-size: 12px;
+  font-weight: 700;
+}
+
+.clb-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cwc-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.btn-dict {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  font-size: 11px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.btn-dict:hover {
+  background: var(--pink-soft);
+  color: var(--pink-hot);
+}
+
+.fc-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.quiz-level-inline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
   font-weight: 700;
 }
 

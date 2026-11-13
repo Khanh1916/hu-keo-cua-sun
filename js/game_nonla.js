@@ -48,7 +48,7 @@ window.NonLaGame = (() => {
     { tier: 2, target: "luôn luôn", blank: "Anh sẽ ___ ở bên cạnh đồng hành cùng em", right: "luôn", wrong: "nuôn", ngong: "nuôn nuôn" },
     { tier: 2, target: "lo lắng", blank: "Đừng ___ nhiều nha, có anh lo hết rồi", right: "lo", wrong: "no", ngong: "no nắng" },
     { tier: 2, target: "lạc lối", blank: "Lỡ bước ___ vào đôi mắt trong veo", right: "lạc", wrong: "nạc", ngong: "nạc nối" },
-    { tier: 2, target: "lên xe", blank: "Mau ___ xe anh chở dạo phố Đất Cảng nào", right: "lên", wrong: "nên", ngong: "nên xe" },
+    { tier: 2, target: "lên xe", blank: "Mau ___ xe anh chở em dạo phố nào", right: "lên", wrong: "nên", ngong: "nên xe" },
     { tier: 2, target: "nụ hôn", blank: "Trao cho người yêu một ___ thật ngọt ngào", right: "nụ", wrong: "lụ", ngong: "lụ hôn" },
     { tier: 2, target: "ngọt lịm", blank: "Giọng nói của em mỗi lần gọi anh ___ lịm", right: "lịm", wrong: "nịm", ngong: "ngọt nịm" },
     { tier: 2, target: "bánh đa lòng cá", blank: "Món bánh đa ___ cá cay xé lưỡi", right: "lòng", wrong: "nòng", ngong: "bánh đa nòng cá" },
@@ -522,6 +522,17 @@ window.NonLaGame = (() => {
     return true;
   }
 
+  function suspend() {
+    // Suspends speech and loop while keeping paused game state intact across menu switches
+    stopSpeech();
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    isPaused = true;
+    if (callbacks.onPauseState) callbacks.onPauseState(true);
+  }
+
   function resume() {
     if (!running || !isPaused) return false;
     isPaused = false;
@@ -531,6 +542,8 @@ window.NonLaGame = (() => {
       startSpeech();
     }
     if (callbacks.onPauseState) callbacks.onPauseState(false);
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
     return true;
   }
 
@@ -791,12 +804,16 @@ window.NonLaGame = (() => {
     stop,
     pause,
     resume,
+    suspend,
     togglePause,
     isPaused: () => isPaused,
+    isRunning: () => running,
+    getScore: () => score,
+    getCandies: () => candies,
+    getLives: () => lives,
     setMode,
     getMode: () => mode,
     hasSpeechAPI,
-    submitQuietChoice,
-    isRunning: () => running
+    submitQuietChoice
   };
 })();

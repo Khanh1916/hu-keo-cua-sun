@@ -17,14 +17,17 @@ window.MemoryGame = (() => {
     { id: "trai_tim", icon: "💖", name: "Trái tim" }
   ];
 
+  const MAX_TURNS = 12;
   let cards = [];
   let selected = [];
-  let moves = 0;
+  let turnsLeft = MAX_TURNS;
   let pairsFound = 0;
   let streak = 0;
   let score = 0;
   let candies = 0;
   let isLocked = false;
+  let isPeeking = false;
+  let peekTimer = 0;
   let particles = [];
   let statusBanner = "";
   let statusTimer = 0;
@@ -41,8 +44,8 @@ window.MemoryGame = (() => {
   function initCards() {
     const deck = [];
     PAIR_ITEMS.forEach((item, itemIdx) => {
-      deck.push({ ...item, key: `${item.id}_a`, pairIdx: itemIdx, flipped: false, matched: false, flipAnim: 1 });
-      deck.push({ ...item, key: `${item.id}_b`, pairIdx: itemIdx, flipped: false, matched: false, flipAnim: 1 });
+      deck.push({ ...item, key: `${item.id}_a`, pairIdx: itemIdx, flipped: true, matched: false });
+      deck.push({ ...item, key: `${item.id}_b`, pairIdx: itemIdx, flipped: true, matched: false });
     });
     const shuffled = shuffle(deck);
     cards = shuffled.map((c, idx) => ({
@@ -71,15 +74,25 @@ window.MemoryGame = (() => {
     }
   }
 
+  function updateHud() {
+    if (callbacks.onHudUpdate) {
+      callbacks.onHudUpdate({
+        score,
+        candies,
+        livesText: `🎯 ${turnsLeft} lượt`
+      });
+    }
+  }
+
   function handleCardClick(card) {
-    if (!running || isLocked || card.flipped || card.matched) return;
+    if (!running || isLocked || isPeeking || card.flipped || card.matched) return;
 
     if (window.AudioManager) AudioManager.playClick();
     card.flipped = true;
     selected.push(card);
 
     if (selected.length === 2) {
-      moves++;
+      turnsLeft = Math.max(0, turnsLeft - 1);
       const [c1, c2] = selected;
 
       if (c1.id === c2.id) {
@@ -88,24 +101,25 @@ window.MemoryGame = (() => {
         c2.matched = true;
         pairsFound++;
         streak++;
-        score += 20 + Math.min(20, streak * 5);
+        score += 20 + Math.min(25, streak * 5);
         if (pairsFound % 3 === 0 && candies < 3) candies++;
 
         spawnSparkles(c1.x, c1.y, "#67B374");
         spawnSparkles(c2.x, c2.y, "#67B374");
 
-        if (window.AudioManager) {
-          if (streak >= 2) AudioManager.playCombo(streak);
-          else AudioManager.playCandy();
+        // Strategic combo reward: consecutive matches award +1 bonus turn!
+        if (streak >= 2) {
+          turnsLeft = Math.min(MAX_TURNS, turnsLeft + 1);
+          statusBanner = `🔥 Chuỗi x${streak}! Thưởng +1 lượt lật ✨`;
+          if (window.AudioManager) AudioManager.playCombo(streak);
+        } else {
+          statusBanner = `✨ Tìm thấy cặp ${c1.name}!`;
+          if (window.AudioManager) AudioManager.playCandy();
         }
 
-        statusBanner = streak >= 2 ? `🔥 Khớp liên tiếp x${streak}!` : `✨ Tìm thấy cặp ${c1.name}!`;
         statusTimer = 45;
         selected = [];
-
-        if (callbacks.onHudUpdate) {
-          callbacks.onHudUpdate({ score, candies, livesText: `🃏 ${pairsFound}/8` });
-        }
+        updateHud();
 
         // Check Victory
         if (pairsFound === 8) {
@@ -115,36 +129,56 @@ window.MemoryGame = (() => {
         // Mismatch
         streak = 0;
         isLocked = true;
-        statusBanner = "Chưa đúng rồi, nhớ vị trí nhé!";
-        statusTimer = 35;
+        updateHud();
 
-        setTimeout(() => {
-          c1.flipped = false;
-          c2.flipped = false;
-          selected = [];
-          isLocked = false;
-        }, 650);
+        if (turnsLeft <= 0 && pairsFound < 8) {
+          statusBanner = "Hết lượt lật rồi!";
+          statusTimer = 45;
+          setTimeout(handleDefeat, 750);
+        } else {
+          statusBanner = `Chưa khớp rồi! (Còn ${turnsLeft} lượt)`;
+          statusTimer = 35;
+          setTimeout(() => {
+            c1.flipped = false;
+            c2.flipped = false;
+            selected = [];
+            isLocked = false;
+          }, 650);
+        }
       }
     }
   }
 
   function handleVictory() {
-    const finalCandies = moves <= 12 ? 3 : (moves <= 16 ? 2 : 1);
-    const finalScore = Math.max(50, 140 - moves * 3);
-    if (window.AudioManager) AudioManager.playCelebration();
     running = false;
+    const finalCandies = turnsLeft >= 5 ? 3 : (turnsLeft >= 2 ? 2 : 1);
+    const finalScore = score + turnsLeft * 12;
+    if (window.AudioManager) AudioManager.playCelebration();
 
     if (callbacks.onGameOver) {
       callbacks.onGameOver({
         score: finalScore,
         candies: finalCandies,
-        reason: `Tuyệt vời! Em hoàn thành chỉ trong ${moves} lượt lật 💕`
+        reason: `Tuyệt vời! Em hoàn thành xuất sắc và còn dư ${turnsLeft} lượt lật 💕`
+      });
+    }
+  }
+
+  function handleDefeat() {
+    running = false;
+    if (window.AudioManager) AudioManager.playBonk();
+
+    if (callbacks.onGameOver) {
+      callbacks.onGameOver({
+        score,
+        candies: 0,
+        reason: `Hết 12 lượt rồi! Lần sau hãy tận dụng 2 giây nhìn lướt đầu ván nhé em 💕`
       });
     }
   }
 
   function onPointerDown(e) {
-    if (!running || !canvas) return;
+    if (!running || !canvas || isPeeking) return;
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
@@ -166,14 +200,13 @@ window.MemoryGame = (() => {
     const x = c.x, y = c.y, w = c.w, h = c.h;
 
     if (c.matched) {
-      // Matched Card - Soft green / pastel gold border
+      // Matched Card - Soft pastel green border
       px(ctx, x, y, w, h, "#E8F5E9");
       px(ctx, x, y, w, 2, "#40916C");
       px(ctx, x, y + h - 2, w, 2, "#40916C");
       px(ctx, x, y, 2, h, "#40916C");
       px(ctx, x + w - 2, y, 2, h, "#40916C");
 
-      // Draw Icon & Name
       ctx.font = "20px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
@@ -185,29 +218,27 @@ window.MemoryGame = (() => {
     } else if (c.flipped) {
       // Face Up Card
       px(ctx, x, y, w, h, "#FFFDF7");
-      px(ctx, x, y, w, 2, "#E46B94");
-      px(ctx, x, y + h - 2, w, 2, "#E46B94");
-      px(ctx, x, y, 2, h, "#E46B94");
-      px(ctx, x + w - 2, y, 2, h, "#E46B94");
+      px(ctx, x, y, w, 2, isPeeking ? "#D97706" : "#E46B94");
+      px(ctx, x, y + h - 2, w, 2, isPeeking ? "#D97706" : "#E46B94");
+      px(ctx, x, y, 2, h, isPeeking ? "#D97706" : "#E46B94");
+      px(ctx, x + w - 2, y, 2, h, isPeeking ? "#D97706" : "#E46B94");
 
-      // Draw Icon & Name
       ctx.font = "20px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(c.icon, x + w / 2, y + 20);
 
-      ctx.fillStyle = "#4A302C";
+      ctx.fillStyle = isPeeking ? "#B45309" : "#4A302C";
       ctx.font = "bold 9px sans-serif";
       ctx.fillText(c.name, x + w / 2, y + 38);
     } else {
-      // Face Down Card (Cute Pixel Backing)
+      // Face Down Card (Pixel Diamond Backing)
       px(ctx, x, y, w, h, "#FFFDF7");
       px(ctx, x, y, w, 2, "#8D5B4C");
       px(ctx, x, y + h - 2, w, 2, "#8D5B4C");
       px(ctx, x, y, 2, h, "#8D5B4C");
       px(ctx, x + w - 2, y, 2, h, "#8D5B4C");
 
-      // Pastel Pink Diamond Center Pattern
       px(ctx, x + 10, y + 10, w - 20, h - 20, "#FDE2EC");
       px(ctx, x + 23, y + 17, 4, 4, "#E46B94");
       px(ctx, x + 21, y + 21, 8, 8, "#E46B94");
@@ -231,37 +262,46 @@ window.MemoryGame = (() => {
     px(ctx, 6, 8, 2, 28, "#8D5B4C");
     px(ctx, 232, 8, 2, 28, "#8D5B4C");
 
-    ctx.fillStyle = "#4A302C";
+    ctx.fillStyle = turnsLeft <= 3 ? "#D90429" : "#4A302C";
     ctx.font = "bold 11px sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText(`Lượt: ${moves}`, 14, 22);
+    ctx.fillText(`Lượt: ${turnsLeft}/${MAX_TURNS}`, 14, 22);
 
     ctx.textAlign = "center";
     ctx.fillStyle = "#E46B94";
-    ctx.fillText(`Đã tìm: ${pairsFound}/8 cặp`, 120, 22);
+    ctx.fillText(`Cặp: ${pairsFound}/8`, 120, 22);
 
     ctx.textAlign = "right";
     ctx.fillStyle = streak >= 2 ? "#D90429" : "#6E4A3A";
-    ctx.fillText(streak >= 2 ? `🔥 x${streak}` : `✨ Kỷ niệm`, 224, 22);
+    ctx.fillText(streak >= 2 ? `🔥 Combo x${streak}` : (isPeeking ? "👀 Ghi nhớ!" : `Điểm: ${score}`), 224, 22);
 
     // Draw 16 Cards
     cards.forEach(drawCard);
 
-    // Status Banner
-    if (statusTimer > 0 && statusBanner) {
+    // Status Banner / Flash Peek Countdown
+    if (isPeeking) {
+      const secLeft = Math.ceil(peekTimer / 60);
+      ctx.fillStyle = "rgba(74, 48, 44, 0.92)";
+      ctx.fillRect(12, 126, 216, 28);
+      ctx.fillStyle = "#FFE7A8";
+      ctx.font = "bold 11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(`👀 Nhìn lướt ghi nhớ nhanh (${secLeft}s)...`, 120, 140);
+    } else if (statusTimer > 0 && statusBanner) {
       statusTimer--;
       ctx.fillStyle = "rgba(74, 48, 44, 0.88)";
-      ctx.fillRect(16, 126, 208, 28);
+      ctx.fillRect(14, 126, 212, 28);
       ctx.fillStyle = "#FFFDF7";
-      ctx.font = "bold 11.5px sans-serif";
+      ctx.font = "bold 11px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(statusBanner, 120, 140);
     }
 
     // Particles
-    particles.forEach((p, idx) => {
+    particles.forEach((p) => {
       p.x += p.vx;
       p.y += p.vy;
       p.life--;
@@ -275,6 +315,21 @@ window.MemoryGame = (() => {
   function loop() {
     if (!running) return;
     frame++;
+
+    if (isPeeking) {
+      peekTimer--;
+      if (peekTimer <= 0) {
+        isPeeking = false;
+        isLocked = false;
+        cards.forEach((c) => {
+          c.flipped = false;
+        });
+        statusBanner = `Bắt đầu! (Giới hạn ${MAX_TURNS} lượt)`;
+        statusTimer = 50;
+        updateHud();
+      }
+    }
+
     render();
     rafId = requestAnimationFrame(loop);
   }
@@ -291,22 +346,24 @@ window.MemoryGame = (() => {
 
   function start() {
     running = true;
-    moves = 0;
+    turnsLeft = MAX_TURNS;
     pairsFound = 0;
     streak = 0;
     score = 0;
     candies = 0;
     selected = [];
-    isLocked = false;
     particles = [];
-    statusBanner = "Lật tìm các cặp thẻ giống nhau nhé!";
-    statusTimer = 60;
     frame = 0;
 
+    // Flash Peek opening phase (2 seconds of preview)
     initCards();
-    if (callbacks.onHudUpdate) {
-      callbacks.onHudUpdate({ score, candies, livesText: "🃏 0/8" });
-    }
+    isPeeking = true;
+    isLocked = true;
+    peekTimer = 110; // ~1.85 seconds at 60fps
+    statusBanner = "👀 Nhìn lướt ghi nhớ nhanh nào!";
+    statusTimer = 110;
+
+    updateHud();
 
     if (rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(loop);
@@ -314,6 +371,7 @@ window.MemoryGame = (() => {
 
   function stop() {
     running = false;
+    isPeeking = false;
     if (rafId) cancelAnimationFrame(rafId);
     rafId = null;
     selected = [];

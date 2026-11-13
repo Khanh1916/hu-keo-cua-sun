@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=18" />
+  <link rel="stylesheet" href="css/style.css?v=19" />
 </head>
 <body>
   <div class="app-shell">
@@ -128,6 +128,10 @@
           <span class="action-emoji">🎮</span>
           <span class="action-name">Chơi Game</span>
         </button>
+        <button class="action-card pixel-btn btn-cream" id="btnQuickChinese">
+          <span class="action-emoji">🀄</span>
+          <span class="action-name">Tiếng Trung</span>
+        </button>
       </section>
     </main>
 
@@ -163,7 +167,7 @@
   <div class="modal-backdrop hidden" id="modalFood">
     <div class="modal-card pixel-box">
       <div class="modal-header">
-        <h2>🍽️ Bữa Ngon Đất Cảng & Quà Vặt</h2>
+        <h2>🍽️ Món Ngon Cho Hai Đứa & Bé Bông</h2>
         <button class="close-btn pixel-btn" data-close="modalFood">✕</button>
       </div>
       <p class="modal-subtitle">Chọn món ngon cho anh Khánh & bé Bông nhé:</p>
@@ -182,15 +186,15 @@
         <button class="close-btn pixel-btn" id="btnCloseMiniGame">✕</button>
       </div>
 
-      <!-- Arcade Menu (4 Games) -->
+      <!-- Arcade Menu (5 Games) -->
       <div id="arcadeMenu" class="arcade-menu">
         <p class="modal-subtitle">Góc trò chơi tuổi thơ Vườn trẻ Kim Đồng Hải Phòng để em giải trí và tích kẹo nhé:</p>
 
         <button class="arcade-card pixel-btn btn-cream" data-game="catch">
           <span class="arcade-icon">🍬</span>
           <div class="arcade-info">
-            <span class="arcade-name">Hứng Kẹo & Quà Đất Cảng</span>
-            <span class="arcade-desc">Hứng kẹo, tim, đồ ăn Hải Phòng — nhớ né chướng ngại vật nhé!</span>
+            <span class="arcade-name">Hứng Kẹo Yêu Thương</span>
+            <span class="arcade-desc">Hứng kẹo ngọt, tim và món ngon — nhớ né chướng ngại vật nhé!</span>
             <span class="arcade-best" id="bestCatchText">Kỷ lục: 0</span>
           </div>
           <span class="arcade-play-tag">Chơi ▶</span>
@@ -200,7 +204,7 @@
           <span class="arcade-icon">🚗</span>
           <div class="arcade-info">
             <span class="arcade-name">Qua Đường Đi Bông!</span>
-            <span class="arcade-desc">Nhảy qua đường phố & sông Cảng né xe, nhảy lên thuyền gỗ.</span>
+            <span class="arcade-desc">Giúp bé Bông né xe cộ và nhảy lên thuyền gỗ qua sông an toàn.</span>
             <span class="arcade-best" id="bestCrossingText">Kỷ lục: 0</span>
           </div>
           <span class="arcade-play-tag">Chơi ▶</span>
@@ -209,8 +213,8 @@
         <button class="arcade-card pixel-btn btn-cream" data-game="flappy">
           <span class="arcade-icon">🪽</span>
           <div class="arcade-info">
-            <span class="arcade-name">Bay Qua Đất Cảng</span>
-            <span class="arcade-desc">"Yên tâm không lo, tôi bay mà!" — Chạm để Bông bay né cột hoa phượng.</span>
+            <span class="arcade-name">Bông Bay Tìm Kẹo</span>
+            <span class="arcade-desc">"Yên tâm không lo, tôi bay mà!" — Chạm để Bông vỗ cánh nhặt kẹo và né cọc.</span>
             <span class="arcade-best" id="bestFlappyText">Kỷ lục: 0</span>
           </div>
           <span class="arcade-play-tag">Chơi ▶</span>
@@ -402,8 +406,8 @@
       </div>
       <div class="chinese-tabs-nav">
         <button class="chinese-nav-tab active" data-tab="daily">🎯 5 Từ Hôm Nay</button>
-        <button class="chinese-nav-tab" data-tab="flashcard">📇 Flashcard</button>
-        <button class="chinese-nav-tab" data-tab="quiz">✍️ Trắc Nghiệm</button>
+        <button class="chinese-nav-tab" data-tab="flashcard">📇 Thẻ Flashcard</button>
+        <button class="chinese-nav-tab" data-tab="quiz">✍️ Trắc Nghiệm HSK</button>
         <button class="chinese-nav-tab" data-tab="love">💌 Lời Yêu Thương</button>
       </div>
       <div id="chineseTabContent" class="chinese-tab-content"></div>
@@ -451,18 +455,18 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=18"></script>
-  <script defer src="js/lunar.js?v=18"></script>
-  <script defer src="js/weather.js?v=18"></script>
-  <script defer src="js/audio.js?v=18"></script>
-  <script defer src="js/sprites.js?v=18"></script>
-  <script defer src="js/room.js?v=18"></script>
-  <script defer src="js/minigame.js?v=18"></script>
-  <script defer src="js/game_crossing.js?v=18"></script>
-  <script defer src="js/game_flappy.js?v=18"></script>
-  <script defer src="js/game_nonla.js?v=18"></script>
-  <script defer src="js/game_memory.js?v=18"></script>
-  <script defer src="js/chinese.js?v=18"></script>
-  <script defer src="js/app.js?v=18"></script>
+  <script defer src="js/data.js?v=19"></script>
+  <script defer src="js/lunar.js?v=19"></script>
+  <script defer src="js/weather.js?v=19"></script>
+  <script defer src="js/audio.js?v=19"></script>
+  <script defer src="js/sprites.js?v=19"></script>
+  <script defer src="js/room.js?v=19"></script>
+  <script defer src="js/minigame.js?v=19"></script>
+  <script defer src="js/game_crossing.js?v=19"></script>
+  <script defer src="js/game_flappy.js?v=19"></script>
+  <script defer src="js/game_nonla.js?v=19"></script>
+  <script defer src="js/game_memory.js?v=19"></script>
+  <script defer src="js/chinese.js?v=19"></script>
+  <script defer src="js/app.js?v=19"></script>
 </body>
 </html>

@@ -840,9 +840,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const ARCADE_META = {
     catch: {
-      title: "🍬 Hứng Kẹo & Quà Đất Cảng",
-      overlayTitle: "Hứng Kẹo & Quà Đất Cảng 🍬",
-      overlayDesc: `Hứng <strong>kẹo, tim, đồ ăn Hải Phòng</strong> và ăn <strong>Nam châm 🧲 / Khiên 🛡️</strong>! Combo 10 lần kích hoạt <strong>Cơn Mưa Kẹo x3</strong>!<br />Nhớ né chướng ngại vật kẻo mất mạng nhé 😂`,
+      title: "🍬 Hứng Kẹo Yêu Thương",
+      overlayTitle: "Hứng Kẹo Yêu Thương 🍬",
+      overlayDesc: `Hứng <strong>kẹo ngọt, tim và món ngon</strong> và ăn <strong>Nam châm 🧲 / Khiên 🛡️</strong>! Combo 10 lần kích hoạt <strong>Cơn Mưa Kẹo x3</strong>!<br />Nhớ né chướng ngại vật kẻo mất mạng nhé 😂`,
       hint: "Chạm kéo 1 ngón tay siêu mượt • Combo 10 = Fever x3 ✨",
       bestKey: "bestScore",
       defaultLives: "❤️❤️❤️",
@@ -850,17 +850,17 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     crossing: {
       title: "🚗 Qua Đường Đi Bông!",
-      overlayTitle: "Bông Sang Đường Hải Phòng 🐱",
-      overlayDesc: `Giúp bé Bông nhảy qua đường phố né xe, và nhảy lên <strong>thuyền gỗ</strong> để vượt sông Cảng!<br />Nhớ nhặt kẹo & tim dọc đường nhé.`,
+      overlayTitle: "Bông Sang Đường 🐱",
+      overlayDesc: `Giúp bé Bông nhảy qua đường phố né xe, và nhảy lên <strong>thuyền gỗ</strong> để qua sông an toàn!<br />Nhớ nhặt kẹo & tim dọc đường nhé.`,
       hint: "Vuốt lên/xuống/trái/phải trên màn hình, dùng nút D-pad bên dưới hoặc phím mũi tên!",
       bestKey: "bestCrossing",
       defaultLives: "🐱",
       mod: () => CrossingGame
     },
     flappy: {
-      title: "🪽 Bay Qua Đất Cảng",
-      overlayTitle: "Yên Tâm Không Lo, Bông Bay Mà! 🪽",
-      overlayDesc: `Chạm màn hình (hoặc phím Space) để bé Bông vỗ cánh bay qua các cột hoa phượng đỏ.<br />Nhớ ăn thêm <strong>kẹo 🍬</strong> lơ lửng giữa khe nhé!`,
+      title: "🍬 Bông Bay Tìm Kẹo",
+      overlayTitle: "Bông Bay Tìm Kẹo 🍬",
+      overlayDesc: `Chạm màn hình (hoặc phím Space) để bé Bông vỗ cánh bay nhặt kẹo và né các cột hoa phượng.<br />Nhớ ăn thêm <strong>kẹo 🍬</strong> lơ lửng giữa khe nhé!`,
       hint: "Chạm liên tục nhịp đều để giữ Bông bay lơ lửng nhé ✨",
       bestKey: "bestFlappy",
       defaultLives: "🪽",
@@ -877,20 +877,24 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     memory: {
       title: "🃏 Ghép Cặp Kỷ Niệm",
-      overlayTitle: "Ghép Đôi Kỷ Niệm Đất Cảng 💕",
-      overlayDesc: `Lật mở từng cặp thẻ bài <strong>Hải Phòng & Kỷ Niệm 2 Đứa</strong> (Bánh mì cay, Trà cúc, Bé Bông, Đĩa than MCK 99%...)!<br />Tìm đủ 8 cặp trước khi hết 20 lượt lật để ẵm kẹo nhé!`,
-      hint: "Chạm lật từng cặp thẻ • Nhớ vị trí từng hình để không tốn lượt ✨",
+      overlayTitle: "Ghép Cặp Kỷ Niệm 💕",
+      overlayDesc: `Lật mở từng cặp thẻ bài <strong>Kỷ Niệm Của Hai Đứa</strong> (Bánh mì cay, Trà cúc, Bé Bông, Đĩa than MCK 99%...)!<br />Tìm đủ 8 cặp trước khi hết 12 lượt lật. 2s đầu tiên được nhìn lướt ghi nhớ! Ghép đúng liên tiếp được +1 lượt!`,
+      hint: "Ghi nhớ nhanh ở 2s đầu • Ghép đúng liên tiếp được thưởng thêm +1 lượt ✨",
       bestKey: "bestMemory",
-      defaultLives: "20 lượt",
+      defaultLives: "🎯 12 lượt",
       mod: () => MemoryGame
     }
   };
 
-  function stopAllGames() {
+  function stopAllGames(preserveNonLa = false) {
     MiniGame.stop();
     CrossingGame.stop();
     FlappyGame.stop();
-    NonLaGame.stop();
+    if (preserveNonLa && NonLaGame.isRunning() && NonLaGame.isPaused()) {
+      NonLaGame.suspend();
+    } else {
+      NonLaGame.stop();
+    }
     if (window.MemoryGame) MemoryGame.stop();
   }
 
@@ -1019,7 +1023,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showArcadeMenu() {
-    stopAllGames();
+    stopAllGames(true);
     document.getElementById("bestCatchText").textContent = `Kỷ lục: ${state.bestScore}`;
     document.getElementById("bestCrossingText").textContent = `Kỷ lục: ${state.bestCrossing}`;
     document.getElementById("bestFlappyText").textContent = `Kỷ lục: ${state.bestFlappy}`;
@@ -1035,22 +1039,37 @@ document.addEventListener("DOMContentLoaded", () => {
   function openArcadeGame(gameKey) {
     activeGameKey = gameKey;
     const meta = ARCADE_META[gameKey];
-    stopAllGames();
+    stopAllGames(gameKey === "nonla");
 
     document.getElementById("arcadeTitle").textContent = meta.title;
     document.getElementById("btnBackArcade").classList.remove("hidden");
     document.getElementById("arcadeMenu").classList.add("hidden");
     document.getElementById("arcadeStage").classList.remove("hidden");
 
-    document.getElementById("mgBest").textContent = state[meta.bestKey];
-    document.getElementById("mgScore").textContent = "0";
-    document.getElementById("mgCandy").textContent = "0";
-    document.getElementById("mgLives").textContent = meta.defaultLives;
-    document.getElementById("mgResultBox").classList.add("hidden");
-    document.getElementById("mgOverlayTitle").textContent = meta.overlayTitle;
-    document.getElementById("mgOverlayDesc").innerHTML = meta.overlayDesc;
-    document.getElementById("mgTouchHint").textContent = meta.hint;
-    document.getElementById("btnStartMiniGame").textContent = "Bắt Đầu Chơi!";
+    const isNonLaPaused = gameKey === "nonla" && NonLaGame.isPaused() && NonLaGame.isRunning();
+
+    if (isNonLaPaused) {
+      document.getElementById("mgBest").textContent = state[meta.bestKey];
+      document.getElementById("mgScore").textContent = NonLaGame.getScore();
+      document.getElementById("mgCandy").textContent = NonLaGame.getCandies();
+      document.getElementById("mgLives").textContent = "❤️".repeat(Math.max(1, NonLaGame.getLives()));
+      document.getElementById("mgResultBox").classList.add("hidden");
+      document.getElementById("mgOverlayTitle").textContent = "⏸ Ván Đang Tạm Dừng";
+      document.getElementById("mgOverlayDesc").innerHTML = `Em đang tạm dừng ván này ở <strong>${NonLaGame.getScore()} điểm</strong> (còn ${NonLaGame.getLives()} mạng).<br />Bấm nút dưới để tiếp tục chơi ngay nhé!`;
+      document.getElementById("mgTouchHint").textContent = meta.hint;
+      document.getElementById("btnStartMiniGame").textContent = "▶ Tiếp Tục Chơi";
+    } else {
+      document.getElementById("mgBest").textContent = state[meta.bestKey];
+      document.getElementById("mgScore").textContent = "0";
+      document.getElementById("mgCandy").textContent = "0";
+      document.getElementById("mgLives").textContent = meta.defaultLives;
+      document.getElementById("mgResultBox").classList.add("hidden");
+      document.getElementById("mgOverlayTitle").textContent = meta.overlayTitle;
+      document.getElementById("mgOverlayDesc").innerHTML = meta.overlayDesc;
+      document.getElementById("mgTouchHint").textContent = meta.hint;
+      document.getElementById("btnStartMiniGame").textContent = "Bắt Đầu Chơi!";
+    }
+
     document.getElementById("mgOverlay").classList.remove("hidden");
 
     document.getElementById("crossingControls").classList.toggle("hidden", gameKey !== "crossing");
@@ -1101,7 +1120,11 @@ document.addEventListener("DOMContentLoaded", () => {
       AudioManager.playClick();
     }
     document.getElementById("mgOverlay").classList.add("hidden");
-    ARCADE_META[activeGameKey].mod().start();
+    if (activeGameKey === "nonla" && NonLaGame.isRunning() && NonLaGame.isPaused()) {
+      NonLaGame.resume();
+    } else {
+      ARCADE_META[activeGameKey].mod().start();
+    }
   });
 
   document.getElementById("btnCloseMiniGame").addEventListener("click", () => {
@@ -1158,17 +1181,18 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnClaimQuests").addEventListener("click", claimDailyQuests);
   document.getElementById("btnSettings").addEventListener("click", () => openModal("modalSettings"));
 
+  const handleOpenChinese = () => {
+    AudioManager.playClick();
+    if (window.ChineseApp) {
+      ChineseApp.open();
+    } else {
+      openModal("modalChinese");
+    }
+  };
   const btnChinese = document.getElementById("btnChinese");
-  if (btnChinese) {
-    btnChinese.addEventListener("click", () => {
-      AudioManager.playClick();
-      if (window.ChineseApp) {
-        ChineseApp.open();
-      } else {
-        openModal("modalChinese");
-      }
-    });
-  }
+  if (btnChinese) btnChinese.addEventListener("click", handleOpenChinese);
+  const btnQuickChinese = document.getElementById("btnQuickChinese");
+  if (btnQuickChinese) btnQuickChinese.addEventListener("click", handleOpenChinese);
 
   // Close buttons & backdrop click
   document.querySelectorAll("[data-close]").forEach((btn) => {

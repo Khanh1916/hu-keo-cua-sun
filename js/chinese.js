@@ -459,6 +459,277 @@ window.ChineseApp = (() => {
         example: "我会倍加珍惜与你相处的时光。",
         examplePinyin: "Wǒ huì bèijiā zhēnxī yǔ nǐ xiāngchǔ de shíguāng.",
         exampleMeaning: "Anh sẽ trân trọng gấp bội từng phút giây bên cạnh em."
+      },
+      {
+        hanzi: "羡慕",
+        pinyin: "xiànmù",
+        type: "Động từ",
+        meaning: "Ngưỡng mộ, ghen tị tích cực",
+        example: "别人都很羡慕我们之间的好感情。",
+        examplePinyin: "Biérén dōu hěn xiànmù wǒmen zhījiān de hǎo gǎnqíng.",
+        exampleMeaning: "Mọi người đều rất ngưỡng mộ tình cảm gắn bó của hai đứa mình."
+      },
+      {
+        hanzi: "鼓励",
+        pinyin: "gǔlì",
+        type: "Động từ/Danh từ",
+        meaning: "Khích lệ, động viên",
+        example: "有你的鼓励，我做什么都更有动力。",
+        examplePinyin: "Yǒu nǐ de gǔlì, wǒ zuò shénme dōu gèng yǒu dònglì.",
+        exampleMeaning: "Có em khích lệ, anh làm việc gì cũng thấy tràn đầy động lực."
+      },
+      {
+        hanzi: "适应",
+        pinyin: "shìyìng",
+        type: "Động từ",
+        meaning: "Thích nghi, quen với",
+        example: "慢慢适应新环境，你一定可以做得很棒。",
+        examplePinyin: "Mànman shìyìng xīn huánjìng, nǐ yīdìng kěyǐ zuò de hěn bàng.",
+        exampleMeaning: "Từ từ thích nghi với môi trường mới, em nhất định sẽ làm thật xuất sắc."
+      },
+      {
+        hanzi: "积累",
+        pinyin: "jīlěi",
+        type: "Động từ/Danh từ",
+        meaning: "Tích lũy",
+        example: "每天积累一点点词汇，中文会越来越好。",
+        examplePinyin: "Měitiān jīlěi yī diǎndiǎn cíhuì, zhōngwén huì yuè lái yuè hǎo.",
+        exampleMeaning: "Mỗi ngày tích lũy thêm một chút từ vựng, tiếng Trung của em sẽ ngày càng siêu."
+      },
+      {
+        hanzi: "精彩",
+        pinyin: "jīngcǎi",
+        type: "Tính từ",
+        meaning: "Đặc sắc, tuyệt vời",
+        example: "愿我们的生活每天都精彩充实。",
+        examplePinyin: "Yuàn wǒmen de shēnghuó měitiān dōu jīngcǎi chōngshí.",
+        exampleMeaning: "Mong cuộc sống của chúng mình mỗi ngày đều rực rỡ và đong đầy ý nghĩa."
+      },
+      {
+        hanzi: "究竟",
+        pinyin: "jiūjìng",
+        type: "Phó từ/Danh từ",
+        meaning: "Rốt cuộc, kết cục",
+        example: "无论遇到什么困难，究竟我们都会一起面对。",
+        examplePinyin: "Wúlùn yùdào shénme kùnnan, jiūjìng wǒmen dōu huì yīqǐ miànduì.",
+        exampleMeaning: "Dù gặp bất cứ khó khăn nào, rốt cuộc chúng mình cũng sẽ cùng nhau đối mặt."
+      },
+      {
+        hanzi: "难免",
+        pinyin: "nánmiǎn",
+        type: "Tính từ/Phó từ",
+        meaning: "Khó tránh khỏi",
+        example: "生活中难免有小摩擦，关键是彼此包容。",
+        examplePinyin: "Shēnghuó zhōng nánmiǎn yǒu xiǎo mócā, guānjiàn shì bǐcǐ bāoróng.",
+        exampleMeaning: "Cuộc sống khó tránh những lúc bất đồng nho nhỏ, quan trọng là biết bao dung cho nhau."
+      },
+      {
+        hanzi: "商量",
+        pinyin: "shāngliang",
+        type: "Động từ",
+        meaning: "Bàn bạc, thương lượng",
+        example: "有事情随时找我商量，别一个人扛着。",
+        examplePinyin: "Yǒu shìqing suíshí zhǎo wǒ shāngliang, bié yī gè rén kángzhe.",
+        exampleMeaning: "Có chuyện gì cứ bàn với anh nhé, đừng có ôm một mình nha em."
+      },
+      {
+        hanzi: "轻松",
+        pinyin: "qīngsōng",
+        type: "Tính từ",
+        meaning: "Thư thái, nhẹ nhõm",
+        example: "回到家，听听音乐，整个人都轻松了。",
+        examplePinyin: "Huí dào jiā, tīngting yīnyuè, zhěng gè rén dōu qīngsōng le.",
+        exampleMeaning: "Về đến nhà, bật chút nhạc lên nghe là thấy cả người nhẹ nhõm hẳn."
+      },
+      {
+        hanzi: "脾气",
+        pinyin: "píqi",
+        type: "Danh từ",
+        meaning: "Tính tình, tính nết",
+        example: "无论你的小脾气怎样，我都一样宠你。",
+        examplePinyin: "Wúlùn nǐ de xiǎo píqi zěnyàng, wǒ dōu yīyàng chǒng nǐ.",
+        exampleMeaning: "Dù em có dỗi hờn thế nào, anh vẫn cứ cưng chiều em như vậy thôi."
+      }
+    ,
+      {
+        "hanzi": "甚至",
+        "pinyin": "shènzhì",
+        "type": "Liên từ",
+        "meaning": "Thậm chí, ngay cả",
+        "example": "看到你笑，甚至连阴天都觉得变晴朗了。",
+        "examplePinyin": "Kàndào nǐ xiào, shènzhì lián yīntiān dōu juéde biàn qínglǎng le.",
+        "exampleMeaning": "Nhìn thấy nụ cười của em, thậm chí ngày u ám cũng thấy bừng sáng."
+      },
+      {
+        "hanzi": "既然",
+        "pinyin": "jìrán",
+        "type": "Liên từ",
+        "meaning": "Đã... thì",
+        "example": "既然认定了你，我就会一直陪着你走下去。",
+        "examplePinyin": "Jìrán rèndìng le nǐ, wǒ jiù huì yīzhí péizhe nǐ zǒu xiàqù.",
+        "exampleMeaning": "Đã chọn em rồi, anh sẽ luôn bên cạnh đồng hành cùng em suốt chặng đường."
+      },
+      {
+        "hanzi": "尽管",
+        "pinyin": "jǐnguǎn",
+        "type": "Liên từ",
+        "meaning": "Mặc dù, dẫu cho",
+        "example": "尽管平时工作很忙，但每天都想抽出时间陪你聊天。",
+        "examplePinyin": "Jǐnguǎn píngshí gōngzuò hěn máng, dàn měitiān dōu xiǎng chōuchū shíjiān péi nǐ liáotiān.",
+        "exampleMeaning": "Dẫu cho công việc bận rộn, mỗi ngày anh vẫn luôn muốn dành thời gian trò chuyện với em."
+      },
+      {
+        "hanzi": "顺利",
+        "pinyin": "shùnlì",
+        "type": "Tính từ",
+        "meaning": "Thuận lợi, suôn sẻ",
+        "example": "祝 Ngọc hôm nay làm việc thật thuận lợi và nhiều niềm vui!",
+        "examplePinyin": "Zhù Ngọc jīntiān gōngzuò shífēn shùnlì!",
+        "exampleMeaning": "Chúc Ngọc hôm nay đi làm thật thuận lợi, suôn sẻ và rạng rỡ nhé!"
+      },
+      {
+        "hanzi": "丰富",
+        "pinyin": "fēngfù",
+        "type": "Tính từ",
+        "meaning": "Phong phú, dồi dào",
+        "example": "愿我们的每一天都过得丰富而充实。",
+        "examplePinyin": "Yuàn wǒmen de měi yī tiān dōu guò de fēngfù ér chōngshí.",
+        "exampleMeaning": "Mong mỗi ngày của hai đứa mình đều trôi qua thật phong phú và ý nghĩa."
+      },
+      {
+        "hanzi": "严格",
+        "pinyin": "yángé",
+        "type": "Tính từ",
+        "meaning": "Nghiêm khắc, chặt chẽ",
+        "example": "对学习虽然要严格，但也要记得劳逸结合哦。",
+        "examplePinyin": "Duì xuéxí suīrán yào yángé, dàn yě yào jìde láoyì jiéhé o.",
+        "exampleMeaning": "Học tập tuy cần nghiêm túc, nhưng nhớ nghỉ ngơi điều độ em nhé."
+      },
+      {
+        "hanzi": "暂时",
+        "pinyin": "zhànshí",
+        "type": "Phó từ/Danh từ",
+        "meaning": "Tạm thời, trước mắt",
+        "example": "暂时的分别只是为了未来更好的相聚。",
+        "examplePinyin": "Zhànshí de fēnbié zhǐshì wèile wèilái gèng hǎo de xiāngjù.",
+        "exampleMeaning": "Tạm thời xa nhau một chút chỉ là để tương lai được gắn bó dài lâu hơn."
+      },
+      {
+        "hanzi": "提醒",
+        "pinyin": "tíxǐng",
+        "type": "Động từ",
+        "meaning": "Nhắc nhở, dặn dò",
+        "example": "天气变冷了，提醒小笨蛋记得添一件外套。",
+        "examplePinyin": "Tiānqì biàn lěng le, tíxǐng xiǎo bèndàn jìde tiān yī jiàn wàitào.",
+        "exampleMeaning": "Trời trở lạnh rồi, nhắc cô bé nhớ mặc thêm áo ấm nhé."
+      },
+      {
+        "hanzi": "接受",
+        "pinyin": "jiēshòu",
+        "type": "Động từ",
+        "meaning": "Tiếp nhận, đón nhận",
+        "example": "坦然接受生活的小挑战，你会发现自己比想象中更坚强。",
+        "examplePinyin": "Tǎnrán jiēshòu shēnghuó de xiǎo tiǎozhàn, nǐ huì fāxiàn zìjǐ bǐ xiǎngxiàng zhōng gèng jiānqiáng.",
+        "exampleMeaning": "Thản nhiên đón nhận thử thách, em sẽ thấy mình mạnh mẽ hơn tưởng tượng nhiều."
+      },
+      {
+        "hanzi": "优秀",
+        "pinyin": "yōuxiù",
+        "type": "Tính từ",
+        "meaning": "Ưu tú, xuất sắc",
+        "example": "在我眼里，认真努力的 Ngọc 永远是最优秀的。",
+        "examplePinyin": "Zài wǒ yǎn lǐ, rènzhēn nǔlì de Ngọc yǒngyuǎn shì zuì yōuxiù de.",
+        "exampleMeaning": "Trong mắt anh, một cô gái chăm chỉ như Ngọc luôn là người tuyệt vời nhất."
+      },
+      {
+        "hanzi": "关键",
+        "pinyin": "guānjiàn",
+        "type": "Danh từ/Tính từ",
+        "meaning": "Mấu chốt, then chốt",
+        "example": "两个人在一起，坦诚与包容才是最关键的。",
+        "examplePinyin": "Liǎng gè rén zài yīqǐ, tǎnchéng yǔ bāoróng cái shì zuì guānjiàn de.",
+        "exampleMeaning": "Hai người ở bên nhau, chân thành và bao dung mới là điều cốt lõi nhất."
+      },
+      {
+        "hanzi": "考虑",
+        "pinyin": "kǎolǜ",
+        "type": "Động từ",
+        "meaning": "Suy nghĩ, cân nhắc",
+        "example": "无论遇到什么选择，慢慢考虑，别给自己太大压力。",
+        "examplePinyin": "Wúlùn yùdào shénme xuǎnzé, mànman kǎolǜ, bié gěi zìjǐ tài dà yālì.",
+        "exampleMeaning": "Gặp bất kỳ lựa chọn nào cũng cứ thong thả cân nhắc, đừng tạo áp lực cho mình nhé."
+      },
+      {
+        "hanzi": "印象",
+        "pinyin": "yìnxiàng",
+        "type": "Danh từ",
+        "meaning": "Ấn tượng",
+        "example": "第一次在 Facebook Dating 聊天的美好印象，我至今都记得。",
+        "examplePinyin": "Dì-yī cì liáotiān de měihǎo yìnxiàng, wǒ zhìjīn dōu jìde.",
+        "exampleMeaning": "Ấn tượng ngọt ngào ngày đầu tiên trò chuyện, anh vẫn luôn nhớ như in."
+      },
+      {
+        "hanzi": "态度",
+        "pinyin": "tàidu",
+        "type": "Danh từ",
+        "meaning": "Thái độ, tâm thế",
+        "example": "积极乐观的生活态度能让每一天都充满阳光。",
+        "examplePinyin": "Jījí lèguān de shēnghuó tàidu néng ràng měi yī tiān dōu chōngmǎn yángguāng.",
+        "exampleMeaning": "Tâm thế lạc quan sẽ giúp từng ngày của em luôn ngập tràn ánh nắng."
+      },
+      {
+        "hanzi": "稍微",
+        "pinyin": "shāowēi",
+        "type": "Phó từ",
+        "meaning": "Một chút, hơi hơi",
+        "example": "累了就稍微闭目养神一会儿，别把自己逼得太紧。",
+        "examplePinyin": "Lèi le jiù shāowēi bìmù yǎngshén yīhuìr, bié bǎ zìjǐ bī de tài jǐn.",
+        "exampleMeaning": "Mệt mỏi thì chợp mắt nghỉ ngơi một chút, đừng ép bản thân quá sức nha em."
+      },
+      {
+        "hanzi": "互相",
+        "pinyin": "hùxiāng",
+        "type": "Phó từ",
+        "meaning": "Lẫn nhau, cùng nhau",
+        "example": "好的感情就是两个人互相理解、互相照顾。",
+        "examplePinyin": "Hǎo de gǎnqíng jiùshì liǎng gè rén hùxiāng lǐjiě, hùxiāng zhàogù.",
+        "exampleMeaning": "Tình cảm đẹp là khi cả hai biết thấu hiểu và chăm sóc cho nhau từng ngày."
+      },
+      {
+        "hanzi": "诚实",
+        "pinyin": "chéngshí",
+        "type": "Tính từ",
+        "meaning": "Chân thật, thành thật",
+        "example": "诚实面对内心的感受，生活会变得更自在。",
+        "examplePinyin": "Chéngshí miànduì nèixīn de gǎnshòu, shēnghuó huì biànde gèng zìzài.",
+        "exampleMeaning": "Thành thật với cảm xúc chính mình, cuộc sống sẽ nhẹ nhàng và an nhiên hơn."
+      },
+      {
+        "hanzi": "表达",
+        "pinyin": "biǎodá",
+        "type": "Động từ",
+        "meaning": "Diễn đạt, bày tỏ",
+        "example": "如果想念也可以具象化，那就是每天都想为你表达爱意。",
+        "examplePinyin": "Rúguǒ xiǎngniàn yě kěyǐ jùxiànghuà, nà jiùshì měitiān dōu xiǎng wèi nǐ biǎodá àiyì.",
+        "exampleMeaning": "Nếu nỗi nhớ có hình hài, thì đó là mỗi ngày anh đều muốn gửi trọn yêu thương tới em."
+      },
+      {
+        "hanzi": "详细",
+        "pinyin": "xiángxì",
+        "type": "Tính từ",
+        "meaning": "Chi tiết, tỉ mỉ",
+        "example": "把今天遇到的有趣小事详细地讲给我听吧。",
+        "examplePinyin": "Bǎ jīntiān yùdào de yǒuqù xiǎoshì xiángxì de jiǎng gěi wǒ tīng ba.",
+        "exampleMeaning": "Kể thật chi tiết những chuyện vui hôm nay cho anh nghe cùng nhé."
+      },
+      {
+        "hanzi": "骄傲",
+        "pinyin": "jiāo'ào",
+        "type": "Tính từ/Danh từ",
+        "meaning": "Kiêu hãnh, tự hào",
+        "example": "看到你一点一滴的成长与进步，我都为你感到骄傲。",
+        "examplePinyin": "Kàndào nǐ yī diǎn yī dī de chéngzhǎng yǔ jìnbù, wǒ dōu wèi nǐ gǎndào jiāo'ào.",
+        "exampleMeaning": "Nhìn thấy từng bước tiến bộ của em, anh luôn tự hào về em vô cùng."
       }
     ],
 
@@ -534,6 +805,205 @@ window.ChineseApp = (() => {
         example: "听见你的声音，心里就很踏实。",
         examplePinyin: "Tīngjiàn nǐ de shēngyīn, xīn lǐ jiù hěn tāshi.",
         exampleMeaning: "Chỉ cần nghe được giọng em là lòng anh thấy vững vàng, an tâm."
+      },
+      {
+        hanzi: "牵挂",
+        pinyin: "qiānguà",
+        type: "Động từ/Danh từ",
+        meaning: "Vấn vương, thương nhớ",
+        example: "远在异地，心中唯一的牵挂就是你。",
+        examplePinyin: "Yuǎn zài yìdì, xīn zhōng wéiyī de qiānguà jiù shì nǐ.",
+        exampleMeaning: "Dẫu xa xôi cách trở, điều duy nhất vấn vương trong lòng anh chính là em."
+      },
+      {
+        hanzi: "欣慰",
+        pinyin: "xīnwèi",
+        type: "Tính từ",
+        meaning: "Vui mừng, an lòng",
+        example: "看到你开开心心的，我就感到十分欣慰。",
+        examplePinyin: "Kàndào nǐ kāikāixīnxīn de, wǒ jiù gǎndào shífēn xīnwèi.",
+        exampleMeaning: "Thấy em luôn tươi vui yêu đời là anh thấy ấm lòng khôn xiết."
+      },
+      {
+        hanzi: "把握",
+        pinyin: "bǎwò",
+        type: "Động từ/Danh từ",
+        meaning: "Nắm bắt, chắc chắn",
+        example: "我们要把握好当下的每一个幸福瞬间。",
+        examplePinyin: "Wǒmen yào bǎwò hǎo dāngxià de měi yī gè xìngfú shùnjiān.",
+        exampleMeaning: "Chúng mình hãy nắm bắt trọn vẹn từng khoảnh khắc hạnh phúc của hiện tại."
+      },
+      {
+        hanzi: "克服",
+        pinyin: "kèfú",
+        type: "Động từ",
+        meaning: "Khắc phục, vượt qua",
+        example: "只要同心协力，一切困难都能克服。",
+        examplePinyin: "Zhǐyào tóngxīn xiélì, yīqiè kùnnan dōu néng kèfú.",
+        exampleMeaning: "Chỉ cần hai đứa đồng lòng, mọi chông gai đều có thể vượt qua."
+      },
+      {
+        hanzi: "深刻",
+        pinyin: "shēnkè",
+        type: "Tính từ",
+        meaning: "Sâu sắc, thâm trầm",
+        example: "你的一言一行都在我心中留下了深刻的印记。",
+        examplePinyin: "Nǐ de yī yán yī xíng dōu zài wǒ xīn zhōng liúxià le shēnkè de yìnjì.",
+        exampleMeaning: "Từng lời nói cử chỉ của em đều khắc sâu trong trái tim anh."
+      },
+      {
+        hanzi: "坦率",
+        pinyin: "tǎnshuài",
+        type: "Tính từ",
+        meaning: "Thẳng thắn, chân thành",
+        example: "坦率的交流让我们的感情更加亲密。",
+        examplePinyin: "Tǎnshuài de jiāoliú ràng wǒmen de gǎnqíng gèngjiā qīnmì.",
+        exampleMeaning: "Những chia sẻ thẳng thắn giúp tình cảm của hai đứa thêm phần khăng khít."
+      },
+      {
+        hanzi: "细腻",
+        pinyin: "xìnì",
+        type: "Tính từ",
+        meaning: "Tinh tế, chu đáo",
+        example: "你细腻的心思总是能给生活带来惊喜。",
+        examplePinyin: "Nǐ xìnì de xīnsi zǒngshì néng gěi shēnghuó dàilái jīngxǐ.",
+        exampleMeaning: "Sự tinh tế, chu đáo của em luôn mang lại những niềm vui bất ngờ cho cuộc sống."
+      }
+    ,
+      {
+        "hanzi": "启发",
+        "pinyin": "qǐfā",
+        "type": "Động từ/Danh từ",
+        "meaning": "Gợi mở, truyền cảm hứng",
+        "example": "每次和你聊天，总能给我很多温暖的生活启发。",
+        "examplePinyin": "Měicì hé nǐ liáotiān, zǒng néng gěi wǒ hěn duō wēnnuǎn de shēnghuó qǐfā.",
+        "exampleMeaning": "Mỗi lần trò chuyện cùng em luôn truyền cho anh nguồn cảm hứng sống ấm áp."
+      },
+      {
+        "hanzi": "坚强",
+        "pinyin": "jiānqiáng",
+        "type": "Tính từ",
+        "meaning": "Kiên cường, mạnh mẽ",
+        "example": "你比自己想象的要更加坚强勇敢。",
+        "examplePinyin": "Nǐ bǐ zìjǐ xiǎngxiàng de yào gèngjiā jiānqiáng yǒnggǎn.",
+        "exampleMeaning": "Em mạnh mẽ và kiên cường hơn những gì bản thân em từng nghĩ rất nhiều."
+      },
+      {
+        "hanzi": "执着",
+        "pinyin": "zhízhuó",
+        "type": "Tính từ",
+        "meaning": "Kiên định, một lòng hướng tới",
+        "example": "执着于梦想的人，眼里总会有星辰大海。",
+        "examplePinyin": "Zhízhuó yú mèngxiǎng de rén, yǎn lǐ zǒng huì yǒu xīngchén dàhǎi.",
+        "exampleMeaning": "Người kiên định với ước mơ thì trong mắt luôn có cả biển rộng trời sao."
+      },
+      {
+        "hanzi": "领悟",
+        "pinyin": "lǐngwù",
+        "type": "Động từ",
+        "meaning": "Lĩnh hội, thấu hiểu sâu sắc",
+        "example": "慢慢领悟生活的真谛，学会珍惜眼前的点滴幸福。",
+        "examplePinyin": "Mànman lǐngwù shēnghuó de zhēndì, xuéhuì zhēnxī yǎnqián de diǎndī xìngfú.",
+        "exampleMeaning": "Thấu hiểu chân lý cuộc sống, biết trân quý từng hạt mầm hạnh phúc trước mắt."
+      },
+      {
+        "hanzi": "宽容",
+        "pinyin": "kuānróng",
+        "type": "Tính từ/Động từ",
+        "meaning": "Bao dung, độ lượng",
+        "example": "宽容不是妥协，而是出于深沉的理解与爱。",
+        "examplePinyin": "Kuānróng bù shì tuǒxié, ér shì chūyú shēnchén de lǐjiě yǔ ài.",
+        "exampleMeaning": "Bao dung không phải là thỏa hiệp, mà bắt nguồn từ sự thấu hiểu và yêu thương sâu sắc."
+      },
+      {
+        "hanzi": "寄托",
+        "pinyin": "jìtuō",
+        "type": "Động từ",
+        "meaning": "Gửi gắm (niềm tin, hy vọng)",
+        "example": "把所有的思念与温柔，都寄托在每一条晚安消息里。",
+        "examplePinyin": "Bǎ suǒyǒu de sīniàn yǔ wēnróu, dōu jìtuō zài měi yī tiáo wǎn'ān xiāoxi lǐ.",
+        "exampleMeaning": "Gửi gắm trọn vẹn thương nhớ và dịu dàng vào từng lời chúc ngủ ngon mỗi tối."
+      },
+      {
+        "hanzi": "憧憬",
+        "pinyin": "chōngjǐng",
+        "type": "Động từ/Danh từ",
+        "meaning": "Hướng về tương lai, khao khát",
+        "example": "憧憬着未来我们拥有自己温馨小窝的那一天。",
+        "examplePinyin": "Chōngjǐngzhe wèilái wǒmen yǒngyǒu zìjǐ wēnxīn xiǎowō de nà yī tiān.",
+        "exampleMeaning": "Mong ước về tương lai hai đứa mình cùng vun vén cho mái ấm nhỏ thân thương."
+      },
+      {
+        "hanzi": "优雅",
+        "pinyin": "yōuyǎ",
+        "type": "Tính từ",
+        "meaning": "Tao nhã, thanh lịch",
+        "example": "喜欢你举手投足间的温柔与优雅。",
+        "examplePinyin": "Xǐhuan nǐ jǔshǒu-tóuzú jiān de wēnróu yǔ yōuyǎ.",
+        "exampleMeaning": "Yêu nét dịu dàng, tao nhã trong từng cử chỉ nhỏ nhắn của em."
+      },
+      {
+        "hanzi": "倾听",
+        "pinyin": "qīngtīng",
+        "type": "Động từ",
+        "meaning": "Chăm chú lắng nghe",
+        "example": "无论你有多少开心或委屈，我都愿意做你最忠实的倾听者。",
+        "examplePinyin": "Wúlùn nǐ yǒu duōshao kāixīn huò wěiqu, wǒ dōu yuànyì zuò nǐ zuì zhōngshí de qīngtīngzhě.",
+        "exampleMeaning": "Dù là chuyện vui hay muộn phiền, anh luôn sẵn sàng làm người lắng nghe em chân thành nhất."
+      },
+      {
+        "hanzi": "沟通",
+        "pinyin": "gōutōng",
+        "type": "Động từ",
+        "meaning": "Giao tiếp, sẻ chia kết nối",
+        "example": "良好的沟通是化解一切距离与烦恼的钥匙。",
+        "examplePinyin": "Liánghǎo de gōutōng shì huàjiě yīqiè jùlí yǔ fánnǎo de yàoshi.",
+        "exampleMeaning": "Sự sẻ chia chân tình là chìa khóa hóa giải mọi khoảng cách và âu lo."
+      },
+      {
+        "hanzi": "感慨",
+        "pinyin": "gǎnkǎi",
+        "type": "Động từ",
+        "meaning": "Cảm thán, xúc động bồi hồi",
+        "example": "回想我们一路走来的点点滴滴，心中满是感慨与感恩。",
+        "examplePinyin": "Huíxiǎng wǒmen yīlù zǒu lái de diǎndiǎndīdī, xīn zhōng mǎn shì gǎnkǎi yǔ gǎn'ēn.",
+        "exampleMeaning": "Ngoảnh nhìn chặng đường đã qua, lòng tràn ngập cảm xúc và biết ơn."
+      },
+      {
+        "hanzi": "舍不得",
+        "pinyin": "shěbude",
+        "type": "Động từ",
+        "meaning": "Không nỡ, tiếc nuối",
+        "example": "每次送你上车离开，心里都满是舍不得。",
+        "examplePinyin": "Měicì sòng nǐ shàng chē líkāi, xīn lǐ dōu mǎn shì shěbude.",
+        "exampleMeaning": "Mỗi lần tiễn em lên xe, trong lòng anh đều đầy ắp sự bịn rịn không nỡ rời."
+      },
+      {
+        "hanzi": "融洽",
+        "pinyin": "róngqià",
+        "type": "Tính từ",
+        "meaning": "Hòa hợp, êm ấm",
+        "example": "希望我们相处的每一刻都能如此融洽自在。",
+        "examplePinyin": "Xīwàng wǒmen xiāngchǔ de měi yī kè dōu néng rúcǐ róngqià zìzài.",
+        "exampleMeaning": "Mong rằng từng khoảnh khắc hai đứa bên nhau luôn êm ấm, tự nhiên."
+      },
+      {
+        "hanzi": "坦诚",
+        "pinyin": "tǎnchéng",
+        "type": "Tính từ",
+        "meaning": "Chân thành, cởi mở",
+        "example": "坦诚相待是我们感情最坚固的基石。",
+        "examplePinyin": "Tǎnchéng xiāngdài shì wǒmen gǎnqíng zuì jiāngù de jīshí.",
+        "exampleMeaning": "Đối đãi chân thành, cởi mở là nền tảng vững chắc nhất cho chuyện tình của chúng mình."
+      },
+      {
+        "hanzi": "陪伴",
+        "pinyin": "péibàn",
+        "type": "Động từ",
+        "meaning": "Đồng hành, cận kề bên em",
+        "example": "最长情的告白，莫过于默默无言的深情陪伴。",
+        "examplePinyin": "Zuì chángqíng de gàobái, mòguòyú mòmò wúyán de shēnqíng péibàn.",
+        "exampleMeaning": "Lời tỏ tình dài lâu nhất chính là sự đồng hành son sắt lặng thầm bên nhau."
       }
     ],
 
@@ -578,7 +1048,7 @@ window.ChineseApp = (() => {
         hanzi: "细水长流",
         pinyin: "xì shuǐ cháng liú",
         type: "Thành ngữ",
-        meaning: "Êm đềm bền bỉ, lâu dài (như dòng nước nhỏ chảy mãi)",
+        meaning: "Êm đềm bền bỉ, lâu dài",
         example: "真正的爱情不是轰轰烈烈，而是细水长流。",
         examplePinyin: "Zhēnzhèng de àiqíng bù shì hōnghōnglièliè, ér shì xì shuǐ cháng liú.",
         exampleMeaning: "Tình yêu đích thực không cần ồn ào mãnh liệt, mà là êm đềm bền chặt tháng năm."
@@ -591,6 +1061,178 @@ window.ChineseApp = (() => {
         example: "我对你的爱，矢志不渝。",
         examplePinyin: "Wǒ duì nǐ de ài, shǐ zhì bù yú.",
         exampleMeaning: "Tình yêu anh dành cho em, mãi vẹn nguyên không hề lay chuyển."
+      },
+      {
+        hanzi: "风雨同舟",
+        pinyin: "fēng yǔ tóng zhōu",
+        type: "Thành ngữ",
+        meaning: "Cùng chung hoạn nạn, vượt qua sóng gió",
+        example: "无论未来的路怎样，我们都风雨同舟。",
+        examplePinyin: "Wúlùn wèilái de lù zěnyàng, wǒmen dōu fēng yǔ tóng zhōu.",
+        exampleMeaning: "Dù con đường phía trước thế nào, hai đứa mình vẫn luôn kề vai sát cánh."
+      },
+      {
+        hanzi: "潜移默化",
+        pinyin: "qián yí mò huà",
+        type: "Thành ngữ",
+        meaning: "Thấm nhuần tự nhiên từng ngày",
+        example: "在你的影响下，我也变得更热爱生活了。",
+        examplePinyin: "Zài nǐ de yǐngxiǎng xià, wǒ yě biànde gèng rè'ài shēnghuó le.",
+        exampleMeaning: "Nhờ nguồn năng lượng ấm áp từ em, anh cũng thêm yêu từng phút giây cuộc sống."
+      },
+      {
+        hanzi: "循序渐进",
+        pinyin: "xún xù jiàn jìn",
+        type: "Thành ngữ",
+        meaning: "Tiến bộ từng bước vững chắc",
+        example: "学中文要循序渐进，相信 Ngọc 一定能考过更高水平！",
+        examplePinyin: "Xué zhōngwén yào xún xù jiàn jìn, xiāngxìn Ngọc yīdìng néng kǎoguò gèng gāo shuǐpíng!",
+        exampleMeaning: "Học tiếng Trung cứ tiến từng bước một, anh tin chắc Ngọc sẽ chinh phục những đỉnh cao mới!"
+      },
+      {
+        hanzi: "白头偕老",
+        pinyin: "bái tóu xié lǎo",
+        type: "Thành ngữ",
+        meaning: "Cùng nhau đi đến bạc đầu",
+        example: "愿得一心人，白头偕老永不分。",
+        examplePinyin: "Yuàn dé yī xīn rén, bái tóu xié lǎo yǒng bù fēn.",
+        exampleMeaning: "Nguyện trọn kiếp bên một người, cùng nhau đi đến đầu bạc răng long chẳng rời."
+      }
+    ,
+      {
+        "hanzi": "情有独钟",
+        "pinyin": "qíng yǒu dú zhōng",
+        "type": "Thành ngữ",
+        "meaning": "Dành trọn chân tình cho một người",
+        "example": "世间繁华千千万，而我唯独对你情有独钟。",
+        "examplePinyin": "Shìjiān fánhuá qiānqiān-wànwàn, ér wǒ wéidú duì nǐ qíng yǒu dú zhōng.",
+        "exampleMeaning": "Thế gian phồn hoa muôn vạn nẻo, nhưng lòng anh chỉ hướng về một mình em."
+      },
+      {
+        "hanzi": "念念不忘",
+        "pinyin": "niàn niàn bù wàng",
+        "type": "Thành ngữ",
+        "meaning": "Khắc sâu trong tâm khảm, nhớ mãi không nguôi",
+        "example": "念念不忘，必有回响。只要心中有爱，时光终不会辜负。",
+        "examplePinyin": "Niàn niàn bù wàng, bì yǒu huíxiǎng.",
+        "exampleMeaning": "Tâm niệm không quên ắt có hồi đáp, chân tình rồi sẽ được thời gian đền đáp xứng đáng."
+      },
+      {
+        "hanzi": "朝夕相处",
+        "pinyin": "zhāo xī xiāng chǔ",
+        "type": "Thành ngữ",
+        "meaning": "Sớm tối có nhau, kề vai sát cánh",
+        "example": "期待未来能与你朝夕相处，共度三餐四季。",
+        "examplePinyin": "Qīdài wèilái néng yǔ nǐ zhāo xī xiāng chǔ, gòngdù sān cān sì jì.",
+        "exampleMeaning": "Mong ngóng ngày tương lai được sớm tối bên em, cùng nhau qua bốn mùa no ấm."
+      },
+      {
+        "hanzi": "相敬如宾",
+        "pinyin": "xiāng jìng rú bīn",
+        "type": "Thành ngữ",
+        "meaning": "Tương kính như tân, kính trọng và nâng niu nhau",
+        "example": "彼此尊重，相敬如宾，方能走过漫长岁月。",
+        "examplePinyin": "Bǐcǐ zūnzhòng, xiāng jìng rú bīn, fāng néng zǒuguò màncháng suìyuè.",
+        "exampleMeaning": "Biết tôn trọng và quý mến lẫn nhau mới có thể nắm tay qua năm tháng dài lâu."
+      },
+      {
+        "hanzi": "举案齐眉",
+        "pinyin": "jǔ àn qí méi",
+        "type": "Thành ngữ",
+        "meaning": "Vợ chồng hòa thuận, yêu thương tôn kính",
+        "example": "举案齐眉相伴老，同舟共济度春秋。",
+        "examplePinyin": "Jǔ àn qí méi xiāng bàn lǎo, tóng zhōu gòng jì dù chūnqiū.",
+        "exampleMeaning": "Cùng nhau hòa thuận đến già, kề vai sát cánh qua mọi xuân thu."
+      },
+      {
+        "hanzi": "一见钟情",
+        "pinyin": "yī jiàn zhōng qíng",
+        "type": "Thành ngữ",
+        "meaning": "Vừa gặp đã yêu, trúng tiếng sét ái tình",
+        "example": "也许第一次聊天，便早已是一见倾心。",
+        "examplePinyin": "Yěxǔ dì-yī cì liáotiān, biàn zǎoyǐ shì yījiàn qīngxīn.",
+        "exampleMeaning": "Có lẽ ngay từ cuộc trò chuyện đầu tiên, trái tim đã thầm rung động."
+      },
+      {
+        "hanzi": "患难与共",
+        "pinyin": "huàn nàn yǔ gòng",
+        "type": "Thành ngữ",
+        "meaning": "Đồng cam cộng khổ, chia ngọt sẻ bùi",
+        "example": "真正的深情，是顺境时携手，逆境时患难与共。",
+        "examplePinyin": "Zhēnzhèng de shēnqíng, shì shùnjìng shí xiéshǒu, nìjìng shí huàn nàn yǔ gòng.",
+        "exampleMeaning": "Chân tình đích thực là lúc thuận lợi thì chung bước, khi trắc trở vẫn kề vai gánh vác."
+      },
+      {
+        "hanzi": "耳濡目染",
+        "pinyin": "ěr rú mù rǎn",
+        "type": "Thành ngữ",
+        "meaning": "Lắng nghe quan sát rồi thấm nhuần tự nhiên",
+        "example": "天天听你念中文，我也耳濡目染学到了不少呢！",
+        "examplePinyin": "Tiāntiān tīng nǐ niàn zhōngwén, wǒ yě ěr rú mù rǎn xué dào le bù shǎo ne!",
+        "exampleMeaning": "Hằng ngày nghe em đọc tiếng Trung, anh cũng thấm dần học được bao điều hay!"
+      },
+      {
+        "hanzi": "融会贯通",
+        "pinyin": "róng huì guàn tōng",
+        "type": "Thành ngữ",
+        "meaning": "Hiểu sâu sắc và kết hợp nhuần nhuyễn",
+        "example": "祝 Ngọc học tiếng Trung ngày càng tinh thông, mọi ngữ pháp đều融会贯通！",
+        "examplePinyin": "Zhù Ngọc xué zhōngwén yuè lái yuè tīngtōng, róng huì guàn tōng!",
+        "exampleMeaning": "Chúc Ngọc học tiếng Trung ngày một siêu đẳng, bài thi nào cũng vượt qua nhẹ nhàng!"
+      },
+      {
+        "hanzi": "深思熟虑",
+        "pinyin": "shēn sī shú lǜ",
+        "type": "Thành ngữ",
+        "meaning": "Suy nghĩ thấu đáo, chín chắn",
+        "example": "每一个重要的决定，都是我们深思熟虑后的双向奔赴。",
+        "examplePinyin": "Měi yī gè zhòngyào de juédìng, dōu shì wǒmen shēn sī shú lǜ hòu de shuāngxiàng bēnfù.",
+        "exampleMeaning": "Mỗi quyết định quan trọng đều là sự thấu hiểu chín chắn và cùng hướng về nhau."
+      },
+      {
+        "hanzi": "豁然开朗",
+        "pinyin": "huò rán kāi lǎng",
+        "type": "Thành ngữ",
+        "meaning": "Bừng tỉnh ngộ, lòng nhẹ nhõm thênh thang",
+        "example": "听到你温柔的开导，心中的烦恼顿时豁然开朗。",
+        "examplePinyin": "Tīngdào nǐ wēnróu de kāidǎo, xīn zhōng de fánnǎo dùnshí huò rán kāi lǎng.",
+        "exampleMeaning": "Nghe lời vỗ về dịu dàng của em, mọi ưu phiền trong lòng liền tan biến hết."
+      },
+      {
+        "hanzi": "独一无二",
+        "pinyin": "dú yī wú èr",
+        "type": "Thành ngữ",
+        "meaning": "Độc nhất vô nhị, có một không hai",
+        "example": "在我心里，Sún 永远是独一无二的小太阳。",
+        "examplePinyin": "Zài wǒ xīn lǐ, Sún yǒngyuǎn shì dú yī wú èr de xiǎo tàiyáng.",
+        "exampleMeaning": "Trong trái tim anh, Sún mãi là vầng mặt trời nhỏ độc nhất vô nhị."
+      },
+      {
+        "hanzi": "井井有条",
+        "pinyin": "jǐng jǐng yǒu tiáo",
+        "type": "Thành ngữ",
+        "meaning": "Ngăn nắp, trật tự, đâu ra đấy",
+        "example": "佩服你总是能把工作和生活安排得井井有条。",
+        "examplePinyin": "Pèifú nǐ zǒngshì néng bǎ gōngzuò hé shēnghuó ānpái de jǐng jǐng yǒu tiáo.",
+        "exampleMeaning": "Thật khâm phục em luôn biết thu xếp công việc và cuộc sống ngăn nắp, tinh tế."
+      },
+      {
+        "hanzi": "名副其实",
+        "pinyin": "míng fù qí shí",
+        "type": "Thành ngữ",
+        "meaning": "Danh xứng với thực, đúng như tên gọi",
+        "example": "你认真专注的样子，真是名副其实的小才女！",
+        "examplePinyin": "Nǐ rènzhēn zhuānzhù de yàngzi, zhēn shì míng fù qí shí de xiǎo cáinǚ!",
+        "exampleMeaning": "Dáng vẻ tập trung chăm chỉ của em đúng là chuẩn cô nàng tài sắc vẹn toàn!"
+      },
+      {
+        "hanzi": "守望相助",
+        "pinyin": "shǒu wàng xiāng zhù",
+        "type": "Thành ngữ",
+        "meaning": "Che chở, tương trợ lẫn nhau",
+        "example": "在彼此身旁，守望相助，成为对方最坚强的后盾。",
+        "examplePinyin": "Zài bǐcǐ shēnpáng, shǒu wàng xiāng zhù, chéngwéi duìfāng zuì jiānqiáng de hòudùn.",
+        "exampleMeaning": "Luôn cạnh bên chở che, trở thành điểm tựa vững vàng nhất cho nhau."
       }
     ],
 
@@ -647,7 +1289,8 @@ window.ChineseApp = (() => {
   };
 
   let currentTab = "daily"; // "daily" | "flashcard" | "quiz" | "love"
-  let currentLevel = "hsk1";
+  let currentLevel = localStorage.getItem("hu_keo_sun_hsk_level") || "hsk4";
+  let dailyOffset = 0;
   let flashcardIndex = 0;
   let flashcardFlipped = false;
   let quizQuestions = [];
@@ -655,42 +1298,81 @@ window.ChineseApp = (() => {
   let quizScore = 0;
   let quizAnswered = false;
 
-  // Web Speech API for Chinese pronunciation (Native on iOS/Android/Chrome)
-  function speak(text) {
+  let activeAudio = null;
+
+  function fallbackWebSpeech(text) {
     if (!("speechSynthesis" in window)) return;
     try {
-      window.speechSynthesis.cancel();
+      window.speechSynthesis.resume();
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = "zh-CN";
-      utter.rate = 0.85; // slightly slower for clean clear tone listening
+      utter.rate = 0.85;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const zhVoice = voices.find((v) => v.lang && v.lang.toLowerCase().replace("_", "-").startsWith("zh"));
+      if (zhVoice) utter.voice = zhVoice;
       window.speechSynthesis.speak(utter);
+    } catch {}
+  }
+
+  // Reliable Dual Audio: Native online stream audio + Web Speech API fallback
+  function speak(text) {
+    if (!text) return;
+    if (activeAudio) {
+      try {
+        activeAudio.pause();
+        activeAudio.currentTime = 0;
+      } catch {}
+      activeAudio = null;
+    }
+
+    try {
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob&q=${encodeURIComponent(text)}`;
+      const audio = new Audio(url);
+      audio.playbackRate = 0.9;
+      activeAudio = audio;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          fallbackWebSpeech(text);
+        });
+      }
     } catch {
-      // ignore audio error on unsupported webviews
+      fallbackWebSpeech(text);
     }
   }
 
-  // Get 5 deterministic words for today per level so it never repeats within a week
+  // Get 5 deterministic words for today per level (cycling sequentially without duplicates)
   function getDailyFiveWords(level) {
-    const list = HSK_DATA[level] || HSK_DATA.hsk1;
+    const list = HSK_DATA[level] || HSK_DATA.hsk4;
     const now = new Date();
-    // seed based on year, month, date
-    const daySeed = now.getFullYear() * 1000 + (now.getMonth() + 1) * 35 + now.getDate();
+    const dayIndex = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000) + dailyOffset;
+    const startIdx = ((dayIndex * 5) % list.length + list.length) % list.length;
     const result = [];
-    for (let i = 0; i < 5; i++) {
-      const idx = (daySeed * 3 + i * 7) % list.length;
+    for (let i = 0; i < Math.min(5, list.length); i++) {
+      const idx = (startIdx + i) % list.length;
       result.push(list[idx]);
     }
     return result;
   }
 
+  function setLevel(lvl) {
+    currentLevel = lvl;
+    try {
+      localStorage.setItem("hu_keo_sun_hsk_level", lvl);
+    } catch {}
+    dailyOffset = 0;
+    flashcardIndex = 0;
+    flashcardFlipped = false;
+  }
+
   function getLevelLabel(lvl) {
     switch (lvl) {
+      case "hsk4": return "HSK 4 (Của Ngọc 💕 • Nâng cao)";
+      case "hsk5": return "HSK 5 (Chuyên sâu • Luyện thi)";
+      case "hsk6": return "HSK 6 (Bậc thầy • Thành ngữ)";
+      case "hsk3": return "HSK 3 (Cảm xúc • Giao tiếp)";
+      case "hsk2": return "HSK 2 (Căn bản • Đời sống)";
       case "hsk1": return "HSK 1 (Nhập môn)";
-      case "hsk2": return "HSK 2 (Giao tiếp)";
-      case "hsk3": return "HSK 3 (Cảm xúc)";
-      case "hsk4": return "HSK 4 (Sâu sắc)";
-      case "hsk5": return "HSK 5 (Văn vẻ)";
-      case "hsk6": return "HSK 6 (Thành ngữ)";
       case "love": return "💕 Lời Yêu Thương";
       default: return lvl.toUpperCase();
     }
@@ -704,7 +1386,7 @@ window.ChineseApp = (() => {
     const isCompletedToday = state.chineseDailyDoneDate === todayStr;
 
     let itemsHtml = "";
-    words.forEach((w, idx) => {
+    words.forEach((w) => {
       itemsHtml += `
         <div class="chinese-word-card pixel-box">
           <div class="cwc-top">
@@ -713,7 +1395,10 @@ window.ChineseApp = (() => {
               <span class="cwc-pinyin">${w.pinyin}</span>
               <span class="cwc-type">${w.type || "Từ vựng"}</span>
             </div>
-            <button class="pixel-btn btn-cream btn-sm btn-speak" data-text="${w.hanzi}">🔊 Nghe</button>
+            <div class="cwc-actions">
+              <button class="pixel-btn btn-cream btn-sm btn-speak" data-text="${w.hanzi}">🔊 Nghe</button>
+              <a class="pixel-btn btn-cream btn-sm btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener" title="Tra từ điển Hanzii (nét viết, bộ thủ, ví dụ)">📖 Hanzii</a>
+            </div>
           </div>
           <div class="cwc-meaning">👉 <strong>${w.meaning}</strong></div>
           ${w.example ? `<div class="cwc-example">"${w.example}" <em>(${w.examplePinyin})</em>: ${w.exampleMeaning}</div>` : ""}
@@ -724,18 +1409,21 @@ window.ChineseApp = (() => {
     container.innerHTML = `
       <div class="chinese-daily-wrap">
         <div class="chinese-level-bar">
-          <label>Cấp độ:</label>
-          <select id="selChineseLevel" class="pixel-select">
-            <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1 (Nhập môn)</option>
-            <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Giao tiếp)</option>
-            <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Cảm xúc)</option>
-            <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Sâu sắc)</option>
-            <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Văn vẻ)</option>
-            <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Thành ngữ)</option>
-          </select>
+          <div class="clb-left">
+            <label>Cấp độ:</label>
+            <select id="selChineseLevel" class="pixel-select">
+              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
+              <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu • Luyện thi)</option>
+              <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy • Thành ngữ)</option>
+              <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Cảm xúc • Giao tiếp)</option>
+              <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Căn bản • Đời sống)</option>
+              <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1 (Nhập môn)</option>
+            </select>
+          </div>
+          <button class="pixel-btn btn-cream btn-sm" id="btnNextDailySet" title="Đổi sang 5 từ tiếp theo">🎲 Đổi 5 từ</button>
         </div>
 
-        <p class="chinese-help-text">🎯 Mỗi ngày hệ thống chọn 5 từ chuẩn chỉ để Ngọc ghi nhớ dần, không bị dồn ép. Bấm 🔊 để luyện nghe phát âm nhé!</p>
+        <p class="chinese-help-text">🎯 Mỗi ngày hệ thống chọn 5 từ chuẩn chỉ theo cấp độ để Ngọc ghi nhớ dần. Bấm 🔊 để nghe phát âm chuẩn hoặc 📖 Hanzii để tra nét viết & bộ thủ nhé!</p>
 
         <div class="chinese-daily-list">
           ${itemsHtml}
@@ -760,8 +1448,15 @@ window.ChineseApp = (() => {
     const sel = document.getElementById("selChineseLevel");
     if (sel) {
       sel.addEventListener("change", (e) => {
-        currentLevel = e.target.value;
-        flashcardIndex = 0;
+        setLevel(e.target.value);
+        renderDailyTab();
+      });
+    }
+
+    const btnNextSet = document.getElementById("btnNextDailySet");
+    if (btnNextSet) {
+      btnNextSet.addEventListener("click", () => {
+        dailyOffset++;
         renderDailyTab();
       });
     }
@@ -797,7 +1492,7 @@ window.ChineseApp = (() => {
 
   function renderFlashcardTab() {
     const container = document.getElementById("chineseTabContent");
-    const list = HSK_DATA[currentLevel] || HSK_DATA.hsk1;
+    const list = HSK_DATA[currentLevel] || HSK_DATA.hsk4;
     if (flashcardIndex >= list.length) flashcardIndex = 0;
     if (flashcardIndex < 0) flashcardIndex = list.length - 1;
 
@@ -808,12 +1503,12 @@ window.ChineseApp = (() => {
         <div class="chinese-level-bar">
           <label>Cấp độ:</label>
           <select id="selFlashcardLevel" class="pixel-select">
+            <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
+            <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu • Luyện thi)</option>
+            <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy • Thành ngữ)</option>
+            <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Cảm xúc • Giao tiếp)</option>
+            <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Căn bản • Đời sống)</option>
             <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1 (Nhập môn)</option>
-            <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Giao tiếp)</option>
-            <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Cảm xúc)</option>
-            <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Sâu sắc)</option>
-            <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Văn vẻ)</option>
-            <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Thành ngữ)</option>
           </select>
           <span class="fc-counter">${flashcardIndex + 1} / ${list.length}</span>
         </div>
@@ -823,7 +1518,10 @@ window.ChineseApp = (() => {
             <div class="fc-front">
               <span class="fc-hanzi">${w.hanzi}</span>
               <span class="fc-hint">💡 Chạm vào thẻ để lật xem nghĩa & pinyin</span>
-              <button class="pixel-btn btn-cream btn-sm btn-speak-card" data-text="${w.hanzi}">🔊 Nghe phát âm</button>
+              <div class="fc-actions-row">
+                <button class="pixel-btn btn-cream btn-sm btn-speak-card" data-text="${w.hanzi}">🔊 Nghe</button>
+                <a class="pixel-btn btn-cream btn-sm btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
+              </div>
             </div>
           ` : `
             <div class="fc-back">
@@ -837,7 +1535,10 @@ window.ChineseApp = (() => {
                   <div class="fc-ex-vi">${w.exampleMeaning}</div>
                 </div>
               ` : ""}
-              <button class="pixel-btn btn-cream btn-sm btn-speak-card" data-text="${w.example || w.hanzi}">🔊 Nghe câu ví dụ</button>
+              <div class="fc-actions-row">
+                <button class="pixel-btn btn-cream btn-sm btn-speak-card" data-text="${w.example || w.hanzi}">🔊 Nghe ví dụ</button>
+                <a class="pixel-btn btn-cream btn-sm btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
+              </div>
             </div>
           `}
         </div>
@@ -853,9 +1554,7 @@ window.ChineseApp = (() => {
     const sel = document.getElementById("selFlashcardLevel");
     if (sel) {
       sel.addEventListener("change", (e) => {
-        currentLevel = e.target.value;
-        flashcardIndex = 0;
-        flashcardFlipped = false;
+        setLevel(e.target.value);
         renderFlashcardTab();
       });
     }
@@ -863,7 +1562,7 @@ window.ChineseApp = (() => {
     const box = document.getElementById("flashcardBox");
     if (box) {
       box.addEventListener("click", (e) => {
-        if (e.target.closest(".btn-speak-card")) return;
+        if (e.target.closest(".btn-speak-card") || e.target.closest(".btn-dict")) return;
         flashcardFlipped = !flashcardFlipped;
         renderFlashcardTab();
       });
@@ -903,11 +1602,12 @@ window.ChineseApp = (() => {
     });
   }
 
+  let quizRewarded = false;
+
   function startQuiz() {
-    const list = HSK_DATA[currentLevel] || HSK_DATA.hsk1;
+    const list = HSK_DATA[currentLevel] || HSK_DATA.hsk4;
     const shuffled = [...list].sort(() => Math.random() - 0.5);
     quizQuestions = shuffled.slice(0, 5).map((target) => {
-      // 3 wrong distractors
       const distractors = list.filter((item) => item.hanzi !== target.hanzi);
       const randomWrong = distractors.sort(() => Math.random() - 0.5).slice(0, 3);
       const options = [target, ...randomWrong].sort(() => Math.random() - 0.5);
@@ -916,6 +1616,7 @@ window.ChineseApp = (() => {
     quizIndex = 0;
     quizScore = 0;
     quizAnswered = false;
+    quizRewarded = false;
     renderQuizQuestion();
   }
 
@@ -923,11 +1624,22 @@ window.ChineseApp = (() => {
     const container = document.getElementById("chineseTabContent");
     if (quizIndex >= quizQuestions.length) {
       // Quiz Complete
+      if (quizScore >= 4 && !quizRewarded) {
+        quizRewarded = true;
+        if (window.GameState) {
+          const s = window.GameState.get();
+          s.candy = (s.candy || 0) + 2;
+          if (window.GameState.addXP) window.GameState.addXP(15);
+          window.GameState.save();
+          window.GameState.renderHUD();
+        }
+      }
+
       container.innerHTML = `
         <div class="quiz-result-wrap pixel-box">
           <h3>🎉 Hoàn Thành Bài Trắc Nghiệm!</h3>
-          <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${quizQuestions.length}</strong> câu</p>
-          <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Cô gái Đất Cảng nhớ từ siêu đỉnh 💕" : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
+          <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${quizQuestions.length}</strong> câu (${getLevelLabel(currentLevel)})</p>
+          <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 (+2 🍬 & +15 XP)" : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
           <div class="quiz-actions">
             <button class="pixel-btn btn-pink" id="btnRestartQuiz">Làm Lại Lượt Mới</button>
             <button class="pixel-btn btn-cream" id="btnBackToDaily">Quay lại 5 từ mỗi ngày</button>
@@ -956,6 +1668,17 @@ window.ChineseApp = (() => {
     container.innerHTML = `
       <div class="chinese-quiz-wrap">
         <div class="quiz-header">
+          <div class="quiz-level-inline">
+            <label>Cấp:</label>
+            <select id="selQuizLevel" class="pixel-select">
+              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 💕</option>
+              <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5</option>
+              <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6</option>
+              <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3</option>
+              <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2</option>
+              <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1</option>
+            </select>
+          </div>
           <span>Câu ${quizIndex + 1} / ${quizQuestions.length}</span>
           <span>Điểm: ${quizScore}</span>
         </div>
@@ -963,7 +1686,10 @@ window.ChineseApp = (() => {
         <div class="quiz-question-card pixel-box">
           <div class="qq-prompt">Từ này có nghĩa là gì?</div>
           <div class="qq-hanzi">${q.target.hanzi}</div>
-          <button class="pixel-btn btn-cream btn-sm" id="btnSpeakQuiz" data-text="${q.target.hanzi}">🔊 Nghe phát âm</button>
+          <div class="fc-actions-row">
+            <button class="pixel-btn btn-cream btn-sm" id="btnSpeakQuiz" data-text="${q.target.hanzi}">🔊 Nghe phát âm</button>
+            <a class="pixel-btn btn-cream btn-sm btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(q.target.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
+          </div>
         </div>
 
         <div class="quiz-options-grid" id="quizOptionsGrid">
@@ -976,6 +1702,14 @@ window.ChineseApp = (() => {
         </div>
       </div>
     `;
+
+    const selQ = document.getElementById("selQuizLevel");
+    if (selQ) {
+      selQ.addEventListener("change", (e) => {
+        setLevel(e.target.value);
+        startQuiz();
+      });
+    }
 
     document.getElementById("btnSpeakQuiz").addEventListener("click", () => {
       speak(q.target.hanzi);
@@ -995,7 +1729,6 @@ window.ChineseApp = (() => {
         } else {
           if (window.AudioManager) AudioManager.playPoop();
           btn.classList.add("btn-wrong");
-          // highlight correct
           document.querySelectorAll(".quiz-opt-btn").forEach((b) => {
             if (b.dataset.hanzi === q.target.hanzi) b.classList.add("btn-correct");
           });

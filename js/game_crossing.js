@@ -344,7 +344,7 @@ window.CrossingGame = (() => {
     if (curLane && curLane.type === "rail") {
       if (curLane.cycle >= 110 && curLane.cycle < 195) {
         if (pxCenter + 6 > curLane.trainX && pxCenter - 6 < curLane.trainX + 130) {
-          endGame("Suýt thì lên tàu Hà Nội - Hải Phòng cùng đoàn tàu tốc hành rồi! 🚆😂");
+          endGame("Suýt thì thành hành khách đi ké đoàn tàu tốc hành rồi! 🚆😂");
           return;
         }
       }
