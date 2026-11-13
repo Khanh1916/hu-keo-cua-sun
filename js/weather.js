@@ -264,9 +264,9 @@ window.WeatherEngine = (() => {
         const { latitude, longitude } = pos.coords;
         let cityName = null;
         try {
-          // Optional reverse geocoding via Nominatim with 3s timeout
+          // Optional reverse geocoding via Nominatim with 3.5s timeout
           const ctrl = new AbortController();
-          const tid = setTimeout(() => ctrl.abort(), 3000);
+          const tid = setTimeout(() => ctrl.abort(), 3500);
           const geoRes = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=vi`,
             { signal: ctrl.signal, headers: { "User-Agent": "HuKeoCuaSun-App/1.0" } }
@@ -292,7 +292,48 @@ window.WeatherEngine = (() => {
         fetchForecast(HAI_PHONG.lat, HAI_PHONG.lon, "Hải Phòng");
         if (onError) onError(err.message);
       },
-      { timeout: 8000, maximumAge: 600000 }
+      { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false }
+    );
+  }
+
+  // Automatic silent background geolocation check (no button click needed!)
+  let lastAutoCheckTime = 0;
+  function tryAutoLocate(force = false) {
+    if (!navigator.geolocation) return;
+    const now = Date.now();
+    // Throttle automatic checks to once every 3 minutes unless forced
+    if (!force && now - lastAutoCheckTime < 180000) return;
+    lastAutoCheckTime = now;
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        let cityName = null;
+        try {
+          const ctrl = new AbortController();
+          const tid = setTimeout(() => ctrl.abort(), 3500);
+          const geoRes = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=vi`,
+            { signal: ctrl.signal, headers: { "User-Agent": "HuKeoCuaSun-App/1.0" } }
+          );
+          clearTimeout(tid);
+          if (geoRes.ok) {
+            const geo = await geoRes.json();
+            const addr = geo.address || {};
+            cityName = addr.city || addr.state || addr.province || addr.county || null;
+            if (cityName) {
+              cityName = cityName.replace(/Thành phố\s*/i, "").replace(/Tỉnh\s*/i, "");
+            }
+          }
+        } catch {
+          // Fallback to distance matching
+        }
+        await fetchForecast(latitude, longitude, cityName);
+      },
+      () => {
+        // Silently keep using cached or Hai Phong weather
+      },
+      { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false }
     );
   }
 
@@ -308,16 +349,19 @@ window.WeatherEngine = (() => {
 
   function init() {
     loadCachedOrFallback();
-    // Try silently fetching default / cached location
+    // 1. Immediately fetch latest weather for cached coords or default Hai Phong
     fetchForecast(
       currentWeather ? currentWeather.lat : HAI_PHONG.lat,
       currentWeather ? currentWeather.lon : HAI_PHONG.lon,
       currentWeather ? currentWeather.city : "Hải Phòng"
     );
+    // 2. Automatically try real GPS location in background (no click required!)
+    tryAutoLocate();
   }
 
   return {
     init,
+    tryAutoLocate,
     getWeather: () => currentWeather,
     fetchForecast,
     requestLocation,

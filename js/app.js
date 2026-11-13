@@ -894,6 +894,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
       handleAppExitOrHide();
+    } else if (document.visibilityState === "visible") {
+      // Auto-refresh location & weather seamlessly when returning to the app
+      if (window.WeatherEngine) {
+        WeatherEngine.tryAutoLocate();
+      }
     }
   });
 
@@ -952,17 +957,26 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnUpdateLoc) {
     btnUpdateLoc.addEventListener("click", () => {
       AudioManager.playClick();
+      btnUpdateLoc.textContent = "⏳ Đang dò...";
+      btnUpdateLoc.disabled = true;
       showToast("Đang định vị để cập nhật thời tiết cho em iu nè... 📍");
       if (window.WeatherEngine) {
         WeatherEngine.requestLocation(
           (w) => {
+            btnUpdateLoc.textContent = "📍 Vị trí";
+            btnUpdateLoc.disabled = false;
             updateWeatherUI(w);
             showToast(`✨ Đã cập nhật thời tiết tại ${w.city} (${w.temp}°C)!`);
           },
           () => {
+            btnUpdateLoc.textContent = "📍 Vị trí";
+            btnUpdateLoc.disabled = false;
             showToast("Không lấy được GPS, đang dùng thời tiết Hải Phòng nha!");
           }
         );
+      } else {
+        btnUpdateLoc.textContent = "📍 Vị trí";
+        btnUpdateLoc.disabled = false;
       }
     });
   }
@@ -988,7 +1002,7 @@ document.addEventListener("DOMContentLoaded", () => {
         checkSpecialDayEvent();
       }
       if (window.WeatherEngine) {
-        WeatherEngine.init();
+        WeatherEngine.tryAutoLocate();
       }
     }
   }
