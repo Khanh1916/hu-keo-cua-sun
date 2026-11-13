@@ -368,12 +368,14 @@ window.RoomScene = (() => {
   }
 
   function getActiveSpecialDay() {
+    if (window.previewSpecialDay) return window.previewSpecialDay;
     const now = new Date();
     const m = now.getMonth() + 1;
     const d = now.getDate();
     if (m === 4 && d === 15) return "ngoc";
     if (m === 6 && d === 1) return "khanh";
     if (m === 2 && d === 11) return "anniversary";
+    if (m === 12 && d >= 20 && d <= 26) return "noel";
     if (window.Amlich && window.Amlich.getTetInfo(now).isTet) return "tet";
     return null;
   }
@@ -547,6 +549,114 @@ window.RoomScene = (() => {
     }
   }
 
+  function drawNoelDecor() {
+    const px = PixelSprites.px;
+
+    // 1. Dây đèn Giáng Sinh nhấp nháy lung linh trên mép tường trên
+    const bulbColors = ["#E63946", "#FFD166", "#2EC4B6", "#3A86FF", "#FF85A1", "#52B788"];
+    px(ctx, 10, 5, 220, 1, "#1B4332"); // green cord
+    for (let lx = 14; lx < 228; lx += 14) {
+      const bidx = Math.floor(lx / 14);
+      const isLit = (Math.floor(frame / 16) + bidx) % 2 === 0;
+      const bcol = isLit ? bulbColors[bidx % bulbColors.length] : "#8D5B4C";
+      px(ctx, lx, 6, 3, 4, bcol);
+      if (isLit) {
+        px(ctx, lx - 1, 7, 5, 2, "rgba(255, 255, 255, 0.45)");
+      }
+    }
+
+    // 2. Vòng Nguyệt Quế Giáng Sinh trên tường giữa 2 cửa sổ (x: 114, y: 16)
+    const wx = 114, wy = 16;
+    px(ctx, wx - 6, wy - 6, 14, 14, "#1B4332");
+    px(ctx, wx - 5, wy - 5, 12, 12, "#2D6A4F");
+    px(ctx, wx - 2, wy - 2, 6, 6, "#FFF4E6"); // center wall hole
+    // Red berries on wreath
+    px(ctx, wx - 4, wy - 4, 2, 2, "#E63946");
+    px(ctx, wx + 4, wy - 3, 2, 2, "#E63946");
+    px(ctx, wx - 3, wy + 3, 2, 2, "#E63946");
+    px(ctx, wx + 3, wy + 3, 2, 2, "#E63946");
+    // Red festive bow & ribbon at bottom of wreath
+    px(ctx, wx - 3, wy + 6, 8, 3, "#D90429");
+    px(ctx, wx - 4, wy + 9, 3, 4, "#D90429");
+    px(ctx, wx + 3, wy + 9, 3, 4, "#D90429");
+    px(ctx, wx, wy + 7, 2, 2, "#FFD166"); // golden bell
+
+    // 3. Cây Thông Noel lung linh bên kệ nhỏ góc phải (tx: 166, ty: 148)
+    const tx = 166, ty = 148;
+    // Pot / Chậu cây đỏ viền vàng
+    px(ctx, tx - 7, ty + 6, 16, 8, "#C92A2A");
+    px(ctx, tx - 8, ty + 5, 18, 2, "#FFD166");
+    px(ctx, tx - 5, ty + 14, 12, 2, "#9E2A2B");
+    // Gốc cây nâu
+    px(ctx, tx - 2, ty + 2, 6, 4, "#5A3825");
+
+    // Tầng lá dưới cùng (Tier 3 - rộng nhất)
+    px(ctx, tx - 14, ty - 8, 30, 10, "#1B4332");
+    px(ctx, tx - 12, ty - 6, 26, 8, "#2D6A4F");
+    px(ctx, tx - 10, ty - 4, 22, 6, "#40916C");
+    // Snow dusting on tips
+    px(ctx, tx - 14, ty + 1, 4, 2, "#FFFFFF");
+    px(ctx, tx + 12, ty + 1, 4, 2, "#FFFFFF");
+    px(ctx, tx - 6, ty + 1, 4, 1, "#E0F2FE");
+    px(ctx, tx + 4, ty + 1, 4, 1, "#E0F2FE");
+
+    // Tầng lá giữa (Tier 2)
+    px(ctx, tx - 10, ty - 18, 22, 10, "#1B4332");
+    px(ctx, tx - 8, ty - 16, 18, 8, "#2D6A4F");
+    px(ctx, tx - 6, ty - 14, 14, 6, "#40916C");
+    // Snow dusting on tips
+    px(ctx, tx - 10, ty - 9, 3, 2, "#FFFFFF");
+    px(ctx, tx + 9, ty - 9, 3, 2, "#FFFFFF");
+
+    // Tầng lá trên cùng (Tier 1)
+    px(ctx, tx - 6, ty - 26, 14, 8, "#1B4332");
+    px(ctx, tx - 4, ty - 24, 10, 6, "#2D6A4F");
+    px(ctx, tx - 2, ty - 28, 6, 4, "#40916C");
+    px(ctx, tx - 6, ty - 19, 3, 2, "#FFFFFF");
+    px(ctx, tx + 5, ty - 19, 3, 2, "#FFFFFF");
+
+    // Ngôi Sao Vàng đỉnh cây thông (Golden Star)
+    const starCol = frame % 30 < 15 ? "#FFE066" : "#FFF9DB";
+    px(ctx, tx, ty - 33, 2, 6, starCol);
+    px(ctx, tx - 2, ty - 31, 6, 2, starCol);
+    px(ctx, tx - 1, ty - 32, 4, 4, starCol);
+
+    // Trái châu trang trí nhấp nháy trên cây thông (Blinking Baubles)
+    const baubles = [
+      { x: tx - 8, y: ty - 4, c1: "#E63946", c2: "#FFD166" },
+      { x: tx + 6, y: ty - 5, c1: "#3A86FF", c2: "#FF85A1" },
+      { x: tx - 1, y: ty - 7, c1: "#FFD166", c2: "#E63946" },
+      { x: tx - 5, y: ty - 13, c1: "#FF85A1", c2: "#3A86FF" },
+      { x: tx + 4, y: ty - 15, c1: "#E63946", c2: "#FFD166" },
+      { x: tx - 2, y: ty - 22, c1: "#FFD166", c2: "#E63946" },
+      { x: tx + 2, y: ty - 24, c1: "#3A86FF", c2: "#FF85A1" }
+    ];
+    baubles.forEach((b, i) => {
+      const lit = (Math.floor(frame / 18) + i) % 2 === 0;
+      px(ctx, b.x, b.y, 2, 2, lit ? b.c1 : b.c2);
+    });
+
+    // 4. Hộp quà Giáng Sinh thắt nơ dưới gốc cây
+    // Hộp quà đỏ thắt nơ vàng
+    px(ctx, tx - 22, ty + 4, 12, 10, "#D90429");
+    px(ctx, tx - 18, ty + 4, 4, 10, "#FFD166");
+    px(ctx, tx - 22, ty + 8, 12, 2, "#FFD166");
+    px(ctx, tx - 18, ty + 2, 4, 2, "#FFE066");
+    // Hộp quà xanh dương thắt nơ hồng
+    px(ctx, tx + 11, ty + 6, 10, 8, "#0077B6");
+    px(ctx, tx + 14, ty + 6, 3, 8, "#FF85A1");
+    px(ctx, tx + 11, ty + 9, 10, 2, "#FF85A1");
+    px(ctx, tx + 14, ty + 4, 3, 2, "#FFAFCC");
+
+    // 5. Bông tuyết rơi lấp lánh nhẹ nhàng khắp phòng
+    for (let s = 0; s < 12; s++) {
+      const sy = ((frame * 0.4 + s * 22) % 170) + 10;
+      const sx = (s * 21 + Math.sin(frame * 0.05 + s) * 7 + 240) % 240;
+      const sAlpha = (s % 3 === 0) ? "rgba(255, 255, 255, 0.9)" : "rgba(224, 242, 254, 0.75)";
+      px(ctx, Math.round(sx), Math.round(sy), 2, 2, sAlpha);
+    }
+  }
+
   function drawParticles() {
     const px = PixelSprites.px;
     particles.forEach((p) => {
@@ -590,13 +700,15 @@ window.RoomScene = (() => {
     if (placed.includes("tea_table")) PixelSprites.drawDecor(ctx, "tea_table", frame);
     if (placed.includes("couple_mugs")) PixelSprites.drawDecor(ctx, "couple_mugs", frame);
 
-    // Hidden Special Day Decorations (15/04, 01/06 Birthdays, 11/02 Anniversary & Tết Âm Lịch)
+    // Hidden Special Day Decorations (15/04, 01/06 Birthdays, 11/02 Anniversary, Tết Âm Lịch & Noel)
     if (specialDay === "ngoc" || specialDay === "khanh") {
       drawBirthdayDecor(specialDay);
     } else if (specialDay === "anniversary") {
       drawAnniversaryDecor();
     } else if (specialDay === "tet") {
       drawTetDecor();
+    } else if (specialDay === "noel") {
+      drawNoelDecor();
     }
 
     // 3. Depth-sorted characters (Khánh Mini & Bé mèo Bông)
@@ -635,6 +747,38 @@ window.RoomScene = (() => {
       const by = Math.round(bong.y - 14 - bhop);
       px(ctx, bx - 2, by + 6, 6, 2, "#D90429");
       px(ctx, bx, by + 7, 2, 2, "#FFD166");
+    }
+
+    // Festive Santa hats & Christmas accessories during Noel!
+    if (specialDay === "noel") {
+      const px = PixelSprites.px;
+      const kbob = khanh.state === "happy" ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
+      const kx = Math.round(khanh.x);
+      const ky = Math.round(khanh.y - 34 + kbob);
+
+      // Khanh's Santa Hat
+      px(ctx, kx - 4, ky, 8, 2, "#FFFFFF"); // white fur trim
+      px(ctx, kx - 3, ky - 3, 6, 3, "#D90429"); // red cap
+      px(ctx, kx - 2, ky - 6, 4, 3, "#D90429");
+      px(ctx, kx + 1, ky - 7, 3, 2, "#D90429"); // tip bend
+      px(ctx, kx + 3, ky - 6, 2, 2, "#FFFFFF"); // pom-pom
+
+      // Khanh's cozy winter scarf
+      px(ctx, kx - 5, ky + 14, 10, 3, "#D90429");
+      px(ctx, kx - 3, ky + 14, 2, 3, "#FFFFFF");
+      px(ctx, kx + 1, ky + 14, 2, 3, "#FFFFFF");
+      px(ctx, kx - 2, ky + 17, 4, 4, "#BA181B");
+      px(ctx, kx - 1, ky + 21, 2, 1, "#FFFFFF");
+
+      // Bong's cute mini Santa hat & holiday collar
+      const bhop = bong.state === "happy" ? Math.abs(Math.round(Math.sin(frame * 0.3) * 3)) : 0;
+      const bx = Math.round(bong.x);
+      const by = Math.round(bong.y - 14 - bhop);
+      px(ctx, bx - 1, by - 3, 6, 2, "#FFFFFF"); // white trim
+      px(ctx, bx, by - 6, 4, 3, "#D90429"); // red hat
+      px(ctx, bx + 3, by - 7, 2, 2, "#FFFFFF"); // pom-pom
+      px(ctx, bx - 2, by + 6, 6, 2, "#D90429"); // collar
+      px(ctx, bx, by + 7, 2, 2, "#FFD166"); // golden bell
     }
 
     // 4. Particles
