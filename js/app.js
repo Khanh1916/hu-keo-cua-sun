@@ -905,6 +905,68 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("webviewTip").classList.add("hidden");
   });
 
+  // Weather & Location Caring Engine Integration
+  function updateWeatherUI(w) {
+    if (!w) return;
+    const iconEl = document.getElementById("weatherIcon");
+    const locEl = document.getElementById("weatherLocation");
+    const tempEl = document.getElementById("weatherTemp");
+    const descEl = document.getElementById("weatherDesc");
+    const careEl = document.getElementById("weatherCareText");
+    const bubbleEl = document.getElementById("weatherCareBubble");
+
+    if (iconEl) iconEl.textContent = w.icon || "🌤️";
+    if (locEl) {
+      if (w.isAway) {
+        locEl.textContent = `📍 ${w.city} (cách HP ${w.distFromHp}km)`;
+        locEl.className = "weather-location-name weather-away-badge";
+      } else {
+        locEl.textContent = `📍 ${w.city}`;
+        locEl.className = "weather-location-name";
+      }
+    }
+    if (tempEl) {
+      tempEl.textContent = `${w.temp}°C`;
+    }
+    if (descEl) {
+      descEl.textContent = `${w.weatherText} • ${w.tempMin}°~${w.tempMax}°C`;
+    }
+    if (careEl) {
+      careEl.textContent = w.caringMessage || "Chúc em Ngọc một ngày thật vui vẻ bên anh!";
+    }
+    if (bubbleEl) {
+      if (w.isAway) {
+        bubbleEl.classList.add("weather-away-bubble");
+      } else {
+        bubbleEl.classList.remove("weather-away-bubble");
+      }
+    }
+  }
+
+  if (window.WeatherEngine) {
+    WeatherEngine.onWeatherChange(updateWeatherUI);
+    updateWeatherUI(WeatherEngine.getWeather());
+  }
+
+  const btnUpdateLoc = document.getElementById("btnUpdateLocation");
+  if (btnUpdateLoc) {
+    btnUpdateLoc.addEventListener("click", () => {
+      AudioManager.playClick();
+      showToast("Đang định vị để cập nhật thời tiết cho em iu nè... 📍");
+      if (window.WeatherEngine) {
+        WeatherEngine.requestLocation(
+          (w) => {
+            updateWeatherUI(w);
+            showToast(`✨ Đã cập nhật thời tiết tại ${w.city} (${w.temp}°C)!`);
+          },
+          () => {
+            showToast("Không lấy được GPS, đang dùng thời tiết Hải Phòng nha!");
+          }
+        );
+      }
+    });
+  }
+
   // Boot
   let lastObservedDateStamp = "";
   let lastObservedHour = -1;
@@ -925,10 +987,16 @@ document.addEventListener("DOMContentLoaded", () => {
       if (dateChanged) {
         checkSpecialDayEvent();
       }
+      if (window.WeatherEngine) {
+        WeatherEngine.init();
+      }
     }
   }
 
   syncClockAndEvents();
+  if (window.WeatherEngine) {
+    WeatherEngine.init();
+  }
   // Auto-switch decorations, banner & music right when crossing 00:00 into/out of special dates!
   setInterval(syncClockAndEvents, 5000);
 

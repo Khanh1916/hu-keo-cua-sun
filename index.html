@@ -90,6 +90,23 @@
         </div>
       </div>
 
+      <!-- Real-time Weather & Caring Widget -->
+      <section class="weather-widget pixel-box" id="weatherWidget" aria-label="Thời tiết & Lời nhắn của anh">
+        <div class="weather-header-row">
+          <div class="weather-badge-group">
+            <span class="weather-icon-emoji" id="weatherIcon">🌤️</span>
+            <span class="weather-location-name" id="weatherLocation">📍 Hải Phòng</span>
+            <span class="weather-temp-pill" id="weatherTemp">24°C</span>
+            <span class="weather-condition-text" id="weatherDesc">Nắng nhẹ mát mẻ</span>
+          </div>
+          <button class="pixel-btn btn-cream weather-btn-refresh" id="btnUpdateLocation" title="Cập nhật thời tiết theo vị trí của em">📍 Vị trí</button>
+        </div>
+        <div class="weather-caring-bubble" id="weatherCareBubble">
+          <span class="khanh-avatar-mini">💬</span>
+          <span id="weatherCareText">Đang tải thời tiết để nhắc nhở em iu nè...</span>
+        </div>
+      </section>
+
       <!-- Quick Action Strip right below room -->
       <section class="quick-actions" aria-label="Tương tác nhanh">
         <button class="action-card pixel-btn btn-pink" id="btnHug">
@@ -380,15 +397,16 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=9"></script>
-  <script defer src="js/lunar.js?v=9"></script>
-  <script defer src="js/audio.js?v=9"></script>
-  <script defer src="js/sprites.js?v=9"></script>
-  <script defer src="js/room.js?v=9"></script>
-  <script defer src="js/minigame.js?v=9"></script>
-  <script defer src="js/game_crossing.js?v=9"></script>
-  <script defer src="js/game_flappy.js?v=9"></script>
-  <script defer src="js/game_nonla.js?v=9"></script>
-  <script defer src="js/app.js?v=9"></script>
+  <script defer src="js/data.js?v=10"></script>
+  <script defer src="js/lunar.js?v=10"></script>
+  <script defer src="js/weather.js?v=10"></script>
+  <script defer src="js/audio.js?v=10"></script>
+  <script defer src="js/sprites.js?v=10"></script>
+  <script defer src="js/room.js?v=10"></script>
+  <script defer src="js/minigame.js?v=10"></script>
+  <script defer src="js/game_crossing.js?v=10"></script>
+  <script defer src="js/game_flappy.js?v=10"></script>
+  <script defer src="js/game_nonla.js?v=10"></script>
+  <script defer src="js/app.js?v=10"></script>
 </body>
 </html>

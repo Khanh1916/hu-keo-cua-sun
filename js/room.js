@@ -172,63 +172,134 @@ window.RoomScene = (() => {
   function drawWindow(tod) {
     const px = PixelSprites.px;
     const wx = 82, wy = 24, ww = 76, wh = 62;
+    const weather = window.WeatherEngine ? WeatherEngine.getWeather() : null;
+    const isRaining = weather && weather.isRaining;
 
-    // Sky background inside window
-    if (tod === "morning") {
-      px(ctx, wx, wy, ww, wh, "#BDE6FF");
-      px(ctx, wx, wy + 34, ww, 28, "#DDF2FF");
-      // Fluffy clouds
-      px(ctx, wx + 10, wy + 12, 18, 5, "#FFFFFF");
-      px(ctx, wx + 14, wy + 9, 10, 4, "#FFFFFF");
-      px(ctx, wx + 48, wy + 18, 16, 4, "#FFFFFF");
+    // 1. Sky background inside window
+    if (isRaining) {
+      px(ctx, wx, wy, ww, wh, "#9BB5C9");
+      px(ctx, wx, wy + 28, ww, 34, "#B8CBD8");
+      // Overcast rain clouds
+      px(ctx, wx + 6, wy + 8, 30, 8, "#7E9AA8");
+      px(ctx, wx + 14, wy + 5, 20, 6, "#6B8594");
+      px(ctx, wx + 40, wy + 12, 28, 7, "#7E9AA8");
+    } else if (tod === "morning") {
+      px(ctx, wx, wy, ww, wh, "#9FD7F9");
+      px(ctx, wx, wy + 32, ww, 30, "#CDECFF");
+      // Fluffy white clouds
+      px(ctx, wx + 8, wy + 10, 22, 6, "#FFFFFF");
+      px(ctx, wx + 13, wy + 6, 12, 5, "#FFFFFF");
+      px(ctx, wx + 48, wy + 16, 18, 5, "#FFFFFF");
     } else if (tod === "sunset") {
-      px(ctx, wx, wy, ww, 24, "#F6A6B2");
-      px(ctx, wx, wy + 24, ww, 20, "#FFC79A");
-      px(ctx, wx, wy + 44, ww, 18, "#FFE5B4");
-      // Warm sun
-      px(ctx, wx + 50, wy + 30, 12, 12, "#FFE985");
+      px(ctx, wx, wy, ww, 22, "#F7A399");
+      px(ctx, wx, wy + 22, ww, 20, "#F4ACB7");
+      px(ctx, wx, wy + 42, ww, 20, "#FFE5B4");
+      // Warm glowing sunset sun
+      px(ctx, wx + 48, wy + 24, 12, 12, "#FFE066");
+      px(ctx, wx + 49, wy + 25, 10, 10, "#FFF3B0");
     } else {
-      px(ctx, wx, wy, ww, wh, "#262D54");
-      px(ctx, wx, wy + 36, ww, 26, "#343D6E");
-      // Twinkling stars & moon
-      const twinkle = Math.floor(frame / 25) % 2 === 0;
-      px(ctx, wx + 12, wy + 10, 2, 2, twinkle ? "#FFF8C9" : "#A9B4E8");
-      px(ctx, wx + 36, wy + 16, 2, 2, !twinkle ? "#FFF8C9" : "#A9B4E8");
-      px(ctx, wx + 60, wy + 8, 2, 2, "#FFF8C9");
-      px(ctx, wx + 52, wy + 12, 8, 8, "#FFE994");
-      px(ctx, wx + 55, wy + 12, 5, 5, "#262D54"); // crescent
+      px(ctx, wx, wy, ww, wh, "#1E2243");
+      px(ctx, wx, wy + 34, ww, 28, "#2B3058");
+      // Twinkling stars & crescent moon
+      const twinkle = Math.floor(frame / 22) % 2 === 0;
+      px(ctx, wx + 10, wy + 8, 2, 2, twinkle ? "#FFF8C9" : "#8E99CC");
+      px(ctx, wx + 34, wy + 14, 2, 2, !twinkle ? "#FFF8C9" : "#8E99CC");
+      px(ctx, wx + 62, wy + 6, 2, 2, "#FFF8C9");
+      px(ctx, wx + 20, wy + 22, 1, 1, "#FFF8C9");
+      // Crescent Moon
+      px(ctx, wx + 50, wy + 10, 9, 9, "#FFE994");
+      px(ctx, wx + 53, wy + 10, 7, 7, "#1E2243");
     }
 
-    // Hoa Phượng Đỏ (Hải Phòng flamboyant branch visible on left of window)
-    px(ctx, wx + 4, wy + 42, 3, 20, "#6E4A3A");
-    px(ctx, wx + 6, wy + 32, 18, 2, "#6E4A3A");
-    // Green leaves
-    px(ctx, wx + 2, wy + 24, 24, 10, "#509E5C");
-    px(ctx, wx + 8, wy + 20, 20, 8, "#63B86E");
-    // Red flamboyant clusters (hoa phượng đỏ)
-    px(ctx, wx + 4, wy + 22, 6, 4, "#E84A4A");
-    px(ctx, wx + 15, wy + 20, 7, 5, "#F25C54");
-    px(ctx, wx + 24, wy + 25, 5, 4, "#E84A4A");
-    px(ctx, wx + 10, wy + 29, 5, 3, "#FF7A70");
+    // 2. Distant Hải Phòng City skyline / gentle green hills
+    px(ctx, wx, wy + 48, ww, 14, "#7EA172");
+    px(ctx, wx, wy + 52, ww, 10, "#5A7D54");
+    // Tiny distant silhouette trees / rooftops
+    px(ctx, wx + 14, wy + 45, 6, 4, "#5A7D54");
+    px(ctx, wx + 36, wy + 46, 5, 3, "#5A7D54");
+    px(ctx, wx + 54, wy + 44, 8, 5, "#5A7D54");
 
-    // Falling petals
-    petals.forEach((pt) => {
-      pt.y += pt.speed;
-      if (pt.y > wy + wh - 3) {
-        pt.y = wy + 22;
-        pt.x = wx + 6 + Math.random() * 58;
-      }
-      const ox = pt.x + Math.sin(frame * 0.05 + pt.sway) * 2.5;
-      px(ctx, ox, pt.y, 2, 2, "#F25C54");
+    // 3. Iconic Hải Phòng Flamboyant Tree Branch (Cành Hoa Phượng Đỏ)
+    // Curved branch extending naturally from left upper corner
+    px(ctx, wx, wy + 12, 7, 3, "#5A3825");
+    px(ctx, wx + 6, wy + 14, 9, 3, "#6E4A3A");
+    px(ctx, wx + 14, wy + 16, 12, 2, "#6E4A3A");
+    px(ctx, wx + 24, wy + 17, 7, 2, "#8D5B4C");
+    // Upper twig
+    px(ctx, wx + 11, wy + 10, 2, 5, "#6E4A3A");
+    px(ctx, wx + 12, wy + 7, 6, 2, "#8D5B4C");
+    // Lower twig
+    px(ctx, wx + 18, wy + 18, 2, 4, "#6E4A3A");
+    px(ctx, wx + 19, wy + 21, 6, 2, "#8D5B4C");
+
+    // Feathery flamboyant leaves (lá phượng xum xuê, mềm mại)
+    const leafClusters = [
+      { x: wx + 4, y: wy + 7, w: 10, h: 5 },
+      { x: wx + 12, y: wy + 4, w: 12, h: 5 },
+      { x: wx + 20, y: wy + 8, w: 11, h: 5 },
+      { x: wx + 8, y: wy + 16, w: 12, h: 6 },
+      { x: wx + 18, y: wy + 14, w: 14, h: 6 },
+      { x: wx + 26, y: wy + 16, w: 10, h: 5 },
+      { x: wx + 15, y: wy + 22, w: 12, h: 5 }
+    ];
+    leafClusters.forEach((c) => {
+      px(ctx, c.x, c.y + 1, c.w, c.h, "#2D6A4F");
+      px(ctx, c.x + 1, c.y, c.w - 2, c.h - 1, "#40916C");
+      px(ctx, c.x + 2, c.y, Math.floor(c.w / 2), 2, "#74C69D");
     });
 
-    // Window frame & sill
-    px(ctx, wx - 3, wy - 3, ww + 6, 3, "#9B6747");
-    px(ctx, wx - 3, wy + wh, ww + 6, 5, "#B87E59");
-    px(ctx, wx - 3, wy, 3, wh, "#9B6747");
-    px(ctx, wx + ww, wy, 3, wh, "#9B6747");
+    // Brilliant Red Flamboyant Flowers (Hoa phượng đỏ thắm nở rộ)
+    const flowerClusters = [
+      { x: wx + 7, y: wy + 8, col: "#E63946" },
+      { x: wx + 15, y: wy + 5, col: "#D90429" },
+      { x: wx + 23, y: wy + 10, col: "#E63946" },
+      { x: wx + 11, y: wy + 15, col: "#FF4D6D" },
+      { x: wx + 21, y: wy + 15, col: "#E63946" },
+      { x: wx + 28, y: wy + 18, col: "#D90429" },
+      { x: wx + 17, y: wy + 23, col: "#FF758F" }
+    ];
+    flowerClusters.forEach((f) => {
+      px(ctx, f.x - 1, f.y, 5, 4, f.col);
+      px(ctx, f.x, f.y - 1, 3, 6, f.col);
+      px(ctx, f.x, f.y + 1, 2, 2, "#FFE066");
+    });
+
+    // 4. Weather Effect on Window
+    if (isRaining) {
+      // Gentle raindrops trickling on glass
+      for (let r = 0; r < 14; r++) {
+        const ry = (frame * 1.8 + r * 16) % (wh - 8) + wy + 4;
+        const rx = wx + 5 + (r * 19) % (ww - 10);
+        px(ctx, rx, ry, 1, 3, "rgba(255, 255, 255, 0.65)");
+        px(ctx, rx, ry + 3, 1, 1, "rgba(200, 230, 255, 0.4)");
+      }
+    } else {
+      // Falling flamboyant petals in gentle breeze
+      petals.forEach((pt) => {
+        pt.y += pt.speed;
+        if (pt.y > wy + wh - 4) {
+          pt.y = wy + 12;
+          pt.x = wx + 4 + Math.random() * 56;
+        }
+        const ox = pt.x + Math.sin(frame * 0.04 + pt.sway) * 2.2;
+        px(ctx, ox, pt.y, 2, 2, "#E63946");
+      });
+    }
+
+    // 5. Subtle diagonal glass reflection gleam
+    px(ctx, wx + 6, wy + 4, 18, 1, "rgba(255, 255, 255, 0.28)");
+    px(ctx, wx + 10, wy + 7, 12, 1, "rgba(255, 255, 255, 0.2)");
+    px(ctx, wx + 44, wy + 4, 18, 1, "rgba(255, 255, 255, 0.25)");
+
+    // 6. Window frame, center mullions & bottom wooden sill
+    px(ctx, wx - 3, wy - 3, ww + 6, 3, "#8D5B4C");
+    px(ctx, wx - 3, wy, 3, wh, "#8D5B4C");
+    px(ctx, wx + ww, wy, 3, wh, "#8D5B4C");
     px(ctx, wx + Math.floor(ww / 2) - 1, wy, 2, wh, "#9B6747");
-    px(ctx, wx, wy + 32, ww, 2, "#9B6747");
+    px(ctx, wx, wy + 31, ww, 2, "#9B6747");
+    // Bottom window sill
+    px(ctx, wx - 4, wy + wh, ww + 8, 5, "#B87E59");
+    px(ctx, wx - 3, wy + wh + 4, ww + 6, 2, "#8D5B4C");
   }
 
   function drawBaseRoom(state, tod) {
