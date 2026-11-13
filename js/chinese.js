@@ -1494,18 +1494,64 @@ window.ChineseApp = (() => {
     return copy;
   }
 
-  // Get 5 deterministic words for today per level (cycling sequentially without duplicates)
+  // Smart Spaced Repetition Daily 5 Words generator
   function getDailyFiveWords(level) {
     const list = HSK_DATA[level] || HSK_DATA.hsk4;
-    const now = new Date();
-    const dayIndex = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000) + dailyOffset;
-    const startIdx = ((dayIndex * 5) % list.length + list.length) % list.length;
-    const result = [];
-    for (let i = 0; i < Math.min(5, list.length); i++) {
-      const idx = (startIdx + i) % list.length;
-      result.push(list[idx]);
+    if (!list || list.length === 0) return [];
+
+    const now = Date.now();
+    const srsMap = getSRSMap();
+
+    // Categorize words into due reviews, unstudied, and others
+    const dueOrMistakes = [];
+    const unstudied = [];
+    const others = [];
+
+    list.forEach((w) => {
+      const srs = srsMap[w.hanzi];
+      if (srs) {
+        if ((srs.mistakes > 0 && srs.repetition < 2) || (srs.dueDate && srs.dueDate <= now)) {
+          dueOrMistakes.push(w);
+        } else {
+          others.push(w);
+        }
+      } else {
+        unstudied.push(w);
+      }
+    });
+
+    // If user clicked "Đổi 5 từ" (dailyOffset > 0)
+    if (dailyOffset > 0) {
+      const startIndex = (dailyOffset * 5) % list.length;
+      const res = [];
+      for (let i = 0; i < Math.min(5, list.length); i++) {
+        res.push(list[(startIndex + i) % list.length]);
+      }
+      return res;
     }
-    return result;
+
+    // Smart composition: up to 2 due review words + unstudied words + fill with others
+    const selected = [];
+    dueOrMistakes.forEach((w) => {
+      if (selected.length < 2) selected.push(w);
+    });
+    unstudied.forEach((w) => {
+      if (selected.length < 5) selected.push(w);
+    });
+    others.forEach((w) => {
+      if (selected.length < 5 && !selected.some((s) => s.hanzi === w.hanzi)) selected.push(w);
+    });
+
+    // Fallback if needed
+    if (selected.length < Math.min(5, list.length)) {
+      list.forEach((w) => {
+        if (selected.length < Math.min(5, list.length) && !selected.some((s) => s.hanzi === w.hanzi)) {
+          selected.push(w);
+        }
+      });
+    }
+
+    return selected;
   }
 
   function setLevel(lvl) {
@@ -1546,7 +1592,10 @@ window.ChineseApp = (() => {
             <span class="cwc-hanzi">${w.hanzi}</span>
             <div class="cwc-meta">
               <span class="cwc-pinyin">${w.pinyin}</span>
-              <span class="cwc-type">${w.type || "Từ vựng"}</span>
+              <div class="cwc-badges-row">
+                <span class="cwc-type">${w.type || "Từ vựng"}</span>
+                <span class="srs-badge ${getSRSBadge(w.hanzi).cls}">${getSRSBadge(w.hanzi).text}</span>
+              </div>
             </div>
             <div class="cwc-actions">
               <button class="btn-star ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}" title="${isStarred(w.hanzi) ? "Đã lưu vào Sổ tay (bấm để bỏ lưu)" : "Lưu vào Sổ tay yêu thích"}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu"}</button>
@@ -1652,6 +1701,12 @@ window.ChineseApp = (() => {
             window.GameState.renderHUD();
           }
         }
+
+        // Record SRS memory progression for each daily word
+        words.forEach((w) => {
+          recordSRSReview(w.hanzi, true);
+        });
+
         btnFinish.textContent = "🎉 Đã Ghi Nhớ Hôm Nay";
         btnFinish.className = "pixel-btn btn-cream disabled";
         btnFinish.disabled = true;
@@ -2004,6 +2059,9 @@ window.ChineseApp = (() => {
             if (b.dataset.hanzi === q.target.hanzi) b.classList.add("btn-correct");
           });
         }
+
+        // Update SRS review status
+        recordSRSReview(q.target.hanzi, isRight);
 
         const fbBox = document.getElementById("quizFeedback");
         const fbText = document.getElementById("quizFeedbackText");
