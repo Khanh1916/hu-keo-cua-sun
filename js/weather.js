@@ -84,57 +84,57 @@ window.WeatherEngine = (() => {
   function generateCaringMessage({ city, temp, feelsLike, weatherText, isRaining, isAway, distFromHp }) {
     // 1. If Ngọc is traveling / away from Hải Phòng (> 35km)
     if (isAway) {
-      if (city.includes("Hà Nội")) {
+      if (city && city.includes("Hà Nội")) {
         return [
-          `Ơ em iu đang ở Hà Nội hả? Qua anh đón đi ăn phở hay đi lượn phố không em iu ơi! 🥰`,
-          `Em lên Hà Nội có việc gì thế? Cần anh chạy qua đón không, nhớ nhắn tin cho anh nha!`
+          `Ủa em đang ở Hà Nội hả? Qua anh đón đi ăn hay đi lượn phố không em? 🥰`,
+          `Em lên Hà Nội có việc gì thế? Cần anh qua đón không, nhớ nhắn cho anh nha!`
         ];
       }
       return [
-        `Ủa hôm nay em đi đâu xa khỏi Hải Phòng thế này (${city})? Đi đường nhớ chú ý xe cộ, đi đứng cẩn thận giữ an toàn nha em iu!`,
-        `Tới ${city} rồi nhớ nhắn tin cho anh biết tới nơi an toàn nha sọ dừa, đừng làm anh lo đấy.`,
-        `Hôm nay đi xa nè, lúc nào xong việc về nhớ đi chậm thôi nha em, đừng phóng nhanh.`
+        `Hôm nay em đi đâu xa thế này (${city})? Đi đường nhớ chú ý xe cộ, đi cẩn thận nha em.`,
+        `Tới ${city} rồi thì nhắn tin cho anh biết là tới nơi an toàn nhé.`,
+        `Đi xa về nhớ đi chậm thôi nha em, đừng phóng nhanh kẻo anh lo.`
       ];
     }
 
     // 2. If in Hải Phòng: customized by real-time weather & temperature
     if (isRaining) {
       return [
-        `Hải Phòng đang mưa này em ơi 🌧️ Ra đường nhớ mang áo mưa, đường Đất Cảng trơn trượt nhớ đi chậm giữ an toàn nha em!`,
-        `Trời mưa gió thế này em đi đứng cẩn thận, về tới nhà nhớ nhắn anh một câu nha sọ dừa.`,
-        `Mưa thế này mà ở nhà nằm đắp chăn ôm mèo Bông là sướng nhất, em đi làm về sớm nha.`
+        `Hải Phòng đang mưa này em ơi 🌧️ Ra đường nhớ mang áo mưa, đường trơn nhớ đi chậm nha.`,
+        `Mưa gió thế này em đi đứng cẩn thận, về tới nhà nhớ nhắn anh một câu nhé.`,
+        `Trời mưa thế này nằm nhà đắp chăn ôm mèo Bông là thích nhất, đi làm về sớm nha em.`
       ];
     }
 
     if (temp <= 16) {
       return [
-        `Hải Phòng hôm nay rét đậm lắm (${temp}°C) đấy! Em Ngọc nhớ mặc áo phao dày, quàng khăn ấm vào nha, đi xe gió lùa buốt tai đấy!`,
-        `Trời lạnh thế này em nhớ uống nước ấm, đừng tắm muộn nha em iu.`,
-        `Gió mùa về Hải Phòng rồi, ra ngoài nhớ giữ ấm cổ họng đừng để bị ho nha.`
+        `Hải Phòng hôm nay rét đậm lắm (${temp}°C) đấy. Đi làm nhớ mặc áo ấm, quàng khăn vào nha em.`,
+        `Trời lạnh thế này em nhớ giữ ấm cổ họng với uống nước ấm nhé.`,
+        `Gió mùa về rồi, ra ngoài nhớ mặc kín đừng để bị cảm lạnh nha.`
       ];
     }
 
     if (temp <= 22) {
       return [
-        `Thời tiết Hải Phòng hôm nay se se lạnh (${temp}°C) thích ghê! Ra đường nhớ khoác thêm áo ấm mỏng nha em.`,
-        `Hôm nay trời mát lạnh dễ chịu, em đi làm nhớ ăn sáng đầy đủ đừng nhịn đói nha.`,
-        `Trời này tối lượn ăn bánh mì cay chấm tương ớt cay nồng là hết sảy nè em!`
+        `Thời tiết hôm nay se lạnh (${temp}°C) dễ chịu ghê. Ra đường khoác thêm áo mỏng nha em.`,
+        `Trời mát mẻ thế này, đi làm nhớ ăn sáng đầy đủ đừng nhịn đói nha.`,
+        `Trời này tối đi làm về lượn ăn bánh mì cay là hợp nhất nè em.`
       ];
     }
 
     if (temp >= 32) {
       return [
-        `Hải Phòng hôm nay nắng to gắt (${temp}°C) ghê! Em ra đường nhớ che chắn kỹ, bôi kem chống nắng với uống nhiều nước nha.`,
-        `Trời nắng nóng thế này đi làm về sớm nghỉ ngơi, đừng phơi nắng nhiều mệt đấy em iu.`,
-        `Nắng này chiều rủ bạn làm cốc dừa dầm mát lạnh giải nhiệt đi em!`
+        `Hải Phòng hôm nay nắng gắt (${temp}°C) đấy. Ra đường nhớ che chắn kỹ với uống nhiều nước nha em.`,
+        `Trời nóng thế này đi làm về sớm nghỉ ngơi, đừng phơi nắng nhiều mệt đấy em.`,
+        `Nắng nóng thế này chiều làm cốc nước mát hay dừa dầm giải nhiệt đi em.`
       ];
     }
 
     // 23 - 31°C: pleasant comfortable weather
     return [
-      `Thời tiết Hải Phòng hôm nay mát mẻ dễ chịu cực (${temp}°C)! Đi làm về có ghé Cing House làm cốc trà cúc không em?`,
-      `Hôm nay trời đẹp nè em iu, chúc em một ngày làm việc thật vui vẻ, bớt suy nghĩ linh tinh nha!`,
-      `Trời đẹp thế này nhớ anh thì mở app vào bấm anh mấy cái cho đỡ nhớ nha 🥰`
+      `Thời tiết hôm nay mát mẻ dễ chịu cực (${temp}°C). Đi làm về có ghé Cing House làm cốc trà không em?`,
+      `Hôm nay trời đẹp nè, chúc em một ngày đi làm nhẹ nhàng, suôn sẻ nhé!`,
+      `Trời đẹp thế này, rảnh tay thì vào đây chơi với anh với mèo Bông một lát nha 🥰`
     ];
   }
 
@@ -245,7 +245,7 @@ window.WeatherEngine = (() => {
       icon: "🌤️",
       isDay: true,
       isRaining: false,
-      caringMessage: "Hôm nay thời tiết Hải Phòng mát mẻ dễ chịu, em Ngọc đi làm nhớ mặc áo khoác mỏng nha!",
+      caringMessage: "Hôm nay thời tiết Hải Phòng mát mẻ dễ chịu, em đi làm nhớ khoác thêm áo mỏng nha!",
       updatedAt: Date.now()
     };
     notifyListeners();

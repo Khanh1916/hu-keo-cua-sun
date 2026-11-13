@@ -3,52 +3,53 @@ window.GAME_DATA = {
 
   timeGreetings: {
     morning: [
-      "Chào buổi sáng em iu, dậy ăn sáng đàng hoàng rồi đi làm nha ☀️",
-      "Dậy chưa đó? Bé Bông dậy đợi em iu vào vuốt đầu rồi kìa 🐱",
-      "Chúc em iu ngày mới làm việc nhẹ nhàng, đi đường chạy xe cẩn thận nhé!"
+      "Dậy chưa em? Nhớ ăn sáng rồi hẵng đi làm nhé ☀️",
+      "Sáng nay đi làm đi cẩn thận nha Sún 🚲",
+      "Dậy đi làm thôi cô nương, mèo Bông dậy trước cả em rồi kìa 🐱",
+      "Chúc em ngày mới đi làm nhẹ nhàng, suôn sẻ nha!"
     ],
     noon: [
-      "Trưa rồi, em iu ăn cơm chưa? (Cấm trả lời 'ăn cức' nha 😆)",
-      "Nghỉ trưa xíu đi em iu, đừng ngồi lì làm việc mãi nha 🍚",
-      "Trưa nay ăn gì chưa? Hay lại thèm bánh đa cua Lạch Tray với cuốn Thủy Nguyên rồi?"
+      "Trưa rồi, nghỉ tay đi ăn cơm đi em 🍚",
+      "Ăn trưa gì chưa? Đừng có nhịn đấy nhé.",
+      "Nghỉ trưa một lát cho lại sức đi em, đừng ngồi làm việc mãi."
     ],
     afternoon: [
-      "Chiều rồi nè, làm ly matcha ô long dừa dầm Cing House cho tỉnh táo không em iu? 🧋",
-      "Sắp hết giờ làm rồi, cố nốt xíu nữa rồi về nghỉ ngơi nha!",
-      "Chiều rảnh tay thì vào chơi với anh & bé Bông một lúc cho đỡ chán nhé."
+      "Sắp hết giờ làm rồi, ráng nốt chút nữa rồi về nghỉ ngơi thôi em 🧋",
+      "Chiều nay ở chỗ làm có mệt lắm không em?",
+      "Chiều rảnh tay thì vào đây chơi với anh với bé Bông một lúc cho khuây khỏa nhé."
     ],
     evening: [
-      "Tối rồi em iu ơi, ăn tối đầy đủ chưa đó? 🌙",
-      "Làm cả ngày chắc mệt rồi, tối nay nghỉ ngơi sớm bên bé Bông nha!",
-      "Tối rảnh thì chơi ván hứng kẹo giải trí rồi nhắn tin kể anh nghe chuyện hôm nay nha."
+      "Về tới nhà chưa em? Tối nay ăn uống đầy đủ rồi nghỉ ngơi nha 🌙",
+      "Hôm nay đi làm có chuyện gì vui không, kể anh nghe với.",
+      "Tối nay nghỉ ngơi sớm đi, cả ngày bận rộn rồi."
     ],
     night: [
-      "Khuya rồi đó Ngọc ơi, đừng thức khuya quá hại sức khỏe nha 💤",
-      "Đi ngủ sớm đi em iu, mai còn có sức đi làm. Ngủ ngon nhé!",
-      "Muộn rồi đó, cất điện thoại đi ngủ thôi nào em iu 🌙"
+      "Khuya rồi đó Ngọc, cất điện thoại đi ngủ sớm đi 💤",
+      "Ngủ sớm đi em, thức khuya mệt người lắm. Chúc em ngủ ngon nha!",
+      "Muộn rồi, mai còn dậy đi làm nữa. Ngủ ngoan nhé 🌙"
     ]
   },
 
   khanhDialogues: [
-    "Em iu ơi, hôm nay đừng có 'Sọ Dừa' với anh đó nha! 🥥",
-    "Ai bảo trẻ hiểu chuyện thường không có kẹo? Anh để sẵn cả hũ cho em iu đây nè 🍬",
-    "Hỏi thật nha: Em ăn cơm chưa? Nếu đáp 'ăn rồi' thì cấm trả lời 'ăn cức' đó! 😂",
-    "Biết là đi đường 'em bay mà', nhưng mà chạy chậm chậm thôi cho anh đỡ lo nhé!",
-    "Anh mặc đúng áo polo đen, quần xám ghi với đeo đồng hồ bạc ngồi chờ em iu vào chơi đây.",
-    "Em hay nhắc anh ăn uống giữ sức khỏe, giờ tới lượt em iu phải tự chăm mình đàng hoàng đó!",
-    "Đừng có ngại với anh nhé, ở đây em cứ thoải mái chẳng việc gì phải giữ ý đâu.",
-    "Bé Bông đang nhìn em iu kìa, chắc lại đòi ăn bim bim với bánh mì cay rồi.",
-    "Có chuyện gì vui hay bực mình ở chỗ làm thì kể anh nghe, anh ngồi nghe hết cho.",
-    "Hôm nào rảnh xuống Hải Phòng, em dẫn anh đi ăn sập mấy quán tủ ở Thủy Nguyên với Lạch Tray nha!"
+    "Hôm nay đi làm thế nào rồi em?",
+    "Lại đang cắn môi suy nghĩ linh tinh cái gì đấy?",
+    "Có chuyện gì bực mình ở chỗ làm cứ kể với anh, anh nghe hết.",
+    "Đi đường nhớ đi chậm thôi đấy nhé, đừng có phóng vèo vèo.",
+    "Anh vẫn ngồi đây chờ em vào nghịch nè.",
+    "Thèm ăn gì ở Hải Phòng không, ghi sổ hôm nào anh xuống dắt đi ăn.",
+    "Ai bảo hiểu chuyện là không được chiều? Ở đây thích gì cứ bảo anh 🍬",
+    "Bé Bông đang nằm dòm em kìa, lại chuẩn bị đòi ăn rồi.",
+    "Mệt thì nghỉ xíu đi em, đừng có cố quá sức nha.",
+    "Hôm nào rảnh anh lại phi từ Hà Nội xuống Hải Phòng đón đi lượn nhé!"
   ],
 
   bongDialogues: [
-    "Meo meo~ (Bé Bông nói: Chị Ngọc về rồi, mau vuốt đầu Bông đi!)",
-    "Meo~ (Bông thấy anh Khánh đang ngồi cười tủm tỉm kìa!)",
-    "Grừ grừ~ (Bông thích nằm cạnh chị Ngọc lúc trời se lạnh nhất luôn!)",
-    "Meo meo! (Bông đói rồi, chị cho Bông với anh Khánh ăn vặt đi ạ 🐟)",
-    "Meow~ (Chị Ngọc ơi đừng suy nghĩ nhiều nha, có Bông lông trắng vàng đây rồi!)",
-    "Meo! (Bông không 'Sọ Dừa' đâu, Bông cực kỳ thân với chị luôn á!)"
+    "Meooo~ (Bông chạy lại gần, cọ cọ đầu vào chân em 🐱)",
+    "Rừ rừ... rừ rừ... (Bông nằm ngửa phơi bụng đòi gãi cằm)",
+    "Meo! (Bông nhảy tót lên đùi ngồi nhìn em chằm chằm)",
+    "Gừ... *ngáp một cái thật to rồi lại cuộn tròn ngủ tiếp*",
+    "Meo meo~ (Bông đưa chân trước khều khều vạt áo em đòi chơi)",
+    "Meo! (Bông nhìn về phía khay thức ăn rồi liếc sang em ra hiệu 🐟)"
   ],
 
   foods: [
@@ -58,7 +59,7 @@ window.GAME_DATA = {
       emoji: "🥖",
       xp: 12,
       candy: 2,
-      reaction: "Cay cay giòn rụm đúng vị Hải Phòng luôn! Cảm ơn em iu nha 🥖"
+      reaction: "Cay giòn đúng điệu Hải Phòng luôn. Ăn ngon quá em 🥖"
     },
     {
       id: "tra_cuc",
@@ -66,7 +67,7 @@ window.GAME_DATA = {
       emoji: "🍵",
       xp: 12,
       candy: 2,
-      reaction: "Làm ngụm trà cúc ấm bụng quá, hôm nào rảnh hai đứa ra quán ngồi uống thật nha!"
+      reaction: "Ấm bụng ghê. Hôm nào rảnh anh xuống hai đứa đi ngồi quán thật nha!"
     },
     {
       id: "cing_house",
@@ -74,7 +75,7 @@ window.GAME_DATA = {
       emoji: "🧋",
       xp: 16,
       candy: 3,
-      reaction: "Chuẩn vị Cing House Thủy Nguyên nè! Món tủ của em iu uống là mê tít 💚"
+      reaction: "Chuẩn vị Cing House Thủy Nguyên rồi! Món tủ của em có khác 💚"
     },
     {
       id: "banh_da_cua",
@@ -82,7 +83,7 @@ window.GAME_DATA = {
       emoji: "🍜",
       xp: 16,
       candy: 3,
-      reaction: "Bát bánh đa cua đầy ú ụ luôn! Ăn no thế này làm việc mới có sức nè 🍜"
+      reaction: "Bát bánh đa cua đầy đặn ghê, ăn no lấy sức làm việc nha em 🍜"
     },
     {
       id: "cuon_thuy_nguyen",
@@ -90,7 +91,7 @@ window.GAME_DATA = {
       emoji: "🥬",
       xp: 14,
       candy: 3,
-      reaction: "Cuốn Thủy Nguyên chấm nước mắm đậm đà quá, bao giờ em iu dẫn anh đi ăn nha!"
+      reaction: "Cuốn Thủy Nguyên ngon thật đấy, hôm nào em nhớ dẫn anh đi ăn nhé!"
     },
     {
       id: "canh_cu",
@@ -98,7 +99,7 @@ window.GAME_DATA = {
       emoji: "🥣",
       xp: 13,
       candy: 2,
-      reaction: "Bát canh củ thanh mát chuẩn cơm nhà luôn, ngon quá em iu 🥰"
+      reaction: "Bát canh củ thanh mát chuẩn cơm nhà luôn, cảm ơn em 🥰"
     },
     {
       id: "oc_hai_phong",
@@ -106,7 +107,7 @@ window.GAME_DATA = {
       emoji: "🐚",
       xp: 15,
       candy: 3,
-      reaction: "Lại thèm đi lượn lờ ăn ốc cùng em iu rồi đó, mlem mlem! 🐚"
+      reaction: "Nhìn thèm ghê, hôm nào anh xuống Hải Phòng dẫn em đi ăn ốc nhé 🐚"
     },
     {
       id: "banh_mi_kep",
@@ -114,7 +115,7 @@ window.GAME_DATA = {
       emoji: "🥪",
       xp: 12,
       candy: 2,
-      reaction: "Bánh mì kẹp nóng hổi nè! Em nhớ ăn sáng đầy đủ đừng bỏ bữa nha."
+      reaction: "Ăn sáng đầy đủ vào nha em, đừng bỏ bữa đấy."
     },
     {
       id: "dua_dam",
@@ -122,7 +123,7 @@ window.GAME_DATA = {
       emoji: "🥥",
       xp: 14,
       candy: 3,
-      reaction: "Dừa dầm mát lạnh ngọt lịm luôn! Không phải 'Sọ Dừa' đâu nha, dừa dầm xịn đó 😆"
+      reaction: "Dừa dầm mát lạnh ngọt lịm luôn!"
     },
     {
       id: "keo_bim_bim",
@@ -130,7 +131,7 @@ window.GAME_DATA = {
       emoji: "🍬",
       xp: 15,
       candy: 4,
-      reaction: "Kẹo ngọt dành riêng cho 'trẻ hiểu chuyện' tên Ngọc! Bé Bông cũng đòi ké bim bim kìa 🍬"
+      reaction: "Kẹo ngọt cho Sún nè, ăn ít thôi không sâu răng nha 🍬"
     }
   ],
 
@@ -195,51 +196,48 @@ window.GAME_DATA = {
 
   moodJars: {
     miss: {
-      tag: "💕 Khi em iu nhớ anh",
+      tag: "💕 Khi em nhớ anh",
       notes: [
-        "Anh ở Hà Nội vẫn đang làm việc đây, nhớ anh thì vào nghịch anh một tí rồi nhắn tin cho anh nha.",
-        "Đang ngồi làm mà tự dưng nghĩ tới em iu, không biết giờ này bên Hải Phòng đang làm gì rồi.",
-        "Lúc nào rảnh cứ mở cái này lên bấm vô anh mấy cái cho đỡ nhớ nha, không mất phí đâu!",
-        "Từ hôm 11/02 tới giờ quen có em nhắn tin hỏi han mỗi ngày rồi, không thấy tin nhắn là thấy thiếu thiếu.",
-        "Em hay ngại nói nhớ lắm đúng không? Với anh thì cứ nói thẳng đi, anh nghe thấy vui mà.",
-        "Đợi hôm nào thu xếp được công việc, anh chạy xuống Hải Phòng rủ em đi ăn bánh đa cua với uống Cing House nha.",
-        "Khi nào rảnh cứ nhắn tin cho anh, bận mấy anh cũng tranh thủ trả lời em iu liền."
+        "Anh ở Hà Nội vẫn nhớ em đây. Nhớ anh thì cứ nhắn tin cho anh nha.",
+        "Đang ngồi làm mà tự dưng nghĩ tới em, không biết giờ này bên Hải Phòng thế nào rồi.",
+        "Lúc nào rảnh cứ mở góc này lên, anh vẫn ở đây với em mà.",
+        "Quen có em nhắn tin hỏi han mỗi ngày rồi, lúc bận không thấy tin nhắn là thấy thiếu thiếu.",
+        "Biết tính em hay ngại rồi, nhớ anh thì cứ nói, anh nghe thấy vui mà.",
+        "Ráng đợi mấy hôm nữa anh sắp xếp công việc rồi chạy xuống Hải Phòng gặp em nhé.",
+        "Khi nào rảnh cứ nhắn tin cho anh, bận mấy anh cũng tranh thủ trả lời em liền."
       ]
     },
     tired: {
-      tag: "☁️ Khi em iu thấy mệt",
+      tag: "☁️ Khi em thấy mệt",
       notes: [
-        "Ai bảo trẻ hiểu chuyện thường không có kẹo? Với anh thì em cứ việc nhõng nhẽo, hũ kẹo này để dành riêng cho em đây.",
-        "Ở ngoài em để ý người khác nhiều rồi, về nói chuyện với anh thì không cần gồng nữa đâu, mệt cứ nói mệt.",
-        "Hôm nay làm việc mệt rồi đúng không? Uống ngụm nước, nghỉ ngơi xíu đi đừng cố quá sức nha.",
-        "Em lúc nào cũng nhắc anh giữ sức khỏe với ăn uống, vậy nên em cũng phải tự lo cho mình đàng hoàng đó!",
-        "Mệt thì cứ nhắn 'mình ơi em mệt', đừng im im chịu một mình nha, có anh ngồi nghe em kể đây.",
+        "Ở ngoài phải để ý nhiều rồi, về nói chuyện với anh thì không cần gồng nữa đâu, mệt cứ nói mệt nha.",
+        "Hôm nay nhiều việc lắm hả em? Uống ngụm nước rồi nghỉ xíu đi, đừng cố quá sức.",
+        "Em lúc nào cũng nhắc anh giữ sức khỏe, giờ em cũng phải tự chăm mình đàng hoàng đấy!",
+        "Mệt thì cứ nhắn cho anh, đừng im im chịu một mình, có anh ngồi nghe em kể đây.",
         "Tưởng tượng bé Bông đang nằm lên đùi kêu rừ rừ cho em đỡ căng thẳng nhé.",
-        "Hôm nay em làm tốt lắm rồi, gác hết việc qua một bên nghỉ ngơi chút đi em iu."
+        "Hôm nay em làm tốt lắm rồi, gác lại nghỉ ngơi chút đi em."
       ]
     },
     sad: {
-      tag: "🌧️ Khi em iu thấy buồn",
+      tag: "🌧️ Khi em thấy buồn",
       notes: [
-        "Này cô nương, không được làm 'Sọ Dừa' với anh đâu nhé! Có chuyện gì buồn cứ kể anh nghe, đừng giấu một mình.",
-        "Anh biết em hay để ý cảm xúc của mọi người rồi tự suy nghĩ nhiều. Nhưng với anh, chuyện của em mới là quan trọng nhất.",
-        "Anh không khéo mồm nói lời hay đâu, chỉ có sao nói vậy và tuyệt đối không nói dối em. Em cứ yên tâm nha.",
-        "Nếu chưa muốn kể ngay cũng không sao, lúc nào em thấy thoải mái rồi nói với anh cũng được.",
-        "Em sống hiền lành, tốt bụng với mọi người vậy rồi nên đừng tự làm mình buồn vì mấy chuyện không đáng nhé.",
-        "Thôi đừng buồn nữa, vào chơi một ván hứng kẹo cho khuây khỏa đầu óc đi nào!",
-        "Có chuyện gì không vui thì nhắn cho anh ngay nhé, lúc nào anh cũng đứng về phía em."
+        "Có chuyện gì buồn cứ nói với anh nhé, đừng giữ một mình trong lòng.",
+        "Anh biết em hay để ý người khác rồi tự nghĩ nhiều. Nhưng với anh, chuyện của em mới là quan trọng nhất.",
+        "Anh ít khi nói mấy lời hoa mỹ, nhưng có sao nói vậy và lúc nào cũng đứng về phía em.",
+        "Nếu chưa muốn kể ngay cũng không sao, lúc nào em thấy nhẹ nhõm hơn thì nói với anh cũng được.",
+        "Em hiền lành tốt tính vậy rồi nên đừng tự làm mình buồn vì mấy chuyện không đáng nhé.",
+        "Thôi đừng buồn nữa, vào đây vuốt mèo Bông một tí cho khuây khỏa nha."
       ]
     },
     playful: {
       tag: "😜 Góc Nhí Nhố của 2 đứa",
       notes: [
-        "Alo em iu ăn cơm chưa? Đáp 'ăn rồi' mà dám bảo 'ăn cức' nữa là biết tay anh đó nha! 😆",
-        "Đi ra đường nhớ chạy xe cẩn thận nhé! Biết là 'tôi bay mà', nhưng bay chậm chậm thôi cho anh đỡ lo!",
-        "Hôm nay có ghen nhẹ vu vơ nữa không đó? Yên tâm đi, anh có mỗi mình em thôi.",
-        "Bé Bông vừa báo cáo là hôm nay em iu chưa ăn kẹo. Mau nạp đường ngay!",
-        "Không có 'Sọ Dừa' gì hết nha, thân nhất nhà rồi còn bày đặt chơi chữ trêu anh!",
-        "Thèm trà cúc, bánh mì cay hay ốc luộc thì ghi sổ vào đây, hôm nào gặp anh dẫn đi ăn bù nha.",
-        "Phát hiện một cô gái hay ngại thẹn thùng đang ngồi đọc trộm lời nhắn của anh nè. Cười cái xem nào!"
+        "Hỏi thật nha: Ăn cơm chưa? Không được trả lời nhây đấy! 😆",
+        "Đi đường chạy chậm thôi đấy nhé, 'tôi bay mà' ít thôi kẻo anh lo!",
+        "Hôm nay có giận dỗi vu vơ gì nữa không đó? Yên tâm, anh chỉ có mỗi em thôi.",
+        "Bé Bông vừa kiểm tra thấy hôm nay em chưa ăn kẹo. Mau nạp đường ngay!",
+        "Thèm trà cúc, bánh mì cay hay ốc thì cứ ghi sổ ra, hôm nào gặp anh dắt đi ăn bù nha.",
+        "Đang cười tủm tỉm đọc mấy dòng này đúng không? Bắt quả tang nhé!"
       ]
     }
   },
@@ -254,7 +252,7 @@ window.GAME_DATA = {
 
 Em hay hỏi han chuyện công việc rồi nhắc anh ăn uống giữ sức khỏe suốt, mấy cái quan tâm nhỏ nhỏ đó làm anh nhớ mãi.
 
-Cảm ơn em iu vì tới giờ vẫn kiên nhẫn nói chuyện với một thằng hơi khô khan như anh nha.`,
+Cảm ơn em vì tới giờ vẫn kiên nhẫn nói chuyện với một đứa hơi khô khan như anh nha.`,
       sign: "— Khánh —"
     },
     {
@@ -266,7 +264,7 @@ Cảm ơn em iu vì tới giờ vẫn kiên nhẫn nói chuyện với một th�
 
 Anh biết em sống tình cảm, hay để ý cảm xúc người xung quanh rồi có chuyện gì lại giữ trong lòng không nói ra. Nhưng ở cạnh anh thì em không cần phải cố tỏ ra hiểu chuyện hay ngại ngùng gì đâu.
 
-Có gì bực mình, mệt hay muốn nhõng nhẽo thì cứ nói thẳng với anh. Kẹo ở ngoài không biết sao, chứ trong cái game này anh để sẵn cả hũ cho em iu rồi đó.`,
+Có gì bực mình, mệt hay muốn nhõng nhẽo thì cứ nói thẳng với anh. Kẹo ở ngoài không biết sao, chứ trong cái game này anh để sẵn cả hũ cho em rồi đó.`,
       sign: "— Khánh —"
     },
     {
@@ -274,7 +272,7 @@ Có gì bực mình, mệt hay muốn nhõng nhẽo thì cứ nói thẳng với
       title: "Thư 3: Chuyện ở xa với mấy câu trêu",
       unlockLevel: 5,
       unlockDesc: "Mở khóa khi đạt Cấp 5 thân mật",
-      body: `Anh ở Hà Nội, em ở Hải Phòng, bình thường bận việc thì hai đứa cũng chỉ nhắn tin hỏi thăm nhau được là chính. Nhiều lúc nhớ mấy câu em hay trêu như "Sọ Dừa", hay hỏi ăn chưa lại đáp "ăn cức" nghe mà chỉ muốn bem cho phát.
+      body: `Anh ở Hà Nội, em ở Hải Phòng, bình thường bận việc thì hai đứa cũng chỉ nhắn tin hỏi thăm nhau được là chính. Nhiều lúc nhớ mấy câu em hay trêu nghe mà chỉ muốn véo má cho phát.
 
 Anh không giỏi nói mấy lời ngọt ngào hoa mỹ, nhưng được cái có sao nói vậy, ghét nói dối giống hệt em nên em cứ yên tâm nhé.
 
@@ -290,7 +288,7 @@ Anh không giỏi nói mấy lời ngọt ngào hoa mỹ, nhưng được cái c
 
 Ở đây có anh phiên bản mặc polo đen đứng chờ, có bé Bông chạy loanh quanh, có mấy món em thích ở Hải Phòng, với mấy lời nhắn anh viết sẵn cho em đọc lúc cần.
 
-Chúc em iu lúc nào cũng vui vẻ, đi đường nhớ chạy xe chậm chậm thôi chứ đừng "tôi bay mà" làm anh lo nhé. Có gì cứ nhắn cho anh!`,
+Chúc em lúc nào cũng vui vẻ, đi đường nhớ chạy xe chậm chậm thôi chứ đừng "tôi bay mà" làm anh lo nhé. Có gì cứ nhắn cho anh!`,
       sign: "— Khánh (Hà Nội) —"
     }
   ],
@@ -380,15 +378,14 @@ Chúc em iu lúc nào cũng vui vẻ, đi đường nhớ chạy xe chậm chậ
       isLunar: true,
       music: "tet",
       giftCandy: 88,
-      banner: "🧧 Chúc Mừng Năm Mới! Chúc em iu luôn xinh xắn, bình an & bớt ngọng L/N nha! 🌸",
-      speech: "Tết đến rồi em iu ơi! Chúc Ngọc năm mới luôn xinh xắn, ngoan ngoãn, vạn sự như ý và bớt bắt nạt anh lại nha 😂 Lì xì em iu +88 🍬 đầu năm lấy lộc phát nè! 🧧",
+      banner: "🧧 Năm mới rồi! Chúc Sún năm mới bình an, luôn xinh xắn và bớt ngọng nha 🌸",
+      speech: "Năm mới chúc Ngọc luôn vui vẻ, nhiều sức khỏe, mọi điều thuận lợi và bớt bắt nạt anh lại nhé! 😂 Lì xì cho em +88 🍬 đầu năm lấy may nè! 🧧",
       quotes: [
-        "Tết này em iu đã ăn bánh chưng chưa? Anh để dành miếng ngon nhất cho em rồi đấy!",
-        "Năm mới chúc em iu luôn vui vẻ, bớt bắt nạt anh lại nha 😂",
-        "Bé Bông cũng chúc chị Ngọc năm mới hay ăn chóng lớn, bớt cào móng vào sofa nha 🐱",
-        "Tết bên Hải Phòng có lạnh không em? Nhớ mặc ấm vào nha sọ dừa 🌸",
-        "Đợi anh mấy hôm nữa phi từ Hà Nội xuống lì xì trực tiếp cho em iu nha! 🧧",
-        "Năm mới chúc tụi mình luôn yêu thương nhau, cùng nhau cố gắng nha em iu 💕",
+        "Tết bên Hải Phòng lạnh không em? Ra đường nhớ mặc áo ấm vào nha 🌸",
+        "Năm mới bớt bắt nạt anh lại nhé!",
+        "Bé Bông cũng chúc chị Ngọc năm mới ăn ngoan chóng lớn, ngoan ngoãn nha 🐱",
+        "Đợi mấy hôm nữa anh phi từ Hà Nội xuống Hải Phòng lì xì trực tiếp cho em nha! 🧧",
+        "Năm mới chúc hai đứa mình luôn gắn bó, cùng nhau cố gắng nha em 💕",
         "Năm mới chúc em luyện nói chuẩn L với N nha, hết Tết là không được nói ngọng nữa đâu 👒"
       ]
     },
@@ -397,24 +394,24 @@ Chúc em iu lúc nào cũng vui vẻ, đi đường nhớ chạy xe chậm chậ
       day: 15,
       music: "birthday",
       giftCandy: 50,
-      banner: "🎂 Chúc mừng sinh nhật Ngọc (15/04)! Hôm nay em iu được ưu tiên cả hũ kẹo! 🎉",
-      speech: "Chúc mừng sinh nhật em iu (15/04)! Thêm tuổi mới chúc Ngọc luôn vui vẻ, mạnh khỏe, bớt suy nghĩ mấy chuyện không đáng nha. Hôm nay không cần làm 'trẻ hiểu chuyện' nữa, thích gì cứ nói với anh! Tặng em iu +50 🍬 trong hũ trước nè 🎂"
+      banner: "🎂 Chúc mừng sinh nhật Ngọc (15/04)! Hôm nay em là nhất! 🎉",
+      speech: "Chúc mừng sinh nhật em nhé (15/04)! Thêm tuổi mới chúc Ngọc luôn vui vẻ, mạnh khỏe, bớt suy nghĩ linh tinh. Hôm nay không cần làm 'trẻ hiểu chuyện' nữa, thích gì cứ bảo anh nha! Tặng em +50 🍬 trong hũ trước nè 🎂"
     },
     khanh: {
       month: 6,
       day: 1,
       music: "birthday",
       giftCandy: 30,
-      banner: "🎂 Hôm nay 01/06 — Sinh nhật anh Khánh (trùng ngày Thiếu nhi luôn 😆)!",
-      speech: "Hôm nay 01/06 sinh nhật anh nè em iu! Sinh đúng ngày Quốc tế Thiếu nhi nên thỉnh thoảng tính vẫn hơi trẻ con tí, em iu thông cảm nha. Tặng ké em iu +30 🍬 mừng sinh nhật anh với bé Bông luôn! 🎂"
+      banner: "🎂 Hôm nay 01/06 — Sinh nhật anh Khánh!",
+      speech: "Hôm nay sinh nhật anh nè! Sinh đúng ngày Quốc tế Thiếu nhi luôn. Tặng em +30 🍬 mừng sinh nhật anh cùng bé Bông nha! 🎂"
     },
     anniversary: {
       month: 2,
       day: 11,
       music: "anniversary",
       giftCandy: 50,
-      banner: "💕 Kỷ niệm ngày 11/02 — Ngày tụi mình quen nhau! Chúc mừng hai đứa nha em iu ✨",
-      speech: "Hôm nay lại tới 11/02 rồi nè em iu! Tính từ ngày đầu nói chuyện trên Facebook Dating tới giờ cũng được {days} ngày rồi đó. Không nói nhiều đâu, tặng em iu +50 🍬 với cả cái ôm thật chặt nha! 💕"
+      banner: "💕 Kỷ niệm ngày 11/02 — Ngày đầu hai đứa mình quen nhau! ✨",
+      speech: "Hôm nay lại tới 11/02 rồi nè! Tính từ ngày đầu nói chuyện trên Facebook Dating tới giờ cũng được {days} ngày rồi đó. Tặng em +50 🍬 với cả cái ôm thật chặt nha! 💕"
     }
   }
 };

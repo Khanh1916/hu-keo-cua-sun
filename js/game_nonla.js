@@ -530,7 +530,7 @@ window.NonLaGame = (() => {
         callbacks.onHudUpdate({ score, candies, livesText: lives > 0 ? "❤️".repeat(lives) : "💔" });
       }
       if (lives <= 0) {
-        endGame("Đâm cột mất rồi! Đọc/chọn nhanh hơn xíu nha em iu:");
+        endGame("Đâm cột mất rồi! Đọc hoặc chọn nhanh hơn xíu nha:");
         return;
       }
       pickNextWord();

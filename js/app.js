@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (leveledUp) {
       AudioManager.playLevelUp();
-      showToast(`🎉 Lên Cấp ${state.level} thân mật! Tặng em iu +10 🍬`);
+      showToast(`🎉 Lên Cấp ${state.level} thân mật! Tặng em +10 🍬`);
     }
 
     checkAchievements();
@@ -444,7 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
     RoomScene.triggerKhanhHappy("happy");
     state.hugCount++;
     const lines = [
-      "Ôm cái cho đỡ mệt nào. Hôm nay mọi chuyện ổn chứ em iu? 🤗",
+      "Ôm cái cho đỡ mệt nào. Hôm nay mọi chuyện ổn chứ em? 🤗",
       "Nạp xíu năng lượng rồi làm việc tiếp nha Ngọc ơi!",
       "Đứng yên anh ôm cái nào, lúc nào rảnh nhắn tin cho anh nha."
     ];
@@ -491,8 +491,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const ARCADE_META = {
     catch: {
       title: "🍬 Hứng Kẹo & Quà Đất Cảng",
-      overlayTitle: "Hứng Kẹo Cho Trẻ Hiểu Chuyện! 🍬",
-      overlayDesc: `Hứng <strong>kẹo, tim, đồ ăn Hải Phòng</strong> và ăn <strong>Nam châm 🧲 / Khiên 🛡️</strong>! Combo 10 lần kích hoạt <strong>Cơn Mưa Kẹo x3</strong>!<br />Nhớ né <strong>cục cứt 💩</strong> kẻo mất mạng nhé 😂`,
+      overlayTitle: "Hứng Kẹo & Quà Đất Cảng 🍬",
+      overlayDesc: `Hứng <strong>kẹo, tim, đồ ăn Hải Phòng</strong> và ăn <strong>Nam châm 🧲 / Khiên 🛡️</strong>! Combo 10 lần kích hoạt <strong>Cơn Mưa Kẹo x3</strong>!<br />Nhớ né chướng ngại vật kẻo mất mạng nhé 😂`,
       hint: "Chạm kéo 1 ngón tay siêu mượt • Combo 10 = Fever x3 ✨",
       bestKey: "bestScore",
       defaultLives: "❤️❤️❤️",
@@ -556,14 +556,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const overlay = document.getElementById("mgOverlay");
     const resultBox = document.getElementById("mgResultBox");
     document.getElementById("mgOverlayTitle").textContent = isNewBest
-      ? "🎉 Kỷ Lục Mới Của Em Iu!"
+      ? "🎉 Kỷ Lục Mới!"
       : "Xong Ván Rồi Nha! 💕";
 
-    let descText = reason || "Em iu chơi giỏi lắm luôn!";
+    let descText = reason || "Em chơi đỉnh thật đấy!";
     if (gameKey === "catch") {
       descText = hitPoop
-        ? "Ối giời ơi hứng nhầm cục cứt mất rồi 😂 Nhưng không sao, quà vẫn đầy túi nè:"
-        : "Em iu chơi giỏi lắm luôn!";
+        ? "Ối giời ơi hứng nhầm rồi 😂 Nhưng không sao, quà vẫn đầy túi nè:"
+        : "Em chơi đỉnh thật đấy!";
     }
     document.getElementById("mgOverlayDesc").textContent = descText;
 
@@ -959,7 +959,7 @@ document.addEventListener("DOMContentLoaded", () => {
       AudioManager.playClick();
       btnUpdateLoc.textContent = "⏳ Đang dò...";
       btnUpdateLoc.disabled = true;
-      showToast("Đang định vị để cập nhật thời tiết cho em iu nè... 📍");
+      showToast("Đang kiểm tra vị trí để cập nhật thời tiết... 📍");
       if (window.WeatherEngine) {
         WeatherEngine.requestLocation(
           (w) => {
