@@ -1890,6 +1890,239 @@ window.ChineseApp = (() => {
     }
   }
 
+  let matchWords = [];
+  let matchHanziCards = [];
+  let matchPinyinCards = [];
+  let matchSelectedHanzi = null;
+  let matchSelectedPinyin = null;
+  let matchedIds = new Set();
+  let matchRewarded = false;
+  let matchLocked = false;
+
+  function startMatchGame() {
+    const list = currentLevel === "starred" ? getAllStarredWords() : (HSK_DATA[currentLevel] || HSK_DATA.hsk4);
+    if (list.length < 4) {
+      const container = document.getElementById("chineseTabContent");
+      container.innerHTML = `
+        <div class="chinese-match-wrap">
+          <div class="chinese-level-bar">
+            <div class="clb-left">
+              <label>🏷️ Cấp độ:</label>
+              <select id="selMatchLevel" class="pixel-select">
+                <option value="hsk4" selected>HSK 4 (Của Ngọc 💕)</option>
+                <option value="hsk5">HSK 5</option>
+                <option value="hsk6">HSK 6</option>
+                <option value="hsk3">HSK 3</option>
+                <option value="hsk2">HSK 2</option>
+                <option value="hsk1">HSK 1</option>
+                <option value="starred">⭐ Sổ Tay Yêu Thích (${getAllStarredWords().length} từ)</option>
+              </select>
+            </div>
+          </div>
+          <div class="flashcard-empty-box">
+            <div style="font-size: 36px; margin-bottom: 8px;">🧩</div>
+            <h3>Cần ít nhất 4 từ để chơi nối chữ!</h3>
+            <p>Sổ tay yêu thích của em cần có từ 4 từ trở lên để tạo ván nối chữ. Em hãy đổi cấp độ hoặc lưu thêm từ vào sổ tay nhé 💕</p>
+          </div>
+        </div>
+      `;
+      const selM = document.getElementById("selMatchLevel");
+      if (selM) {
+        selM.addEventListener("change", (e) => {
+          setLevel(e.target.value);
+          startMatchGame();
+        });
+      }
+      return;
+    }
+
+    const shuffled = [...list].sort(() => Math.random() - 0.5);
+    matchWords = shuffled.slice(0, 5).map((w, idx) => ({ ...w, uid: `m_${idx}_${w.hanzi}` }));
+
+    matchHanziCards = matchWords.map((w) => ({ uid: w.uid, hanzi: w.hanzi })).sort(() => Math.random() - 0.5);
+    matchPinyinCards = matchWords.map((w) => ({ uid: w.uid, pinyin: w.pinyin, meaning: w.meaning, hanzi: w.hanzi })).sort(() => Math.random() - 0.5);
+
+    matchSelectedHanzi = null;
+    matchSelectedPinyin = null;
+    matchedIds = new Set();
+    matchRewarded = false;
+    matchLocked = false;
+
+    renderMatchBoard();
+  }
+
+  function renderMatchBoard() {
+    const container = document.getElementById("chineseTabContent");
+    const isCompleted = matchedIds.size === matchWords.length && matchWords.length > 0;
+
+    if (isCompleted) {
+      if (!matchRewarded) {
+        matchRewarded = true;
+        if (window.GameState) {
+          const s = window.GameState.get();
+          s.candy = (s.candy || 0) + 2;
+          if (window.GameState.addXP) window.GameState.addXP(10);
+          window.GameState.save();
+          window.GameState.renderHUD();
+        }
+        if (window.AudioManager) AudioManager.playCelebration();
+      }
+
+      container.innerHTML = `
+        <div class="quiz-result-wrap match-result-wrap">
+          <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
+          <h3>Xuất Sắc! Hoàn Thành Nối Từ</h3>
+          <p class="quiz-score-text">Ngọc đã nối chính xác trọn vẹn <strong>${matchWords.length}/${matchWords.length}</strong> cặp chữ Hán & Pinyin (${getLevelLabel(currentLevel)})!</p>
+          <p class="quiz-cheer">Trí nhớ của em siêu đỉnh luôn nè 💕 (+2 🍬 Kẹo & +10 XP)</p>
+          <div class="quiz-actions">
+            <button class="pixel-btn btn-pink" id="btnRestartMatch">Chơi Ván Mới 🧩</button>
+            <button class="pixel-btn btn-cream" id="btnMatchToStarred">Xem Sổ Tay ⭐</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("btnRestartMatch").addEventListener("click", startMatchGame);
+      document.getElementById("btnMatchToStarred").addEventListener("click", () => switchTab("starred"));
+      return;
+    }
+
+    let hanziHtml = "";
+    matchHanziCards.forEach((c) => {
+      const isMatched = matchedIds.has(c.uid);
+      const isSelected = matchSelectedHanzi && matchSelectedHanzi.uid === c.uid;
+      hanziHtml += `
+        <button class="match-card match-card-hanzi ${isMatched ? "matched" : ""} ${isSelected ? "selected" : ""}" data-uid="${c.uid}" ${isMatched ? "disabled" : ""}>
+          <span class="mc-hanzi">${c.hanzi}</span>
+          ${isMatched ? '<span class="mc-check">✓</span>' : ""}
+        </button>
+      `;
+    });
+
+    let pinyinHtml = "";
+    matchPinyinCards.forEach((c) => {
+      const isMatched = matchedIds.has(c.uid);
+      const isSelected = matchSelectedPinyin && matchSelectedPinyin.uid === c.uid;
+      pinyinHtml += `
+        <button class="match-card match-card-pinyin ${isMatched ? "matched" : ""} ${isSelected ? "selected" : ""}" data-uid="${c.uid}" ${isMatched ? "disabled" : ""}>
+          <span class="mc-pinyin">${c.pinyin}</span>
+          <span class="mc-meaning">${c.meaning}</span>
+          ${isMatched ? '<span class="mc-check">✓</span>' : ""}
+        </button>
+      `;
+    });
+
+    container.innerHTML = `
+      <div class="chinese-match-wrap">
+        <div class="quiz-progress-track">
+          <div class="quiz-progress-fill" style="width: ${(matchedIds.size / Math.max(1, matchWords.length)) * 100}%"></div>
+        </div>
+
+        <div class="chinese-level-bar">
+          <div class="clb-left">
+            <label>🏷️ Cấp:</label>
+            <select id="selMatchLevel" class="pixel-select">
+              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 💕</option>
+              <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5</option>
+              <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6</option>
+              <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3</option>
+              <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2</option>
+              <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1</option>
+              <option value="starred" ${currentLevel === "starred" ? "selected" : ""}>⭐ Sổ Tay (${getAllStarredWords().length})</option>
+            </select>
+          </div>
+          <span class="fc-counter">🧩 Đã nối: <strong>${matchedIds.size} / ${matchWords.length}</strong></span>
+          <button class="btn-dict" id="btnNewMatchRound" title="Đổi sang 5 từ khác">🎲 Đổi ván</button>
+        </div>
+
+        <p class="chinese-help-text">Chạm 1 thẻ <strong>Chữ Hán</strong> bên trái và 1 thẻ <strong>Pinyin / Nghĩa</strong> bên phải tương ứng để nối cặp nhé!</p>
+
+        <div class="match-columns-grid">
+          <div class="match-col match-col-left">
+            <div class="match-col-title">🀄 Chữ Hán</div>
+            ${hanziHtml}
+          </div>
+          <div class="match-col match-col-right">
+            <div class="match-col-title">📖 Pinyin & Nghĩa</div>
+            ${pinyinHtml}
+          </div>
+        </div>
+      </div>
+    `;
+
+    bindMatchEvents();
+  }
+
+  function bindMatchEvents() {
+    const sel = document.getElementById("selMatchLevel");
+    if (sel) {
+      sel.addEventListener("change", (e) => {
+        setLevel(e.target.value);
+        startMatchGame();
+      });
+    }
+
+    const btnNew = document.getElementById("btnNewMatchRound");
+    if (btnNew) {
+      btnNew.addEventListener("click", startMatchGame);
+    }
+
+    document.querySelectorAll(".match-card-hanzi").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (matchLocked) return;
+        const uid = btn.dataset.uid;
+        if (matchedIds.has(uid)) return;
+
+        matchSelectedHanzi = matchHanziCards.find((c) => c.uid === uid);
+        checkMatchAttempt();
+      });
+    });
+
+    document.querySelectorAll(".match-card-pinyin").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (matchLocked) return;
+        const uid = btn.dataset.uid;
+        if (matchedIds.has(uid)) return;
+
+        matchSelectedPinyin = matchPinyinCards.find((c) => c.uid === uid);
+        checkMatchAttempt();
+      });
+    });
+  }
+
+  function checkMatchAttempt() {
+    if (!matchSelectedHanzi || !matchSelectedPinyin) {
+      renderMatchBoard();
+      return;
+    }
+
+    const isCorrect = matchSelectedHanzi.uid === matchSelectedPinyin.uid;
+    const targetWord = matchWords.find((w) => w.uid === matchSelectedHanzi.uid);
+
+    if (isCorrect) {
+      matchedIds.add(matchSelectedHanzi.uid);
+      if (window.AudioManager) AudioManager.playCandy();
+      if (targetWord) speak(targetWord.hanzi);
+      matchSelectedHanzi = null;
+      matchSelectedPinyin = null;
+      renderMatchBoard();
+    } else {
+      matchLocked = true;
+      if (window.AudioManager) AudioManager.playPoop();
+      
+      const hBtn = document.querySelector(`.match-card-hanzi[data-uid="${matchSelectedHanzi.uid}"]`);
+      const pBtn = document.querySelector(`.match-card-pinyin[data-uid="${matchSelectedPinyin.uid}"]`);
+      if (hBtn) hBtn.classList.add("shake-wrong");
+      if (pBtn) pBtn.classList.add("shake-wrong");
+
+      setTimeout(() => {
+        matchSelectedHanzi = null;
+        matchSelectedPinyin = null;
+        matchLocked = false;
+        renderMatchBoard();
+      }, 700);
+    }
+  }
+
   function renderLoveTab() {
     const container = document.getElementById("chineseTabContent");
     const list = HSK_DATA.love;
@@ -2074,6 +2307,7 @@ window.ChineseApp = (() => {
     if (tabKey === "daily") renderDailyTab();
     else if (tabKey === "flashcard") renderFlashcardTab();
     else if (tabKey === "quiz") startQuiz();
+    else if (tabKey === "match") startMatchGame();
     else if (tabKey === "starred") renderStarredTab();
     else if (tabKey === "love") renderLoveTab();
   }
