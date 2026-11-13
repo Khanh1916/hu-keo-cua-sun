@@ -1288,7 +1288,7 @@ window.ChineseApp = (() => {
     ]
   };
 
-  let currentTab = "daily"; // "daily" | "flashcard" | "quiz" | "love"
+  let currentTab = "daily"; // "daily" | "flashcard" | "quiz" | "match" | "starred" | "love"
   let currentLevel = localStorage.getItem("hu_keo_sun_hsk_level") || "hsk4";
   let dailyOffset = 0;
   let flashcardIndex = 0;
@@ -1297,6 +1297,71 @@ window.ChineseApp = (() => {
   let quizIndex = 0;
   let quizScore = 0;
   let quizAnswered = false;
+
+  // Starred / Favorite Words Data Model
+  const STARRED_KEY = "hu_keo_sun_starred_words";
+
+  function getStarredList() {
+    try {
+      const raw = localStorage.getItem(STARRED_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveStarredList(list) {
+    try {
+      localStorage.setItem(STARRED_KEY, JSON.stringify(list));
+    } catch {}
+  }
+
+  function isStarred(hanzi) {
+    const list = getStarredList();
+    return list.some((item) => (typeof item === "string" ? item === hanzi : item.hanzi === hanzi));
+  }
+
+  function findWordByHanzi(hanzi) {
+    for (const key of Object.keys(HSK_DATA)) {
+      const match = HSK_DATA[key].find((w) => w.hanzi === hanzi);
+      if (match) return { ...match, level: key };
+    }
+    return null;
+  }
+
+  function getAllStarredWords() {
+    const list = getStarredList();
+    const result = [];
+    list.forEach((item) => {
+      const hanzi = typeof item === "string" ? item : item.hanzi;
+      const found = findWordByHanzi(hanzi);
+      if (found) {
+        result.push(found);
+      } else if (typeof item === "object") {
+        result.push(item);
+      }
+    });
+    return result;
+  }
+
+  function toggleStar(wordObj) {
+    let list = getStarredList();
+    const hanzi = typeof wordObj === "string" ? wordObj : wordObj.hanzi;
+    const exists = list.some((item) => (typeof item === "string" ? item === hanzi : item.hanzi === hanzi));
+    if (exists) {
+      list = list.filter((item) => (typeof item === "string" ? item !== hanzi : item.hanzi !== hanzi));
+      saveStarredList(list);
+      if (window.showToast) window.showToast(`Đã bỏ lưu "${hanzi}" khỏi Sổ tay`);
+      return false;
+    } else {
+      const fullObj = typeof wordObj === "object" ? wordObj : findWordByHanzi(hanzi) || { hanzi };
+      list.push(fullObj);
+      saveStarredList(list);
+      if (window.AudioManager) AudioManager.playCelebration();
+      if (window.showToast) window.showToast(`⭐ Đã lưu "${hanzi}" vào Sổ tay yêu thích!`);
+      return true;
+    }
+  }
 
   let activeAudio = null;
 
