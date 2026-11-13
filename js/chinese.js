@@ -1951,6 +1951,120 @@ window.ChineseApp = (() => {
     });
   }
 
+  let starredFilter = "all";
+
+  function renderStarredTab() {
+    const container = document.getElementById("chineseTabContent");
+    const allStarred = getAllStarredWords();
+
+    let filtered = allStarred;
+    if (starredFilter !== "all") {
+      filtered = allStarred.filter((w) => w.level === starredFilter);
+    }
+
+    if (allStarred.length === 0) {
+      container.innerHTML = `
+        <div class="chinese-starred-wrap">
+          <div class="flashcard-empty-box">
+            <div style="font-size: 40px; margin-bottom: 10px;">⭐</div>
+            <h3>Sổ Tay Yêu Thích Đang Trống</h3>
+            <p>Góc nhỏ này dành riêng để Ngọc lưu lại những từ vựng khó nhớ hoặc những câu nói ngọt ngào muốn ôn tập lại.</p>
+            <p style="font-size: 11.5px; color: #8c7365; margin: 12px 0;">Em chỉ cần bấm nút <strong>☆ Lưu từ</strong> ở mục <strong>5 Từ Hôm Nay</strong> hoặc <strong>Flashcard</strong> là từ sẽ xuất hiện ngay tại đây nhé 💕</p>
+            <button class="pixel-btn btn-pink" id="btnGoToDaily">Đi đến 5 Từ Hôm Nay</button>
+          </div>
+        </div>
+      `;
+      const btnGo = document.getElementById("btnGoToDaily");
+      if (btnGo) btnGo.addEventListener("click", () => switchTab("daily"));
+      return;
+    }
+
+    let itemsHtml = "";
+    filtered.forEach((w) => {
+      itemsHtml += `
+        <div class="chinese-word-card starred-card">
+          <div class="cwc-top">
+            <span class="cwc-hanzi">${w.hanzi}</span>
+            <div class="cwc-meta">
+              <span class="cwc-pinyin">${w.pinyin || ""}</span>
+              <span class="cwc-type">${w.level ? w.level.toUpperCase() : "ĐÃ LƯU"}</span>
+            </div>
+            <div class="cwc-actions">
+              <button class="btn-speak" data-text="${w.hanzi}" title="Nghe phát âm chuẩn">🔊 Nghe</button>
+              <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener" title="Tra nét viết trên Hanzii">📖 Hanzii</a>
+              <button class="btn-star-remove" data-hanzi="${w.hanzi}" title="Bỏ lưu khỏi sổ tay">🗑️ Bỏ lưu</button>
+            </div>
+          </div>
+          <div class="cwc-meaning">👉 <strong>${w.meaning || ""}</strong></div>
+          ${w.example ? `
+            <div class="cwc-example">
+              <span class="cwc-ex-hanzi">"${w.example}"</span>
+              ${w.examplePinyin ? `<span class="cwc-ex-pinyin">${w.examplePinyin}</span>` : ""}
+              ${w.exampleMeaning ? `<span class="cwc-ex-meaning">💬 ${w.exampleMeaning}</span>` : ""}
+            </div>
+          ` : ""}
+        </div>
+      `;
+    });
+
+    container.innerHTML = `
+      <div class="chinese-starred-wrap">
+        <div class="chinese-level-bar">
+          <div class="clb-left">
+            <label>⭐ Lọc:</label>
+            <select id="selStarredFilter" class="pixel-select">
+              <option value="all" ${starredFilter === "all" ? "selected" : ""}>Tất cả (${allStarred.length} từ)</option>
+              <option value="hsk4" ${starredFilter === "hsk4" ? "selected" : ""}>HSK 4</option>
+              <option value="hsk5" ${starredFilter === "hsk5" ? "selected" : ""}>HSK 5</option>
+              <option value="hsk6" ${starredFilter === "hsk6" ? "selected" : ""}>HSK 6</option>
+              <option value="hsk3" ${starredFilter === "hsk3" ? "selected" : ""}>HSK 3</option>
+              <option value="hsk2" ${starredFilter === "hsk2" ? "selected" : ""}>HSK 2</option>
+              <option value="hsk1" ${starredFilter === "hsk1" ? "selected" : ""}>HSK 1</option>
+              <option value="love" ${starredFilter === "love" ? "selected" : ""}>Lời Yêu Thương</option>
+            </select>
+          </div>
+          <div class="clb-right-actions">
+            <button class="btn-dict" id="btnStarredToFlashcard" title="Lật thẻ Flashcard riêng với các từ này">📇 Ôn Flashcard</button>
+          </div>
+        </div>
+
+        <p class="chinese-help-text">⭐ Sổ tay riêng của Ngọc với <strong>${allStarred.length}</strong> từ vựng đã chọn lọc. Em có thể bấm <strong>📇 Ôn Flashcard</strong> để luyện nhớ hoặc bấm <strong>🔊 Nghe</strong> để nghe lại bất cứ lúc nào!</p>
+
+        <div class="chinese-daily-list">
+          ${itemsHtml.length > 0 ? itemsHtml : '<div class="empty-filter-notice" style="text-align: center; padding: 20px; color: #8c7365; font-size: 12px;">Không có từ nào thuộc cấp này trong sổ tay của em.</div>'}
+        </div>
+      </div>
+    `;
+
+    const sel = document.getElementById("selStarredFilter");
+    if (sel) {
+      sel.addEventListener("change", (e) => {
+        starredFilter = e.target.value;
+        renderStarredTab();
+      });
+    }
+
+    const btnToFc = document.getElementById("btnStarredToFlashcard");
+    if (btnToFc) {
+      btnToFc.addEventListener("click", () => {
+        setLevel("starred");
+        switchTab("flashcard");
+      });
+    }
+
+    document.querySelectorAll(".btn-speak").forEach((btn) => {
+      btn.addEventListener("click", () => speak(btn.dataset.text));
+    });
+
+    document.querySelectorAll(".btn-star-remove").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const hanzi = btn.dataset.hanzi;
+        toggleStar(hanzi);
+        renderStarredTab();
+      });
+    });
+  }
+
   function switchTab(tabKey) {
     currentTab = tabKey;
     document.querySelectorAll(".chinese-nav-tab").forEach((btn) => {
@@ -1960,6 +2074,7 @@ window.ChineseApp = (() => {
     if (tabKey === "daily") renderDailyTab();
     else if (tabKey === "flashcard") renderFlashcardTab();
     else if (tabKey === "quiz") startQuiz();
+    else if (tabKey === "starred") renderStarredTab();
     else if (tabKey === "love") renderLoveTab();
   }
 
