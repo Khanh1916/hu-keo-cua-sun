@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         id: "game",
         icon: "🎮",
-        title: "Thử tài ở khu trò chơi",
+        title: "Vui chơi ở Vườn trẻ Kim Đồng",
         desc: "Chơi 1 ván mini-game đạt từ 50 điểm trở lên",
         done: q.gameDone
       }
@@ -959,7 +959,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("bestCrossingText").textContent = `Kỷ lục: ${state.bestCrossing}`;
     document.getElementById("bestFlappyText").textContent = `Kỷ lục: ${state.bestFlappy}`;
     document.getElementById("bestNonlaText").textContent = `Kỷ lục: ${state.bestNonla}`;
-    document.getElementById("arcadeTitle").textContent = "🎮 Khu Trò Chơi Đất Cảng";
+    document.getElementById("arcadeTitle").textContent = "🎮 Vườn Trẻ Kim Đồng";
     document.getElementById("btnBackArcade").classList.add("hidden");
     document.getElementById("arcadeMenu").classList.remove("hidden");
     document.getElementById("arcadeStage").classList.add("hidden");
