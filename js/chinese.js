@@ -1406,6 +1406,16 @@ window.ChineseApp = (() => {
     }
   }
 
+  // True unbiased Fisher-Yates shuffle algorithm
+  function shuffleArray(arr) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
   // Get 5 deterministic words for today per level (cycling sequentially without duplicates)
   function getDailyFiveWords(level) {
     const list = HSK_DATA[level] || HSK_DATA.hsk4;
@@ -1738,14 +1748,59 @@ window.ChineseApp = (() => {
   let quizRewarded = false;
 
   function startQuiz() {
-    const list = HSK_DATA[currentLevel] || HSK_DATA.hsk4;
-    const shuffled = [...list].sort(() => Math.random() - 0.5);
-    quizQuestions = shuffled.slice(0, 5).map((target) => {
-      const distractors = list.filter((item) => item.hanzi !== target.hanzi);
-      const randomWrong = distractors.sort(() => Math.random() - 0.5).slice(0, 3);
-      const options = [target, ...randomWrong].sort(() => Math.random() - 0.5);
+    const list = currentLevel === "starred" ? getAllStarredWords() : (HSK_DATA[currentLevel] || HSK_DATA.hsk4);
+    if (!list || list.length === 0) {
+      const container = document.getElementById("chineseTabContent");
+      container.innerHTML = `
+        <div class="chinese-quiz-wrap">
+          <div class="chinese-level-bar">
+            <div class="clb-left">
+              <label>🏷️ Cấp:</label>
+              <select id="selQuizLevel" class="pixel-select">
+                <option value="hsk4">HSK 4 💕</option>
+                <option value="hsk5">HSK 5</option>
+                <option value="hsk6">HSK 6</option>
+                <option value="hsk3">HSK 3</option>
+                <option value="hsk2">HSK 2</option>
+                <option value="hsk1">HSK 1</option>
+                <option value="starred" selected>⭐ Sổ Tay (0 từ)</option>
+              </select>
+            </div>
+          </div>
+          <div class="flashcard-empty-box">
+            <div style="font-size: 36px; margin-bottom: 8px;">✍️</div>
+            <h3>Sổ tay từ vựng đang trống nè!</h3>
+            <p>Em hãy lưu thêm từ vào sổ tay hoặc chọn một cấp HSK khác để bắt đầu bài trắc nghiệm nhé 💕</p>
+          </div>
+        </div>
+      `;
+      const selQ = document.getElementById("selQuizLevel");
+      if (selQ) {
+        selQ.addEventListener("change", (e) => {
+          setLevel(e.target.value);
+          startQuiz();
+        });
+      }
+      return;
+    }
+
+    // High quality distractor fallback pool to guarantee exactly 4 unique options
+    const fallbackPool = [...(HSK_DATA.hsk4 || []), ...(HSK_DATA.hsk3 || []), ...(HSK_DATA.hsk2 || [])];
+
+    const shuffled = shuffleArray(list);
+    const questionTargets = shuffled.slice(0, Math.min(5, shuffled.length));
+
+    quizQuestions = questionTargets.map((target) => {
+      let pool = list.filter((item) => item.hanzi !== target.hanzi && item.meaning !== target.meaning);
+      if (pool.length < 3) {
+        const extra = fallbackPool.filter((item) => item.hanzi !== target.hanzi && item.meaning !== target.meaning && !pool.some((p) => p.hanzi === item.hanzi));
+        pool = [...pool, ...extra];
+      }
+      const randomWrong = shuffleArray(pool).slice(0, 3);
+      const options = shuffleArray([target, ...randomWrong]);
       return { target, options };
     });
+
     quizIndex = 0;
     quizScore = 0;
     quizAnswered = false;
@@ -1814,6 +1869,7 @@ window.ChineseApp = (() => {
               <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3</option>
               <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2</option>
               <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1</option>
+              <option value="starred" ${currentLevel === "starred" ? "selected" : ""}>⭐ Sổ Tay (${getAllStarredWords().length})</option>
             </select>
           </div>
           <span>Câu ${quizIndex + 1} / ${quizQuestions.length}</span>
