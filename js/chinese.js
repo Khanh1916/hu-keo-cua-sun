@@ -1388,7 +1388,7 @@ window.ChineseApp = (() => {
     let itemsHtml = "";
     words.forEach((w) => {
       itemsHtml += `
-        <div class="chinese-word-card pixel-box">
+        <div class="chinese-word-card">
           <div class="cwc-top">
             <span class="cwc-hanzi">${w.hanzi}</span>
             <div class="cwc-meta">
@@ -1396,12 +1396,18 @@ window.ChineseApp = (() => {
               <span class="cwc-type">${w.type || "Từ vựng"}</span>
             </div>
             <div class="cwc-actions">
-              <button class="pixel-btn btn-cream btn-sm btn-speak" data-text="${w.hanzi}">🔊 Nghe</button>
-              <a class="pixel-btn btn-cream btn-sm btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener" title="Tra từ điển Hanzii (nét viết, bộ thủ, ví dụ)">📖 Hanzii</a>
+              <button class="btn-speak" data-text="${w.hanzi}" title="Nghe phát âm chuẩn">🔊 Nghe</button>
+              <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener" title="Tra nét viết, bộ thủ trên từ điển Hanzii">📖 Hanzii</a>
             </div>
           </div>
           <div class="cwc-meaning">👉 <strong>${w.meaning}</strong></div>
-          ${w.example ? `<div class="cwc-example">"${w.example}" <em>(${w.examplePinyin})</em>: ${w.exampleMeaning}</div>` : ""}
+          ${w.example ? `
+            <div class="cwc-example">
+              <span class="cwc-ex-hanzi">"${w.example}"</span>
+              <span class="cwc-ex-pinyin">${w.examplePinyin}</span>
+              <span class="cwc-ex-meaning">💬 ${w.exampleMeaning}</span>
+            </div>
+          ` : ""}
         </div>
       `;
     });
@@ -1410,7 +1416,7 @@ window.ChineseApp = (() => {
       <div class="chinese-daily-wrap">
         <div class="chinese-level-bar">
           <div class="clb-left">
-            <label>Cấp độ:</label>
+            <label>🏷️ Cấp độ:</label>
             <select id="selChineseLevel" class="pixel-select">
               <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
               <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu • Luyện thi)</option>
@@ -1420,19 +1426,19 @@ window.ChineseApp = (() => {
               <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1 (Nhập môn)</option>
             </select>
           </div>
-          <button class="pixel-btn btn-cream btn-sm" id="btnNextDailySet" title="Đổi sang 5 từ tiếp theo">🎲 Đổi 5 từ</button>
+          <button class="btn-dict" id="btnNextDailySet" title="Đổi sang 5 từ tiếp theo">🎲 Đổi 5 từ</button>
         </div>
 
-        <p class="chinese-help-text">🎯 Mỗi ngày hệ thống chọn 5 từ chuẩn chỉ theo cấp độ để Ngọc ghi nhớ dần. Bấm 🔊 để nghe phát âm chuẩn hoặc 📖 Hanzii để tra nét viết & bộ thủ nhé!</p>
+        <p class="chinese-help-text">🎯 Mỗi ngày 5 từ vừa vặn, không bị dồn ép. Bấm 🔊 để luyện nghe giọng đọc ấm áp hoặc 📖 Hanzii để tra nét bút thuận hoạt họa nhé!</p>
 
         <div class="chinese-daily-list">
           ${itemsHtml}
         </div>
 
-        <div class="chinese-daily-finish-box pixel-box">
+        <div class="chinese-daily-finish-box">
           <div class="cdf-info">
             <span>🎁 Học xong 5 từ hôm nay:</span>
-            <strong style="color: var(--pink-hot)">+2 🍬 Kẹo & +10 XP</strong>
+            <strong style="color: #d6336c">+2 🍬 Kẹo & +10 XP</strong>
           </div>
           <button class="pixel-btn ${isCompletedToday ? "btn-cream disabled" : "btn-pink"}" id="btnFinishDailyChinese" ${isCompletedToday ? "disabled" : ""}>
             ${isCompletedToday ? "🎉 Đã Ghi Nhớ Hôm Nay" : "Đã Nhớ Cả 5 Từ ✓"}
@@ -1501,26 +1507,29 @@ window.ChineseApp = (() => {
     container.innerHTML = `
       <div class="chinese-flashcard-wrap">
         <div class="chinese-level-bar">
-          <label>Cấp độ:</label>
-          <select id="selFlashcardLevel" class="pixel-select">
-            <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
-            <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu • Luyện thi)</option>
-            <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy • Thành ngữ)</option>
-            <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Cảm xúc • Giao tiếp)</option>
-            <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Căn bản • Đời sống)</option>
-            <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1 (Nhập môn)</option>
-          </select>
+          <div class="clb-left">
+            <label>🏷️ Cấp độ:</label>
+            <select id="selFlashcardLevel" class="pixel-select">
+              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
+              <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu • Luyện thi)</option>
+              <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy • Thành ngữ)</option>
+              <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Cảm xúc • Giao tiếp)</option>
+              <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Căn bản • Đời sống)</option>
+              <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1 (Nhập môn)</option>
+            </select>
+          </div>
           <span class="fc-counter">${flashcardIndex + 1} / ${list.length}</span>
         </div>
 
-        <div class="flashcard-box pixel-box ${flashcardFlipped ? "flipped" : ""}" id="flashcardBox">
+        <div class="flashcard-box ${flashcardFlipped ? "flipped" : ""}" id="flashcardBox">
           ${!flashcardFlipped ? `
             <div class="fc-front">
+              <span class="fc-tag">🀄 ${getLevelLabel(currentLevel).split(" ")[0]} ${getLevelLabel(currentLevel).split(" ")[1] || ""} • Thẻ ${flashcardIndex + 1}/${list.length}</span>
               <span class="fc-hanzi">${w.hanzi}</span>
-              <span class="fc-hint">💡 Chạm vào thẻ để lật xem nghĩa & pinyin</span>
+              <span class="fc-hint">👆 Chạm vào thẻ để lật xem nghĩa & ví dụ</span>
               <div class="fc-actions-row">
-                <button class="pixel-btn btn-cream btn-sm btn-speak-card" data-text="${w.hanzi}">🔊 Nghe</button>
-                <a class="pixel-btn btn-cream btn-sm btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
+                <button class="btn-speak btn-speak-card" data-text="${w.hanzi}">🔊 Nghe phát âm</button>
+                <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
               </div>
             </div>
           ` : `
@@ -1530,14 +1539,14 @@ window.ChineseApp = (() => {
               <span class="fc-type-badge">${w.type || "Từ vựng"}</span>
               ${w.example ? `
                 <div class="fc-example-box">
-                  <div class="fc-ex-hanzi">"${w.example}"</div>
-                  <div class="fc-ex-pinyin">${w.examplePinyin}</div>
-                  <div class="fc-ex-vi">${w.exampleMeaning}</div>
+                  <span class="fc-ex-hanzi">"${w.example}"</span>
+                  <span class="fc-ex-pinyin">${w.examplePinyin}</span>
+                  <span class="fc-ex-vi">💬 ${w.exampleMeaning}</span>
                 </div>
               ` : ""}
               <div class="fc-actions-row">
-                <button class="pixel-btn btn-cream btn-sm btn-speak-card" data-text="${w.example || w.hanzi}">🔊 Nghe ví dụ</button>
-                <a class="pixel-btn btn-cream btn-sm btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
+                <button class="btn-speak btn-speak-card" data-text="${w.example || w.hanzi}">🔊 Nghe ví dụ</button>
+                <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
               </div>
             </div>
           `}
@@ -1636,7 +1645,7 @@ window.ChineseApp = (() => {
       }
 
       container.innerHTML = `
-        <div class="quiz-result-wrap pixel-box">
+        <div class="quiz-result-wrap">
           <h3>🎉 Hoàn Thành Bài Trắc Nghiệm!</h3>
           <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${quizQuestions.length}</strong> câu (${getLevelLabel(currentLevel)})</p>
           <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 (+2 🍬 & +15 XP)" : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
@@ -1658,7 +1667,7 @@ window.ChineseApp = (() => {
     let optsHtml = "";
     q.options.forEach((opt, idx) => {
       optsHtml += `
-        <button class="quiz-opt-btn pixel-btn btn-cream" data-hanzi="${opt.hanzi}">
+        <button class="quiz-opt-btn" data-hanzi="${opt.hanzi}">
           <span class="q-opt-label">${String.fromCharCode(65 + idx)}.</span>
           <span class="q-opt-text">${opt.meaning} (${opt.pinyin})</span>
         </button>
@@ -1667,6 +1676,10 @@ window.ChineseApp = (() => {
 
     container.innerHTML = `
       <div class="chinese-quiz-wrap">
+        <div class="quiz-progress-track">
+          <div class="quiz-progress-fill" style="width: ${((quizIndex + 1) / quizQuestions.length) * 100}%"></div>
+        </div>
+
         <div class="quiz-header">
           <div class="quiz-level-inline">
             <label>Cấp:</label>
@@ -1680,15 +1693,15 @@ window.ChineseApp = (() => {
             </select>
           </div>
           <span>Câu ${quizIndex + 1} / ${quizQuestions.length}</span>
-          <span>Điểm: ${quizScore}</span>
+          <span>🎯 Điểm: ${quizScore}</span>
         </div>
 
-        <div class="quiz-question-card pixel-box">
+        <div class="quiz-question-card">
           <div class="qq-prompt">Từ này có nghĩa là gì?</div>
           <div class="qq-hanzi">${q.target.hanzi}</div>
           <div class="fc-actions-row">
-            <button class="pixel-btn btn-cream btn-sm" id="btnSpeakQuiz" data-text="${q.target.hanzi}">🔊 Nghe phát âm</button>
-            <a class="pixel-btn btn-cream btn-sm btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(q.target.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
+            <button class="btn-speak" id="btnSpeakQuiz" data-text="${q.target.hanzi}">🔊 Nghe phát âm</button>
+            <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(q.target.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
           </div>
         </div>
 
@@ -1760,12 +1773,12 @@ window.ChineseApp = (() => {
     let itemsHtml = "";
     list.forEach((item, idx) => {
       itemsHtml += `
-        <div class="love-quote-card pixel-box">
+        <div class="love-quote-card">
           <div class="lqc-top">
             <span class="lqc-badge">💕 Câu #${idx + 1}</span>
             <div class="lqc-actions">
-              <button class="pixel-btn btn-cream btn-sm btn-speak" data-text="${item.hanzi}">🔊 Nghe</button>
-              <button class="pixel-btn btn-cream btn-sm btn-copy" data-copy="${item.hanzi} (${item.pinyin}): ${item.meaning}">📋 Copy</button>
+              <button class="btn-speak" data-text="${item.hanzi}">🔊 Nghe</button>
+              <button class="btn-dict btn-copy" data-copy="${item.hanzi} (${item.pinyin}): ${item.meaning}">📋 Copy</button>
             </div>
           </div>
           <div class="lqc-hanzi">${item.hanzi}</div>
