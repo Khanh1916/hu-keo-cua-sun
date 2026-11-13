@@ -2180,15 +2180,40 @@ window.ChineseApp = (() => {
 
   let activeAudio = null;
 
+  let cachedVoices = [];
+  function loadVoices() {
+    if (!("speechSynthesis" in window)) return;
+    try {
+      cachedVoices = window.speechSynthesis.getVoices() || [];
+    } catch {}
+  }
+  if (typeof window !== "undefined" && "speechSynthesis" in window) {
+    loadVoices();
+    try {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    } catch {}
+  }
+
+  function getBestMandarinVoice() {
+    if (!cachedVoices.length) loadVoices();
+    const vList = cachedVoices || [];
+    return (
+      vList.find((v) => v.lang && v.lang.toLowerCase().replace("_", "-").startsWith("zh-cn")) ||
+      vList.find((v) => v.lang && v.lang.toLowerCase().replace("_", "-").startsWith("zh")) ||
+      vList.find((v) => /chinese|mandarin|putonghua|xiaoxiao|yunxi|huihui|yaoyao/i.test(v.name)) ||
+      null
+    );
+  }
+
   function fallbackWebSpeech(text) {
     if (!("speechSynthesis" in window)) return;
     try {
+      window.speechSynthesis.cancel();
       window.speechSynthesis.resume();
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = "zh-CN";
-      utter.rate = 0.85;
-      const voices = window.speechSynthesis.getVoices() || [];
-      const zhVoice = voices.find((v) => v.lang && v.lang.toLowerCase().replace("_", "-").startsWith("zh"));
+      utter.rate = 0.82;
+      const zhVoice = getBestMandarinVoice();
       if (zhVoice) utter.voice = zhVoice;
       window.speechSynthesis.speak(utter);
     } catch {}
