@@ -1111,7 +1111,10 @@ body {
 }
 
 .time-modes .pixel-btn.active {
-  background: var(--pink-soft);
+  background: var(--pink-soft) !important;
+  border-color: #d6336c !important;
+  font-weight: 700 !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), 0 2px 0 var(--ink) !important;
 }
 
 .danger-zone {
