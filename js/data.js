@@ -474,6 +474,23 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
       giftCandy: 50,
       banner: "💕 Kỷ niệm ngày 11/02 — Ngày đầu hai đứa mình quen nhau! ✨",
       speech: "Hôm nay lại tới 11/02 rồi nè! Tính từ ngày đầu nói chuyện trên Facebook Dating tới giờ cũng được {days} ngày rồi đó. Tặng em +50 🍬 với cả cái ôm thật chặt nha! 💕"
+    },
+    noel: {
+      month: 12,
+      startDay: 20,
+      endDay: 26,
+      music: "noel",
+      giftCandy: 60,
+      banner: "🎄 Giáng Sinh an lành! Chúc Ngọc có một mùa Noel ấm áp và ngập tràn niềm vui ❄️",
+      speech: "Giáng Sinh an lành nha em yêu! Trời mùa đông lạnh lắm, ra đường nhớ quàng khăn ấm vào nhé. Anh tặng Ngọc hộp quà Giáng Sinh +60 🍬 ngọt ngào nè! 🎁🎄",
+      quotes: [
+        "Noel này bên Hải Phòng lạnh không em? Ra đường nhớ mặc áo phao dày với quàng khăn ấm nhé 🧣",
+        "Ước gì Noel này được ở cạnh nắm tay em đi dạo Nhà thờ lớn Hải Phòng nhỉ 🎄",
+        "Bé Bông cũng được đội mũ ông già Noel đỏ chót nè, trông yêu chưa! 🎅🐱",
+        "Giáng Sinh ấm áp nha cô gái nhỏ của anh 💕",
+        "Noel năm nay dù hai đứa ở hai thành phố nhưng trái tim anh lúc nào cũng hướng về em ✨",
+        "Cây thông Noel trong phòng sáng đèn lung linh ghê, chúc Ngọc lúc nào cũng rạng rỡ nha 🌟"
+      ]
     }
   }
 };
