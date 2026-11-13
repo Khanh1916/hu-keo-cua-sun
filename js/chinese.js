@@ -1461,6 +1461,7 @@ window.ChineseApp = (() => {
               <span class="cwc-type">${w.type || "Từ vựng"}</span>
             </div>
             <div class="cwc-actions">
+              <button class="btn-star ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}" title="${isStarred(w.hanzi) ? "Đã lưu vào Sổ tay (bấm để bỏ lưu)" : "Lưu vào Sổ tay yêu thích"}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu từ"}</button>
               <button class="btn-speak" data-text="${w.hanzi}" title="Nghe phát âm chuẩn">🔊 Nghe</button>
               <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener" title="Tra nét viết, bộ thủ trên từ điển Hanzii">📖 Hanzii</a>
             </div>
@@ -1538,6 +1539,16 @@ window.ChineseApp = (() => {
       });
     });
 
+    document.querySelectorAll(".btn-star").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const hanzi = btn.dataset.hanzi;
+        const starred = toggleStar(hanzi);
+        btn.classList.toggle("active", starred);
+        btn.innerHTML = starred ? "⭐ Đã lưu" : "☆ Lưu từ";
+      });
+    });
+
     const btnFinish = document.getElementById("btnFinishDailyChinese");
     if (btnFinish) {
       btnFinish.addEventListener("click", () => {
@@ -1563,7 +1574,42 @@ window.ChineseApp = (() => {
 
   function renderFlashcardTab() {
     const container = document.getElementById("chineseTabContent");
-    const list = HSK_DATA[currentLevel] || HSK_DATA.hsk4;
+    const list = currentLevel === "starred" ? getAllStarredWords() : (HSK_DATA[currentLevel] || HSK_DATA.hsk4);
+    
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div class="chinese-flashcard-wrap">
+          <div class="chinese-level-bar">
+            <div class="clb-left">
+              <label>🏷️ Cấp độ:</label>
+              <select id="selFlashcardLevel" class="pixel-select">
+                <option value="starred" selected>⭐ Sổ Tay Yêu Thích (0 từ)</option>
+                <option value="hsk4">HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
+                <option value="hsk5">HSK 5 (Chuyên sâu • Luyện thi)</option>
+                <option value="hsk6">HSK 6 (Bậc thầy • Thành ngữ)</option>
+                <option value="hsk3">HSK 3 (Cảm xúc • Giao tiếp)</option>
+                <option value="hsk2">HSK 2 (Căn bản • Đời sống)</option>
+                <option value="hsk1">HSK 1 (Nhập môn)</option>
+              </select>
+            </div>
+          </div>
+          <div class="flashcard-empty-box">
+            <div style="font-size: 36px; margin-bottom: 8px;">⭐</div>
+            <h3>Sổ tay từ vựng đang trống nè!</h3>
+            <p>Em hãy bấm <strong>☆ Lưu từ</strong> ở mục <strong>5 Từ Hôm Nay</strong> hoặc các bài học khác để gom những từ vựng yêu thích vào đây ôn tập Flashcard riêng nhé 💕</p>
+          </div>
+        </div>
+      `;
+      const selEmpty = document.getElementById("selFlashcardLevel");
+      if (selEmpty) {
+        selEmpty.addEventListener("change", (e) => {
+          setLevel(e.target.value);
+          renderFlashcardTab();
+        });
+      }
+      return;
+    }
+
     if (flashcardIndex >= list.length) flashcardIndex = 0;
     if (flashcardIndex < 0) flashcardIndex = list.length - 1;
 
@@ -1575,6 +1621,7 @@ window.ChineseApp = (() => {
           <div class="clb-left">
             <label>🏷️ Cấp độ:</label>
             <select id="selFlashcardLevel" class="pixel-select">
+              <option value="starred" ${currentLevel === "starred" ? "selected" : ""}>⭐ Sổ Tay Yêu Thích (${getAllStarredWords().length} từ)</option>
               <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
               <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu • Luyện thi)</option>
               <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy • Thành ngữ)</option>
@@ -1593,6 +1640,7 @@ window.ChineseApp = (() => {
               <span class="fc-hanzi">${w.hanzi}</span>
               <span class="fc-hint">👆 Chạm vào thẻ để lật xem nghĩa & ví dụ</span>
               <div class="fc-actions-row">
+                <button class="btn-star btn-star-fc ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu từ"}</button>
                 <button class="btn-speak btn-speak-card" data-text="${w.hanzi}">🔊 Nghe phát âm</button>
                 <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
               </div>
@@ -1610,6 +1658,7 @@ window.ChineseApp = (() => {
                 </div>
               ` : ""}
               <div class="fc-actions-row">
+                <button class="btn-star btn-star-fc ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu từ"}</button>
                 <button class="btn-speak btn-speak-card" data-text="${w.example || w.hanzi}">🔊 Nghe ví dụ</button>
                 <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
               </div>
@@ -1636,7 +1685,7 @@ window.ChineseApp = (() => {
     const box = document.getElementById("flashcardBox");
     if (box) {
       box.addEventListener("click", (e) => {
-        if (e.target.closest(".btn-speak-card") || e.target.closest(".btn-dict")) return;
+        if (e.target.closest(".btn-speak-card") || e.target.closest(".btn-dict") || e.target.closest(".btn-star-fc")) return;
         flashcardFlipped = !flashcardFlipped;
         renderFlashcardTab();
       });
@@ -1672,6 +1721,16 @@ window.ChineseApp = (() => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         speak(btn.dataset.text);
+      });
+    });
+
+    document.querySelectorAll(".btn-star-fc").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const hanzi = btn.dataset.hanzi;
+        const starred = toggleStar(hanzi);
+        btn.classList.toggle("active", starred);
+        btn.innerHTML = starred ? "⭐ Đã lưu" : "☆ Lưu từ";
       });
     });
   }
@@ -1842,6 +1901,7 @@ window.ChineseApp = (() => {
           <div class="lqc-top">
             <span class="lqc-badge">💕 Câu #${idx + 1}</span>
             <div class="lqc-actions">
+              <button class="btn-star btn-star-love ${isStarred(item.hanzi) ? "active" : ""}" data-hanzi="${item.hanzi}" title="${isStarred(item.hanzi) ? "Bỏ lưu câu" : "Lưu câu yêu thích"}">${isStarred(item.hanzi) ? "⭐" : "☆"}</button>
               <button class="btn-speak" data-text="${item.hanzi}">🔊 Nghe</button>
               <button class="btn-dict btn-copy" data-copy="${item.hanzi} (${item.pinyin}): ${item.meaning}">📋 Copy</button>
             </div>
@@ -1865,6 +1925,18 @@ window.ChineseApp = (() => {
 
     document.querySelectorAll(".btn-speak").forEach((btn) => {
       btn.addEventListener("click", () => speak(btn.dataset.text));
+    });
+
+    document.querySelectorAll(".btn-star-love").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const hanzi = btn.dataset.hanzi;
+        const card = btn.closest(".love-quote-card");
+        const meaning = card?.querySelector(".lqc-meaning")?.textContent?.replace("👉", "").trim() || "";
+        const pinyin = card?.querySelector(".lqc-pinyin")?.textContent || "";
+        const starred = toggleStar({ hanzi, pinyin, meaning, type: "Lời Yêu Thương" });
+        btn.classList.toggle("active", starred);
+        btn.textContent = starred ? "⭐" : "☆";
+      });
     });
 
     document.querySelectorAll(".btn-copy").forEach((btn) => {
