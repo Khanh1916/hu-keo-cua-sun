@@ -1187,6 +1187,7 @@ body {
   border-radius: 14px;
   box-shadow: 0 6px 0 var(--ink);
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Chinese Typography Stack */
@@ -1254,6 +1255,8 @@ body {
   overflow-x: hidden;
   max-height: 68vh;
   padding-right: 2px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .chinese-level-bar {
@@ -1335,8 +1338,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   margin-top: 8px;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .quiz-level-inline {
