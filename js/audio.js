@@ -67,6 +67,22 @@ window.AudioManager = (() => {
     N.A4, null, N.G4, null, N.E4, null, N.D4, null, N.C4, null, null, null, null, null
   ];
 
+  // Christmas Noel: "Jingle Bells" festive 8-bit chime melody
+  const noelSteps = [
+    // "Jingle bells, jingle bells, jingle all the way"
+    N.E4, N.E4, N.E4, null, N.E4, N.E4, N.E4, null,
+    N.E4, N.G4, N.C4, N.D4, N.E4, null, null, null,
+    // "Oh what fun it is to ride in a one-horse open sleigh, hey!"
+    N.F4, N.F4, N.F4, N.F4, N.F4, N.E4, N.E4, N.E4,
+    N.E4, N.D4, N.D4, N.E4, N.D4, null, N.G4, null,
+    // "Jingle bells, jingle bells, jingle all the way"
+    N.E4, N.E4, N.E4, null, N.E4, N.E4, N.E4, null,
+    N.E4, N.G4, N.C4, N.D4, N.E4, null, null, null,
+    // "Oh what fun it is to ride in a one-horse open sleigh!"
+    N.F4, N.F4, N.F4, N.F4, N.F4, N.E4, N.E4, N.E4,
+    N.G4, N.G4, N.F4, N.D4, N.C4, null, null, null
+  ];
+
   function ensureContext() {
     if (!ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -109,6 +125,7 @@ window.AudioManager = (() => {
     if (currentTheme === "birthday") return { steps: birthdaySteps, tempoMs: 265 };
     if (currentTheme === "anniversary") return { steps: anniversarySteps, tempoMs: 280 };
     if (currentTheme === "tet") return { steps: tetSteps, tempoMs: 250 };
+    if (currentTheme === "noel") return { steps: noelSteps, tempoMs: 240 };
     return { steps: normalSteps, tempoMs: 390 };
   }
 
