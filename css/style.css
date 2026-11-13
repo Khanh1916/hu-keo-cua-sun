@@ -1279,13 +1279,15 @@ body {
 .cwc-actions {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .btn-dict, .btn-speak {
-  padding: 4px 8px;
-  font-size: 11px;
+  padding: 3.5px 7px;
+  font-size: 10.5px;
   font-weight: 700;
   border-radius: 99px;
   border: 1.5px solid var(--ink);
@@ -1293,6 +1295,7 @@ body {
   color: var(--ink);
   box-shadow: 0 1.5px 0 var(--ink);
   cursor: pointer;
+  white-space: nowrap;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -1365,6 +1368,8 @@ body {
   flex-direction: column;
   gap: 7px;
   transition: transform 0.12s ease;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .chinese-word-card:hover {
@@ -1375,7 +1380,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .cwc-hanzi {
@@ -1829,19 +1835,20 @@ body {
 
 /* Starred & Match Mini-Game Styles */
 .btn-star {
-  padding: 4px 8px;
-  font-size: 11px;
+  padding: 3.5px 7px;
+  font-size: 10.5px;
   font-weight: 700;
   border: 1.5px solid #e67700;
   background: #fff9db;
   color: #d9480f !important;
-  border-radius: 8px;
+  border-radius: 99px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 3px;
   box-shadow: 0 1.5px 0 #e67700;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .btn-star:hover {

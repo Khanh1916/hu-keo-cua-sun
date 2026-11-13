@@ -1461,7 +1461,7 @@ window.ChineseApp = (() => {
               <span class="cwc-type">${w.type || "Từ vựng"}</span>
             </div>
             <div class="cwc-actions">
-              <button class="btn-star ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}" title="${isStarred(w.hanzi) ? "Đã lưu vào Sổ tay (bấm để bỏ lưu)" : "Lưu vào Sổ tay yêu thích"}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu từ"}</button>
+              <button class="btn-star ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}" title="${isStarred(w.hanzi) ? "Đã lưu vào Sổ tay (bấm để bỏ lưu)" : "Lưu vào Sổ tay yêu thích"}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu"}</button>
               <button class="btn-speak" data-text="${w.hanzi}" title="Nghe phát âm chuẩn">🔊 Nghe</button>
               <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener" title="Tra nét viết, bộ thủ trên từ điển Hanzii">📖 Hanzii</a>
             </div>
@@ -1545,7 +1545,7 @@ window.ChineseApp = (() => {
         const hanzi = btn.dataset.hanzi;
         const starred = toggleStar(hanzi);
         btn.classList.toggle("active", starred);
-        btn.innerHTML = starred ? "⭐ Đã lưu" : "☆ Lưu từ";
+        btn.innerHTML = starred ? "⭐ Đã lưu" : "☆ Lưu";
       });
     });
 
@@ -1640,7 +1640,7 @@ window.ChineseApp = (() => {
               <span class="fc-hanzi">${w.hanzi}</span>
               <span class="fc-hint">👆 Chạm vào thẻ để lật xem nghĩa & ví dụ</span>
               <div class="fc-actions-row">
-                <button class="btn-star btn-star-fc ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu từ"}</button>
+                <button class="btn-star btn-star-fc ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu"}</button>
                 <button class="btn-speak btn-speak-card" data-text="${w.hanzi}">🔊 Nghe phát âm</button>
                 <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
               </div>
@@ -1658,7 +1658,7 @@ window.ChineseApp = (() => {
                 </div>
               ` : ""}
               <div class="fc-actions-row">
-                <button class="btn-star btn-star-fc ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu từ"}</button>
+                <button class="btn-star btn-star-fc ${isStarred(w.hanzi) ? "active" : ""}" data-hanzi="${w.hanzi}">${isStarred(w.hanzi) ? "⭐ Đã lưu" : "☆ Lưu"}</button>
                 <button class="btn-speak btn-speak-card" data-text="${w.example || w.hanzi}">🔊 Nghe ví dụ</button>
                 <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(w.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
               </div>
@@ -1730,7 +1730,7 @@ window.ChineseApp = (() => {
         const hanzi = btn.dataset.hanzi;
         const starred = toggleStar(hanzi);
         btn.classList.toggle("active", starred);
-        btn.innerHTML = starred ? "⭐ Đã lưu" : "☆ Lưu từ";
+        btn.innerHTML = starred ? "⭐ Đã lưu" : "☆ Lưu";
       });
     });
   }
