@@ -1206,19 +1206,19 @@ body {
 }
 
 .chinese-nav-tab {
-  padding: 8px 6px;
-  font-size: 11.5px;
+  padding: 7px 4px;
+  font-size: clamp(10.5px, 2.9vw, 11.5px);
   font-weight: 700;
   border: 1.5px solid var(--ink);
   background: #fffbf5;
-  color: var(--ink) !important;
+  color: #2b1810 !important;
   border-radius: 10px;
   cursor: pointer;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   line-height: 1.2;
   box-shadow: 0 2px 0 var(--ink);
   box-sizing: border-box;
@@ -1241,10 +1241,12 @@ body {
 }
 
 .chinese-nav-tab.active {
-  background: #d6336c !important;
-  color: #ffffff !important;
-  border-color: var(--ink);
-  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.18), 0 2px 0 var(--ink);
+  background: #ffccd5 !important;
+  color: #2b1810 !important;
+  border-color: var(--ink) !important;
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.16), 0 1px 0 var(--ink) !important;
+  font-weight: 800;
+  transform: translateY(1px);
 }
 
 .chinese-tab-content {
