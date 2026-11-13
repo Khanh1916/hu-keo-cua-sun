@@ -1,4 +1,4 @@
-const CACHE_NAME = "hu-keo-sun-v21";
+const CACHE_NAME = "hu-keo-sun-v22";
 const CORE_ASSETS = [
   "./",
   "./index.html",
