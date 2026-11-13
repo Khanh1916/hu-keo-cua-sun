@@ -57,80 +57,80 @@ window.GAME_DATA = {
       id: "banh_mi_cay",
       name: "Bánh mì cay HP",
       emoji: "🥖",
-      xp: 12,
-      candy: 2,
+      cost: 2,
+      xp: 15,
       reaction: "Cay giòn đúng điệu Hải Phòng luôn. Ăn ngon quá em 🥖"
     },
     {
       id: "tra_cuc",
       name: "Trà cúc mật ong",
       emoji: "🍵",
-      xp: 12,
-      candy: 2,
+      cost: 2,
+      xp: 15,
       reaction: "Ấm bụng ghê. Hôm nào rảnh anh xuống hai đứa đi ngồi quán thật nha!"
     },
     {
       id: "cing_house",
       name: "Matcha ô long dừa dầm",
       emoji: "🧋",
-      xp: 16,
-      candy: 3,
+      cost: 3,
+      xp: 22,
       reaction: "Chuẩn vị Cing House Thủy Nguyên rồi! Món tủ của em có khác 💚"
     },
     {
       id: "banh_da_cua",
       name: "Bánh đa cua Lạch Tray",
       emoji: "🍜",
-      xp: 16,
-      candy: 3,
+      cost: 3,
+      xp: 22,
       reaction: "Bát bánh đa cua đầy đặn ghê, ăn no lấy sức làm việc nha em 🍜"
     },
     {
       id: "cuon_thuy_nguyen",
       name: "Cuốn Thủy Nguyên",
       emoji: "🥬",
-      xp: 14,
-      candy: 3,
+      cost: 3,
+      xp: 20,
       reaction: "Cuốn Thủy Nguyên ngon thật đấy, hôm nào em nhớ dẫn anh đi ăn nhé!"
     },
     {
       id: "canh_cu",
       name: "Canh củ Hải Phòng",
       emoji: "🥣",
-      xp: 13,
-      candy: 2,
+      cost: 2,
+      xp: 16,
       reaction: "Bát canh củ thanh mát chuẩn cơm nhà luôn, cảm ơn em 🥰"
     },
     {
       id: "oc_hai_phong",
       name: "Ốc xào me / luộc",
       emoji: "🐚",
-      xp: 15,
-      candy: 3,
+      cost: 3,
+      xp: 22,
       reaction: "Nhìn thèm ghê, hôm nào anh xuống Hải Phòng dẫn em đi ăn ốc nhé 🐚"
     },
     {
       id: "banh_mi_kep",
       name: "Bánh mì kẹp đầy đặn",
       emoji: "🥪",
-      xp: 12,
-      candy: 2,
+      cost: 2,
+      xp: 15,
       reaction: "Ăn sáng đầy đủ vào nha em, đừng bỏ bữa đấy."
     },
     {
       id: "dua_dam",
       name: "Dừa dầm béo ngậy",
       emoji: "🥥",
-      xp: 14,
-      candy: 3,
+      cost: 3,
+      xp: 20,
       reaction: "Dừa dầm mát lạnh ngọt lịm luôn!"
     },
     {
       id: "keo_bim_bim",
       name: "Bim bim & Kẹo ngọt",
       emoji: "🍬",
+      cost: 2,
       xp: 15,
-      candy: 4,
       reaction: "Kẹo ngọt cho Sún nè, ăn ít thôi không sâu răng nha 🍬"
     }
   ],

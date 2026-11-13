@@ -163,7 +163,7 @@ window.CrossingGame = (() => {
 
       const ptsGain = 10 + (streak >= 3 ? (streak - 2) * 3 : 0);
       score += ptsGain;
-      if (maxRowReached % 5 === 0) candies += 1;
+      if (maxRowReached % 8 === 0) candies += 1;
 
       if (streak >= 3) {
         AudioManager.playCombo(streak);
@@ -173,23 +173,23 @@ window.CrossingGame = (() => {
 
       // Hải Phòng Milestones!
       if (maxRowReached === 10) {
-        candies += 2;
-        bannerText = "📍 Qua Cầu Bính rồi! +2 🍬";
+        candies += 1;
+        bannerText = "📍 Qua Cầu Bính rồi! +1 🍬";
         bannerTimer = 110;
         AudioManager.playPowerup();
       } else if (maxRowReached === 20) {
-        candies += 3;
-        bannerText = "📍 Tới Lạch Tray ăn bánh đa cua! +3 🍬";
+        candies += 1;
+        bannerText = "📍 Tới Lạch Tray ăn bánh đa cua! +1 🍬";
         bannerTimer = 110;
         AudioManager.playPowerup();
       } else if (maxRowReached === 35) {
-        candies += 5;
-        bannerText = "📍 Về Thủy Nguyên uống Cing House! +5 🍬";
+        candies += 2;
+        bannerText = "📍 Về Thủy Nguyên uống Cing House! +2 🍬";
         bannerTimer = 120;
         AudioManager.playPowerup();
-      } else if (maxRowReached > 35 && maxRowReached % 20 === 0) {
-        candies += 3;
-        bannerText = `📍 Siêu tốc ${maxRowReached} bước! +3 🍬`;
+      } else if (maxRowReached > 35 && maxRowReached % 25 === 0) {
+        candies += 1;
+        bannerText = `📍 Siêu tốc ${maxRowReached} bước! +1 🍬`;
         bannerTimer = 100;
         AudioManager.playPowerup();
       }
@@ -203,7 +203,7 @@ window.CrossingGame = (() => {
       targetLane.coins.forEach((cn) => {
         if (!cn.taken && cn.col === Math.round(playerCol)) {
           cn.taken = true;
-          const addC = cn.kind === "heart" ? 2 : 1;
+          const addC = 1;
           candies += addC;
           score += 15;
           AudioManager.playCandy();

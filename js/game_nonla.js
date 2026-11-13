@@ -124,17 +124,18 @@ window.NonLaGame = (() => {
     obstacleCleared = true;
     if (obstacleX > 115) obstacleX = 115;
     streak++;
-    const bonusCandy = streak >= 4 ? 3 : 2;
+    const givesCandy = (streak % 2 === 0);
+    const bonusCandy = givesCandy ? 1 : 0;
     score += 15 + Math.min(15, (streak - 1) * 3);
     candies += bonusCandy;
 
     const silentAudioLock = isIOS && mode === "voice";
     if (streak >= 3) {
       if (!silentAudioLock && window.AudioManager) AudioManager.playCombo(streak);
-      statusBanner = `🔥 Chuỗi chuẩn x${streak}! +${bonusCandy} 🍬`;
+      statusBanner = `🔥 Chuỗi chuẩn x${streak}! ${bonusCandy > 0 ? "+1 🍬" : "✨"}`;
     } else {
       if (!silentAudioLock && window.AudioManager) AudioManager.playCandy();
-      statusBanner = msg || `Chuẩn L-N! 👒 +${bonusCandy} 🍬`;
+      statusBanner = msg || `Chuẩn L-N! 👒 ${bonusCandy > 0 ? "+1 🍬" : "✨"}`;
     }
     statusTimer = 55;
     if (callbacks.onHudUpdate) {

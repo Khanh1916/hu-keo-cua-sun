@@ -21,6 +21,7 @@ window.FlappyGame = (() => {
 
   let score = 0;
   let candies = 0;
+  let pipesPassed = 0;
   let pipesSpawned = 0;
   let pipes = [];
   let pipeTimer = 0;
@@ -80,6 +81,7 @@ window.FlappyGame = (() => {
     birdTilt = 0;
     score = 0;
     candies = 0;
+    pipesPassed = 0;
     pipesSpawned = 0;
     pipes = [];
     feathers = [];
@@ -172,11 +174,12 @@ window.FlappyGame = (() => {
 
       if (!p.passed && p.x + p.w < birdX) {
         p.passed = true;
+        pipesPassed++;
         const distTop = birdY - 4 - p.topH;
         const distBot = p.topH + p.gap - (birdY + 4);
         const nearMiss = Math.min(distTop, distBot) < 10;
         score += nearMiss ? 15 : 10;
-        candies += 1;
+        if (pipesPassed % 5 === 0) candies += 1;
         AudioManager.playCombo(Math.floor(score / 10));
         popups.push({
           x: birdX,
@@ -191,13 +194,13 @@ window.FlappyGame = (() => {
           bannerTimer = 90;
           AudioManager.playPowerup();
         } else if (score >= 100 && score < 115) {
-          candies += 3;
-          bannerText = "🌙 Hoàng hôn tới rồi! +3 🍬";
+          candies += 1;
+          bannerText = "🌙 Hoàng hôn tới rồi! +1 🍬";
           bannerTimer = 100;
           AudioManager.playPowerup();
         } else if (score >= 160 && score < 175) {
-          candies += 5;
-          bannerText = "⭐ Bay xuyên đêm luôn! +5 🍬";
+          candies += 2;
+          bannerText = "⭐ Bay xuyên đêm luôn! +2 🍬";
           bannerTimer = 100;
           AudioManager.playPowerup();
         }
@@ -210,7 +213,7 @@ window.FlappyGame = (() => {
         const cy = p.topH + p.gap / 2;
         if (Math.abs(birdX - cx) < 14 && Math.abs(birdY - cy) < 14) {
           p.candyTaken = true;
-          const addC = p.pickup === "heart" ? 2 : 1;
+          const addC = 1;
           candies += addC;
           score += 5;
           AudioManager.playCandy();

@@ -609,6 +609,11 @@ body {
   text-align: left;
 }
 
+.food-item.disabled {
+  opacity: 0.55;
+  filter: grayscale(40%);
+}
+
 .food-icon {
   font-size: 24px;
   flex-shrink: 0;

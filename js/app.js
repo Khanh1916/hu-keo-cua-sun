@@ -19,7 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
     foodsFed: [],
     jarReads: 0,
     claimedBirthdays: [],
-    timeOverride: "auto"
+    timeOverride: "auto",
+    freeMealsDate: "",
+    freeMealsLeft: 3
   };
 
   let state = loadState();
@@ -48,7 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function xpNeededForLevel(lvl) {
-    return 50 + (lvl - 1) * 30;
+    // Polynomial cozy progression curve: 50 + 35*lvl + 12*lvl^1.55
+    return Math.round(50 + lvl * 35 + Math.pow(lvl, 1.55) * 12);
   }
 
   function getDaysTogether() {
@@ -252,21 +255,48 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Render Food Tray
+  // Render Food Tray with Daily Free Meals & Candy Sink
+  function syncDailyFreeMeals() {
+    const todayStr = new Date().toDateString();
+    if (state.freeMealsDate !== todayStr) {
+      state.freeMealsDate = todayStr;
+      state.freeMealsLeft = 3;
+      saveState();
+    }
+  }
+
   function renderFoodGrid() {
+    syncDailyFreeMeals();
     const grid = document.getElementById("foodGrid");
     grid.innerHTML = "";
+
+    const freeCount = state.freeMealsLeft || 0;
+    const subtitle = document.querySelector("#modalFood .modal-subtitle");
+    if (subtitle) {
+      subtitle.innerHTML = freeCount > 0
+        ? `Chọn món ngon cho anh Khánh & bé Bông nhé (Hôm nay còn <strong>${freeCount}/3 bữa miễn phí</strong> ✨):`
+        : `Dùng kẹo kiếm được để chiêu đãi anh Khánh & bé Bông (có <strong id="foodCandyText">${state.candy}</strong> 🍬):`;
+    }
+
     DATA.foods.forEach((food) => {
+      const isFree = freeCount > 0;
+      const canAfford = isFree || state.candy >= (food.cost || 2);
+
       const btn = document.createElement("button");
-      btn.className = "food-item pixel-btn btn-cream";
+      btn.className = `food-item pixel-btn btn-cream ${canAfford ? "" : "disabled"}`;
       btn.innerHTML = `
         <span class="food-icon">${food.emoji}</span>
         <div class="food-info">
           <span class="food-name">${food.name}</span>
-          <span class="food-bonus">+${food.xp} thân mật • +${food.candy} 🍬</span>
+          <span class="food-bonus">${isFree ? "Miễn phí hôm nay ✨" : `Giá: ${food.cost || 2} 🍬`} • +${food.xp} thân mật</span>
         </div>
       `;
       btn.addEventListener("click", () => {
+        if (!isFree && state.candy < (food.cost || 2)) {
+          showToast(`Cần ${food.cost || 2} 🍬 để đãi món này. Chơi mini-game kiếm thêm kẹo nha! 🍬`);
+          return;
+        }
+
         closeModal("modalFood");
         AudioManager.playHug();
         RoomScene.triggerKhanhHappy("eating");
@@ -276,7 +306,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!state.foodsFed.includes(food.id)) {
           state.foodsFed.push(food.id);
         }
-        addRewards(food.xp, food.candy);
+
+        if (isFree) {
+          state.freeMealsLeft = Math.max(0, state.freeMealsLeft - 1);
+          addRewards(food.xp, 0);
+          showToast(`Đã đãi món ngon! (Còn ${state.freeMealsLeft}/3 bữa miễn phí hôm nay)`);
+        } else {
+          state.candy -= (food.cost || 2);
+          addRewards(food.xp, 0);
+          showToast(`Đã dùng ${food.cost || 2} 🍬 đãi món ngon! (+${food.xp} thân mật)`);
+        }
       });
       grid.appendChild(btn);
     });
@@ -439,6 +478,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Mood Jars
+  let jarReadsToday = 0;
+  let lastJarDate = "";
+
   function drawNoteFromJar(jarKey) {
     currentJarKey = jarKey;
     const jar = DATA.moodJars[jarKey];
@@ -457,34 +499,113 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("notePaper").classList.remove("hidden");
 
     state.jarReads++;
-    addRewards(4, 1);
+
+    const todayStr = new Date().toDateString();
+    if (lastJarDate !== todayStr) {
+      lastJarDate = todayStr;
+      jarReadsToday = 0;
+    }
+
+    if (jarReadsToday < 3) {
+      jarReadsToday++;
+      addRewards(6, 1);
+    } else {
+      addRewards(1, 0);
+    }
   }
 
-  // Room & Character Interactions
+  // Room & Character Interactions (Cozy Rested Bonus & Natural Soft Cooldowns)
+  let lastHugTime = 0;
+  let dailyHugsToday = 0;
+  let lastHugDate = "";
+
   function handleHug() {
     AudioManager.playHug();
     RoomScene.triggerKhanhHappy("happy");
     state.hugCount++;
-    const lines = [
-      "Ôm cái cho đỡ mệt nào. Hôm nay mọi chuyện ổn chứ em? 🤗",
-      "Nạp xíu năng lượng rồi làm việc tiếp nha Ngọc ơi!",
-      "Đứng yên anh ôm cái nào, lúc nào rảnh nhắn tin cho anh nha."
-    ];
-    const { item } = pickRandom(lines);
-    showSpeech("Anh Khánh", item);
-    addRewards(10, 2);
+
+    const todayStr = new Date().toDateString();
+    if (lastHugDate !== todayStr) {
+      lastHugDate = todayStr;
+      dailyHugsToday = 0;
+    }
+
+    const now = Date.now();
+    const elapsed = now - lastHugTime;
+    let speech = "";
+
+    if (dailyHugsToday === 0) {
+      dailyHugsToday++;
+      lastHugTime = now;
+      speech = "Cái ôm chào ngày mới nè! Chúc em một ngày thật vui nha 🤗";
+      addRewards(25, 3);
+    } else if (elapsed > 75000) {
+      dailyHugsToday++;
+      lastHugTime = now;
+      const lines = [
+        "Ôm cái cho đỡ mệt nào. Hôm nay mọi chuyện ổn chứ em? 🤗",
+        "Nạp xíu năng lượng rồi làm việc tiếp nha Ngọc!",
+        "Đứng yên anh ôm cái nào, lúc nào rảnh nhắn tin cho anh nha."
+      ];
+      speech = pickRandom(lines).item;
+      addRewards(10, 1);
+    } else {
+      const quickLines = [
+        "Vừa ôm xong mà, nhớ anh đến thế cơ à? 🥰",
+        "Ôm thêm cái nữa nè, thích nhõng nhẽo rồi đúng không?",
+        "Vẫn đang ôm em đây mà, đừng lo nha."
+      ];
+      speech = pickRandom(quickLines).item;
+      addRewards(1, 0);
+    }
+
+    showSpeech("Anh Khánh", speech);
   }
+
+  let lastPetTime = 0;
+  let dailyPetToday = 0;
+  let lastPetDate = "";
 
   function handlePetBong() {
     AudioManager.playMeow();
     RoomScene.triggerBongHappy();
     state.petCount++;
-    const { item } = pickRandom(DATA.bongDialogues);
-    showSpeech("Bé Bông 🐱", item);
-    addRewards(8, 2);
+
+    const todayStr = new Date().toDateString();
+    if (lastPetDate !== todayStr) {
+      lastPetDate = todayStr;
+      dailyPetToday = 0;
+    }
+
+    const now = Date.now();
+    const elapsed = now - lastPetTime;
+    let speech = "";
+
+    if (dailyPetToday === 0) {
+      dailyPetToday++;
+      lastPetTime = now;
+      speech = "Meooo~ (Bông dụi đầu vào tay em chào ngày mới rừ rừ 🐱)";
+      addRewards(20, 2);
+    } else if (elapsed > 60000) {
+      dailyPetToday++;
+      lastPetTime = now;
+      speech = pickRandom(DATA.bongDialogues).item;
+      addRewards(8, 1);
+    } else {
+      const restingBong = [
+        "(Bông ngáp một cái thật to, thỏa mãn cuộn tròn nằm ngủ tiếp)",
+        "(Bông liếm nhẹ mu bàn tay em rồi lim dim mắt)",
+        "Rừ rừ... (Bông đang nằm êm ru, không thèm mở mắt luôn)"
+      ];
+      speech = pickRandom(restingBong).item;
+      addRewards(1, 0);
+    }
+
+    showSpeech("Bé Bông 🐱", speech);
   }
 
   // Initialize Room Scene
+  let lastTalkTime = 0;
   RoomScene.init(
     document.getElementById("roomCanvas"),
     () => state,
@@ -499,7 +620,13 @@ document.addEventListener("DOMContentLoaded", () => {
           const { item } = pickRandom(DATA.khanhDialogues);
           showSpeech("Anh Khánh", item);
         }
-        addRewards(5, 1);
+        const now = Date.now();
+        if (now - lastTalkTime > 60000) {
+          lastTalkTime = now;
+          addRewards(6, 1);
+        } else {
+          addRewards(1, 0);
+        }
       } else if (who === "bong") {
         handlePetBong();
       }

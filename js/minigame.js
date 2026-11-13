@@ -121,26 +121,26 @@ window.MiniGame = (() => {
     let candyVal = 1;
 
     if (feverTimer > 0) {
-      // Fever rain: lots of candies, matcha & hearts, zero poop!
+      // Fever rain: lots of candies & score bonuses!
       if (r < 0.35) {
         kind = "matcha";
         pts = 35;
-        candyVal = 3;
-      } else if (r < 0.68) {
+        candyVal = 1;
+      } else if (r < 0.65) {
         kind = "heart";
         pts = 20;
-        candyVal = 2;
+        candyVal = 0;
       } else {
         kind = "candy";
         pts = 15;
-        candyVal = 2;
+        candyVal = 1;
       }
     } else {
       const poopChance = Math.min(0.25, 0.14 + score / 2400);
       if (r < 0.045) {
         kind = Math.random() < 0.5 ? "magnet" : "shield";
         pts = 25;
-        candyVal = 1;
+        candyVal = 0;
       } else if (r < 0.045 + poopChance) {
         kind = "poop";
         pts = 0;
@@ -148,15 +148,19 @@ window.MiniGame = (() => {
       } else if (r < 0.045 + poopChance + 0.14) {
         kind = "matcha";
         pts = 30;
-        candyVal = 3;
-      } else if (r < 0.045 + poopChance + 0.30) {
+        candyVal = 1;
+      } else if (r < 0.045 + poopChance + 0.32) {
         kind = "banhmi";
         pts = 20;
-        candyVal = 2;
+        candyVal = 0;
       } else if (r < 0.045 + poopChance + 0.56) {
         kind = "heart";
         pts = 15;
-        candyVal = 2;
+        candyVal = 0;
+      } else {
+        kind = "candy";
+        pts = 10;
+        candyVal = Math.random() < 0.4 ? 1 : 0;
       }
     }
 
@@ -280,7 +284,7 @@ window.MiniGame = (() => {
             if (other.kind === "poop") {
               other.kind = "candy";
               other.pts = 15;
-              other.candyVal = 2;
+              other.candyVal = 1;
             }
           });
         }
@@ -292,7 +296,7 @@ window.MiniGame = (() => {
 
         spawnBurst(it.x, playerY - 6, it.kind === "heart" ? "#F05D8E" : "#FFE066", 5);
         if (it.kind !== "magnet" && it.kind !== "shield") {
-          const label = mult > 1 ? `+${gainedPts} x${mult}!` : `+${it.candyVal} 🍬`;
+          const label = it.candyVal > 0 ? `+${it.candyVal} 🍬` : (mult > 1 ? `+${gainedPts} x${mult}!` : `+${gainedPts}`);
           addPopup(it.x, playerY - 18, label, "#E46B94");
         }
 
