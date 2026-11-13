@@ -48,6 +48,8 @@ window.NonLaGame = (() => {
   let speechDetected = false;
   let lastHeard = "";
 
+  let isPaused = false;
+
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || "") ||
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
@@ -203,17 +205,6 @@ window.NonLaGame = (() => {
     }
   }
 
-  async function primeMicHardware() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      // Immediately release tracks so SpeechRecognition owns the iOS audio session cleanly
-      stream.getTracks().forEach((t) => t.stop());
-    } catch {
-      // Ignore; SpeechRecognition error handler will decide fallback
-    }
-  }
-
   function forceKillRecognition(rec) {
     if (!rec) return;
     rec.onstart = null;
@@ -228,15 +219,10 @@ window.NonLaGame = (() => {
     } catch {
       // ignore
     }
-    try {
-      rec.stop();
-    } catch {
-      // ignore
-    }
   }
 
   function spawnFreshRecognizer() {
-    if (!running || mode !== "voice" || !hasSpeechAPI()) return;
+    if (!running || isPaused || mode !== "voice" || !hasSpeechAPI()) return;
     clearTimeout(restartTimer);
     pendingErrorRetry = false;
 
@@ -300,30 +286,25 @@ window.NonLaGame = (() => {
           pendingErrorRetry = true;
           setMode("quiet", "Tab này chưa cấp quyền Micro → chuyển sang Im lặng 🤫");
         } else if (err.error === "audio-capture") {
-          // Critical: prevent immediate onend() from cancelling our escalating retry timer!
           pendingErrorRetry = true;
-          const delays = [500, 1200, 2200];
+          const delays = [600, 1500];
           if (captureRetries < delays.length) {
             const waitMs = delays[captureRetries];
-            const usePrimer = captureRetries >= 1;
             captureRetries++;
             if (callbacks.onMicState) {
               callbacks.onMicState(false, `🎤 Đang kết nối lại Micro (${captureRetries}/${delays.length})...`);
             }
             clearTimeout(restartTimer);
-            restartTimer = setTimeout(async () => {
-              if (!running || mode !== "voice" || myGen !== recGeneration) return;
-              if (usePrimer) await primeMicHardware();
-              if (running && mode === "voice" && myGen === recGeneration) {
-                spawnFreshRecognizer();
-              }
+            restartTimer = setTimeout(() => {
+              if (!running || isPaused || mode !== "voice" || myGen !== recGeneration) return;
+              spawnFreshRecognizer();
             }, waitMs);
           } else {
             const isStandalone = Boolean(window.navigator.standalone) ||
               (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
             const msg = isStandalone && isIOS
-              ? "iPhone chưa nhả Mic sau khi vuốt tắt app — thử bấm 'Đổi sang Mic' hoặc mở bằng Safari nha!"
-              : "Micro đang bận trên máy → chuyển tạm sang Im lặng 🤫";
+              ? "Micro đang bận trên iPhone → bấm 'Đổi sang Mic' để bật lại nha!"
+              : "Micro đang bận trên máy → chuyển sang Im lặng 🤫";
             setMode("quiet", msg);
           }
         } else if (err.error === "network") {
@@ -337,10 +318,10 @@ window.NonLaGame = (() => {
         speechDetected = false;
         // Never overwrite an active error-recovery timer scheduled by rec.onerror!
         if (pendingErrorRetry) return;
-        if (running && mode === "voice") {
+        if (running && !isPaused && mode === "voice") {
           clearTimeout(restartTimer);
           restartTimer = setTimeout(() => {
-            if (running && mode === "voice" && myGen === recGeneration) {
+            if (running && !isPaused && mode === "voice" && myGen === recGeneration) {
               spawnFreshRecognizer();
             }
           }, isIOS ? 280 : 120);
@@ -356,7 +337,7 @@ window.NonLaGame = (() => {
   }
 
   function startSpeech() {
-    if (mode !== "voice") return;
+    if (mode !== "voice" || isPaused) return;
     if (!hasSpeechAPI()) {
       setMode("quiet", "Trình duyệt chưa hỗ trợ Speech API → dùng Im lặng 🤫");
       return;
@@ -450,27 +431,58 @@ window.NonLaGame = (() => {
     lastTime = 0;
     acc = 0;
     running = true;
+    isPaused = false;
 
     pickNextWord();
     if (callbacks.onHudUpdate) callbacks.onHudUpdate({ score, candies, livesText: "❤️❤️❤️" });
+    if (callbacks.onPauseState) callbacks.onPauseState(false);
     if (mode === "voice") startSpeech();
     if (rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(loop);
   }
 
+  function pause() {
+    if (!running || isPaused) return false;
+    isPaused = true;
+    stopSpeech();
+    if (callbacks.onPauseState) callbacks.onPauseState(true);
+    return true;
+  }
+
+  function resume() {
+    if (!running || !isPaused) return false;
+    isPaused = false;
+    lastTime = performance.now();
+    acc = 0;
+    if (mode === "voice") {
+      startSpeech();
+    }
+    if (callbacks.onPauseState) callbacks.onPauseState(false);
+    return true;
+  }
+
+  function togglePause() {
+    if (!running) return false;
+    return isPaused ? resume() : pause();
+  }
+
   function stop() {
     running = false;
+    isPaused = false;
     stopSpeech();
     if (rafId) {
       cancelAnimationFrame(rafId);
       rafId = null;
     }
+    if (callbacks.onPauseState) callbacks.onPauseState(false);
   }
 
   function endGame(reason) {
     running = false;
+    isPaused = false;
     stopSpeech();
     AudioManager.playBonk();
+    if (callbacks.onPauseState) callbacks.onPauseState(false);
     if (callbacks.onGameOver) {
       callbacks.onGameOver({ score, candies, reason });
     }
@@ -650,6 +662,32 @@ window.NonLaGame = (() => {
       ctx.fillText(statusBanner, 120, 112);
       ctx.textAlign = "left";
     }
+
+    if (isPaused) {
+      // Semi-transparent backdrop
+      ctx.fillStyle = "rgba(40, 24, 20, 0.72)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Pixel box in center
+      ctx.fillStyle = "#FFFDF7";
+      ctx.fillRect(24, 88, 192, 90);
+      ctx.strokeStyle = "#4A302C";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(24, 88, 192, 90);
+
+      ctx.fillStyle = "#E45A7A";
+      ctx.font = "bold 13px 'Press Start 2P', monospace, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("⏸ TẠM DỪNG", 120, 116);
+
+      ctx.fillStyle = "#4A302C";
+      ctx.font = "11px 'Be Vietnam Pro', sans-serif";
+      ctx.fillText("Game đang được giữ nguyên nè!", 120, 138);
+      ctx.fillStyle = "#2D6A4F";
+      ctx.font = "bold 10.5px 'Be Vietnam Pro', sans-serif";
+      ctx.fillText("Bấm [Tiếp Tục] để chơi lại nha 👒", 120, 158);
+      ctx.textAlign = "left";
+    }
   }
 
   const FIXED_STEP = 1000 / 60;
@@ -661,10 +699,12 @@ window.NonLaGame = (() => {
     if (!lastTime) lastTime = now;
     const dt = Math.min(80, Math.max(0, now - lastTime));
     lastTime = now;
-    acc += dt;
-    while (acc >= FIXED_STEP && running) {
-      update();
-      acc -= FIXED_STEP;
+    if (!isPaused) {
+      acc += dt;
+      while (acc >= FIXED_STEP && running && !isPaused) {
+        update();
+        acc -= FIXED_STEP;
+      }
     }
     if (running) {
       draw();
@@ -676,6 +716,10 @@ window.NonLaGame = (() => {
     init,
     start,
     stop,
+    pause,
+    resume,
+    togglePause,
+    isPaused: () => isPaused,
     setMode,
     getMode: () => mode,
     hasSpeechAPI,

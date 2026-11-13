@@ -49,6 +49,24 @@ window.AudioManager = (() => {
     N.G4, N.A4, N.C5, N.D5, N.C5, N.E5, N.D5, null, N.C5, N.A4, N.G4, N.C5, null, null, null, null
   ];
 
+  // Lunar New Year (Tết Âm Lịch): "Ngày Tết Quê Em" music-box rendition
+  const tetSteps = [
+    // "Tết Tết Tết Tết đến rồi"
+    N.G4, N.G4, N.G4, N.G4, null, N.E4, null, N.G4, null, null,
+    // "Tết Tết Tết Tết đến rồi"
+    N.G4, N.G4, N.G4, N.G4, null, N.E4, null, N.G4, null, null,
+    // "Tết đến trong tim mọi người"
+    N.C5, null, N.C5, null, N.B4, N.A4, null, N.G4, null, null, null, null,
+    // "Mừng ngày Tết trên khắp quê tôi"
+    N.E4, null, N.G4, null, N.A4, N.A4, null, N.G4, null, N.E4, null, N.D4, null, null,
+    // "Người ra Trung ra Bắc vô Nam"
+    N.D4, null, N.E4, null, N.G4, N.G4, null, N.E4, null, N.D4, null, N.C4, null, null,
+    // "Dù đi đâu ai cũng nhớ"
+    N.C4, null, N.D4, null, N.E4, null, N.G4, null, N.A4, null, N.C5, null,
+    // "Về chung vui bên gia đình"
+    N.A4, null, N.G4, null, N.E4, null, N.D4, null, N.C4, null, null, null, null, null
+  ];
+
   function ensureContext() {
     if (!ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -90,6 +108,7 @@ window.AudioManager = (() => {
   function getActivePattern() {
     if (currentTheme === "birthday") return { steps: birthdaySteps, tempoMs: 265 };
     if (currentTheme === "anniversary") return { steps: anniversarySteps, tempoMs: 280 };
+    if (currentTheme === "tet") return { steps: tetSteps, tempoMs: 250 };
     return { steps: normalSteps, tempoMs: 390 };
   }
 

@@ -98,6 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function closeModal(id) {
+    if (id === "modalMiniGame") {
+      stopAllGames();
+    }
     document.getElementById(id).classList.add("hidden");
   }
 
@@ -169,6 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (m === 4 && d === 15) return "ngoc";
     if (m === 6 && d === 1) return "khanh";
     if (m === 2 && d === 11) return "anniversary";
+    if (window.Amlich && window.Amlich.getTetInfo(now).isTet) return "tet";
     return null;
   }
 
@@ -184,16 +188,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const ev = DATA.specialDays[key];
 
     const now = new Date();
-    const claimKey = `${key}_${now.getFullYear()}`;
+    let claimYear = now.getFullYear();
+    if (key === "tet" && window.Amlich) {
+      claimYear = window.Amlich.getTetInfo(now).lunarYear || claimYear;
+    }
+    const claimKey = `${key}_${claimYear}`;
     if (!state.claimedBirthdays.includes(claimKey)) {
       state.claimedBirthdays.push(claimKey);
-      addRewards(key === "anniversary" ? 30 : 25, ev.giftCandy);
+      addRewards(key === "tet" ? 35 : (key === "anniversary" ? 30 : 25), ev.giftCandy);
       AudioManager.playPowerup();
       RoomScene.triggerKhanhHappy("happy");
       RoomScene.triggerBongHappy();
       const speechText = ev.speech.replace("{days}", String(getDaysTogether()));
-      showSpeech(key === "anniversary" ? "Anh Khánh 💕" : "Anh Khánh 🎂", speechText);
-      showToast(`${key === "anniversary" ? "💕 Quà kỷ niệm" : "🎂 Quà sinh nhật"}: +${ev.giftCandy} 🍬!`);
+      const title = key === "tet" ? "Anh Khánh 🧧" : (key === "anniversary" ? "Anh Khánh 💕" : "Anh Khánh 🎂");
+      showSpeech(title, speechText);
+      const giftLabel = key === "tet" ? "🧧 Lì xì Tết" : (key === "anniversary" ? "💕 Quà kỷ niệm" : "🎂 Quà sinh nhật");
+      showToast(`${giftLabel}: +${ev.giftCandy} 🍬!`);
     }
   }
 
@@ -459,8 +469,14 @@ document.addEventListener("DOMContentLoaded", () => {
     (who) => {
       if (who === "khanh") {
         AudioManager.playClick();
-        const { item } = pickRandom(DATA.khanhDialogues);
-        showSpeech("Anh Khánh", item);
+        const specialDay = getActiveSpecialDay();
+        if (specialDay === "tet" && DATA.specialDays.tet && DATA.specialDays.tet.quotes) {
+          const { item } = pickRandom(DATA.specialDays.tet.quotes);
+          showSpeech("Anh Khánh 🧧", item);
+        } else {
+          const { item } = pickRandom(DATA.khanhDialogues);
+          showSpeech("Anh Khánh", item);
+        }
         addRewards(5, 1);
       } else if (who === "bong") {
         handlePetBong();
@@ -616,6 +632,13 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     onWordUpdate({ word, mode, lastHeard }) {
       updateNonlaUI(mode, word, lastHeard);
+    },
+    onPauseState(isPaused) {
+      const btn = document.getElementById("btnPauseNonla");
+      if (btn) {
+        btn.textContent = isPaused ? "▶ Tiếp Tục" : "⏸ Tạm Dừng";
+        btn.className = isPaused ? "pixel-btn btn-pink btn-sm" : "pixel-btn btn-cream btn-sm";
+      }
     }
   });
 
@@ -715,6 +738,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("dpadRight").addEventListener("click", () => CrossingGame.move(1, 0));
 
   // Non La L-N controls
+  document.getElementById("btnPauseNonla").addEventListener("click", () => {
+    AudioManager.playClick();
+    NonLaGame.togglePause();
+  });
   document.getElementById("btnToggleNonlaMode").addEventListener("click", () => {
     const next = NonLaGame.getMode() === "voice" ? "quiet" : "voice";
     if (next !== "voice") {

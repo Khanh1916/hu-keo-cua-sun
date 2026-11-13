@@ -139,56 +139,56 @@ window.GAME_DATA = {
       id: "teddy",
       name: "Gấu bông Teddy",
       emoji: "🧸",
-      price: 25,
+      price: 65,
       desc: "Chú gấu Teddy mềm mại đặt trên giường cho căn phòng đỡ trống."
     },
     {
       id: "rug",
       name: "Thảm tròn hồng pastel",
       emoji: "🩷",
-      price: 30,
+      price: 120,
       desc: "Tấm thảm êm ái giữa phòng cho anh Khánh ngồi chơi cùng bé Bông."
     },
     {
       id: "bong_bed",
       name: "Ổ nệm êm cho bé Bông",
       emoji: "🛏️",
-      price: 35,
+      price: 240,
       desc: "Chiếc nệm hồng ấm áp để mèo Bông cuộn tròn ngủ nướng."
     },
     {
       id: "plant",
       name: "Chậu hoa nhỏ bên cửa sổ",
       emoji: "🪴",
-      price: 40,
+      price: 380,
       desc: "Thêm chút xanh mát ngay bậu cửa sổ ngắm hoa phượng đỏ."
     },
     {
       id: "photo",
       name: "Khung ảnh 11/02/2026",
       emoji: "🖼️",
-      price: 45,
+      price: 580,
       desc: "Treo lên tường kỷ niệm ngày đầu tụi mình quen nhau trên Facebook Dating."
     },
     {
       id: "tea_table",
       name: "Bàn trà cúc ấm áp",
       emoji: "🫖",
-      price: 55,
+      price: 850,
       desc: "Góc nhỏ pha trà cúc, nhâm nhi bánh mì cay ngồi nói chuyện."
     },
     {
       id: "lamp",
       name: "Đèn ngủ ánh trăng",
       emoji: "🌙",
-      price: 65,
+      price: 1250,
       desc: "Tỏa ánh sáng vàng dịu vào buổi tối cho phòng đỡ tối."
     },
     {
       id: "fairy_lights",
       name: "Dây đèn lấp lánh",
       emoji: "✨",
-      price: 80,
+      price: 1800,
       desc: "Giăng ngang tường lung linh cho góc phòng thêm ấm cúng."
     }
   ],
@@ -300,82 +300,98 @@ Chúc em iu lúc nào cũng vui vẻ, đi đường nhớ chạy xe chậm chậ
       id: "first_hug",
       name: "Cái ôm đầu tiên",
       desc: "Ôm anh Khánh 1 lần trong phòng",
-      reward: 10,
+      reward: 15,
       emoji: "🤗"
     },
     {
       id: "pet_bong_5",
       name: "Con sen chính hiệu",
       desc: "Vuốt ve bé mèo Bông 5 lần",
-      reward: 15,
+      reward: 20,
       emoji: "🐱"
     },
     {
       id: "foodie_5",
       name: "Thổ địa Hải Phòng",
       desc: "Cho ăn ít nhất 5 món khác nhau",
-      reward: 25,
+      reward: 35,
       emoji: "🍜"
     },
     {
       id: "mg_score_200",
       name: "Cao thủ Hứng Kẹo",
       desc: "Đạt từ 200 điểm trở lên trong mini-game",
-      reward: 25,
+      reward: 35,
       emoji: "🎮"
     },
     {
       id: "jar_reader",
       name: "Đọc hết tâm tư",
       desc: "Mở Lọ lời nhắn ít nhất 8 lần",
-      reward: 20,
+      reward: 30,
       emoji: "🫙"
     },
     {
       id: "decor_4",
       name: "Tổ ấm nhỏ xinh",
       desc: "Sắm được 4 món đồ trang trí phòng",
-      reward: 30,
+      reward: 80,
       emoji: "🛋️"
     },
     {
       id: "decor_all",
       name: "Căn phòng hoàn hảo",
       desc: "Sưu tầm đủ cả 8 món đồ trang trí",
-      reward: 50,
+      reward: 200,
       emoji: "🏡"
     },
     {
       id: "level_5",
       name: "Không còn Sọ Dừa!",
       desc: "Đạt Cấp 5 độ thân mật",
-      reward: 35,
+      reward: 60,
       emoji: "💕"
     },
     {
       id: "crossing_100",
       name: "Bông qua đường siêu đỉnh",
       desc: "Đạt từ 100 điểm trong Qua Đường Đi Bông",
-      reward: 25,
+      reward: 35,
       emoji: "🚗"
     },
     {
       id: "flappy_50",
       name: "Yên tâm, tôi bay mà!",
       desc: "Đạt từ 50 điểm trong Bay Qua Đất Cảng",
-      reward: 25,
+      reward: 35,
       emoji: "🪽"
     },
     {
       id: "nonla_75",
       name: "Không ngọng chút nào!",
       desc: "Đạt từ 75 điểm trong Nón Lá L-N",
-      reward: 30,
+      reward: 35,
       emoji: "👒"
     }
   ],
 
   specialDays: {
+    tet: {
+      isLunar: true,
+      music: "tet",
+      giftCandy: 88,
+      banner: "🧧 Chúc Mừng Năm Mới! Chúc em iu luôn xinh xắn, bình an & bớt ngọng L/N nha! 🌸",
+      speech: "Tết đến rồi em iu ơi! Chúc Ngọc năm mới luôn xinh xắn, ngoan ngoãn, vạn sự như ý và bớt bắt nạt anh lại nha 😂 Lì xì em iu +88 🍬 đầu năm lấy lộc phát nè! 🧧",
+      quotes: [
+        "Tết này em iu đã ăn bánh chưng chưa? Anh để dành miếng ngon nhất cho em rồi đấy!",
+        "Năm mới chúc em iu luôn vui vẻ, bớt bắt nạt anh lại nha 😂",
+        "Bé Bông cũng chúc chị Ngọc năm mới hay ăn chóng lớn, bớt cào móng vào sofa nha 🐱",
+        "Tết bên Hải Phòng có lạnh không em? Nhớ mặc ấm vào nha sọ dừa 🌸",
+        "Đợi anh mấy hôm nữa phi từ Hà Nội xuống lì xì trực tiếp cho em iu nha! 🧧",
+        "Năm mới chúc tụi mình luôn yêu thương nhau, cùng nhau cố gắng nha em iu 💕",
+        "Năm mới chúc em luyện nói chuẩn L với N nha, hết Tết là không được nói ngọng nữa đâu 👒"
+      ]
+    },
     ngoc: {
       month: 4,
       day: 15,

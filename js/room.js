@@ -303,7 +303,95 @@ window.RoomScene = (() => {
     if (m === 4 && d === 15) return "ngoc";
     if (m === 6 && d === 1) return "khanh";
     if (m === 2 && d === 11) return "anniversary";
+    if (window.Amlich && window.Amlich.getTetInfo(now).isTet) return "tet";
     return null;
+  }
+
+  function drawTetDecor() {
+    const px = PixelSprites.px;
+
+    // 1. Câu Đối Đỏ Tết trên 2 bên tường
+    // Câu đối bên trái (x: 14, y: 24, w: 14, h: 54)
+    px(ctx, 14, 24, 14, 54, "#C92A2A");
+    px(ctx, 15, 25, 12, 52, "#D90429");
+    px(ctx, 13, 23, 16, 2, "#FFD166");
+    px(ctx, 13, 78, 16, 2, "#FFD166");
+    px(ctx, 20, 80, 2, 6, "#E63946");
+    px(ctx, 19, 86, 4, 3, "#FFD166");
+    const glyphY = [28, 38, 48, 58, 68];
+    glyphY.forEach((gy, i) => {
+      const gcolor = (Math.floor(frame / 20) + i) % 2 === 0 ? "#FFF3B0" : "#FFD166";
+      px(ctx, 18, gy, 6, 2, gcolor);
+      px(ctx, 20, gy + 2, 2, 4, gcolor);
+      px(ctx, 17, gy + 4, 8, 2, gcolor);
+    });
+
+    // Câu đối bên phải (x: 212, y: 24, w: 14, h: 54)
+    px(ctx, 212, 24, 14, 54, "#C92A2A");
+    px(ctx, 213, 25, 12, 52, "#D90429");
+    px(ctx, 211, 23, 16, 2, "#FFD166");
+    px(ctx, 211, 78, 16, 2, "#FFD166");
+    px(ctx, 218, 80, 2, 6, "#E63946");
+    px(ctx, 217, 86, 4, 3, "#FFD166");
+    glyphY.forEach((gy, i) => {
+      const gcolor = (Math.floor(frame / 20) + i) % 2 === 0 ? "#FFD166" : "#FFF3B0";
+      px(ctx, 216, gy, 6, 2, gcolor);
+      px(ctx, 218, gy + 2, 2, 4, gcolor);
+      px(ctx, 215, gy + 4, 8, 2, gcolor);
+    });
+
+    // 2. Cành Đào Tết hồng thắm bên kệ nhỏ (x: 162, y: 144)
+    const tx = 162, ty = 144;
+    px(ctx, tx - 4, ty + 12, 24, 3, "#8D5B4C");
+    px(ctx, tx + 6, ty + 15, 4, 6, "#6B3D2E");
+    px(ctx, tx + 3, ty + 4, 10, 8, "#FFFDF7");
+    px(ctx, tx + 4, ty + 2, 8, 2, "#FFD166");
+    px(ctx, tx + 5, ty + 12, 6, 1, "#E9D8A6");
+    px(ctx, tx + 7, ty - 4, 2, 6, "#5A3825");
+    px(ctx, tx + 5, ty - 8, 2, 4, "#5A3825");
+    px(ctx, tx + 3, ty - 12, 2, 5, "#5A3825");
+    px(ctx, tx + 8, ty - 10, 2, 4, "#5A3825");
+    px(ctx, tx + 10, ty - 14, 2, 5, "#5A3825");
+    px(ctx, tx + 1, ty - 15, 3, 2, "#5A3825");
+    const blossoms = [
+      { x: tx + 2, y: ty - 16, col: "#FF758F" },
+      { x: tx + 0, y: ty - 12, col: "#FF4D6D" },
+      { x: tx + 6, y: ty - 14, col: "#FF758F" },
+      { x: tx + 10, y: ty - 16, col: "#FF4D6D" },
+      { x: tx + 12, y: ty - 11, col: "#FF758F" },
+      { x: tx + 4, y: ty - 6, col: "#FFB3C1" },
+      { x: tx + 9, y: ty - 7, col: "#FF4D6D" }
+    ];
+    blossoms.forEach((b) => {
+      px(ctx, b.x - 1, b.y, 4, 3, b.col);
+      px(ctx, b.x, b.y - 1, 2, 5, b.col);
+      px(ctx, b.x, b.y, 2, 2, "#FFE066");
+    });
+    const ribbonBob = Math.round(Math.sin(frame * 0.1) * 1);
+    px(ctx, tx + 9, ty - 3 + ribbonBob, 2, 5, "#E63946");
+    px(ctx, tx + 9, ty + 2 + ribbonBob, 2, 2, "#FFD166");
+
+    // 3. Đĩa Bánh Chưng xanh & dưa hấu Tết (x: 140, y: 152)
+    const bx = 140, by = 152;
+    px(ctx, bx - 2, by + 6, 18, 3, "#E9D8A6");
+    px(ctx, bx, by, 10, 6, "#2D6A4F");
+    px(ctx, bx + 1, by + 1, 8, 4, "#40916C");
+    px(ctx, bx + 4, by, 2, 6, "#FEE440");
+    px(ctx, bx, by + 2, 10, 2, "#FEE440");
+    px(ctx, bx + 11, by + 1, 5, 5, "#E63946");
+    px(ctx, bx + 11, by + 5, 5, 1, "#2D6A4F");
+    px(ctx, bx + 13, by + 3, 1, 1, "#1D3557");
+
+    // 4. Bao Lì Xì đỏ may mắn
+    px(ctx, bx + 1, by + 8, 7, 4, "#D90429");
+    px(ctx, bx + 3, by + 9, 3, 2, "#FFD166");
+
+    // 5. Cánh hoa đào rơi lãng mạn trong phòng
+    for (let p = 0; p < 7; p++) {
+      const py = (frame * 0.4 + p * 28) % 170 + 20;
+      const pxPos = 30 + p * 28 + Math.sin(frame * 0.03 + p * 1.5) * 8;
+      px(ctx, pxPos, py, 3, 2, p % 2 === 0 ? "#FF758F" : "#FFCCD5");
+    }
   }
 
   function drawAnniversaryDecor() {
@@ -425,11 +513,13 @@ window.RoomScene = (() => {
     if (placed.includes("bong_bed")) PixelSprites.drawDecor(ctx, "bong_bed", frame);
     if (placed.includes("tea_table")) PixelSprites.drawDecor(ctx, "tea_table", frame);
 
-    // Hidden Special Day Decorations (15/04, 01/06 Birthdays & 11/02 Anniversary)
+    // Hidden Special Day Decorations (15/04, 01/06 Birthdays, 11/02 Anniversary & Tết Âm Lịch)
     if (specialDay === "ngoc" || specialDay === "khanh") {
       drawBirthdayDecor(specialDay);
     } else if (specialDay === "anniversary") {
       drawAnniversaryDecor();
+    } else if (specialDay === "tet") {
+      drawTetDecor();
     }
 
     // 3. Depth-sorted characters (Khánh Mini & Bé mèo Bông)
@@ -449,6 +539,25 @@ window.RoomScene = (() => {
       px(ctx, hx - 3, hy, 6, 2, "#E46B94");
       px(ctx, hx - 2, hy - 2, 4, 2, "#FFE066");
       px(ctx, hx - 1, hy - 4, 2, 2, "#8ED6FF");
+    }
+
+    // Festive red accessories during Lunar New Year (Tết)
+    if (specialDay === "tet") {
+      const px = PixelSprites.px;
+      // Khanh's festive red scarf
+      const kbob = khanh.state === "happy" ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
+      const kx = Math.round(khanh.x);
+      const ky = Math.round(khanh.y - 32 + kbob);
+      px(ctx, kx - 5, ky + 12, 10, 3, "#D90429");
+      px(ctx, kx - 2, ky + 15, 4, 4, "#BA181B");
+      px(ctx, kx - 1, ky + 19, 2, 1, "#FFD166");
+
+      // Bong's cute red collar with tiny golden bell
+      const bhop = bong.state === "happy" ? Math.abs(Math.round(Math.sin(frame * 0.3) * 3)) : 0;
+      const bx = Math.round(bong.x);
+      const by = Math.round(bong.y - 14 - bhop);
+      px(ctx, bx - 2, by + 6, 6, 2, "#D90429");
+      px(ctx, bx, by + 7, 2, 2, "#FFD166");
     }
 
     // 4. Particles

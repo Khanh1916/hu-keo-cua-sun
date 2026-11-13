@@ -710,6 +710,13 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nonla-top-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
 
 .nonla-mic-badge {
