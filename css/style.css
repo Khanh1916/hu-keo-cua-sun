@@ -1260,24 +1260,36 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 10px;
   background: #fff8f0;
   border: 1.5px solid var(--ink);
   border-radius: 10px;
-  padding: 6px 10px;
+  padding: 6px 8px;
   box-shadow: 0 2px 0 var(--ink);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }
 
 .clb-left {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   font-size: 11.5px;
   font-weight: 700;
   color: var(--ink);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.clb-left label {
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-size: 11px;
 }
 
 .cwc-actions {
@@ -1336,16 +1348,32 @@ body {
 }
 
 .pixel-select {
-  padding: 4px 8px;
+  padding: 4px 6px;
   border: 1.5px solid var(--ink);
   border-radius: 8px;
   background: #fff;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--ink);
   outline: none;
   cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+#btnNextDailySet {
+  flex-shrink: 0;
+  padding: 4.5px 8px;
+  font-size: 11px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .chinese-help-text {

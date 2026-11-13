@@ -2383,11 +2383,11 @@ window.ChineseApp = (() => {
           <div class="clb-left">
             <label>🏷️ Cấp độ:</label>
             <select id="selChineseLevel" class="pixel-select">
-              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
-              <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu • Luyện thi)</option>
-              <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy • Thành ngữ)</option>
-              <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Cảm xúc • Giao tiếp)</option>
-              <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Căn bản • Đời sống)</option>
+              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕)</option>
+              <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu)</option>
+              <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy)</option>
+              <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Giao tiếp)</option>
+              <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Căn bản)</option>
               <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1 (Nhập môn)</option>
             </select>
           </div>
@@ -2488,12 +2488,12 @@ window.ChineseApp = (() => {
             <div class="clb-left">
               <label>🏷️ Cấp độ:</label>
               <select id="selFlashcardLevel" class="pixel-select">
-                <option value="starred" selected>⭐ Sổ Tay Yêu Thích (0 từ)</option>
-                <option value="hsk4">HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
-                <option value="hsk5">HSK 5 (Chuyên sâu • Luyện thi)</option>
-                <option value="hsk6">HSK 6 (Bậc thầy • Thành ngữ)</option>
-                <option value="hsk3">HSK 3 (Cảm xúc • Giao tiếp)</option>
-                <option value="hsk2">HSK 2 (Căn bản • Đời sống)</option>
+                <option value="starred" selected>⭐ Sổ Tay (${getAllStarredWords().length} từ)</option>
+                <option value="hsk4">HSK 4 (Của Ngọc 💕)</option>
+                <option value="hsk5">HSK 5 (Chuyên sâu)</option>
+                <option value="hsk6">HSK 6 (Bậc thầy)</option>
+                <option value="hsk3">HSK 3 (Giao tiếp)</option>
+                <option value="hsk2">HSK 2 (Căn bản)</option>
                 <option value="hsk1">HSK 1 (Nhập môn)</option>
               </select>
             </div>
@@ -2526,12 +2526,12 @@ window.ChineseApp = (() => {
           <div class="clb-left">
             <label>🏷️ Cấp độ:</label>
             <select id="selFlashcardLevel" class="pixel-select">
-              <option value="starred" ${currentLevel === "starred" ? "selected" : ""}>⭐ Sổ Tay Yêu Thích (${getAllStarredWords().length} từ)</option>
-              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕 • Nâng cao)</option>
-              <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu • Luyện thi)</option>
-              <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy • Thành ngữ)</option>
-              <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Cảm xúc • Giao tiếp)</option>
-              <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Căn bản • Đời sống)</option>
+              <option value="starred" ${currentLevel === "starred" ? "selected" : ""}>⭐ Sổ Tay (${getAllStarredWords().length} từ)</option>
+              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕)</option>
+              <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu)</option>
+              <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy)</option>
+              <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Giao tiếp)</option>
+              <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2 (Căn bản)</option>
               <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1 (Nhập môn)</option>
             </select>
           </div>
