@@ -1,4 +1,4 @@
-const CACHE_NAME = "hu-keo-sun-v24";
+const CACHE_NAME = "hu-keo-sun-v25";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -6,20 +6,20 @@ const CORE_ASSETS = [
   "./favicon.svg",
   "./icon-180.png",
   "./icon-512.png",
-  "./css/style.css?v=24",
-  "./js/data.js?v=24",
-  "./js/lunar.js?v=24",
-  "./js/weather.js?v=24",
-  "./js/audio.js?v=24",
-  "./js/sprites.js?v=24",
-  "./js/room.js?v=24",
-  "./js/minigame.js?v=24",
-  "./js/game_crossing.js?v=24",
-  "./js/game_flappy.js?v=24",
-  "./js/game_nonla.js?v=24",
-  "./js/game_memory.js?v=24",
-  "./js/chinese.js?v=24",
-  "./js/app.js?v=24"
+  "./css/style.css?v=25",
+  "./js/data.js?v=25",
+  "./js/lunar.js?v=25",
+  "./js/weather.js?v=25",
+  "./js/audio.js?v=25",
+  "./js/sprites.js?v=25",
+  "./js/room.js?v=25",
+  "./js/minigame.js?v=25",
+  "./js/game_crossing.js?v=25",
+  "./js/game_flappy.js?v=25",
+  "./js/game_nonla.js?v=25",
+  "./js/game_memory.js?v=25",
+  "./js/chinese.js?v=25",
+  "./js/app.js?v=25"
 ];
 
 self.addEventListener("install", (event) => {
