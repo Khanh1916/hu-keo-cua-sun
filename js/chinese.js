@@ -1779,7 +1779,10 @@ window.ChineseApp = (() => {
         <div class="flashcard-box ${flashcardFlipped ? "flipped" : ""}" id="flashcardBox">
           ${!flashcardFlipped ? `
             <div class="fc-front">
-              <span class="fc-tag">🀄 ${getLevelLabel(currentLevel).split(" ")[0]} ${getLevelLabel(currentLevel).split(" ")[1] || ""} • Thẻ ${flashcardIndex + 1}/${list.length}</span>
+              <div class="fc-header-row">
+                <span class="fc-tag">🀄 ${getLevelLabel(currentLevel).split(" ")[0]} ${getLevelLabel(currentLevel).split(" ")[1] || ""} • Thẻ ${flashcardIndex + 1}/${list.length}</span>
+                <span class="srs-badge ${getSRSBadge(w.hanzi).cls}">${getSRSBadge(w.hanzi).text}</span>
+              </div>
               <span class="fc-hanzi">${w.hanzi}</span>
               <span class="fc-hint">👆 Chạm vào thẻ để lật xem nghĩa & ví dụ</span>
               <div class="fc-actions-row">
@@ -1792,7 +1795,10 @@ window.ChineseApp = (() => {
             <div class="fc-back">
               <span class="fc-pinyin">${w.pinyin}</span>
               <span class="fc-meaning">${w.meaning}</span>
-              <span class="fc-type-badge">${w.type || "Từ vựng"}</span>
+              <div class="cwc-badges-row" style="margin-top: 4px;">
+                <span class="fc-type-badge">${w.type || "Từ vựng"}</span>
+                <span class="srs-badge ${getSRSBadge(w.hanzi).cls}">${getSRSBadge(w.hanzi).text}</span>
+              </div>
               ${w.example ? `
                 <div class="fc-example-box">
                   <span class="fc-ex-hanzi">"${w.example}"</span>
@@ -1809,11 +1815,18 @@ window.ChineseApp = (() => {
           `}
         </div>
 
-        <div class="fc-nav-controls">
-          <button class="pixel-btn btn-cream" id="btnFcPrev">◀ Từ Trước</button>
-          <button class="pixel-btn btn-pink" id="btnFcFlip">🔄 Lật Thẻ</button>
-          <button class="pixel-btn btn-cream" id="btnFcNext">Từ Sau ▶</button>
-        </div>
+        ${flashcardFlipped ? `
+          <div class="fc-srs-rating-row">
+            <button class="pixel-btn btn-cream srs-rate-btn rate-again" id="btnSrsAgain">🔴 Chưa nhớ (Ôn lại)</button>
+            <button class="pixel-btn btn-pink srs-rate-btn rate-good" id="btnSrsGood">🟢 Đã thuộc (Nhớ tốt)</button>
+          </div>
+        ` : `
+          <div class="fc-nav-controls">
+            <button class="pixel-btn btn-cream" id="btnFcPrev">◀ Từ Trước</button>
+            <button class="pixel-btn btn-pink" id="btnFcFlip">🔄 Lật Thẻ</button>
+            <button class="pixel-btn btn-cream" id="btnFcNext">Từ Sau ▶</button>
+          </div>
+        `}
       </div>
     `;
 
@@ -1838,6 +1851,29 @@ window.ChineseApp = (() => {
     if (btnFlip) {
       btnFlip.addEventListener("click", () => {
         flashcardFlipped = !flashcardFlipped;
+        renderFlashcardTab();
+      });
+    }
+
+    const btnSrsAgain = document.getElementById("btnSrsAgain");
+    if (btnSrsAgain) {
+      btnSrsAgain.addEventListener("click", () => {
+        recordSRSReview(w.hanzi, false);
+        if (window.showToast) window.showToast(`Đã ghi nhận: Cần ôn lại từ [${w.hanzi}]`);
+        flashcardIndex++;
+        flashcardFlipped = false;
+        renderFlashcardTab();
+      });
+    }
+
+    const btnSrsGood = document.getElementById("btnSrsGood");
+    if (btnSrsGood) {
+      btnSrsGood.addEventListener("click", () => {
+        recordSRSReview(w.hanzi, true, "easy");
+        if (window.AudioManager) AudioManager.playCandy();
+        if (window.showToast) window.showToast(`✨ Tuyệt vời! Đã nhớ tốt từ [${w.hanzi}]`);
+        flashcardIndex++;
+        flashcardFlipped = false;
         renderFlashcardTab();
       });
     }
