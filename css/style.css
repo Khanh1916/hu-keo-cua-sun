@@ -1334,6 +1334,18 @@ body {
   box-shadow: 0 0 0 var(--ink);
 }
 
+.btn-speak.speaking, .btn-speak-card.speaking, #btnSpeakQuiz.speaking {
+  background: #ffc2d1 !important;
+  color: #c92a2a !important;
+  border-color: #c92a2a !important;
+  animation: pulseAudio 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes pulseAudio {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+
 .fc-actions-row {
   display: flex;
   align-items: center;
