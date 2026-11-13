@@ -181,6 +181,115 @@ window.ChineseApp = (() => {
         examplePinyin: "Xièxie nǐ láidào wǒ de shìjiè lǐ.",
         exampleMeaning: "Cảm ơn em đã bước vào thế giới của anh."
       }
+    ,
+      {
+      "hanzi": "你好",
+      "pinyin": "nǐ hǎo",
+      "type": "Thán từ",
+      "meaning": "Chào bạn, xin chào",
+      "example": "你好，很高兴在 Facebook Dating 遇见你。",
+      "examplePinyin": "Nǐ hǎo, hěn gāoxìng zài Facebook Dating yùjiàn nǐ.",
+      "exampleMeaning": "Xin chào, rất vui được gặp em ngày hôm đó."
+},
+      {
+      "hanzi": "不客气",
+      "pinyin": "bù kèqi",
+      "type": "Cụm từ",
+      "meaning": "Đừng khách sáo, không có chi",
+      "example": "对我不用客气，为你做什么我都乐意。",
+      "examplePinyin": "Duì wǒ bùyòng kèqi, wèi nǐ zuò shénme wǒ dōu lèyì.",
+      "exampleMeaning": "Với anh không cần khách sáo, làm gì cho em anh cũng vui vẻ."
+},
+      {
+      "hanzi": "再见",
+      "pinyin": "zàijiàn",
+      "type": "Động từ",
+      "meaning": "Tạm biệt, hẹn gặp lại",
+      "example": "每次说再见，我都已经开始想你了。",
+      "examplePinyin": "Měicì shuō zàijiàn, wǒ dōu yǐjīng kāishǐ xiǎng nǐ le.",
+      "exampleMeaning": "Mỗi lần nói tạm biệt, lòng anh đã bắt đầu nhớ em rồi."
+},
+      {
+      "hanzi": "今天",
+      "pinyin": "jīntiān",
+      "type": "Danh từ",
+      "meaning": "Hôm nay",
+      "example": "今天也是超级喜欢你的一天。",
+      "examplePinyin": "Jīntiān yě shì chāojí xǐhuan nǐ de yī tiān.",
+      "exampleMeaning": "Hôm nay cũng là một ngày anh thương em thật nhiều."
+},
+      {
+      "hanzi": "昨天",
+      "pinyin": "zuótiān",
+      "type": "Danh từ",
+      "meaning": "Hôm qua",
+      "example": "昨天的回忆很甜，今天也是。",
+      "examplePinyin": "Zuótiān de huíyì hěn tián, jīntiān yě shì.",
+      "exampleMeaning": "Kỷ niệm hôm qua thật ngọt ngào, và hôm nay cũng vậy."
+},
+      {
+      "hanzi": "月",
+      "pinyin": "yuè",
+      "type": "Danh từ",
+      "meaning": "Tháng, mặt trăng",
+      "example": "二月十一日是我们相识的特别日子。",
+      "examplePinyin": "Èryuè shíyī rì shì wǒmen xiāngshí de tèbié rìzi.",
+      "exampleMeaning": "Ngày 11 tháng 2 là ngày kỷ niệm thật đặc biệt của hai đứa."
+},
+      {
+      "hanzi": "日",
+      "pinyin": "rì",
+      "type": "Danh từ",
+      "meaning": "Ngày, mặt trời",
+      "example": "和你在一起的每一日都很珍贵。",
+      "examplePinyin": "Hé nǐ zài yīqǐ de měi yī rì dōu hěn zhēnguì.",
+      "exampleMeaning": "Mỗi một ngày được ở bên em đều vô cùng quý giá."
+},
+      {
+      "hanzi": "高兴",
+      "pinyin": "gāoxìng",
+      "type": "Tính từ",
+      "meaning": "Vui vẻ, phấn khởi",
+      "example": "收到你的消息我就特别高兴。",
+      "examplePinyin": "Shōudào nǐ de xiāoxi wǒ jiù tèbié gāoxìng.",
+      "exampleMeaning": "Nhận được tin nhắn của em là lòng anh vui như mở cờ."
+},
+      {
+      "hanzi": "冷",
+      "pinyin": "lěng",
+      "type": "Tính từ",
+      "meaning": "Lạnh",
+      "example": "天气冷了，出门记得多穿衣服。",
+      "examplePinyin": "Tiānqì lěng le, chūmén jìde duō chuān yīfu.",
+      "exampleMeaning": "Trời trở lạnh rồi, ra đường nhớ mặc thật ấm nha em."
+},
+      {
+      "hanzi": "热",
+      "pinyin": "rè",
+      "type": "Tính từ",
+      "meaning": "Nóng, nhiệt tình",
+      "example": "喝一口热茶，心里暖暖的。",
+      "examplePinyin": "Hē yī kǒu rè chá, xīn lǐ nuǎnnuǎn de.",
+      "exampleMeaning": "Uống một ngụm trà nóng, trong lòng thấy ấm áp hẳn."
+},
+      {
+      "hanzi": "米饭",
+      "pinyin": "mǐfàn",
+      "type": "Danh từ",
+      "meaning": "Cơm",
+      "example": "记得按时吃米饭，不要饿肚子哦。",
+      "examplePinyin": "Jìde ànshí chī mǐfàn, bù yào è dùzi o.",
+      "exampleMeaning": "Nhớ ăn cơm đúng giờ, đừng để bụng đói nhé em."
+},
+      {
+      "hanzi": "水",
+      "pinyin": "shuǐ",
+      "type": "Danh từ",
+      "meaning": "Nước",
+      "example": "工作再忙也要记得多喝水。",
+      "examplePinyin": "Gōngzuò zài máng yě yào jìde duō hē shuǐ.",
+      "exampleMeaning": "Công việc có bận rộn cũng nhớ uống nhiều nước vào nha."
+}
     ],
 
     hsk2: [
@@ -274,6 +383,179 @@ window.ChineseApp = (() => {
         examplePinyin: "Gōngzuò lèi le jiù xiūxi yīxià ba.",
         exampleMeaning: "Đi làm mệt rồi thì nghỉ tay một chút nhé."
       }
+    ,
+      {
+      "hanzi": "快乐",
+      "pinyin": "kuàilè",
+      "type": "Tính từ",
+      "meaning": "Vui vẻ, hạnh phúc",
+      "example": "祝我的小宝贝每天都开开心心、快快乐乐。",
+      "examplePinyin": "Zhù wǒ de xiǎo bǎobèi měitiān dōu kāikāixīnxīn, kuàikuàilèlè.",
+      "exampleMeaning": "Chúc bé cưng của anh mỗi ngày đều vui vẻ và ngập tràn hạnh phúc."
+},
+      {
+      "hanzi": "开始",
+      "pinyin": "kāishǐ",
+      "type": "Động từ",
+      "meaning": "Bắt đầu",
+      "example": "新的一天开始了，加油哦！",
+      "examplePinyin": "Xīn de yī tiān kāishǐ le, jiāyóu o!",
+      "exampleMeaning": "Một ngày mới lại bắt đầu rồi, cố lên nha em yêu!"
+},
+      {
+      "hanzi": "跑步",
+      "pinyin": "pǎobù",
+      "type": "Động từ",
+      "meaning": "Chạy bộ",
+      "example": "跑步锻炼身体，保持好心情。",
+      "examplePinyin": "Pǎobù duànliàn shēntǐ, bǎochí hǎo xīnqíng.",
+      "exampleMeaning": "Chạy bộ rèn luyện sức khỏe và giữ tinh thần vui tươi."
+},
+      {
+      "hanzi": "生病",
+      "pinyin": "shēngbìng",
+      "type": "Động từ",
+      "meaning": "Bị ốm, bị bệnh",
+      "example": "听到你生病了，我真的很心疼。",
+      "examplePinyin": "Tīngdào nǐ shēngbìng le, wǒ zhēnde hěn xīnténg.",
+      "exampleMeaning": "Nghe tin em ốm mà anh xót lòng ghê."
+},
+      {
+      "hanzi": "休息",
+      "pinyin": "xiūxi",
+      "type": "Động từ",
+      "meaning": "Nghỉ ngơi",
+      "example": "太累了就早点休息，明天再努力。",
+      "examplePinyin": "Tài lèi le jiù zǎodiǎn xiūxi, míngtiān zài nǔlì.",
+      "exampleMeaning": "Mệt quá thì nghỉ sớm nhé, mai mình lại cố gắng tiếp."
+},
+      {
+      "hanzi": "药",
+      "pinyin": "yào",
+      "type": "Danh từ",
+      "meaning": "Thuốc",
+      "example": "记得按时吃药，多喝热水。",
+      "examplePinyin": "Jìde ànshí chī yào, duō hē rè shuǐ.",
+      "exampleMeaning": "Nhớ uống thuốc đúng giờ và uống nhiều nước ấm nha."
+},
+      {
+      "hanzi": "身体",
+      "pinyin": "shēntǐ",
+      "type": "Danh từ",
+      "meaning": "Sức khỏe, cơ thể",
+      "example": "身体是最重要的，别太辛苦了。",
+      "examplePinyin": "Shēntǐ shì zuì zhòngyào de, bié tài xīnkǔ le.",
+      "exampleMeaning": "Sức khỏe là quan trọng nhất, đừng làm việc quá sức nhé."
+},
+      {
+      "hanzi": "眼睛",
+      "pinyin": "yǎnjing",
+      "type": "Danh từ",
+      "meaning": "Đôi mắt",
+      "example": "你的眼睛笑起来特别迷人。",
+      "examplePinyin": "Nǐ de yǎnjing xiào qǐlái tèbié mírén.",
+      "exampleMeaning": "Đôi mắt em mỗi khi cười trông thật là cuốn hút."
+},
+      {
+      "hanzi": "送",
+      "pinyin": "sòng",
+      "type": "Động từ",
+      "meaning": "Tặng, đưa tiễn",
+      "example": "我想送你一束你最喜欢的花。",
+      "examplePinyin": "Wǒ xiǎng sòng nǐ yī shù nǐ zuì xǐhuan de huā.",
+      "exampleMeaning": "Anh muốn tặng em một bó hoa mà em yêu thích nhất."
+},
+      {
+      "hanzi": "时间",
+      "pinyin": "shíjiān",
+      "type": "Danh từ",
+      "meaning": "Thời gian",
+      "example": "时间过得真快，一转眼我们在一起好久了。",
+      "examplePinyin": "Shíjiān guò de zhēn kuài, yī zhuǎnyǎn wǒmen zài yīqǐ hǎojiǔ le.",
+      "exampleMeaning": "Thời gian trôi thật nhanh, chớp mắt tụi mình đã bên nhau bao ngày rồi."
+},
+      {
+      "hanzi": "旅游",
+      "pinyin": "lǚyóu",
+      "type": "Động từ/Danh từ",
+      "meaning": "Du lịch",
+      "example": "等有空了，我们一起去旅游吧。",
+      "examplePinyin": "Děng yǒu kòng le, wǒmen yīqǐ qù lǚyóu ba.",
+      "exampleMeaning": "Hôm nào rảnh rang, hai đứa mình cùng nhau đi du lịch nhé."
+},
+      {
+      "hanzi": "唱歌",
+      "pinyin": "chànggē",
+      "type": "Động từ",
+      "meaning": "Ca hát",
+      "example": "听你唱歌就像听世界上最动听的旋律。",
+      "examplePinyin": "Tīng nǐ chànggē jiù xiàng tīng shìjiè shàng zuì dòngtīng de xuánlǜ.",
+      "exampleMeaning": "Nghe em hát như lắng nghe giai điệu ngọt ngào nhất trần đời."
+},
+      {
+      "hanzi": "微笑",
+      "pinyin": "wēixiào",
+      "type": "Động từ/Danh từ",
+      "meaning": "Mỉm cười, nụ cười",
+      "example": "你的微笑是我一天中最治愈的光芒。",
+      "examplePinyin": "Nǐ de wēixiào shì wǒ yī tiān zhōng zuì zhìyù de guāngmáng.",
+      "exampleMeaning": "Nụ cười của em là ánh sáng chữa lành dịu êm nhất ngày của anh."
+}
+    ,
+      {
+      "hanzi": "觉得",
+      "pinyin": "juéde",
+      "type": "Động từ",
+      "meaning": "Cảm thấy, thấy rằng",
+      "example": "只要和你在一起，我就觉得很幸福。",
+      "examplePinyin": "Zhǐyào hé nǐ zài yīqǐ, wǒ jiù juéde hěn xìngfú.",
+      "exampleMeaning": "Chỉ cần ở bên em là anh thấy hạnh phúc ngập tràn."
+},
+      {
+      "hanzi": "便宜",
+      "pinyin": "piányi",
+      "type": "Tính từ",
+      "meaning": "Rẻ, giá hợp lý",
+      "example": "海防的小吃又便宜又美味。",
+      "examplePinyin": "Hǎifáng de xiǎochī yòu piányi yòu měiwèi.",
+      "exampleMeaning": "Đồ ăn vặt Hải Phòng vừa rẻ vừa ngon tuyệt."
+},
+      {
+      "hanzi": "贵",
+      "pinyin": "guì",
+      "type": "Tính từ",
+      "meaning": "Đắt, quý giá",
+      "example": "礼物不在于贵不贵，心意最珍贵。",
+      "examplePinyin": "Lǐwù bù zàiyú guì bu guì, xīnyì zuì zhēnguì.",
+      "exampleMeaning": "Món quà chẳng cần đắt đỏ, tấm chân tình mới là đáng quý nhất."
+},
+      {
+      "hanzi": "穿",
+      "pinyin": "chuān",
+      "type": "Động từ",
+      "meaning": "Mặc, đeo",
+      "example": "你今天穿这件衣服真好看。",
+      "examplePinyin": "Nǐ jīntiān chuān zhè jiàn yīfu zhēn hǎokàn.",
+      "exampleMeaning": "Hôm nay em mặc bộ này trông xinh xắn ghê."
+},
+      {
+      "hanzi": "等",
+      "pinyin": "děng",
+      "type": "Động từ",
+      "meaning": "Chờ, đợi",
+      "example": "下班在门口等我，我去接你。",
+      "examplePinyin": "Xiàbān zài ménkǒu děng wǒ, wǒ qù jiē nǐ.",
+      "exampleMeaning": "Tan làm đứng trước cửa đợi anh, anh qua đón em nhé."
+},
+      {
+      "hanzi": "介绍",
+      "pinyin": "jièshào",
+      "type": "Động từ",
+      "meaning": "Giới thiệu",
+      "example": "我想把你正式介绍给我的家人和朋友。",
+      "examplePinyin": "Wǒ xiǎng bǎ nǐ zhèngshì jièshào gěi wǒ de jiārén hé péngyou.",
+      "exampleMeaning": "Anh muốn chính thức giới thiệu em với gia đình và bạn bè anh."
+}
     ],
 
     hsk3: [
@@ -367,6 +649,197 @@ window.ChineseApp = (() => {
         examplePinyin: "Yùdào nǐ, jiù shì shàngtiān gěi wǒ zuì hǎo de lǐwù.",
         exampleMeaning: "Gặp được em chính là món quà tuyệt vời nhất ông trời ban cho anh."
       }
+    ,
+      {
+      "hanzi": "努力",
+      "pinyin": "nǔlì",
+      "type": "Tính từ/Động từ",
+      "meaning": "Nỗ lực, cố gắng",
+      "example": "为了我们的未来，我们一起努力。",
+      "examplePinyin": "Wèile wǒmen de wèilái, wǒmen yīqǐ nǔlì.",
+      "exampleMeaning": "Vì tương lai của hai đứa, mình cùng nhau nỗ lực nhé."
+},
+      {
+      "hanzi": "感动",
+      "pinyin": "gǎndòng",
+      "type": "Động từ/Tính từ",
+      "meaning": "Cảm động",
+      "example": "看到你细心准备的小礼物，我特别感动。",
+      "examplePinyin": "Kàndào nǐ xìxīn zhǔnbèi de xiǎo lǐwù, wǒ tèbié gǎndòng.",
+      "exampleMeaning": "Nhìn món quà nhỏ em chu đáo chuẩn bị, anh cảm động lắm."
+},
+      {
+      "hanzi": "担心",
+      "pinyin": "dānxīn",
+      "type": "Động từ",
+      "meaning": "Lo lắng",
+      "example": "不要担心，一切困难我们都会一起扛过去。",
+      "examplePinyin": "Bù yào dānxīn, yīqiè kùnnan wǒmen dōu huì yīqǐ káng guòqù.",
+      "exampleMeaning": "Đừng lo lắng nhé, khó khăn gì hai đứa mình cũng sẽ cùng vượt qua."
+},
+      {
+      "hanzi": "难过",
+      "pinyin": "nánguò",
+      "type": "Tính từ",
+      "meaning": "Buồn bã, đau lòng",
+      "example": "如果你难过，记得我的肩膀随时借你靠。",
+      "examplePinyin": "Rúguǒ nǐ nánguò, jìde wǒ de jiānbǎng suíshí jiè nǐ kào.",
+      "exampleMeaning": "Nếu thấy buồn lòng, bờ vai anh luôn sẵn sàng để em tựa vào."
+},
+      {
+      "hanzi": "清楚",
+      "pinyin": "qīngchu",
+      "type": "Tính từ",
+      "meaning": "Rõ ràng, rành mạch",
+      "example": "我心里很清楚，你就是我想相伴一生的人。",
+      "examplePinyin": "Wǒ xīn lǐ hěn qīngchu, nǐ jiù shì wǒ xiǎng xiāngbàn yīshēng de rén.",
+      "exampleMeaning": "Lòng anh hiểu rất rõ, em chính là người anh muốn gắn bó trọn đời."
+},
+      {
+      "hanzi": "互相",
+      "pinyin": "hùxiāng",
+      "type": "Phó từ",
+      "meaning": "Lẫn nhau, qua lại",
+      "example": "互相包容、互相理解，爱情才能长久。",
+      "examplePinyin": "Hùxiāng bāoróng, hùxiāng lǐjiě, àiqíng cáinǐng chángjiǔ.",
+      "exampleMeaning": "Biết bao dung và thấu hiểu nhau thì tình yêu mới bền lâu."
+},
+      {
+      "hanzi": "秘密",
+      "pinyin": "mìmì",
+      "type": "Danh từ",
+      "meaning": "Bí mật",
+      "example": "在信箱里有我写给你的小秘密哦。",
+      "examplePinyin": "Zài xìnxiāng lǐ yǒu wǒ xiě gěi nǐ de xiǎo mìmì o.",
+      "exampleMeaning": "Trong hòm thư có những bí mật nhỏ xíu anh viết gửi em đó."
+},
+      {
+      "hanzi": "蛋糕",
+      "pinyin": "dàngāo",
+      "type": "Danh từ",
+      "meaning": "Bánh kem",
+      "example": "过生日的时候，我们一起吃甜甜的蛋糕。",
+      "examplePinyin": "Guò shēngrì de shíhou, wǒmen yīqǐ chī tiántián de dàngāo.",
+      "exampleMeaning": "Mỗi dịp sinh nhật, hai đứa mình cùng nhau thưởng thức bánh kem ngọt ngào."
+},
+      {
+      "hanzi": "照片",
+      "pinyin": "zhàopiàn",
+      "type": "Danh từ",
+      "meaning": "Bức ảnh",
+      "example": "看着我们合影的照片，嘴角总会忍不住上扬。",
+      "examplePinyin": "Kànzhe wǒmen héyǐng de zhàopiàn, zuǐjiǎo zǒng huì rěnbuzhù shàngyáng.",
+      "exampleMeaning": "Ngắm những bức ảnh chụp chung, khóe môi anh lúc nào cũng bất giác mỉm cười."
+},
+      {
+      "hanzi": "节日",
+      "pinyin": "jiérì",
+      "type": "Danh từ",
+      "meaning": "Ngày lễ, ngày hội",
+      "example": "每一个和你一起度过的节日都很特别。",
+      "examplePinyin": "Měi yī gè hé nǐ yīqǐ dùguò de jiérì dōu hěn tèbié.",
+      "exampleMeaning": "Mỗi một ngày lễ được ở bên em đều trở nên vô cùng đặc biệt."
+},
+      {
+      "hanzi": "春天",
+      "pinyin": "chūntiān",
+      "type": "Danh từ",
+      "meaning": "Mùa xuân",
+      "example": "春天花开的时候，去海防看红凤凰花吧。",
+      "examplePinyin": "Chūntiān huā kāi de shíhou, qù Hǎifáng kàn hóng fènghuáng huā ba.",
+      "exampleMeaning": "Mùa xuân hoa nở, cùng anh về Hải Phòng ngắm hoa phượng đỏ nhé."
+},
+      {
+      "hanzi": "冬天",
+      "pinyin": "dōngtiān",
+      "type": "Danh từ",
+      "meaning": "Mùa đông",
+      "example": "冬天虽然很冷，但牵着你的手就很暖和。",
+      "examplePinyin": "Dōngtiān suīrán hěn lěng, dàn qiānzhe nǐ de shǒu jiù hěn nuǎnhuo.",
+      "exampleMeaning": "Mùa đông tuy lạnh giá, nhưng nắm tay em là thấy ấm áp lạ kỳ."
+},
+      {
+      "hanzi": "安全",
+      "pinyin": "ānquán",
+      "type": "Tính từ/Danh từ",
+      "meaning": "An toàn",
+      "example": "出门路上注意安全，到家记得给我发信息。",
+      "examplePinyin": "Chūmén lùshang zhùyì ānquán, dào jiā jìde gěi wǒ fā xìnxī.",
+      "exampleMeaning": "Đi đường nhớ chú ý an toàn, về đến nhà nhớ nhắn tin cho anh nhé."
+}
+    ,
+      {
+      "hanzi": "简单",
+      "pinyin": "jiǎndān",
+      "type": "Tính từ",
+      "meaning": "Đơn giản, giản dị",
+      "example": "简单的生活，有你陪伴就很满足。",
+      "examplePinyin": "Jiǎndān de shēnghuó, yǒu nǐ péibàn jiù hěn mǎnzú.",
+      "exampleMeaning": "Cuộc sống giản đơn chỉ cần có em đồng hành là đã trọn vẹn."
+},
+      {
+      "hanzi": "容易",
+      "pinyin": "róngyì",
+      "type": "Tính từ",
+      "meaning": "Dễ dàng",
+      "example": "学习中文虽然不容易，但我相信你一定行。",
+      "examplePinyin": "Xuéxí zhōngwén suīrán bù róngyì, dàn wǒ xiāngxìn nǐ yīdìng xíng.",
+      "exampleMeaning": "Học tiếng Trung tuy không dễ dàng, nhưng anh tin chắc em sẽ làm được."
+},
+      {
+      "hanzi": "经常",
+      "pinyin": "jīngcháng",
+      "type": "Phó từ",
+      "meaning": "Thường xuyên",
+      "example": "工作再忙也要经常记得微笑哦。",
+      "examplePinyin": "Gōngzuò zài máng yě yào jīngcháng jìde wēixiào o.",
+      "exampleMeaning": "Công việc có bận cũng phải thường xuyên mỉm cười nhé."
+},
+      {
+      "hanzi": "认真",
+      "pinyin": "rènzhēn",
+      "type": "Tính từ",
+      "meaning": "Chăm chỉ, nghiêm túc",
+      "example": "你认真专注的样子，真的特别迷人。",
+      "examplePinyin": "Nǐ rènzhēn zhuānzhù de yàngzi, zhēn de tèbié mírén.",
+      "exampleMeaning": "Dáng vẻ tập trung chăm chỉ của em thực sự cuốn hút vô cùng."
+},
+      {
+      "hanzi": "热情",
+      "pinyin": "rèqíng",
+      "type": "Tính từ",
+      "meaning": "Nhiệt tình, niềm nở",
+      "example": "海防的人民都非常热情好客。",
+      "examplePinyin": "Hǎifáng de rénmín dōu fēicháng rèqíng hàokè.",
+      "exampleMeaning": "Người dân Hải Phòng ai nấy đều vô cùng nhiệt tình, hiếu khách."
+},
+      {
+      "hanzi": "舒服",
+      "pinyin": "shūfu",
+      "type": "Tính từ",
+      "meaning": "Thoải mái, dễ chịu",
+      "example": "和你在一起聊天，感觉特别舒服自在。",
+      "examplePinyin": "Hé nǐ zài yīqǐ liáotiān, gǎnjué tèbié shūfu zìzài.",
+      "exampleMeaning": "Ở cạnh trò chuyện cùng em luôn cảm thấy thoải mái, tự nhiên lạ lùng."
+},
+      {
+      "hanzi": "了解",
+      "pinyin": "liǎojiě",
+      "type": "Động từ",
+      "meaning": "Hiểu rõ, tìm hiểu",
+      "example": "越是深入了解你，我就越喜欢你。",
+      "examplePinyin": "Yuè shì shēnrù liǎojiě nǐ, wǒ jiù yuè xǐhuan nǐ.",
+      "exampleMeaning": "Càng thấu hiểu em sâu sắc, anh lại càng thương em nhiều hơn."
+},
+      {
+      "hanzi": "遇到",
+      "pinyin": "yùdào",
+      "type": "Động từ",
+      "meaning": "Bắt gặp, gặp phải",
+      "example": "遇到你，是我人生中最美的意外。",
+      "examplePinyin": "Yùdào nǐ, shì wǒ rénshēng zhōng zuì měi de yìwài.",
+      "exampleMeaning": "Gặp được em là sự tình cờ tươi đẹp nhất đời anh."
+}
     ],
 
     hsk4: [
@@ -731,6 +1204,170 @@ window.ChineseApp = (() => {
         "examplePinyin": "Kàndào nǐ yī diǎn yī dī de chéngzhǎng yǔ jìnbù, wǒ dōu wèi nǐ gǎndào jiāo'ào.",
         "exampleMeaning": "Nhìn thấy từng bước tiến bộ của em, anh luôn tự hào về em vô cùng."
       }
+    ,
+      {
+      "hanzi": "成功",
+      "pinyin": "chénggōng",
+      "type": "Động từ/Danh từ",
+      "meaning": "Thành công",
+      "example": "我相信通过努力，你一定能成功考取 HSK 证书！",
+      "examplePinyin": "Wǒ xiāngxìn tōngguò nǔlì, nǐ yīdìng néng chénggōng kǎoqǔ HSK zhèngshū!",
+      "exampleMeaning": "Anh tin rằng với sự nỗ lực, em nhất định sẽ thi đỗ chứng chỉ HSK thật vẻ vang!"
+},
+      {
+      "hanzi": "责任",
+      "pinyin": "zérèn",
+      "type": "Danh từ",
+      "meaning": "Trách nhiệm",
+      "example": "照顾好你，是我这辈子最甜蜜的责任。",
+      "examplePinyin": "Zhàogù hǎo nǐ, shì wǒ zhè bèizi zuì tiánmì de zérèn.",
+      "exampleMeaning": "Chăm sóc tốt cho em là trách nhiệm ngọt ngào nhất cả cuộc đời anh."
+},
+      {
+      "hanzi": "幽默",
+      "pinyin": "yōumò",
+      "type": "Tính từ",
+      "meaning": "Hài hước, hóm hỉnh",
+      "example": "你偶尔说的一两句调皮话，真幽默又可爱。",
+      "examplePinyin": "Nǐ ǒu'ěr shuō de yī liǎng jù tiáopí huà, zhēn yōumò yòu kě'ài.",
+      "exampleMeaning": "Em thỉnh thoảng trêu vài câu nhây nhây, vừa hài hước mà lại đáng yêu ghê."
+},
+      {
+      "hanzi": "成熟",
+      "pinyin": "chéngshú",
+      "type": "Tính từ",
+      "meaning": "Trưởng thành, chín chắn",
+      "example": "在工作上你很成熟懂事，但在我面前可以尽情当个小女孩。",
+      "examplePinyin": "Zài gōngzuò shàng nǐ hěn chéngshú dǒngshì, dàn zài wǒ miànqián kěyǐ jìnqíng dāng gè xiǎo nǚhái.",
+      "exampleMeaning": "Đi làm em rất trưởng thành hiểu chuyện, nhưng ở trước mặt anh cứ vô tư làm cô bé nhỏ nhé."
+},
+      {
+      "hanzi": "佩服",
+      "pinyin": "pèifu",
+      "type": "Động từ",
+      "meaning": "Khâm phục, thán phục",
+      "example": "我很佩服你工作时那种专注认真的态度。",
+      "examplePinyin": "Wǒ hěn pèifu nǐ gōngzuò shí nà zhǒng zhuānzhù rènzhēn de tàidu.",
+      "exampleMeaning": "Anh rất khâm phục sự chăm chỉ, tập trung cao độ của em trong công việc."
+},
+      {
+      "hanzi": "解释",
+      "pinyin": "jiěshì",
+      "type": "Động từ/Danh từ",
+      "meaning": "Giải thích, giãi bày",
+      "example": "有误会就坦诚解释清楚，不要自己憋在心里哦。",
+      "examplePinyin": "Yǒu wùhuì jiù tǎnchéng jiěshì qīngchu, bù yào zìjǐ biē zài xīn lǐ o.",
+      "exampleMeaning": "Có hiểu lầm gì cứ thẳng thắn giải thích rõ ràng, đừng ôm nỗi niềm một mình nha."
+},
+      {
+      "hanzi": "原谅",
+      "pinyin": "yuánliàng",
+      "type": "Động từ",
+      "meaning": "Tha thứ, lượng thứ",
+      "example": "如果我有做得不够周到的地方，请原谅我哦。",
+      "examplePinyin": "Rúguǒ wǒ yǒu zuò de bù gòu zhōudào de dìfang, qǐng yuánliàng wǒ o.",
+      "exampleMeaning": "Nếu anh có điểm nào vụng về chưa chu đáo, em hãy rộng lòng tha thứ cho anh nhé."
+},
+      {
+      "hanzi": "无论",
+      "pinyin": "wúlùn",
+      "type": "Liên từ",
+      "meaning": "Bất kể, dù cho",
+      "example": "无论相隔多远，心都在一起。",
+      "examplePinyin": "Wúlùn xiānggé duō yuǎn, xīn dōu zài yīqǐ.",
+      "exampleMeaning": "Dù khoảng cách xa xôi nhường nào, trái tim đôi mình vẫn luôn hướng về nhau."
+},
+      {
+      "hanzi": "偶尔",
+      "pinyin": "ǒu'ěr",
+      "type": "Phó từ",
+      "meaning": "Thỉnh thoảng, đôi khi",
+      "example": "偶尔的小争吵只是生活的小调料，更懂珍惜彼此就好。",
+      "examplePinyin": "Ǒu'ěr de xiǎo zhēngchǎo zhǐ shì shēnghuó de xiǎo tiáoliào, gèng dǒng zhēnxī bǐcǐ jiù hǎo.",
+      "exampleMeaning": "Thỉnh thoảng hờn dỗi chút xíu chỉ là gia vị cuộc sống, để ta càng thêm trân trọng nhau hơn."
+},
+      {
+      "hanzi": "安排",
+      "pinyin": "ānpái",
+      "type": "Động từ/Danh từ",
+      "meaning": "Sắp xếp, an bài",
+      "example": "这个周末我已经安排好路线，带你去打卡好玩的地方。",
+      "examplePinyin": "Zhè gè zhōumò wǒ yǐjīng ānpái hǎo lùxiàn, dài nǐ qù dǎkǎ hǎowán de dìfang.",
+      "exampleMeaning": "Cuối tuần này anh đã lên lịch trình rồi, sẽ dắt em đi lượn những chỗ cực vui."
+},
+      {
+      "hanzi": "准确",
+      "pinyin": "zhǔnquè",
+      "type": "Tính từ",
+      "meaning": "Chính xác, chuẩn xác",
+      "example": "你的直觉总是那么准确，什么小心思都瞒不过你。",
+      "examplePinyin": "Nǐ de zhíjué zǒng shì nàme zhǔnquè, shénme xiǎo xīnsi dōu mán bù guò nǐ.",
+      "exampleMeaning": "Trực giác của em lúc nào cũng chuẩn ghê, anh nghĩ gì em cũng đoán ra hết trơn."
+},
+      {
+      "hanzi": "激动",
+      "pinyin": "jīdòng",
+      "type": "Tính từ/Động từ",
+      "meaning": "Xúc động, hồi hộp kích động",
+      "example": "每次坐车下海防见你，心里都特别激动期待。",
+      "examplePinyin": "Měicì zuò chē xià Hǎifáng jiàn nǐ, xīn lǐ dōu tèbié jīdòng qīdài.",
+      "exampleMeaning": "Mỗi lần ngồi xe xuống Hải Phòng đón em, lòng anh lại bồi hồi háo hức khôn nguôi."
+},
+      {
+      "hanzi": "孤单",
+      "pinyin": "gūdān",
+      "type": "Tính từ",
+      "meaning": "Cô đơn, một mình",
+      "example": "有我一直在，你永远都不会觉得孤单。",
+      "examplePinyin": "Yǒu wǒ yīzhí zài, nǐ yǒngyuǎn dōu bù huì juéde gūdān.",
+      "exampleMeaning": "Có anh luôn ở đây rồi, em sẽ không bao giờ phải thấy cô đơn nữa đâu."
+}
+    ,
+      {
+      "hanzi": "提前",
+      "pinyin": "tíqián",
+      "type": "Động từ/Phó từ",
+      "meaning": "Làm trước, sớm hơn hạn",
+      "example": "周五我会提前下班，去海防接你下班吃晚饭。",
+      "examplePinyin": "Zhōuwǔ wǒ huì tíqián xiàbān, qù Hǎifáng jiē nǐ xiàbān chī wǎnfàn.",
+      "exampleMeaning": "Thứ sáu anh sẽ xong việc sớm, phi xuống Hải Phòng đón em đi ăn tối."
+},
+      {
+      "hanzi": "幽雅",
+      "pinyin": "yōuyǎ",
+      "type": "Tính từ",
+      "meaning": "Tao nhã, thanh lịch",
+      "example": "海防大剧院周围的环境特别幽雅宁静。",
+      "examplePinyin": "Hǎifáng Dà Jùyuàn zhōuwéi de huánjìng tèbié yōuyǎ níngjìng.",
+      "exampleMeaning": "Khuôn viên quanh Nhà hát lớn Hải Phòng trông thật thanh lịch và yên bình."
+},
+      {
+      "hanzi": "普遍",
+      "pinyin": "pǔbiàn",
+      "type": "Tính từ",
+      "meaning": "Phổ biến, rộng khắp",
+      "example": "爱与被爱是人类最普遍的美好渴望。",
+      "examplePinyin": "Ài yǔ bèi ài shì rénlèi zuì pǔbiàn de měihǎo kěwàng.",
+      "exampleMeaning": "Yêu và được yêu là khát khao ấm áp phổ biến nhất của con người."
+},
+      {
+      "hanzi": "随着",
+      "pinyin": "suízhe",
+      "type": "Giới từ",
+      "meaning": "Cùng với, theo đà",
+      "example": "随着时间的推移，我对你的爱意只增不减。",
+      "examplePinyin": "Suízhe shíjiān de tuīyí, wǒ duì nǐ de àiyì zhǐ zēng bù jiǎn.",
+      "exampleMeaning": "Theo năm tháng trôi qua, tình yêu anh dành cho em chỉ tăng chứ không hề giảm."
+},
+      {
+      "hanzi": "值得",
+      "pinyin": "zhíde",
+      "type": "Động từ",
+      "meaning": "Xứng đáng, đáng giá",
+      "example": "为了你，所有的等待和奔波都完全值得。",
+      "examplePinyin": "Wèile nǐ, suǒyǒu de děngdài hé bēnbō dōu wánquán zhíde.",
+      "exampleMeaning": "Vì em, mọi sự chờ đợi và những chuyến xe đi lại đều hoàn toàn xứng đáng."
+}
     ],
 
     hsk5: [
@@ -1005,6 +1642,25 @@ window.ChineseApp = (() => {
         "examplePinyin": "Zuì chángqíng de gàobái, mòguòyú mòmò wúyán de shēnqíng péibàn.",
         "exampleMeaning": "Lời tỏ tình dài lâu nhất chính là sự đồng hành son sắt lặng thầm bên nhau."
       }
+    ,
+      {
+      "hanzi": "珍惜",
+      "pinyin": "zhēnxī",
+      "type": "Động từ",
+      "meaning": "Trân trọng, quý trọng",
+      "example": "相遇不容易，我们要倍加珍惜这份缘分。",
+      "examplePinyin": "Xiāngyù bù róngyì, wǒmen yào bèijiā zhēnxī zhè fèn yuánfèn.",
+      "exampleMeaning": "Gặp được nhau chẳng hề dễ dàng, hai đứa mình càng phải trân quý duyên phận này."
+},
+      {
+      "hanzi": "包容",
+      "pinyin": "bāoróng",
+      "type": "Động từ/Danh từ",
+      "meaning": "Bao dung, độ lượng",
+      "example": "真正的爱，是接纳彼此的不完美并互相包容。",
+      "examplePinyin": "Zhēnzhèng de ài, shì jiēnà bǐcǐ de bù wánměi bìng hùxiāng bāoróng.",
+      "exampleMeaning": "Tình yêu đích thực là cùng đón nhận những điều chưa hoàn hảo và bao dung cho nhau."
+}
     ],
 
     hsk6: [
@@ -1234,6 +1890,43 @@ window.ChineseApp = (() => {
         "examplePinyin": "Zài bǐcǐ shēnpáng, shǒu wàng xiāng zhù, chéngwéi duìfāng zuì jiānqiáng de hòudùn.",
         "exampleMeaning": "Luôn cạnh bên chở che, trở thành điểm tựa vững vàng nhất cho nhau."
       }
+    ,
+      {
+      "hanzi": "情深似海",
+      "pinyin": "qíng shēn sì hǎi",
+      "type": "Thành ngữ",
+      "meaning": "Tình sâu tựa biển, ân tình sâu đậm",
+      "example": "我对你的爱意情深似海，历久弥新。",
+      "examplePinyin": "Wǒ duì nǐ de àiyì qíng shēn sì hǎi, lì jiǔ mí xīn.",
+      "exampleMeaning": "Tình cảm anh dành cho em sâu đậm tựa biển khơi, càng qua năm tháng lại càng nồng nàn."
+},
+      {
+      "hanzi": "朝夕相伴",
+      "pinyin": "zhāo xī xiāng bàn",
+      "type": "Thành ngữ",
+      "meaning": "Sớm tối có nhau, cận kề bên nhau",
+      "example": "愿未来的岁月里，能与你朝夕相伴、柴米油盐皆是诗。",
+      "examplePinyin": "Yuàn wèilái de suìyuè lǐ, néng yǔ nǐ zhāo xī xiāng bàn, chái mǐ yóu yán jiē shì shī.",
+      "exampleMeaning": "Mong những năm tháng mai sau sớm tối có em, cơm áo gạo tiền cũng hóa thành thơ."
+},
+      {
+      "hanzi": "坚定不移",
+      "pinyin": "jiān dìng bù yí",
+      "type": "Thành ngữ",
+      "meaning": "Kiên định không dời, son sắt một lòng",
+      "example": "选择你是我一生中最坚定不移的决定。",
+      "examplePinyin": "Xuǎnzé nǐ shì wǒ yīshēng zhōng zuì jiāndìng bù yí de juédìng.",
+      "exampleMeaning": "Chọn em là quyết định kiên định vững vàng nhất cuộc đời anh."
+},
+      {
+      "hanzi": "心有灵犀",
+      "pinyin": "xīn yǒu líng xī",
+      "type": "Thành ngữ",
+      "meaning": "Tâm đầu ý hợp, thần giao cách cảm",
+      "example": "一个眼神你就能懂我想什么，我们真是心有灵犀。",
+      "examplePinyin": "Yī gè yǎnshén nǐ jiù néng dǒng wǒ xiǎng shénme, wǒmen zhēnshì xīn yǒu líng xī.",
+      "exampleMeaning": "Chỉ cần một ánh mắt là em đã hiểu ý anh, hai đứa mình thật là tâm đầu ý hợp."
+}
     ],
 
     love: [
@@ -1285,6 +1978,50 @@ window.ChineseApp = (() => {
         meaning: "Có em thật tốt, mỗi ngày đều phải vui vẻ nhé!",
         note: "Lời chúc ấm áp từ anh gửi đến em yêu."
       }
+    ,
+      {
+      "hanzi": "不管距离有多远，我的心永远紧挨着你。",
+      "pinyin": "Bùguǎn jùlí yǒu duō yuǎn, wǒ de xīn yǒngyuǎn jǐn'āizhe nǐ.",
+      "meaning": "Dù khoảng cách có xa bao nhiêu, trái tim anh vẫn luôn ở sát bên em.",
+      "note": "Dành cho cô gái Hải Phòng của chàng trai Hà Nội."
+},
+      {
+      "hanzi": "世界很大，但我的眼里只装得下一个你。",
+      "pinyin": "Shìjiè hěn dà, dàn wǒ de yǎn lǐ zhǐ zhuāng de xià yī gè nǐ.",
+      "meaning": "Thế giới này rộng lớn biết bao, nhưng trong mắt anh chỉ chứa vừa một mình em.",
+      "note": "Lời nhắn chân thành gửi trọn cho Sún yêu dấu."
+},
+      {
+      "hanzi": "听你的声音，是我一天中最放松的时刻。",
+      "pinyin": "Tīng nǐ de shēngyīn, shì wǒ yī tiān zhōng zuì fàngsōng de shíkè.",
+      "meaning": "Nghe được giọng nói của em là khoảnh khắc thư thái, bình yên nhất ngày của anh.",
+      "note": "Những cuộc gọi buổi tối tâm sự tỉ tê sau giờ làm việc."
+},
+      {
+      "hanzi": "愿我们三餐四季，温柔相伴，岁岁年年。",
+      "pinyin": "Yuàn wǒmen sān cān sì jì, wēnróu xiāngbàn, suì suì nián nián.",
+      "meaning": "Nguyện cho đôi mình bốn mùa no ấm, dịu dàng bên nhau suốt tháng năm dài.",
+      "note": "Ước nguyện bình dị mà vững bền nhất của tình yêu."
+}
+    ,
+      {
+      "hanzi": "你是我平淡岁月里最璀璨的星光。",
+      "pinyin": "Nǐ shì wǒ píngdàn suìyuè lǐ zuì cuǐcàn de xīngguāng.",
+      "meaning": "Em là ánh sao lung linh nhất trong những năm tháng bình dị của anh.",
+      "note": "Dành tặng cô gái đáng yêu của anh."
+},
+      {
+      "hanzi": "愿与你共赏人间烟火，共度漫漫余生。",
+      "pinyin": "Yuàn yǔ nǐ gòng shǎng rénjiān yānhuǒ, gòng dù mànmàn yúshēng.",
+      "meaning": "Nguyện cùng em ngắm khói lửa nhân gian, cùng đi qua tháng năm còn lại.",
+      "note": "Lời ước nguyện trọn đời trọn kiếp."
+},
+      {
+      "hanzi": "只要回到你身边，世界就安静温柔了下来。",
+      "pinyin": "Zhǐyào huí dào nǐ shēnbiān, shìjiè jiù ānjìng wēnróu le xiàlai.",
+      "meaning": "Chỉ cần trở về bên em, cả thế giới bỗng trở nên dịu dàng, an yên.",
+      "note": "Bình yên là khi có em."
+}
     ]
   };
 
