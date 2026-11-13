@@ -240,6 +240,11 @@ window.AudioManager = (() => {
       notes.forEach((n, idx) => playTone(n, 0.18, "triangle", 0.06, null, idx * 0.09));
     },
 
+    playCelebration() {
+      const notes = [523.25, 659.25, 783.99, 1046.5, 1318.5];
+      notes.forEach((n, idx) => playTone(n, 0.2, "triangle", 0.065, null, idx * 0.08));
+    },
+
     suspendForMic() {
       stopBGM();
       if (ctx && ctx.state === "running") {
