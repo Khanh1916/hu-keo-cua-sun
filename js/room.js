@@ -577,12 +577,18 @@ window.RoomScene = (() => {
     // 2. Background & Wall Decor
     if (placed.includes("fairy_lights")) PixelSprites.drawDecor(ctx, "fairy_lights", frame);
     if (placed.includes("photo")) PixelSprites.drawDecor(ctx, "photo", frame);
+    if (placed.includes("bookshelf")) PixelSprites.drawDecor(ctx, "bookshelf", frame);
     if (placed.includes("plant")) PixelSprites.drawDecor(ctx, "plant", frame);
-    if (placed.includes("teddy")) PixelSprites.drawDecor(ctx, "teddy", frame);
+    if (placed.includes("succulent")) PixelSprites.drawDecor(ctx, "succulent", frame);
     if (placed.includes("lamp")) PixelSprites.drawDecor(ctx, "lamp", frame);
+    if (placed.includes("mck_vinyl")) PixelSprites.drawDecor(ctx, "mck_vinyl", frame);
+    if (placed.includes("teddy")) PixelSprites.drawDecor(ctx, "teddy", frame);
+    if (placed.includes("cat_tree")) PixelSprites.drawDecor(ctx, "cat_tree", frame);
+    if (placed.includes("mirror")) PixelSprites.drawDecor(ctx, "mirror", frame);
     if (placed.includes("rug")) PixelSprites.drawDecor(ctx, "rug", frame);
     if (placed.includes("bong_bed")) PixelSprites.drawDecor(ctx, "bong_bed", frame);
     if (placed.includes("tea_table")) PixelSprites.drawDecor(ctx, "tea_table", frame);
+    if (placed.includes("couple_mugs")) PixelSprites.drawDecor(ctx, "couple_mugs", frame);
 
     // Hidden Special Day Decorations (15/04, 01/06 Birthdays, 11/02 Anniversary & Tết Âm Lịch)
     if (specialDay === "ngoc" || specialDay === "khanh") {

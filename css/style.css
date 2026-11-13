@@ -487,9 +487,9 @@ body {
 /* Bottom Navigation */
 .bottom-nav {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 5px;
-  gap: 5px;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 4px 2px;
+  gap: 3px;
   background: #fff8f2;
 }
 
@@ -498,7 +498,7 @@ body {
   border: 2px solid transparent;
   background: transparent;
   border-radius: 8px;
-  padding: 6px 2px;
+  padding: 5px 1px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -521,13 +521,14 @@ body {
 }
 
 .nav-label {
-  font-size: 11px;
+  font-size: 10px;
+  white-space: nowrap;
 }
 
 .unread-dot {
   position: absolute;
-  top: 3px;
-  right: 10px;
+  top: 2px;
+  right: 5px;
   background: var(--pink-accent);
   color: #fff;
   border: 1.5px solid var(--ink);
@@ -918,13 +919,13 @@ body {
 }
 
 /* Shop List */
-.shop-list, .letter-list, .achieve-list {
+.shop-list, .letter-list, .achieve-list, .quest-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.shop-row, .letter-row, .achieve-row {
+.shop-row, .letter-row, .achieve-row, .quest-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -962,6 +963,58 @@ body {
   font-size: 11.5px;
   color: var(--ink-soft);
   line-height: 1.3;
+}
+
+/* Daily Quests */
+.quest-row.done {
+  background: #f4faf4;
+}
+
+.quest-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 99px;
+  border: 1.5px solid var(--ink);
+  white-space: nowrap;
+}
+
+.quest-badge.done {
+  background: #d4edda;
+  color: #155724;
+}
+
+.quest-badge.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.quest-reward-box {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--pink-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.quest-reward-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.quest-reward-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.quest-reward-val {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--pink-hot);
 }
 
 /* Secret Letters */

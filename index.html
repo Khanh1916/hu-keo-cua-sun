@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=15" />
+  <link rel="stylesheet" href="css/style.css?v=16" />
 </head>
 <body>
   <div class="app-shell">
@@ -147,6 +147,11 @@
         <span class="nav-icon">🏆</span>
         <span class="nav-label">Thành Tựu</span>
         <span class="unread-dot hidden" id="achieveDot">!</span>
+      </button>
+      <button class="nav-btn" id="navQuests">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Nhiệm Vụ</span>
+        <span class="unread-dot hidden" id="questDot">!</span>
       </button>
     </nav>
   </div>
@@ -356,6 +361,25 @@
     </div>
   </div>
 
+  <!-- MODAL: Daily Quests -->
+  <div class="modal-backdrop hidden" id="modalQuests">
+    <div class="modal-card pixel-box">
+      <div class="modal-header">
+        <h2>📋 Nhiệm Vụ Mỗi Ngày</h2>
+        <button class="close-btn pixel-btn" data-close="modalQuests">✕</button>
+      </div>
+      <p class="modal-subtitle">Hoàn thành 3 việc nhỏ mỗi ngày cùng nhau để nhận kẹo &amp; điểm thân mật (Làm mới vào 00:00):</p>
+      <div class="quest-list" id="questList"></div>
+      <div class="quest-reward-box pixel-box" id="questRewardBox">
+        <div class="quest-reward-info">
+          <span class="quest-reward-title">🎁 Thưởng Ngày:</span>
+          <span class="quest-reward-val">+15 🍬 Kẹo &amp; +35 XP</span>
+        </div>
+        <button class="pixel-btn btn-pink" id="btnClaimQuests">Nhận Thưởng</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Settings / Time Preview -->
   <div class="modal-backdrop hidden" id="modalSettings">
     <div class="modal-card pixel-box">
@@ -397,16 +421,16 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=15"></script>
-  <script defer src="js/lunar.js?v=15"></script>
-  <script defer src="js/weather.js?v=15"></script>
-  <script defer src="js/audio.js?v=15"></script>
-  <script defer src="js/sprites.js?v=15"></script>
-  <script defer src="js/room.js?v=15"></script>
-  <script defer src="js/minigame.js?v=15"></script>
-  <script defer src="js/game_crossing.js?v=15"></script>
-  <script defer src="js/game_flappy.js?v=15"></script>
-  <script defer src="js/game_nonla.js?v=15"></script>
-  <script defer src="js/app.js?v=15"></script>
+  <script defer src="js/data.js?v=16"></script>
+  <script defer src="js/lunar.js?v=16"></script>
+  <script defer src="js/weather.js?v=16"></script>
+  <script defer src="js/audio.js?v=16"></script>
+  <script defer src="js/sprites.js?v=16"></script>
+  <script defer src="js/room.js?v=16"></script>
+  <script defer src="js/minigame.js?v=16"></script>
+  <script defer src="js/game_crossing.js?v=16"></script>
+  <script defer src="js/game_flappy.js?v=16"></script>
+  <script defer src="js/game_nonla.js?v=16"></script>
+  <script defer src="js/app.js?v=16"></script>
 </body>
 </html>

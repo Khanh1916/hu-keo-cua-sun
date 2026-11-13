@@ -21,7 +21,14 @@ document.addEventListener("DOMContentLoaded", () => {
     claimedBirthdays: [],
     timeOverride: "auto",
     freeMealsDate: "",
-    freeMealsLeft: 3
+    freeMealsLeft: 3,
+    dailyQuests: {
+      date: "",
+      hugDone: false,
+      feedDone: false,
+      gameDone: false,
+      claimed: false
+    }
   };
 
   let state = loadState();
@@ -35,7 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return { ...DEFAULT_STATE };
       const parsed = JSON.parse(raw);
-      return { ...DEFAULT_STATE, ...parsed };
+      const merged = { ...DEFAULT_STATE, ...parsed };
+      if (!merged.dailyQuests || typeof merged.dailyQuests !== "object") {
+        merged.dailyQuests = { ...DEFAULT_STATE.dailyQuests };
+      }
+      return merged;
     } catch {
       return { ...DEFAULT_STATE };
     }
@@ -249,24 +260,152 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     document.getElementById("letterDot").classList.toggle("hidden", !hasUnreadLetter);
 
+    updateQuestDot();
+
     // Update time-mode active button
     document.querySelectorAll("#timeModes button").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.time === state.timeOverride);
     });
   }
 
-  // Render Food Tray with Daily Free Meals & Candy Sink
-  function syncDailyFreeMeals() {
+  // Daily Reset & Quests Management
+  function syncDailyReset() {
     const todayStr = new Date().toDateString();
+    let changed = false;
     if (state.freeMealsDate !== todayStr) {
       state.freeMealsDate = todayStr;
       state.freeMealsLeft = 3;
+      changed = true;
+    }
+    if (!state.dailyQuests || state.dailyQuests.date !== todayStr) {
+      state.dailyQuests = {
+        date: todayStr,
+        hugDone: false,
+        feedDone: false,
+        gameDone: false,
+        claimed: false
+      };
+      changed = true;
+    }
+    if (changed) {
       saveState();
+    }
+    updateQuestDot();
+  }
+
+  function updateQuestDot() {
+    const dot = document.getElementById("questDot");
+    if (!dot) return;
+    const q = state.dailyQuests;
+    if (!q) {
+      dot.classList.add("hidden");
+      return;
+    }
+    const allDone = q.hugDone && q.feedDone && q.gameDone;
+    if (allDone && !q.claimed) {
+      dot.classList.remove("hidden");
+      dot.textContent = "!";
+      dot.style.background = "#FFD166";
+      dot.style.color = "#4A302C";
+    } else if (!allDone && !q.claimed) {
+      dot.classList.remove("hidden");
+      dot.textContent = "•";
+      dot.style.background = "var(--pink-accent)";
+      dot.style.color = "#FFF";
+    } else {
+      dot.classList.add("hidden");
     }
   }
 
+  function renderQuestsModal() {
+    syncDailyReset();
+    const listEl = document.getElementById("questList");
+    if (!listEl) return;
+    listEl.innerHTML = "";
+    const q = state.dailyQuests;
+
+    const quests = [
+      {
+        id: "hug",
+        icon: "🫂",
+        title: "Ôm anh một cái thật chặt",
+        desc: "Bấm nút 'Ôm một cái' ngoài phòng khách để nạp năng lượng",
+        done: q.hugDone
+      },
+      {
+        id: "feed",
+        icon: "🍲",
+        title: "Chăm sóc dạ dày & bé mèo",
+        desc: "Đãi anh món ngon Hải Phòng hoặc vuốt ve bé mèo Bông",
+        done: q.feedDone
+      },
+      {
+        id: "game",
+        icon: "🎮",
+        title: "Thử tài ở khu trò chơi",
+        desc: "Chơi 1 ván mini-game đạt từ 50 điểm trở lên",
+        done: q.gameDone
+      }
+    ];
+
+    quests.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = `quest-row ${item.done ? "done" : ""}`;
+      row.innerHTML = `
+        <div class="item-left">
+          <span class="item-emoji">${item.icon}</span>
+          <div class="item-meta">
+            <span class="item-title">${item.title}</span>
+            <span class="item-desc">${item.desc}</span>
+          </div>
+        </div>
+        <span class="quest-badge ${item.done ? "done" : "pending"}">${item.done ? "Đã xong ✓" : "Chưa xong (0/1)"}</span>
+      `;
+      listEl.appendChild(row);
+    });
+
+    const allDone = q.hugDone && q.feedDone && q.gameDone;
+    const btnClaim = document.getElementById("btnClaimQuests");
+    if (btnClaim) {
+      if (q.claimed) {
+        btnClaim.textContent = "🎉 Đã Nhận Hôm Nay";
+        btnClaim.className = "pixel-btn btn-cream btn-sm disabled";
+        btnClaim.disabled = true;
+      } else if (allDone) {
+        btnClaim.textContent = "✨ Nhận Thưởng (+15 🍬, +35 XP)";
+        btnClaim.className = "pixel-btn btn-pink";
+        btnClaim.disabled = false;
+      } else {
+        const count = (q.hugDone ? 1 : 0) + (q.feedDone ? 1 : 0) + (q.gameDone ? 1 : 0);
+        btnClaim.textContent = `Chưa Xong Hết (${count}/3)`;
+        btnClaim.className = "pixel-btn btn-cream btn-sm disabled";
+        btnClaim.disabled = true;
+      }
+    }
+  }
+
+  function claimDailyQuests() {
+    AudioManager.playClick();
+    const q = state.dailyQuests;
+    if (!q || q.claimed) return;
+    const allDone = q.hugDone && q.feedDone && q.gameDone;
+    if (!allDone) {
+      showToast("Hãy hoàn thành đủ cả 3 việc nhỏ trước nhé!");
+      return;
+    }
+    q.claimed = true;
+    addRewards(35, 15);
+    saveState();
+    renderHUD();
+    renderQuestsModal();
+    updateQuestDot();
+    AudioManager.playLevelUp();
+    showToast("🎉 Đã nhận thưởng ngày: +15 🍬 & +35 XP!");
+  }
+
+  // Render Food Tray with Daily Free Meals & Candy Sink
   function renderFoodGrid() {
-    syncDailyFreeMeals();
+    syncDailyReset();
     const grid = document.getElementById("foodGrid");
     grid.innerHTML = "";
 
@@ -305,6 +444,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!state.foodsFed.includes(food.id)) {
           state.foodsFed.push(food.id);
+        }
+
+        if (state.dailyQuests && !state.dailyQuests.feedDone) {
+          state.dailyQuests.feedDone = true;
+          updateQuestDot();
         }
 
         if (isFree) {
@@ -524,6 +668,12 @@ document.addEventListener("DOMContentLoaded", () => {
     RoomScene.triggerKhanhHappy("happy");
     state.hugCount++;
 
+    if (state.dailyQuests && !state.dailyQuests.hugDone) {
+      state.dailyQuests.hugDone = true;
+      saveState();
+      updateQuestDot();
+    }
+
     const todayStr = new Date().toDateString();
     if (lastHugDate !== todayStr) {
       lastHugDate = todayStr;
@@ -570,6 +720,12 @@ document.addEventListener("DOMContentLoaded", () => {
     AudioManager.playMeow();
     RoomScene.triggerBongHappy();
     state.petCount++;
+
+    if (state.dailyQuests && !state.dailyQuests.feedDone) {
+      state.dailyQuests.feedDone = true;
+      saveState();
+      updateQuestDot();
+    }
 
     const todayStr = new Date().toDateString();
     if (lastPetDate !== todayStr) {
@@ -701,6 +857,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const xpEarned = Math.max(8, Math.floor(score / 12));
     addRewards(xpEarned, candies);
+
+    if (score >= 50 && state.dailyQuests && !state.dailyQuests.gameDone) {
+      state.dailyQuests.gameDone = true;
+      saveState();
+      updateQuestDot();
+    }
 
     const overlay = document.getElementById("mgOverlay");
     const resultBox = document.getElementById("mgResultBox");
@@ -922,6 +1084,11 @@ document.addEventListener("DOMContentLoaded", () => {
     renderAchievements();
     openModal("modalAchieve");
   });
+  document.getElementById("navQuests").addEventListener("click", () => {
+    renderQuestsModal();
+    openModal("modalQuests");
+  });
+  document.getElementById("btnClaimQuests").addEventListener("click", claimDailyQuests);
   document.getElementById("btnSettings").addEventListener("click", () => openModal("modalSettings"));
 
   // Close buttons & backdrop click
@@ -1144,6 +1311,7 @@ document.addEventListener("DOMContentLoaded", () => {
       lastObservedDateStamp = dateStamp;
       lastObservedHour = hour;
 
+      syncDailyReset();
       syncMusicThemeForToday();
       updateGreetingBanner();
       renderHUD();

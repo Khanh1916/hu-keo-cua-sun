@@ -265,6 +265,121 @@ window.PixelSprites = (() => {
         });
         break;
       }
+      case "cat_tree": {
+        // Cute 3-tier cat climbing post & scratching tree for bé Bông
+        const cx = 52, cy = 124;
+        px(ctx, cx, cy + 24, 18, 4, "#D4A373");
+        px(ctx, cx + 7, cy + 6, 4, 18, "#E6CCB2");
+        // Sisal rope wrapping
+        px(ctx, cx + 7, cy + 9, 4, 1, "#B08968");
+        px(ctx, cx + 7, cy + 14, 4, 1, "#B08968");
+        px(ctx, cx + 7, cy + 19, 4, 1, "#B08968");
+        // Middle perch
+        px(ctx, cx - 2, cy + 14, 12, 3, "#D4A373");
+        px(ctx, cx - 1, cy + 13, 10, 2, "#F7B6CC");
+        // Top perch
+        px(ctx, cx + 3, cy + 4, 14, 3, "#D4A373");
+        px(ctx, cx + 4, cy + 3, 12, 2, "#FDE2EC");
+        // Dangling tiny toy mouse
+        px(ctx, cx + 1, cy + 17, 1, 4, "#6E4A3A");
+        px(ctx, cx, cy + 21, 3, 2, "#ADB5BD");
+        px(ctx, cx + 2, cy + 20, 1, 1, "#E46B94");
+        break;
+      }
+      case "mck_vinyl": {
+        // Retro vinyl record player spinning Album 99% - MCK with floating beats
+        const vx = 170, vy = 92;
+        // Turntable cabinet (vintage warm wood)
+        px(ctx, vx, vy + 4, 22, 10, "#5C3D2E");
+        px(ctx, vx + 1, vy + 2, 20, 3, "#C89666");
+        // Vinyl record (spinning black disk)
+        px(ctx, vx + 2, vy, 14, 4, "#1A1A1A");
+        px(ctx, vx + 4, vy - 1, 10, 6, "#2B2B2B");
+        px(ctx, vx + 6, vy, 6, 4, "#1A1A1A");
+        // MCK 99% pink center label
+        px(ctx, vx + 7, vy + 1, 4, 2, "#FF4D6D");
+        px(ctx, vx + 8, vy + 1, 2, 1, "#FFFFFF");
+        // Golden tonearm
+        px(ctx, vx + 18, vy - 1, 2, 3, "#FFE066");
+        px(ctx, vx + 14, vy + 1, 5, 1, "#FFE066");
+        // Floating musical beats
+        const noteBob1 = (frame * 0.4) % 18;
+        px(ctx, vx + 9, vy - 4 - noteBob1, 2, 3, "#E46B94");
+        px(ctx, vx + 10, vy - 4 - noteBob1, 3, 1, "#E46B94");
+        const noteBob2 = (frame * 0.4 + 9) % 18;
+        px(ctx, vx + 16, vy - 3 - noteBob2, 2, 3, "#9D4EDD");
+        px(ctx, vx + 17, vy - 3 - noteBob2, 3, 1, "#9D4EDD");
+        break;
+      }
+      case "succulent": {
+        // Twin succulent rosettes on window sill (left side)
+        const sx = 86, sy = 76;
+        px(ctx, sx, sy + 7, 12, 7, "#FFFDF7");
+        px(ctx, sx - 1, sy + 6, 14, 2, "#FDE2EC");
+        px(ctx, sx + 5, sy + 9, 2, 2, "#E46B94"); // tiny heart
+        px(ctx, sx + 1, sy + 6, 10, 1, "#5A3825"); // soil
+        // Rosette 1 (minty with pink tips)
+        px(ctx, sx + 1, sy + 3, 5, 3, "#52B788");
+        px(ctx, sx + 2, sy + 1, 3, 2, "#74C69D");
+        px(ctx, sx + 3, sy, 1, 1, "#FF758F");
+        // Rosette 2
+        px(ctx, sx + 6, sy + 2, 5, 4, "#40916C");
+        px(ctx, sx + 7, sy + 1, 3, 2, "#52B788");
+        px(ctx, sx + 8, sy, 1, 1, "#FF758F");
+        break;
+      }
+      case "bookshelf": {
+        // Wooden bookshelf with colorful books
+        const bx = 174, by = 62;
+        px(ctx, bx - 2, by + 12, 28, 2, "#8D5B4C");
+        px(ctx, bx - 1, by + 13, 26, 1, "#6E4A3A");
+        px(ctx, bx, by + 14, 2, 3, "#6E4A3A");
+        px(ctx, bx + 22, by + 14, 2, 3, "#6E4A3A");
+        // Colorful book spines
+        px(ctx, bx + 2, by + 2, 3, 10, "#FF6B6B");
+        px(ctx, bx + 5, by + 3, 3, 9, "#FFE66D");
+        px(ctx, bx + 8, by + 1, 4, 11, "#4ECDC4");
+        px(ctx, bx + 13, by + 4, 3, 8, "#B392AC");
+        px(ctx, bx + 14, by + 3, 2, 2, "#B392AC");
+        px(ctx, bx + 18, by + 5, 4, 7, "#95D5B2");
+        break;
+      }
+      case "mirror": {
+        // Floor-standing arched mirror with pastel pink trim
+        const mx = 224, my = 106;
+        px(ctx, mx + 1, my, 10, 2, "#E46B94");
+        px(ctx, mx, my + 2, 12, 34, "#E46B94");
+        px(ctx, mx + 2, my + 34, 8, 4, "#8D5B4C");
+        px(ctx, mx - 1, my + 37, 14, 2, "#6E4A3A");
+        // Mirror glass reflection
+        px(ctx, mx + 2, my + 2, 8, 32, "#DDF2FF");
+        px(ctx, mx + 3, my + 3, 6, 30, "#EDF7FF");
+        // Glass shine
+        px(ctx, mx + 5, my + 7, 3, 1, "rgba(255,255,255,0.7)");
+        px(ctx, mx + 4, my + 8, 3, 1, "rgba(255,255,255,0.7)");
+        px(ctx, mx + 6, my + 14, 2, 1, "rgba(255,255,255,0.5)");
+        break;
+      }
+      case "couple_mugs": {
+        // Interlocking couple mugs (HN Blue - HP Pink with steaming heart)
+        const kx = 188, ky = 138;
+        // Blue Hanoi mug (Khánh)
+        px(ctx, kx, ky + 2, 5, 5, "#4EA8DE");
+        px(ctx, kx - 1, ky + 3, 1, 3, "#4EA8DE");
+        px(ctx, kx + 1, ky + 1, 3, 1, "#72EFDD");
+        px(ctx, kx + 2, ky + 3, 2, 2, "#FFFFFF");
+        // Pink Haiphong mug (Ngọc)
+        px(ctx, kx + 6, ky + 2, 5, 5, "#FF758F");
+        px(ctx, kx + 11, ky + 3, 1, 3, "#FF758F");
+        px(ctx, kx + 7, ky + 1, 3, 1, "#FFCCD5");
+        px(ctx, kx + 7, ky + 3, 2, 2, "#FFFFFF");
+        // Cozy steam rising
+        const sBob = Math.floor(frame / 20) % 2;
+        px(ctx, kx + 2, ky - 2 + sBob, 1, 2, "rgba(255,255,255,0.6)");
+        px(ctx, kx + 8, ky - 2 + (1 - sBob), 1, 2, "rgba(255,255,255,0.6)");
+        px(ctx, kx + 5, ky - 4, 2, 2, "#FF80A4");
+        break;
+      }
     }
   }
 

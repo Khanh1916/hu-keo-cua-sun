@@ -6,33 +6,97 @@ window.NonLaGame = (() => {
   let frame = 0;
   let callbacks = {};
 
-  // 3 Tiers of meaningful Vietnamese L-N phrases & classic tongue twisters
+  // 80+ Diverse challenges across 3 tiers (Everyday, Love & Inside jokes, Hải Phòng dishes/landmarks, MCK lyrics, and classic twisters)
   const CHALLENGES = [
-    // Tier 1: Ngắn, có nghĩa, dễ đọc
-    { tier: 1, target: "nón lá", blank: "___ lá đội đầu", right: "Nón", wrong: "Lón", ngong: "lón ná" },
-    { tier: 1, target: "lá non", blank: "___ non xanh mơn mởn", right: "Lá", wrong: "Ná", ngong: "ná lon" },
-    { tier: 1, target: "nước lọc", blank: "___ lọc mát lạnh", right: "Nước", wrong: "Lước", ngong: "lước nọc" },
-    { tier: 1, target: "lúa nếp", blank: "___ nếp thơm dẻo", right: "Lúa", wrong: "Núa", ngong: "núa lếp" },
-    { tier: 1, target: "nồi niêu", blank: "___ niêu xoong chảo", right: "Nồi", wrong: "Lồi", ngong: "lồi liêu" },
-    { tier: 1, target: "lòng lợn", blank: "___ lợn luộc chấm mắm", right: "Lòng", wrong: "Nòng", ngong: "nòng nợn" },
-    { tier: 1, target: "no nê", blank: "Ăn uống ___ nê", right: "no", wrong: "lo", ngong: "lo lê" },
-    { tier: 1, target: "nắng lên", blank: "___ lên rực rỡ", right: "Nắng", wrong: "Lắng", ngong: "lắng nên" },
-    { tier: 1, target: "nấm lùn", blank: "Cây ___ lùn nhỏ xíu", right: "nấm", wrong: "lấm", ngong: "lấm nùn" },
-    { tier: 1, target: "lạnh lùng", blank: "Thái độ ___ lùng", right: "lạnh", wrong: "nạnh", ngong: "nạnh nùng" },
+    // Tier 1: Cặp từ ngắn, chuẩn phát âm đời thường (30 câu)
+    { tier: 1, target: "nón lá", blank: "___ lá đội đầu che nắng", right: "Nón", wrong: "Lón", ngong: "lón ná" },
+    { tier: 1, target: "lá non", blank: "Cành cây trổ ___ non mơn mởn", right: "lá", wrong: "ná", ngong: "ná lon" },
+    { tier: 1, target: "nước lọc", blank: "Uống ngụm ___ lọc mát lạnh", right: "nước", wrong: "lước", ngong: "lước nọc" },
+    { tier: 1, target: "lúa nếp", blank: "Hương ___ nếp thơm ngạt ngào", right: "lúa", wrong: "núa", ngong: "núa lếp" },
+    { tier: 1, target: "nồi niêu", blank: "Căn bếp đầy ___ niêu xoong chảo", right: "nồi", wrong: "lồi", ngong: "lồi liêu" },
+    { tier: 1, target: "lòng lợn", blank: "Món ___ lợn luộc chấm mắm tôm", right: "lòng", wrong: "nòng", ngong: "nòng nợn" },
+    { tier: 1, target: "no nê", blank: "Hai đứa mình ăn uống ___ nê", right: "no", wrong: "lo", ngong: "lo lê" },
+    { tier: 1, target: "nắng lên", blank: "Bình minh vừa ___ lên rực rỡ", right: "nắng", wrong: "lắng", ngong: "lắng nên" },
+    { tier: 1, target: "nấm lùn", blank: "Cây ___ lùn nhỏ xíu góc vườn", right: "nấm", wrong: "lấm", ngong: "lấm nùn" },
+    { tier: 1, target: "lạnh lùng", blank: "Ngoài mặt tỏ vẻ ___ lùng thế thôi", right: "lạnh", wrong: "nạnh", ngong: "nạnh nùng" },
+    { tier: 1, target: "hoa lan", blank: "Chậu hoa ___ tím dịu dàng khoe sắc", right: "lan", wrong: "nan", ngong: "hoa nan" },
+    { tier: 1, target: "lung linh", blank: "Đèn hoa phượng ___ linh phố Cảng", right: "lung", wrong: "nung", ngong: "nung ninh" },
+    { tier: 1, target: "lấp lánh", blank: "Ánh sao đêm ___ lánh trên bầu trời", right: "lấp", wrong: "nấp", ngong: "nấp nánh" },
+    { tier: 1, target: "lưu luyến", blank: "Lúc chia tay lòng đầy ___ luyến", right: "lưu", wrong: "nưu", ngong: "nưu nuyến" },
+    { tier: 1, target: "nô nức", blank: "Phố phường đông vui ___ nức hội hè", right: "nô", wrong: "lô", ngong: "lô lức" },
+    { tier: 1, target: "nũng nịu", blank: "Bé Sún hay ___ đòi anh dỗ dành", right: "nũng nịu", wrong: "lũng liệu", ngong: "lũng liệu" },
+    { tier: 1, target: "nóng lòng", blank: "Anh rất ___ lòng muốn gặp em sớm", right: "nóng", wrong: "lóng", ngong: "lóng nòng" },
+    { tier: 1, target: "lối nhỏ", blank: "Con ___ nhỏ dẫn vào ngõ nhà em", right: "lối", wrong: "nối", ngong: "nối nhỏ" },
+    { tier: 1, target: "lời nói", blank: "Từng ___ nói anh đều ghi nhớ kỹ", right: "lời", wrong: "nời", ngong: "nời lói" },
+    { tier: 1, target: "líu lo", blank: "Chim hót ___ lo trên cành ban mai", right: "líu", wrong: "níu", ngong: "níu no" },
+    { tier: 1, target: "lén lút", blank: "Cứ ___ lút nhìn trộm người ta cười", right: "lén", wrong: "nén", ngong: "nén nút" },
+    { tier: 1, target: "nô đùa", blank: "Mèo Bông nghịch ngợm chạy nhảy ___ đùa", right: "nô", wrong: "lô", ngong: "lô đùa" },
+    { tier: 1, target: "lạ lùng", blank: "Cảm giác xốn xang thật ___ lùng", right: "lạ", wrong: "nạ", ngong: "nạ nùng" },
+    { tier: 1, target: "nỗ lực", blank: "Mỗi ngày hai đứa đều cùng ___ lực", right: "nỗ", wrong: "lỗ", ngong: "lỗ lực" },
+    { tier: 1, target: "lụa là", blank: "Tà áo dài duyên dáng gấm vóc ___ là", right: "lụa", wrong: "nụa", ngong: "nụa nà" },
+    { tier: 1, target: "lộc non", blank: "Mùa xuân cây cối đâm chồi ___ non", right: "lộc", wrong: "nộc", ngong: "nộc non" },
+    { tier: 1, target: "nồng nàn", blank: "Hương hoa sữa ___ nàn góc phố thu", right: "nồng", wrong: "lồng", ngong: "lồng làn" },
+    { tier: 1, target: "nặng lòng", blank: "Mỗi khi xa cách nghe sao ___ lòng", right: "nặng", wrong: "lặng", ngong: "lặng nòng" },
+    { tier: 1, target: "lặng lẽ", blank: "Anh ___ lẽ ngắm nhìn ánh mắt em", right: "lặng", wrong: "nặng", ngong: "nặng nẽ" },
+    { tier: 1, target: "lanh lợi", blank: "Cô bé người yêu vừa xinh vừa ___ lợi", right: "lanh", wrong: "nanh", ngong: "nanh nợi" },
 
-    // Tier 2: Cụm từ & đồng dao kinh điển
-    { tier: 2, target: "nói năng lưu loát", blank: "Nói năng ___ loát", right: "lưu", wrong: "nưu", ngong: "lói lăng nưu noát" },
-    { tier: 2, target: "nồi đồng nấu ốc", blank: "Nồi đồng ___ ốc", right: "nấu", wrong: "lấu", ngong: "lồi đồng lấu ốc" },
-    { tier: 2, target: "con lươn luồn lườn", blank: "Con ___ nó luồn qua lườn", right: "lươn", wrong: "nươn", ngong: "con nươn nuồn nườn" },
-    { tier: 2, target: "lên non lấy nứa", blank: "Lên non lấy ___", right: "nứa", wrong: "lứa", ngong: "nên lon nấy lứa" },
-    { tier: 2, target: "lính lệ leo lầu", blank: "Lính ___ leo lên lầu", right: "lệ", wrong: "nệ", ngong: "nính nệ neo nầu" },
-    { tier: 2, target: "lòng nàng lâng lâng", blank: "Lòng nàng ___ lâng", right: "lâng", wrong: "nâng", ngong: "nòng làng nâng nâng" },
+    // Tier 2: Tình yêu đôi mình, Đất Cảng Hải Phòng & Nhạc MCK (30 câu)
+    { tier: 2, target: "yêu lắm", blank: "Dù ở xa nhau nhưng anh thương em ___", right: "lắm", wrong: "nắm", ngong: "yêu nắm" },
+    { tier: 2, target: "nhớ lắm", blank: "Mới không gặp mấy hôm mà đã ___", right: "lắm", wrong: "nắm", ngong: "nhớ nắm" },
+    { tier: 2, target: "nắm lấy tay", blank: "Hãy đưa tay đây và ___ lấy tay anh", right: "Nắm", wrong: "Lắm", ngong: "lắm nấy tay" },
+    { tier: 2, target: "nựng má", blank: "Mỗi lần gặp chỉ muốn véo ___ thơm má", right: "nựng", wrong: "lựng", ngong: "lựng má" },
+    { tier: 2, target: "luôn luôn", blank: "Anh sẽ ___ ở bên cạnh đồng hành cùng em", right: "luôn", wrong: "nuôn", ngong: "nuôn nuôn" },
+    { tier: 2, target: "lo lắng", blank: "Đừng ___ nhiều nha, có anh lo hết rồi", right: "lo", wrong: "no", ngong: "no nắng" },
+    { tier: 2, target: "lạc lối", blank: "Lỡ bước ___ vào đôi mắt trong veo", right: "lạc", wrong: "nạc", ngong: "nạc nối" },
+    { tier: 2, target: "lên xe", blank: "Mau ___ xe anh chở dạo phố Đất Cảng nào", right: "lên", wrong: "nên", ngong: "nên xe" },
+    { tier: 2, target: "nụ hôn", blank: "Trao cho người yêu một ___ thật ngọt ngào", right: "nụ", wrong: "lụ", ngong: "lụ hôn" },
+    { tier: 2, target: "ngọt lịm", blank: "Giọng nói của em mỗi lần gọi anh ___ lịm", right: "lịm", wrong: "nịm", ngong: "ngọt nịm" },
+    { tier: 2, target: "bánh đa lòng cá", blank: "Món bánh đa ___ cá cay xé lưỡi", right: "lòng", wrong: "nòng", ngong: "bánh đa nòng cá" },
+    { tier: 2, target: "nem cua bể", blank: "Đĩa ___ cua bể chiên giòn rụm", right: "nem", wrong: "lem", ngong: "lem cua bể" },
+    { tier: 2, target: "nước dùng", blank: "Nồi ___ dùng bánh đa cua thơm nức mũi", right: "nước", wrong: "lước", ngong: "lước dùng" },
+    { tier: 2, target: "lạch tray", blank: "Cung đường ___ Tray tấp nập xe cộ", right: "Lạch", wrong: "Nạch", ngong: "nạch tray" },
+    { tier: 2, target: "lê chân", blank: "Tượng đài Nữ tướng ___ Chân hào hùng", right: "Lê", wrong: "Nê", ngong: "nê chân" },
+    { tier: 2, target: "đồ sơn lộng gió", blank: "Bờ biển Đồ Sơn chiều về ___ gió mát rượi", right: "lộng", wrong: "nộng", ngong: "đồ sơn nộng gió" },
+    { tier: 2, target: "cát bà lung linh", blank: "Vịnh đảo Cát Bà ___ linh sóng nước", right: "lung", wrong: "nung", ngong: "cát bà nung ninh" },
+    { tier: 2, target: "cột đèn nức tiếng", blank: "Pate Cột Đèn Hải Phòng ___ tiếng gần xa", right: "nức", wrong: "lức", ngong: "cột đèn lức tiếng" },
+    { tier: 2, target: "chìm sâu", blank: "Tại vì sao lại cứ ___ sâu trong mắt em (MCK)", right: "chìm", wrong: "nhìm", ngong: "nại cứ chìm sâu" },
+    { tier: 2, target: "lời đường mật", blank: "Chẳng cần những ___ đường mật phù phiếm trên môi", right: "lời", wrong: "nời", ngong: "nời đường mật" },
+    { tier: 2, target: "lặng thinh", blank: "Ngồi một góc ngắm nhìn em rồi ___ thinh", right: "lặng", wrong: "nặng", ngong: "nặng thinh" },
+    { tier: 2, target: "lối đi", blank: "Dù cuộc đời có trăm ngàn ngã rẽ ___ đi", right: "lối", wrong: "nối", ngong: "nối đi" },
+    { tier: 2, target: "nụ cười", blank: "Chỉ cần nhìn thấy một ___ cười của em là đủ", right: "nụ", wrong: "lụ", ngong: "lụ cười" },
+    { tier: 2, target: "hoàng long", blank: "Tên thật của rapper MCK là Nghiêm Vũ Hoàng ___", right: "Long", wrong: "Nong", ngong: "hoàng nong" },
+    { tier: 2, target: "nói năng lưu loát", blank: "Cùng nhau luyện phát âm nói năng ___ loát", right: "lưu", wrong: "nưu", ngong: "lói lăng nưu noát" },
+    { tier: 2, target: "nồi đồng nấu ốc", blank: "Nồi đồng ___ ốc còn nồi đất nấu ếch", right: "nấu", wrong: "lấu", ngong: "lồi đồng lấu ốc" },
+    { tier: 2, target: "con lươn luồn lườn", blank: "Con ___ luồn qua cái lườn ông tiến sĩ", right: "lươn", wrong: "nươn", ngong: "con nươn nuồn nườn" },
+    { tier: 2, target: "lên non lấy nứa", blank: "Rủ nhau lên ___ lấy nứa về đan rổ", right: "non", wrong: "lon", ngong: "nên lon nấy lứa" },
+    { tier: 2, target: "lính lệ leo lầu", blank: "Lũ lính ___ leo lên thang lầu canh gác", right: "lệ", wrong: "nệ", ngong: "nính nệ neo nầu" },
+    { tier: 2, target: "lòng nàng lâng lâng", blank: "Nghe câu tỏ tình khiến lòng nàng ___ lâng", right: "lâng", wrong: "nâng", ngong: "nòng làng nâng nâng" },
 
-    // Tier 3: Thử thách xoắn lưỡi trên mạng
-    { tier: 3, target: "lúa nếp là lúa nếp non", blank: "___ nếp là lúa nếp non", right: "Lúa", wrong: "Núa", ngong: "núa lếp nà núa lếp lon" },
-    { tier: 3, target: "lên núi lấy nứa làm lán", blank: "Lên núi lấy nứa làm ___", right: "lán", wrong: "nán", ngong: "nên lúi nấy lứa nàm nán" },
-    { tier: 3, target: "nói năng nên luyện luôn luôn", blank: "Nói năng nên ___ luôn luôn", right: "luyện", wrong: "nuyện", ngong: "lói lăng lên nuyện nuôn nuôn" },
-    { tier: 3, target: "luộc hột vịt lộn luộc lại", blank: "___ hột vịt lộn luộc lại", right: "Luộc", wrong: "Nuộc", ngong: "nuộc hột vịt nộn nuộc nại" }
+    // Tier 3: Thử thách xoắn não & Ca dao đồng dao hóc búa (24 câu)
+    { tier: 3, target: "lúa nếp là lúa nếp non", blank: "___ nếp là lúa nếp non hạt mẩy", right: "Lúa", wrong: "Núa", ngong: "núa lếp nà núa lếp lon" },
+    { tier: 3, target: "lên núi lấy nứa làm lán", blank: "Lên núi lấy nứa về làm cái ___ nghỉ", right: "lán", wrong: "nán", ngong: "nên lúi nấy lứa nàm nán" },
+    { tier: 3, target: "nói năng nên luyện luôn luôn", blank: "Nói năng chuẩn chỉ nên ___ luôn luôn", right: "luyện", wrong: "nuyện", ngong: "lói lăng lên nuyện nuôn nuôn" },
+    { tier: 3, target: "luộc hột vịt lộn luộc lại", blank: "Nửa đêm đói bụng ___ hột vịt lộn luộc lại", right: "luộc", wrong: "nuộc", ngong: "nuộc hột vịt nộn nuộc nại" },
+    { tier: 3, target: "làng nành lợn nái năm nay", blank: "Làng Nành đàn ___ nái đẻ được năm con", right: "lợn", wrong: "nợn", ngong: "nàng nành nợn nái năm nay" },
+    { tier: 3, target: "nồi nung nấu nước luộc lòng", blank: "Bắc cái nồi nung nấu nước ___ lòng lợn", right: "luộc", wrong: "nuộc", ngong: "lồi nung lấu lước nuộc nòng" },
+    { tier: 3, target: "lúa nếp chín nứt nở lòng nàng", blank: "Cánh đồng lúa nếp chín rộ ___ nở lòng nàng", right: "nứt", wrong: "lứt", ngong: "lúa lếp chín lứt lở nòng nàng" },
+    { tier: 3, target: "lá lành đùm lá rách", blank: "Truyền thống ngàn đời như lá ___ đùm lá rách", right: "lành", wrong: "nành", ngong: "ná nành đùm ná rách" },
+    { tier: 3, target: "nuôi nấng nên người", blank: "Công cha nghĩa mẹ bao năm ___ nấng nên người", right: "nuôi", wrong: "luôi", ngong: "luôi lấng lên người" },
+    { tier: 3, target: "lửa lựu lập lòe", blank: "Đầu tường hoa lửa lựu ___ lòe đơm bông", right: "lập", wrong: "nập", ngong: "nửa nựu nập nòe" },
+    { tier: 3, target: "nắng nỏ đồng khô", blank: "Trời mùa hạ gay gắt ___ nỏ đồng khô nứt nẻ", right: "nắng", wrong: "lắng", ngong: "lắng lỏ đồng khô" },
+    { tier: 3, target: "lung la lung linh", blank: "Vầng trăng đêm rằm chiếu sáng ___ la lung linh", right: "lung", wrong: "nung", ngong: "nung na nung ninh" },
+    { tier: 3, target: "lóng lánh ánh nắng", blank: "Giọt sương sớm đọng ___ lánh dưới ánh nắng", right: "lóng", wrong: "nóng", ngong: "nóng nánh ánh nắng" },
+    { tier: 3, target: "năn nỉ nỉ non", blank: "Có anh chàng ngọt ngào ___ nỉ dỗ người thương", right: "năn", wrong: "lăn", ngong: "lăn lỉ nỉ lon" },
+    { tier: 3, target: "lầm lì lầm lụi", blank: "Chàng trai thương em ___ lì chịu thương chịu khó", right: "lầm", wrong: "nầm", ngong: "nầm nì nầm nụi" },
+    { tier: 3, target: "lặn lội nuôi con", blank: "Thương mẹ một đời ___ lội sớm hôm tảo tần", right: "lặn", wrong: "nặn", ngong: "nặn nội nuôi con" },
+    { tier: 3, target: "long lanh mắt ngọc", blank: "Đôi mắt em trong veo ___ lanh như ngọc", right: "long", wrong: "nong", ngong: "nong nanh mắt ngọc" },
+    { tier: 3, target: "nâng niu nụ cười", blank: "Anh nguyện cả đời ___ niu nụ cười của em", right: "nâng", wrong: "lâng", ngong: "lâng liu nụ cười" },
+    { tier: 3, target: "lộng lẫy nàng thơ", blank: "Dù giản dị em vẫn là người ___ lẫy nhất với anh", right: "lộng", wrong: "nộng", ngong: "nộng nẫy nàng thơ" },
+    { tier: 3, target: "nắm chặt bàn tay", blank: "Bão tố ngoài kia chỉ cần ___ chặt lấy tay nhau", right: "nắm", wrong: "lắm", ngong: "lắm chặt bàn tay" },
+    { tier: 3, target: "lắng nghe giai điệu", blank: "Tựa đầu bên nhau ___ nghe giai điệu Album 99%", right: "lắng", wrong: "nắng", ngong: "nắng nghe giai điệu" },
+    { tier: 3, target: "lạc nhịp con tim", blank: "Mỗi lần nhìn vào mắt em là khiến ___ nhịp tim", right: "lạc", wrong: "nạc", ngong: "nạc nhịp con tim" },
+    { tier: 3, target: "nương náu bình yên", blank: "Bên em là bến đỗ an yên cho anh ___ náu", right: "nương", wrong: "lương", ngong: "lương náu bình yên" },
+    { tier: 3, target: "luôn ở bên cạnh", blank: "Khoảng cách địa lý nhưng trái tim ___ bên cạnh em", right: "luôn", wrong: "nuôn", ngong: "nuôn ở bên cạnh" }
   ];
 
   let mode = "voice"; // "voice" | "quiet"
@@ -90,10 +154,17 @@ window.NonLaGame = (() => {
       .normalize("NFC");
   }
 
+  const usedTargets = new Set();
+
   function pickNextWord() {
     const maxTier = score >= 120 ? 3 : (score >= 45 ? 2 : 1);
-    const pool = CHALLENGES.filter((c) => c.tier <= maxTier && c.target !== lastTarget);
+    let pool = CHALLENGES.filter((c) => c.tier <= maxTier && !usedTargets.has(c.target));
+    if (pool.length === 0) {
+      usedTargets.clear();
+      pool = CHALLENGES.filter((c) => c.tier <= maxTier && c.target !== lastTarget);
+    }
     const chosen = pool[Math.floor(Math.random() * pool.length)] || CHALLENGES[0];
+    usedTargets.add(chosen.target);
     currentWord = chosen;
     lastTarget = chosen.target;
     obstacleX = 248;
@@ -426,6 +497,7 @@ window.NonLaGame = (() => {
     lastHeard = "";
     lastTarget = "";
     dust = [];
+    usedTargets.clear();
     statusBanner = mode === "voice" ? "Đọc to câu bên trên vào Mic nha!" : "Điền đúng L hoặc N để nhảy!";
     statusTimer = 70;
     frame = 0;

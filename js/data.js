@@ -40,7 +40,11 @@ window.GAME_DATA = {
     "Ai bảo hiểu chuyện là không được chiều? Ở đây thích gì cứ bảo anh 🍬",
     "Bé Bông đang nằm dòm em kìa, lại chuẩn bị đòi ăn rồi.",
     "Mệt thì nghỉ xíu đi em, đừng có cố quá sức nha.",
-    "Hôm nào rảnh anh lại phi từ Hà Nội xuống Hải Phòng đón đi lượn nhé!"
+    "Hôm nào rảnh anh lại phi từ Hà Nội xuống Hải Phòng đón đi lượn nhé!",
+    "Hôm nay em nghe nhạc MCK chưa? Nghe 'Chìm Sâu' lại thấy nhớ cô gái Đất Cảng ghê 🎵",
+    "Bật máy đĩa than góc phòng lên nghe Album 99% cùng anh nhé em.",
+    "Thấy em thích MCK nên anh cũng nghe theo, riết rồi nghiện luôn cả list nhạc của người ta.",
+    "Hôm nào anh xuống, bật nhạc MCK trên xe rồi hai đứa mình lượn phố Hải Phòng nha."
   ],
 
   bongDialogues: [
@@ -141,56 +145,98 @@ window.GAME_DATA = {
       name: "Gấu bông Teddy",
       emoji: "🧸",
       price: 65,
-      desc: "Chú gấu Teddy mềm mại đặt trên giường cho căn phòng đỡ trống."
+      desc: "Chú gấu Teddy mềm mại đặt trên giường cho căn phòng đỡ trống trải."
     },
     {
       id: "rug",
-      name: "Thảm tròn hồng pastel",
+      name: "Thảm tròn pastel",
       emoji: "🩷",
       price: 120,
-      desc: "Tấm thảm êm ái giữa phòng cho anh Khánh ngồi chơi cùng bé Bông."
+      desc: "Tấm thảm êm ái giữa phòng cho anh Khánh ngồi chơi vuốt ve bé Bông."
     },
     {
       id: "bong_bed",
       name: "Ổ nệm êm cho bé Bông",
       emoji: "🛏️",
       price: 240,
-      desc: "Chiếc nệm hồng ấm áp để mèo Bông cuộn tròn ngủ nướng."
+      desc: "Chiếc nệm hồng ấm áp để mèo Bông cuộn tròn ngủ nướng cả ngày."
     },
     {
       id: "plant",
-      name: "Chậu hoa nhỏ bên cửa sổ",
+      name: "Chậu hoa bên cửa sổ",
       emoji: "🪴",
       price: 380,
-      desc: "Thêm chút xanh mát ngay bậu cửa sổ ngắm hoa phượng đỏ."
+      desc: "Thêm chút xanh mát ngay bậu cửa sổ ngắm hoa phượng đỏ Đất Cảng."
+    },
+    {
+      id: "cat_tree",
+      name: "Tháp leo cào móng cho Bông",
+      emoji: "🐾",
+      price: 520,
+      desc: "Tháp cây 3 tầng cho bé Bông tha hồ cào móng và trèo lên ngắm chim chóc."
     },
     {
       id: "photo",
       name: "Khung ảnh 11/02/2026",
       emoji: "🖼️",
-      price: 580,
+      price: 680,
       desc: "Treo lên tường kỷ niệm ngày đầu tụi mình quen nhau trên Facebook Dating."
     },
     {
       id: "tea_table",
       name: "Bàn trà cúc ấm áp",
       emoji: "🫖",
-      price: 850,
-      desc: "Góc nhỏ pha trà cúc, nhâm nhi bánh mì cay ngồi nói chuyện."
+      price: 950,
+      desc: "Góc nhỏ pha trà cúc, nhâm nhi bánh mì cay ngồi tâm sự chuyện đời."
     },
     {
       id: "lamp",
       name: "Đèn ngủ ánh trăng",
       emoji: "🌙",
       price: 1250,
-      desc: "Tỏa ánh sáng vàng dịu vào buổi tối cho phòng đỡ tối."
+      desc: "Tỏa ánh sáng vàng dịu vào buổi tối cho căn phòng thêm ấm cúng."
+    },
+    {
+      id: "mck_vinyl",
+      name: "Máy đĩa than Album 99% - MCK",
+      emoji: "🎵",
+      price: 1550,
+      desc: "Chiếc máy đĩa than phát giai điệu 'Chìm Sâu' và trọn vẹn Album 99% của MCK cực chill."
     },
     {
       id: "fairy_lights",
       name: "Dây đèn lấp lánh",
       emoji: "✨",
-      price: 1800,
-      desc: "Giăng ngang tường lung linh cho góc phòng thêm ấm cúng."
+      price: 1950,
+      desc: "Giăng ngang tường lung linh như bầu trời sao lấp lánh giữa đêm."
+    },
+    {
+      id: "succulent",
+      name: "Chậu sen đá đôi tình yêu",
+      emoji: "🌱",
+      price: 2400,
+      desc: "Hai cây sen đá nhỏ xinh mọng nước, tượng trưng cho tình cảm bền bỉ lâu dài."
+    },
+    {
+      id: "bookshelf",
+      name: "Giá sách gỗ xinh xắn",
+      emoji: "📚",
+      price: 3200,
+      desc: "Tủ sách gỗ chứa những cuốn tiểu thuyết và truyện tranh hai đứa mình yêu thích."
+    },
+    {
+      id: "mirror",
+      name: "Gương đứng vòm pastel",
+      emoji: "🪞",
+      price: 4200,
+      desc: "Gương toàn thân viền uốn lượn để bé Sún tha hồ soi outfit xinh mỗi ngày."
+    },
+    {
+      id: "couple_mugs",
+      name: "Cặp cốc Hà Nội - Hải Phòng",
+      emoji: "☕",
+      price: 5500,
+      desc: "Cặp cốc đôi in hình Tháp Rùa và Cầu Hoàng Văn Thụ gắn kết hai trái tim."
     }
   ],
 
