@@ -414,6 +414,14 @@ body {
   font-weight: 500;
 }
 
+.weather-sub-row {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+  padding-left: 2px;
+  font-weight: 500;
+}
+
 .weather-btn-refresh {
   padding: 3px 6px !important;
   font-size: 10px !important;
