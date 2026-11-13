@@ -245,50 +245,66 @@ window.GAME_DATA = {
   secretLetters: [
     {
       id: "letter_1",
-      title: "Thư 1: Từ hôm 11/02 trên Facebook Dating",
+      title: "Thư 1: Ngày 11/02 & ấn tượng đầu tiên",
       unlockLevel: 1,
-      unlockDesc: "Mở sẵn từ đầu như món quà chào mừng",
-      body: `Hồi mới quen nhau hôm 11/02 trên Facebook Dating, ấn tượng đầu tiên của anh là em hiền, ít nói với hay ngại. Nhưng càng nói chuyện lâu thì anh càng thấy quý cái tính thật thà với biết để ý người khác của em.
+      unlockDesc: "Mở sẵn từ ngày đầu như lời chào mừng",
+      body: `Hồi mới quen nhau hôm 11/02 trên Facebook Dating, ấn tượng đầu tiên của anh là em hiền, ít nói và có vẻ hay ngại. Nhưng càng nói chuyện, anh càng nhận ra đằng sau sự rụt rè đó là một cô gái rất chân thành, thật thà và biết để ý đến cảm xúc của người khác.
 
-Em hay hỏi han chuyện công việc rồi nhắc anh ăn uống giữ sức khỏe suốt, mấy cái quan tâm nhỏ nhỏ đó làm anh nhớ mãi.
+Anh nhớ những hôm em chủ động nhắn tin hỏi han chuyện công việc, rồi lúc nào cũng dặn anh phải ăn uống đúng giờ, giữ sức khỏe. Những sự quan tâm bình dị, nhỏ xíu ấy lại là điều làm anh nhớ mãi.
 
-Cảm ơn em vì tới giờ vẫn kiên nhẫn nói chuyện với một đứa hơi khô khan như anh nha.`,
-      sign: "— Khánh —"
+Cảm ơn em vì từ ngày ấy đến giờ vẫn kiên nhẫn ở lại trò chuyện cùng một đứa đôi lúc hơi khô khan và ít nói lời hoa mỹ như anh.`,
+      sign: "— Khánh (Hà Nội) —"
     },
     {
       id: "letter_2",
-      title: "Thư 2: Chuyện 'trẻ không có kẹo'",
-      unlockLevel: 3,
-      unlockDesc: "Mở khóa khi đạt Cấp 3 thân mật",
-      body: `Thấy em hay đùa bảo mình là "trẻ không có kẹo" vì trẻ con hiểu chuyện thường bị thiệt, nghe vừa buồn cười vừa thấy thương.
+      title: "Thư 2: 'Trẻ hiểu chuyện' & hũ kẹo riêng cho em",
+      unlockLevel: 4,
+      reqHugs: 5,
+      unlockDesc: "Đạt Cấp 4 thân mật & ôm anh ít nhất 5 lần",
+      body: `Có lần em đùa bảo với anh rằng em là "trẻ không có kẹo", vì người ta hay nói đứa trẻ nào hiểu chuyện thì thường chịu nhiều thiệt thòi nhất. Nghe em nói câu đấy, anh vừa thấy buồn cười nhưng vừa thấy thương nhiều hơn.
 
-Anh biết em sống tình cảm, hay để ý cảm xúc người xung quanh rồi có chuyện gì lại giữ trong lòng không nói ra. Nhưng ở cạnh anh thì em không cần phải cố tỏ ra hiểu chuyện hay ngại ngùng gì đâu.
+Anh biết tính em sống tình cảm, lúc nào cũng sợ làm phiền người xung quanh, có chuyện gì buồn hay mệt mỏi cũng hay nén lại một mình rồi tự gánh lấy. Nhưng em nhớ này: ở cạnh anh, em không cần phải cố gồng mình làm một người lớn hiểu chuyện đâu.
 
-Có gì bực mình, mệt hay muốn nhõng nhẽo thì cứ nói thẳng với anh. Kẹo ở ngoài không biết sao, chứ trong cái game này anh để sẵn cả hũ cho em rồi đó.`,
+Thích gì cứ nói, mệt cứ than, muốn nhõng nhẽo hay bắt nạt anh một chút cũng chẳng sao cả. Kẹo ở ngoài đời có thể khó kiếm, nhưng trong góc nhỏ này và trong lòng anh, kẹo lúc nào cũng để sẵn dành riêng cho em.`,
       sign: "— Khánh —"
     },
     {
       id: "letter_3",
-      title: "Thư 3: Chuyện ở xa với mấy câu trêu",
-      unlockLevel: 5,
-      unlockDesc: "Mở khóa khi đạt Cấp 5 thân mật",
-      body: `Anh ở Hà Nội, em ở Hải Phòng, bình thường bận việc thì hai đứa cũng chỉ nhắn tin hỏi thăm nhau được là chính. Nhiều lúc nhớ mấy câu em hay trêu nghe mà chỉ muốn véo má cho phát.
+      title: "Thư 3: 100 cây số Hà Nội ↔ Hải Phòng",
+      unlockLevel: 8,
+      reqDecor: 3,
+      unlockDesc: "Đạt Cấp 8 thân mật & sắm ít nhất 3 món đồ phòng",
+      body: `Anh ở Hà Nội, em ở Hải Phòng. Hơn 100 cây số không hẳn là quá xa, nhưng những ngày cả hai đứa đều bận rộn với công việc thì cũng chỉ biết nhìn màn hình điện thoại nhắn vài ba tin hỏi thăm nhau.
 
-Anh không giỏi nói mấy lời ngọt ngào hoa mỹ, nhưng được cái có sao nói vậy, ghét nói dối giống hệt em nên em cứ yên tâm nhé.
+Nhiều lúc tan làm về, đi giữa đường phố Hà Nội đông đúc, anh lại tự hỏi không biết bên Hải Phòng lúc này em đã tan ca chưa, đi đường có an toàn không, hay lại đang lượn lờ đâu đó.
 
-Đợi hôm nào rảnh anh chạy xuống Hải Phòng, em nhớ dẫn anh đi ăn bánh đa cua Lạch Tray, cuốn Thủy Nguyên, ốc với làm ly Cing House nha.`,
+Mỗi lần sắp xếp được công việc để chạy xe xuống Hải Phòng gặp em, được nghe em dẫn đi ăn bánh đa cua Lạch Tray, cuốn Thủy Nguyên, hay ngồi uống cốc trà cúc ấm nóng, anh đều thấy mọi mệt mỏi của chuyến đi tan biến hết. Khoảng cách địa lý có thể là thử thách, nhưng chỉ cần hai đứa cùng hướng về nhau thì chẳng có con đường nào là xa cả.`,
       sign: "— Khánh —"
     },
     {
       id: "letter_4",
-      title: "Thư 4: Lúc nào rảnh thì mở lên chơi nhé",
-      unlockLevel: 7,
-      unlockDesc: "Mở khóa khi đạt Cấp 7 thân mật (hoặc sắm đủ 8 món decor)",
-      body: `Anh làm cái game nhỏ này chỉ mong lúc nào em rảnh rỗi, đi làm về mệt hoặc tự dưng thấy chán chán thì mở lên chơi cho đỡ buồn.
+      title: "Thư 4: Những câu trêu & tính hay nghĩ ngợi",
+      unlockLevel: 12,
+      reqJars: 8,
+      unlockDesc: "Đạt Cấp 12 thân mật & mở Lọ lời nhắn ít nhất 8 lần",
+      body: `Anh thích nhất là những lúc em thoải mái trêu đùa anh. Hỏi ăn cơm chưa thì trả lời nhây, đi đường thì cứ bảo "tôi bay mà" làm anh ngồi từ xa mà cứ phải dặn đi chậm lại mãi.
 
-Ở đây có anh phiên bản mặc polo đen đứng chờ, có bé Bông chạy loanh quanh, có mấy món em thích ở Hải Phòng, với mấy lời nhắn anh viết sẵn cho em đọc lúc cần.
+Nhưng anh cũng biết, em là đứa ngoài mặt thì cười đùa thế thôi chứ trong đầu hay suy nghĩ linh tinh lắm. Đôi khi một chuyện nhỏ xíu cũng làm em để tâm rồi tự buồn một mình.
 
-Chúc em lúc nào cũng vui vẻ, đi đường nhớ chạy xe chậm chậm thôi chứ đừng "tôi bay mà" làm anh lo nhé. Có gì cứ nhắn cho anh!`,
+Anh không phải kiểu người khéo ăn khéo nói, tính anh thẳng thắn và ghét sự giả dối. Nhưng một khi anh đã chọn ở bên cạnh em, thì mọi buồn vui, lo lắng của em anh đều muốn san sẻ. Có chuyện gì cứ trút hết vào anh, lúc nào anh cũng đứng về phía em mà.`,
+      sign: "— Khánh —"
+    },
+    {
+      id: "letter_5",
+      title: "Thư 5: Góc nhỏ bình yên & cảm ơn em",
+      unlockLevel: 18,
+      reqDecor: 8,
+      unlockDesc: "Đạt Cấp 18 thân mật & sắm trọn bộ 8 món trang trí phòng",
+      body: `Nếu em đang mở được lá thư này, chắc hẳn em đã gắn bó với góc nhỏ này rất nhiều ngày rồi, và căn phòng của chúng mình cũng đã có đủ ấm áp với bé Bông, chiếc giường nệm, bàn trà cúc và những món đồ nhỏ xinh.
+
+Anh tự tay làm cái app nhỏ này, ngồi vẽ từng nét áo polo đen, góc phòng quen thuộc, cành hoa phượng đỏ ngoài cửa sổ Hải Phòng, chỉ với một mong muốn giản dị: mỗi khi em đi làm về mệt mỏi, hay những lúc không có anh ở bên, em mở góc này lên sẽ cảm thấy lòng mình được an yên một chút.
+
+Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi ngày, một lý do để cố gắng hơn trong cuộc sống. Dù sau này có thế nào, anh vẫn luôn ở đây làm điểm tựa vững chãi cho em. Chúc Sún của anh luôn bình an và mỉm cười thật nhiều nhé.`,
       sign: "— Khánh (Hà Nội) —"
     }
   ],

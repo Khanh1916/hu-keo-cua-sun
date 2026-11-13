@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function xpNeededForLevel(lvl) {
-    return 40 + (lvl - 1) * 25;
+    return 50 + (lvl - 1) * 30;
   }
 
   function getDaysTogether() {
@@ -127,10 +127,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function isLetterUnlocked(letter) {
-    if (letter.id === "letter_4" && state.ownedDecor.length >= DATA.decorItems.length) {
-      return true;
-    }
-    return state.level >= letter.unlockLevel;
+    if (state.level < letter.unlockLevel) return false;
+    if (letter.reqHugs && (state.hugCount || 0) < letter.reqHugs) return false;
+    if (letter.reqDecor && (state.ownedDecor || []).length < letter.reqDecor && state.level < 22) return false;
+    if (letter.reqJars && (state.jarReads || 0) < letter.reqJars) return false;
+    return true;
   }
 
   function checkAchievements() {
@@ -357,6 +358,27 @@ document.addEventListener("DOMContentLoaded", () => {
       const unlocked = isLetterUnlocked(letter);
       const isRead = state.readLetters.includes(letter.id);
 
+      let statusDesc = "";
+      if (unlocked) {
+        statusDesc = isRead ? "Đã đọc • Bấm để xem lại" : "Mới mở khóa! Chưa đọc";
+      } else {
+        const parts = [];
+        if (state.level < letter.unlockLevel) {
+          parts.push(`Cấp ${state.level}/${letter.unlockLevel}`);
+        }
+        if (letter.reqHugs && (state.hugCount || 0) < letter.reqHugs) {
+          parts.push(`Ôm ${state.hugCount || 0}/${letter.reqHugs}`);
+        }
+        if (letter.reqDecor && (state.ownedDecor || []).length < letter.reqDecor) {
+          parts.push(`Đồ phòng ${(state.ownedDecor || []).length}/${letter.reqDecor}`);
+        }
+        if (letter.reqJars && (state.jarReads || 0) < letter.reqJars) {
+          parts.push(`Mở lọ ${state.jarReads || 0}/${letter.reqJars}`);
+        }
+        const progStr = parts.length > 0 ? ` [Tiến độ: ${parts.join(" • ")}]` : "";
+        statusDesc = `${letter.unlockDesc}${progStr}`;
+      }
+
       const row = document.createElement("div");
       row.className = `letter-row ${unlocked ? "" : "locked"}`;
       row.innerHTML = `
@@ -364,7 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <span class="item-emoji">${unlocked ? (isRead ? "📖" : "💌") : "🔒"}</span>
           <div class="item-meta">
             <span class="item-title">${letter.title}</span>
-            <span class="item-desc">${unlocked ? (isRead ? "Đã đọc • Bấm để xem lại" : "Mới mở khóa! Chưa đọc") : letter.unlockDesc}</span>
+            <span class="item-desc">${statusDesc}</span>
           </div>
         </div>
         ${unlocked ? `<button class="pixel-btn btn-pink btn-sm" data-read="${letter.id}">Đọc thư</button>` : ""}
