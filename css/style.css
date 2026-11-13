@@ -1186,6 +1186,7 @@ body {
   border: 2.5px solid var(--ink);
   border-radius: 14px;
   box-shadow: 0 6px 0 var(--ink);
+  overflow-x: hidden;
 }
 
 /* Chinese Typography Stack */
@@ -1248,6 +1249,7 @@ body {
 
 .chinese-tab-content {
   overflow-y: auto;
+  overflow-x: hidden;
   max-height: 68vh;
   padding-right: 2px;
 }
