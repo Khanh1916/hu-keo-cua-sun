@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
     freeMealsDate: "",
     freeMealsLeft: 3,
     chineseDailyDoneDate: "",
-    coupleDiary: {},
     dailyInteractions: {
       date: "",
       hugCount: 0,
@@ -56,9 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (!merged.dailyQuests || typeof merged.dailyQuests !== "object") {
         merged.dailyQuests = { ...DEFAULT_STATE.dailyQuests };
-      }
-      if (!merged.coupleDiary || typeof merged.coupleDiary !== "object") {
-        merged.coupleDiary = {};
       }
       return merged;
     } catch {
@@ -320,7 +316,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (changed) {
       saveState();
-      if (window.DiaryApp) DiaryApp.renderWidget();
     }
     updateQuestDot();
   }
@@ -1502,14 +1497,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   if (window.ChineseApp) {
     ChineseApp.init();
-  }
-  if (window.DiaryApp) {
-    DiaryApp.init({
-      getState: () => state,
-      saveState: saveState,
-      addRewards: addRewards,
-      showSpeech: showSpeech
-    });
   }
   // Auto-switch decorations, banner & music right when crossing 00:00 into/out of special dates!
   setInterval(syncClockAndEvents, 5000);
