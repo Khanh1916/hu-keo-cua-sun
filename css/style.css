@@ -994,31 +994,111 @@ body {
 }
 
 .quest-reward-box {
-  margin-top: 12px;
-  padding: 10px 14px;
-  background: var(--pink-soft);
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: #fff0f5;
+  border: 1.5px solid rgba(214, 51, 108, 0.25);
+  border-radius: 14px;
+  box-shadow: 0 3px 8px rgba(214, 51, 108, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .quest-reward-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .quest-reward-title {
   font-size: 12px;
   font-weight: 700;
-  color: var(--ink-soft);
+  color: var(--ink);
 }
 
 .quest-reward-val {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--pink-hot);
+  color: #d6336c;
+}
+
+.btn-claim-quests {
+  flex: 0 0 auto;
+  padding: 10px 18px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  line-height: 1.2;
+  box-sizing: border-box;
+  letter-spacing: 0.3px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.btn-claim-quests.ready {
+  background: linear-gradient(135deg, #ff6b8b 0%, #ff8e53 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 107, 139, 0.35), 0 2px 0 #d93d68;
+}
+
+.btn-claim-quests.ready:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 107, 139, 0.45), 0 2px 0 #d93d68;
+  filter: brightness(1.04);
+}
+
+.btn-claim-quests.ready:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 4px rgba(255, 107, 139, 0.3);
+}
+
+.btn-claim-quests.claimed {
+  background: linear-gradient(135deg, #40c057 0%, #2f9e44 100%);
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(47, 158, 68, 0.3), 0 2px 0 #2b8a3e;
+  opacity: 0.95;
+  cursor: default;
+}
+
+.btn-claim-quests.incomplete {
+  background: #f1f3f5;
+  color: #8c7365;
+  border: 1.5px solid rgba(74, 48, 44, 0.15);
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+@media (max-width: 440px) {
+  .quest-reward-box {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 10px;
+    padding: 12px 14px;
+    height: auto;
+  }
+  .quest-reward-info {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+  .btn-claim-quests {
+    width: 100%;
+    flex: 0 0 auto;
+  }
 }
 
 /* Secret Letters */

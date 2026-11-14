@@ -396,16 +396,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnClaim) {
       if (q.claimed) {
         btnClaim.textContent = "🎉 Đã Nhận Hôm Nay";
-        btnClaim.className = "pixel-btn btn-cream btn-sm disabled";
+        btnClaim.className = "btn-claim-quests claimed";
         btnClaim.disabled = true;
       } else if (allDone) {
-        btnClaim.textContent = "✨ Nhận Thưởng (+15 🍬, +35 XP)";
-        btnClaim.className = "pixel-btn btn-pink";
+        btnClaim.textContent = "✨ Nhận Thưởng Ngay";
+        btnClaim.className = "btn-claim-quests ready";
         btnClaim.disabled = false;
       } else {
         const count = (q.hugDone ? 1 : 0) + (q.feedDone ? 1 : 0) + (q.gameDone ? 1 : 0);
-        btnClaim.textContent = `Chưa Xong Hết (${count}/3)`;
-        btnClaim.className = "pixel-btn btn-cream btn-sm disabled";
+        btnClaim.textContent = `Chưa Hoàn Thành (${count}/3)`;
+        btnClaim.className = "btn-claim-quests incomplete";
         btnClaim.disabled = true;
       }
     }
