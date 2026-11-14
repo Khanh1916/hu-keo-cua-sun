@@ -2522,7 +2522,7 @@ window.ChineseApp = (() => {
           <div class="clb-left">
             <label>🏷️ Cấp độ:</label>
             <select id="selChineseLevel" class="pixel-select">
-              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕)</option>
+              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Ngọc 💕)</option>
               <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu)</option>
               <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy)</option>
               <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Giao tiếp)</option>
@@ -2669,7 +2669,7 @@ window.ChineseApp = (() => {
             <label>🏷️ Cấp độ:</label>
             <select id="selFlashcardLevel" class="pixel-select">
               <option value="starred" ${currentLevel === "starred" ? "selected" : ""}>⭐ Sổ Tay (${getAllStarredWords().length} từ)</option>
-              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Của Ngọc 💕)</option>
+              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 (Ngọc 💕)</option>
               <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5 (Chuyên sâu)</option>
               <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6 (Bậc thầy)</option>
               <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3 (Giao tiếp)</option>
@@ -3165,8 +3165,10 @@ window.ChineseApp = (() => {
               <option value="starred" ${currentLevel === "starred" ? "selected" : ""}>⭐ Sổ Tay (${getAllStarredWords().length})</option>
             </select>
           </div>
-          <span class="fc-counter">🧩 Đã nối: <strong>${matchedIds.size} / ${matchWords.length}</strong></span>
-          <button class="btn-dict" id="btnNewMatchRound" title="Đổi sang 5 từ khác">🎲 Đổi ván</button>
+          <div class="clb-right">
+            <span class="fc-counter">🧩 <strong>${matchedIds.size}/${matchWords.length}</strong></span>
+            <button class="btn-dict" id="btnNewMatchRound" title="Đổi sang 5 từ khác">🎲 Đổi ván</button>
+          </div>
         </div>
 
         <p class="chinese-help-text">Chạm 1 thẻ <strong>Chữ Hán</strong> bên trái và 1 thẻ <strong>Pinyin / Nghĩa</strong> bên phải tương ứng để nối cặp nhé!</p>
