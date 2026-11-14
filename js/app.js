@@ -285,11 +285,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("#timeModes button").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.time === state.timeOverride);
     });
-
-    // Update event-mode active button
-    document.querySelectorAll("#eventModes button").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.event === (window.previewSpecialDay || "auto"));
-    });
   }
 
   // Daily Reset & Quests Management
@@ -1286,21 +1281,6 @@ document.addEventListener("DOMContentLoaded", () => {
       saveState();
       renderHUD();
       showToast("Đã đổi khung cảnh cửa sổ ✨");
-    });
-  });
-
-  // Holiday Event Override in Settings
-  document.querySelectorAll("#eventModes button").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      AudioManager.playClick();
-      const ev = btn.dataset.event;
-      window.previewSpecialDay = ev === "auto" ? null : ev;
-      syncMusicThemeForToday();
-      updateGreetingBanner();
-      checkSpecialDayEvent();
-      renderHUD();
-      const label = btn.textContent.trim();
-      showToast("Đã chuyển không khí: " + label);
     });
   });
 
