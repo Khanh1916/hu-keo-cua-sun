@@ -95,12 +95,26 @@ window.AudioManager = (() => {
     return ctx;
   }
 
-  function triggerHaptic(pattern) {
+  function triggerHaptic(pattern = 15) {
+    // 1. Android & browsers with HTML5 Vibration API
     if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
       try {
         navigator.vibrate(pattern);
       } catch {}
     }
+
+    // 2. iOS Safari & WebKit PWA (Taptic Engine tick via switch label trick)
+    try {
+      const label = document.getElementById("hapticSwitchLabel");
+      if (label) {
+        label.click();
+        if (Array.isArray(pattern) && pattern.length > 2) {
+          setTimeout(() => {
+            try { label.click(); } catch {}
+          }, Math.min(120, pattern[1] || 60));
+        }
+      }
+    } catch {}
   }
 
   function playTone(freq, duration, type = "sine", volume = 0.06, slideTo = null, delay = 0) {

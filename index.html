@@ -17,6 +17,12 @@
   <link rel="stylesheet" href="css/style.css?v=27" />
 </head>
 <body>
+  <!-- iOS Native Taptic Engine Haptic Bridge (iOS 18+ WebKit Switch Trick) -->
+  <div style="position: fixed; top: -100px; left: -100px; opacity: 0; pointer-events: none; z-index: -9999;" aria-hidden="true">
+    <input type="checkbox" id="hapticSwitchInput" switch />
+    <label for="hapticSwitchInput" id="hapticSwitchLabel">Haptic</label>
+  </div>
+
   <div class="app-shell">
     <!-- In-App Browser / QR Scanner Tip (only visible inside Zalo/Messenger/WebView) -->
     <div id="webviewTip" class="webview-tip pixel-box hidden">
