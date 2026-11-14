@@ -2996,7 +2996,9 @@ window.ChineseApp = (() => {
           if (window.AudioManager) AudioManager.playCandy();
           btn.classList.add("btn-correct");
         } else {
-          if (window.AudioManager) AudioManager.playPoop();
+          if (window.AudioManager && typeof AudioManager.playBonk === "function") {
+            AudioManager.playBonk();
+          }
           btn.classList.add("btn-wrong");
           document.querySelectorAll(".quiz-opt-btn").forEach((b) => {
             if (b.dataset.hanzi === q.target.hanzi) b.classList.add("btn-correct");
