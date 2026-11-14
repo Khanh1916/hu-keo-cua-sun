@@ -2413,12 +2413,63 @@ window.ChineseApp = (() => {
     }
   }
 
+  const STREAK_KEY = "hu_keo_sun_hsk_streak";
+
+  function getStreakData() {
+    try {
+      const raw = localStorage.getItem(STREAK_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return { count: 0, lastDate: "" };
+  }
+
+  function saveStreakData(data) {
+    try {
+      localStorage.setItem(STREAK_KEY, JSON.stringify(data));
+    } catch {}
+  }
+
+  function recordStreakToday() {
+    const data = getStreakData();
+    const today = new Date().toISOString().slice(0, 10);
+    if (data.lastDate === today) return data.count || 1;
+
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    if (data.lastDate === yesterday) {
+      data.count = (data.count || 0) + 1;
+    } else {
+      data.count = 1;
+    }
+    data.lastDate = today;
+    saveStreakData(data);
+    return data.count;
+  }
+
+  function getLevelMasteryStats(level) {
+    const list = HSK_DATA[level] || HSK_DATA.hsk4 || [];
+    let mastered = 0;
+    let reviewing = 0;
+    let newWords = 0;
+
+    list.forEach((w) => {
+      const item = getSRSItem(w.hanzi);
+      if (item.repetition >= 3) mastered++;
+      else if (item.repetition >= 1) reviewing++;
+      else newWords++;
+    });
+
+    const percent = list.length > 0 ? Math.round((mastered / list.length) * 100) : 0;
+    return { total: list.length, mastered, reviewing, newWords, percent };
+  }
+
   function renderDailyTab() {
     const container = document.getElementById("chineseTabContent");
     const words = getDailyFiveWords(currentLevel);
     const todayStr = new Date().toDateString();
     const state = window.GameState ? window.GameState.get() : {};
     const isCompletedToday = state.chineseDailyDoneDate === todayStr;
+    const streakData = getStreakData();
+    const stats = getLevelMasteryStats(currentLevel);
 
     let itemsHtml = "";
     words.forEach((w) => {
@@ -2453,6 +2504,16 @@ window.ChineseApp = (() => {
 
     container.innerHTML = `
       <div class="chinese-daily-wrap">
+        <div class="chinese-mastery-banner">
+          <div class="cmb-left">
+            <span class="cmb-streak" title="Chuỗi ngày liên tục hoàn thành bài học tiếng Trung">🔥 Chuỗi: <strong>${streakData.count || 0}</strong> ngày</span>
+            <span class="cmb-stat">🏆 Đã thuộc: <strong>${stats.mastered}/${stats.total}</strong> (${stats.percent}%)</span>
+          </div>
+          <div class="cmb-progress-bar" title="Tiến độ ghi nhớ HSK cấp độ này">
+            <div class="cmb-progress-fill" style="width: ${stats.percent}%"></div>
+          </div>
+        </div>
+
         <div class="chinese-level-bar">
           <div class="clb-left">
             <label>🏷️ Cấp độ:</label>
@@ -2486,10 +2547,10 @@ window.ChineseApp = (() => {
       </div>
     `;
 
-    bindDailyEvents();
+    bindDailyEvents(words);
   }
 
-  function bindDailyEvents() {
+  function bindDailyEvents(words = []) {
     const sel = document.getElementById("selChineseLevel");
     if (sel) {
       sel.addEventListener("change", (e) => {
@@ -2539,14 +2600,17 @@ window.ChineseApp = (() => {
         }
 
         // Record SRS memory progression for each daily word
-        words.forEach((w) => {
-          recordSRSReview(w.hanzi, true);
-        });
+        if (Array.isArray(words)) {
+          words.forEach((w) => {
+            recordSRSReview(w.hanzi, true);
+          });
+        }
 
-        btnFinish.textContent = "🎉 Đã Ghi Nhớ Hôm Nay";
-        btnFinish.className = "pixel-btn btn-cream disabled";
-        btnFinish.disabled = true;
-        if (window.showToast) window.showToast("🎉 Giỏi quá! Đã nhận thưởng học bài: +2 🍬 & +10 XP!");
+        const streak = recordStreakToday();
+        const streakMsg = streak > 1 ? ` 🔥 Chuỗi ${streak} ngày đỉnh nóc kịch trần!` : "";
+        if (window.showToast) window.showToast(`🎉 Giỏi quá! Đã nhận thưởng học bài: +2 🍬 & +10 XP!${streakMsg}`);
+
+        renderDailyTab();
       });
     }
   }

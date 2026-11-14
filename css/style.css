@@ -1259,6 +1259,58 @@ body {
   width: 100%;
 }
 
+.chinese-mastery-banner {
+  background: linear-gradient(135deg, #fff5f5, #ffeef0);
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 0 var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.cmb-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--ink);
+  flex-wrap: wrap;
+}
+
+.cmb-streak {
+  font-weight: 700;
+  color: #c92a2a;
+}
+
+.cmb-stat {
+  font-weight: 600;
+  color: #495057;
+  font-size: 11px;
+}
+
+.cmb-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #f1f3f5;
+  border-radius: 99px;
+  border: 1px solid rgba(43, 24, 16, 0.2);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.cmb-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b6b, #fa5252);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
 .chinese-level-bar {
   display: flex;
   align-items: center;
@@ -1564,7 +1616,7 @@ body {
   cursor: default;
 }
 
-@media (max-width: 360px) {
+@media (max-width: 440px) {
   .chinese-daily-finish-box {
     flex-direction: column;
     align-items: stretch;
@@ -1574,6 +1626,7 @@ body {
   }
   .cdf-info {
     align-items: center;
+    text-align: center;
   }
   #btnFinishDailyChinese {
     width: 100%;
