@@ -492,5 +492,43 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
         "Cây thông Noel trong phòng sáng đèn lung linh ghê, chúc Ngọc lúc nào cũng rạng rỡ nha 🌟"
       ]
     }
-  }
+  },
+
+  coupleQuestions: [
+    { id: 1, text: "Điều gì khiến em mỉm cười đầu tiên mỗi sáng khi nhớ đến anh?", defaultTags: ["Nụ cười của anh", "Tin nhắn chào buổi sáng", "Sự chu đáo", "Cái ôm ấm áp"] },
+    { id: 2, text: "Món ăn nào ở Hải Phòng mà em muốn cùng anh đi ăn nhất dịp gặp tới?", defaultTags: ["Bánh đa cua", "Bánh mì cay", "Ốc Đinh Tiên Hoàng", "Trà cúc vỉa hè"] },
+    { id: 3, text: "Khoảnh khắc nào bên anh mà em cảm thấy bình yên và ấm áp nhất?", defaultTags: ["Lúc tựa vai anh", "Cùng dạo phố đêm", "Nắm tay đi ăn ngon", "Ngồi im nghe nhạc cùng"] },
+    { id: 4, text: "Nếu được chọn một bài hát của MCK miêu tả tình yêu tụi mình, em sẽ chọn bài nào?", defaultTags: ["Chìm Sâu", "Chỉ Một Đêm Nữa Thôi", "Tại Vì Sao", "Suit & Tie"] },
+    { id: 5, text: "Một thói quen đáng yêu nào của anh Khánh khiến em thấy cưng nhất?", defaultTags: ["Giọng nói ấm áp", "Lúc xoa đầu em", "Hỏi em ăn cơm chưa", "Dỗ em lúc mệt"] },
+    { id: 6, text: "Kỷ niệm nào trong những chuyến tàu/xe Hà Nội ↔ Hải Phòng làm em nhớ mãi?", defaultTags: ["Lúc đứng đợi nhau", "Lúc ôm tạm biệt", "Cùng nhìn qua cửa sổ", "Tin nhắn sắp đến nơi"] },
+    { id: 7, text: "Điều gì ở bé mèo Bông làm em thấy giống một 'đứa con ngoan' của tụi mình?", defaultTags: ["Lúc nằm phơi bụng", "Kêu meo meo nịnh", "Lúc dụi đầu vào tay", "Đôi mắt tròn xoe"] },
+    { id: 8, text: "Nếu cuối tuần này chỉ có hai đứa mình, em muốn một ngày hẹn hò thế nào?", defaultTags: ["Nấu ăn tại nhà", "Đi cà phê góc quen", "Xem phim ôm nhau", "Lượn phố hóng gió"] },
+    { id: 9, text: "Một lời khen hoặc câu nói nào của anh từng làm tim em rung rinh nhất?", defaultTags: ["'Công chúa của anh'", "'Có anh ở đây rồi'", "'Em giỏi lắm'", "'Anh nhớ em nhiều'"] },
+    { id: 10, text: "Mùa nào trong năm em thích nắm tay anh đi dạo nhất và vì sao?", defaultTags: ["Mùa đông gió lạnh", "Mùa thu lá vàng", "Mùa xuân ấm áp", "Mùa hè ngắm hoàng hôn"] },
+    { id: 11, text: "Món quà bất ngờ nào anh từng tặng làm em cảm động nhất?", defaultTags: ["Món đồ nhỏ anh tự chọn", "Hũ Kẹo Của Sún", "Đồ ăn anh mua", "Bức thư tay"] },
+    { id: 12, text: "Khi có chuyện buồn hay mệt mỏi, điều gì ở anh làm em thấy an lòng nhất?", defaultTags: ["Cái ôm thật chặt", "Anh lắng nghe em", "Giọng nói bình tĩnh", "Cho em tựa vai khóc"] },
+    { id: 13, text: "Điều em muốn anh Khánh tiếp tục phát huy nhất để chăm sóc em?", defaultTags: ["Luôn kiên nhẫn", "Dành thời gian cho em", "Chăm chỉ nấu đồ ngon", "Nắm tay em qua đường"] },
+    { id: 14, text: "Điểm đến du lịch nào em mơ ước hai đứa mình cùng đặt chân tới đầu tiên?", defaultTags: ["Đà Lạt se lạnh", "Biển Phú Quốc", "Sapa săn mây", "Bắc Kinh / Thượng Hải"] },
+    { id: 15, text: "Một bộ phim hoặc thể loại mà em muốn hai đứa cùng cuộn chăn xem vào ngày mưa?", defaultTags: ["Phim hoạt hình Ghibli", "Phim tình cảm ngọt", "Phim trinh thám hồi hộp", "Hài lãng mạn"] },
+    { id: 16, text: "Em thích nhất lúc anh nấu món gì cho em ăn (hoặc muốn anh học nấu món gì)?", defaultTags: ["Bò bít tết sốt tiêu", "Mì Ý kem nấm", "Canh sườn hầm", "Bữa sáng trứng ốp"] },
+    { id: 17, text: "Nếu được gửi một điều ước cho tình yêu của tụi mình, em ước điều gì?", defaultTags: ["Mãi bên nhau bình yên", "Cùng nhau về một nhà", "Vượt mọi khoảng cách", "Luôn thấu hiểu nhau"] },
+    { id: 18, text: "Một tật xấu nho nhỏ nhưng siêu đáng yêu của anh mà em 'bắt đền' được không?", defaultTags: ["Lúc ngái ngủ", "Hay trêu em cười", "Lúc giả vờ giận dỗi", "Nghiện ôm em"] },
+    { id: 19, text: "Cảm giác của em ngày đầu tiên hai đứa chính thức bước vào thế giới của nhau thế nào?", defaultTags: ["Hồi hộp rung rinh", "Như quen từ kiếp trước", "Vừa ngại vừa thích", "Cảm giác an toàn"] },
+    { id: 20, text: "Điều gì làm em tự hào nhất khi có anh Khánh là bạn trai của mình?", defaultTags: ["Chân thành chung thủy", "Ý chí phấn đấu", "Luôn cưng chiều em", "Đẹp trai chu đáo"] },
+    { id: 21, text: "Một quán quen hay góc phố kỷ niệm nào ở Hải Phòng mà em luôn muốn quay lại cùng anh?", defaultTags: ["Hồ Tam Bạc", "Phố đi bộ Thế Lữ", "Nhà hát lớn Hải Phòng", "Quán cà phê tầng thượng"] },
+    { id: 22, text: "Khi anh ôm em từ phía sau, em thường nghĩ về điều gì?", defaultTags: ["Cảm giác được che chở", "Muốn thời gian dừng lại", "Thấy mình nhỏ bé", "Hạnh phúc ngập tràn"] },
+    { id: 23, text: "Một điều giản dị mỗi ngày hai đứa làm cùng nhau mà em không bao giờ chán?", defaultTags: ["Kể chuyện linh tinh", "Chúc ngủ ngon mỗi tối", "Gửi ảnh mèo Bông", "Call video nhìn mặt nhau"] },
+    { id: 24, text: "Nếu bé Bông biết nói tiếng người, em nghĩ bé sẽ méch chuyện gì về hai đứa?", defaultTags: ["Suốt ngày ôm nhau", "Bỏ rơi con đói", "Ba mẹ cưng con nhất", "Ba Khánh nghiện mẹ Ngọc"] },
+    { id: 25, text: "Mục tiêu chung lớn nhất mà em muốn hai đứa mình cùng nhau cố gắng đạt được là gì?", defaultTags: ["Một mái ấm chung", "Tài chính vững vàng", "Cùng đi du lịch xa", "Hạnh phúc bền lâu"] },
+    { id: 26, text: "Mùi hương hoặc cảm giác nào làm em liên tưởng ngay đến anh Khánh?", defaultTags: ["Mùi áo thơm tho thoảng", "Bàn tay ấm áp", "Ánh mắt dịu dàng", "Chiếc ôm chặt"] },
+    { id: 27, text: "Một câu nói ngọt ngào nào em muốn được nghe anh thì thầm vào tai ngay lúc này?", defaultTags: ["'Anh yêu em nhiều lắm'", "'Em là duy nhất của anh'", "'Có anh ở đây rồi'", "'Ngọc của anh ngoan lắm'"] },
+    { id: 28, text: "Nếu có một ngày anh biến thành 'quản gia riêng' của em, em sẽ sai anh làm gì đầu tiên?", defaultTags: ["Xoa bóp vai lưng", "Bóc tôm gọt hoa quả", "Nấu món em thích", "Chỉ được ôm em cả ngày"] },
+    { id: 29, text: "Hành động nhỏ nào của anh khiến em cảm nhận sâu sắc rằng 'mình được yêu thương trọn vẹn'?", defaultTags: ["Để ý món em thích", "Gạt chân chống xe cho em", "Nhường miếng ngon nhất", "Hỏi han lúc em mệt"] },
+    { id: 30, text: "Bức ảnh chụp chung nào của hai đứa mà em thích ngắm đi ngắm lại nhất?", defaultTags: ["Ảnh selfie cười tít mắt", "Ảnh anh chụp lén em", "Ảnh chụp cùng bé Bông", "Ảnh nắm tay nhau"] },
+    { id: 31, text: "Một bức thư tình lý tưởng đối với em nên bắt đầu bằng điều gì?", defaultTags: ["'Gửi em yêu của anh'", "'Ngọc à...'", "'Chào cô bé của anh'", "'Gửi tương lai của anh'"] },
+    { id: 32, text: "Em có nhớ lần hai đứa cùng vượt qua một sự hiểu lầm nhỏ không? Cảm giác lúc làm hòa thế nào?", defaultTags: ["Thấy thương nhau hơn", "Hiểu nhau sâu sắc hơn", "Ôm một cái là tan hết", "Nhận ra không thể thiếu nhau"] },
+    { id: 33, text: "Điều em mong chờ nhất ở ngôi nhà tương lai của hai đứa mình là gì?", defaultTags: ["Góc ban công ngập nắng", "Gian bếp thơm mùi cơm", "Nuôi thêm bé mèo cho Bông", "Mỗi tối cùng nhau xem phim"] },
+    { id: 34, text: "Nếu gửi cho anh một cái ôm qua màn hình ngay bây giờ, cái ôm đó sẽ kéo dài bao lâu?", defaultTags: ["1 phút sạc pin", "10 phút ấm áp", "Cả tiếng đồng hồ", "Mãi không muốn buông"] },
+    { id: 35, text: "Hôm nay em có yêu anh nhiều hơn ngày hôm qua một chút xíu nào không nè?", defaultTags: ["Nhiều hơn 100 lần!", "Nhiều hơn hôm qua một chút", "Vô cùng vô tận 💕", "Không đếm xuể luôn"] }
+  ]
 };

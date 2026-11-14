@@ -113,6 +113,33 @@
         </div>
       </section>
 
+      <!-- Daily Couple Question Widget (SumOne Love Diary Style) -->
+      <section class="couple-diary-strip pixel-box" id="coupleDiaryStrip" aria-label="Tâm tình đôi lứa mỗi ngày">
+        <div class="cds-header">
+          <div class="cds-title-group">
+            <span class="cds-icon">📖</span>
+            <div class="cds-title-col">
+              <strong>Tâm Tình Hôm Nay 💕</strong>
+              <span class="cds-status-tag" id="cdsStatusTag">Chưa viết</span>
+            </div>
+          </div>
+          <button class="cds-history-btn" id="btnOpenDiaryHistory" title="Xem nhật ký tình yêu">Xem lại 📜</button>
+        </div>
+        <div class="cds-question-box">
+          <p class="cds-question" id="cdsQuestionText">"Điều gì khiến em mỉm cười đầu tiên mỗi sáng khi nhớ đến anh?"</p>
+        </div>
+        <div class="cds-action-area" id="cdsActionArea">
+          <button class="cds-answer-btn" id="btnOpenDiaryModal">✍️ Viết lời tâm tình cho anh (+3 🍬 & +15 XP)</button>
+        </div>
+        <div class="cds-answered-box hidden" id="cdsAnsweredBox">
+          <div class="cds-answer-quote" id="cdsAnswerQuote"></div>
+          <div class="cds-answered-meta">
+            <span>✨ Anh Khánh đã nhận được lời nhắn của em rồi nha!</span>
+            <button class="cds-edit-btn" id="btnEditTodayDiary">Sửa lại</button>
+          </div>
+        </div>
+      </section>
+
       <!-- Quick Action Strip right below room -->
       <section class="quick-actions" aria-label="Tương tác nhanh">
         <button class="action-card pixel-btn btn-pink" id="btnHug">
@@ -401,6 +428,42 @@
     </div>
   </div>
 
+  <!-- MODAL: Couple Love Diary & Daily Question -->
+  <div class="modal-backdrop hidden" id="modalDiary">
+    <div class="modal-card modal-diary pixel-box">
+      <div class="modal-header">
+        <h2>📖 Nhật Ký Tâm Tình 💕</h2>
+        <button class="close-btn pixel-btn" data-close="modalDiary">✕</button>
+      </div>
+
+      <div class="diary-tabs-nav">
+        <button class="diary-nav-tab active" id="tabDiaryToday">✍️ Hôm Nay</button>
+        <button class="diary-nav-tab" id="tabDiaryList">📜 Kỷ Niệm Đã Ghi</button>
+      </div>
+
+      <div class="diary-tab-content" id="diaryTabTodayContent">
+        <div class="diary-question-hero">
+          <div class="dqh-badge" id="dqhDayBadge">📅 Câu hỏi hôm nay</div>
+          <h3 class="dqh-title" id="dqhQuestionTitle">"Điều gì khiến em mỉm cười đầu tiên mỗi sáng khi nhớ đến anh?"</h3>
+        </div>
+
+        <div class="diary-quick-tags" id="diaryQuickTags"></div>
+
+        <div class="diary-input-wrap">
+          <textarea id="diaryInputText" class="diary-textarea" rows="3" maxlength="300" placeholder="Nhập suy nghĩ, lời nhắn ngọt ngào hoặc tâm tình hôm nay gửi cho anh nhé..."></textarea>
+          <div class="diary-input-footer">
+            <span class="diary-char-count" id="diaryCharCount">0/300</span>
+            <button class="cds-submit-btn" id="btnSubmitDiary">Gửi Cho Anh Khánh 💕 (+3 🍬 & +15 XP)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="diary-tab-content hidden" id="diaryTabListContent">
+        <div class="diary-history-list" id="diaryHistoryList"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Chinese HSK Learning -->
   <div class="modal-backdrop hidden" id="modalChinese">
     <div class="modal-card modal-chinese pixel-box">
@@ -473,6 +536,7 @@
   <script defer src="js/game_nonla.js?v=29"></script>
   <script defer src="js/game_memory.js?v=29"></script>
   <script defer src="js/chinese.js?v=29"></script>
+  <script defer src="js/diary.js?v=29"></script>
   <script defer src="js/app.js?v=29"></script>
 </body>
 </html>
