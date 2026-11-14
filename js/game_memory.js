@@ -3,6 +3,7 @@ window.MemoryGame = (() => {
   let ctx = null;
   let rafId = null;
   let running = false;
+  let isPaused = false;
   let frame = 0;
   let callbacks = {};
 
@@ -178,7 +179,7 @@ window.MemoryGame = (() => {
   }
 
   function onPointerDown(e) {
-    if (!running || !canvas || isPeeking) return;
+    if (!running || !canvas || isPeeking || isPaused) return;
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
@@ -346,6 +347,7 @@ window.MemoryGame = (() => {
 
   function start() {
     running = true;
+    isPaused = false;
     turnsLeft = MAX_TURNS;
     pairsFound = 0;
     streak = 0;
@@ -369,8 +371,49 @@ window.MemoryGame = (() => {
     rafId = requestAnimationFrame(loop);
   }
 
+  function suspend() {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    isPaused = true;
+  }
+
+  function resume() {
+    if (!running) return false;
+    isPaused = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+    return true;
+  }
+
+  function drawPausedPreview() {
+    if (running && isPaused && ctx) {
+      render();
+      // Draw pause overlay box on canvas
+      ctx.fillStyle = "rgba(40, 24, 20, 0.65)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#FFFDF7";
+      ctx.fillRect(24, 96, 192, 70);
+      ctx.strokeStyle = "#4A302C";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(24, 96, 192, 70);
+
+      ctx.fillStyle = "#E46B94";
+      ctx.font = "bold 12px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("⏸ Ván Đang Tạm Dừng", 120, 118);
+
+      ctx.fillStyle = "#4A302C";
+      ctx.font = "10.5px sans-serif";
+      ctx.fillText(`Đã ghép: ${pairsFound}/8 cặp • Còn: ${turnsLeft} lượt`, 120, 142);
+    }
+  }
+
   function stop() {
     running = false;
+    isPaused = false;
     isPeeking = false;
     if (rafId) cancelAnimationFrame(rafId);
     rafId = null;
@@ -381,6 +424,15 @@ window.MemoryGame = (() => {
   return {
     init,
     start,
-    stop
+    stop,
+    suspend,
+    resume,
+    drawPausedPreview,
+    isPaused: () => isPaused,
+    isRunning: () => running,
+    getScore: () => score,
+    getCandies: () => candies,
+    getTurnsLeft: () => turnsLeft,
+    getPairsFound: () => pairsFound
   };
 })();

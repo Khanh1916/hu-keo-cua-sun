@@ -896,16 +896,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  function stopAllGames(preserveNonLa = false) {
+  function stopAllGames(forceStop = false) {
     MiniGame.stop();
     CrossingGame.stop();
     FlappyGame.stop();
-    if (preserveNonLa && NonLaGame.isRunning() && NonLaGame.isPaused()) {
-      NonLaGame.suspend();
-    } else {
+    if (forceStop) {
       NonLaGame.stop();
+      if (window.MemoryGame) MemoryGame.stop();
+    } else {
+      if (NonLaGame.isRunning()) {
+        NonLaGame.suspend();
+      }
+      if (window.MemoryGame && MemoryGame.isRunning()) {
+        MemoryGame.suspend();
+      }
     }
-    if (window.MemoryGame) MemoryGame.stop();
   }
 
   function handleArcadeHud({ score, candies, lives, livesText }) {
@@ -955,6 +960,8 @@ document.addEventListener("DOMContentLoaded", () => {
       Thu hoạch: <strong>+${finalCandies} 🍬</strong> và <strong>+${xpEarned} thân mật</strong>!
     `;
     resultBox.classList.remove("hidden");
+    const restartBtn = document.getElementById("btnRestartMiniGame");
+    if (restartBtn) restartBtn.classList.add("hidden");
     document.getElementById("btnStartMiniGame").textContent = "Chơi Lại Nhé!";
     overlay.classList.remove("hidden");
   }
@@ -1033,7 +1040,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showArcadeMenu() {
-    stopAllGames(true);
+    stopAllGames(false);
     document.getElementById("bestCatchText").textContent = `Kỷ lục: ${state.bestScore}`;
     document.getElementById("bestCrossingText").textContent = `Kỷ lục: ${state.bestCrossing}`;
     document.getElementById("bestFlappyText").textContent = `Kỷ lục: ${state.bestFlappy}`;
@@ -1049,7 +1056,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function openArcadeGame(gameKey) {
     activeGameKey = gameKey;
     const meta = ARCADE_META[gameKey];
-    stopAllGames(gameKey === "nonla");
+    stopAllGames(false);
 
     document.getElementById("arcadeTitle").textContent = meta.title;
     document.getElementById("btnBackArcade").classList.remove("hidden");
@@ -1057,8 +1064,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("arcadeStage").classList.remove("hidden");
 
     const isNonLaPaused = gameKey === "nonla" && NonLaGame.isPaused() && NonLaGame.isRunning();
+    const isMemoryPaused = gameKey === "memory" && window.MemoryGame && MemoryGame.isPaused() && MemoryGame.isRunning();
+    const restartBtn = document.getElementById("btnRestartMiniGame");
 
     if (isNonLaPaused) {
+      if (NonLaGame.drawPausedPreview) NonLaGame.drawPausedPreview();
       document.getElementById("mgBest").textContent = state[meta.bestKey];
       document.getElementById("mgScore").textContent = NonLaGame.getScore();
       document.getElementById("mgCandy").textContent = NonLaGame.getCandies();
@@ -1068,6 +1078,19 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("mgOverlayDesc").innerHTML = `Em đang tạm dừng ván này ở <strong>${NonLaGame.getScore()} điểm</strong> (còn ${NonLaGame.getLives()} mạng).<br />Bấm nút dưới để tiếp tục chơi ngay nhé!`;
       document.getElementById("mgTouchHint").textContent = meta.hint;
       document.getElementById("btnStartMiniGame").textContent = "▶ Tiếp Tục Chơi";
+      if (restartBtn) restartBtn.classList.remove("hidden");
+    } else if (isMemoryPaused) {
+      if (MemoryGame.drawPausedPreview) MemoryGame.drawPausedPreview();
+      document.getElementById("mgBest").textContent = state[meta.bestKey];
+      document.getElementById("mgScore").textContent = MemoryGame.getScore();
+      document.getElementById("mgCandy").textContent = MemoryGame.getCandies();
+      document.getElementById("mgLives").textContent = `${MemoryGame.getTurnsLeft()} lượt`;
+      document.getElementById("mgResultBox").classList.add("hidden");
+      document.getElementById("mgOverlayTitle").textContent = "⏸ Ván Đang Tạm Dừng";
+      document.getElementById("mgOverlayDesc").innerHTML = `Em đang tạm dừng ở <strong>${MemoryGame.getPairsFound()}/8 cặp</strong> (còn ${MemoryGame.getTurnsLeft()} lượt lật).<br />Bấm nút dưới để tiếp tục giải mã nhé!`;
+      document.getElementById("mgTouchHint").textContent = meta.hint;
+      document.getElementById("btnStartMiniGame").textContent = "▶ Tiếp Tục Chơi";
+      if (restartBtn) restartBtn.classList.remove("hidden");
     } else {
       document.getElementById("mgBest").textContent = state[meta.bestKey];
       document.getElementById("mgScore").textContent = "0";
@@ -1078,6 +1101,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("mgOverlayDesc").innerHTML = meta.overlayDesc;
       document.getElementById("mgTouchHint").textContent = meta.hint;
       document.getElementById("btnStartMiniGame").textContent = "Bắt Đầu Chơi!";
+      if (restartBtn) restartBtn.classList.add("hidden");
     }
 
     document.getElementById("mgOverlay").classList.remove("hidden");
@@ -1130,12 +1154,35 @@ document.addEventListener("DOMContentLoaded", () => {
       AudioManager.playClick();
     }
     document.getElementById("mgOverlay").classList.add("hidden");
+    const restartBtn = document.getElementById("btnRestartMiniGame");
+    if (restartBtn) restartBtn.classList.add("hidden");
+
     if (activeGameKey === "nonla" && NonLaGame.isRunning() && NonLaGame.isPaused()) {
       NonLaGame.resume();
+    } else if (activeGameKey === "memory" && window.MemoryGame && MemoryGame.isRunning() && MemoryGame.isPaused()) {
+      MemoryGame.resume();
     } else {
       ARCADE_META[activeGameKey].mod().start();
     }
   });
+
+  const btnRestartMiniGame = document.getElementById("btnRestartMiniGame");
+  if (btnRestartMiniGame) {
+    btnRestartMiniGame.addEventListener("click", () => {
+      AudioManager.playClick();
+      document.getElementById("mgOverlay").classList.add("hidden");
+      btnRestartMiniGame.classList.add("hidden");
+      if (activeGameKey === "nonla") {
+        NonLaGame.stop();
+        NonLaGame.start();
+      } else if (activeGameKey === "memory" && window.MemoryGame) {
+        MemoryGame.stop();
+        MemoryGame.start();
+      } else {
+        ARCADE_META[activeGameKey].mod().start();
+      }
+    });
+  }
 
   document.getElementById("btnCloseMiniGame").addEventListener("click", () => {
     stopAllGames();

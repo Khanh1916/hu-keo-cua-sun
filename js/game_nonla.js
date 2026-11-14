@@ -798,6 +798,12 @@ window.NonLaGame = (() => {
     }
   }
 
+  function drawPausedPreview() {
+    if (running && isPaused && ctx) {
+      draw();
+    }
+  }
+
   return {
     init,
     start,
@@ -806,6 +812,7 @@ window.NonLaGame = (() => {
     resume,
     suspend,
     togglePause,
+    drawPausedPreview,
     isPaused: () => isPaused,
     isRunning: () => running,
     getScore: () => score,
