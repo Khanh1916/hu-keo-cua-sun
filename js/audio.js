@@ -1,6 +1,13 @@
 window.AudioManager = (() => {
+  const STORAGE_KEY = "hu_keo_audio_enabled";
   let ctx = null;
   let enabled = false;
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved !== null) {
+      enabled = saved === "1";
+    }
+  } catch {}
   let bgmTimer = null;
   let stepIndex = 0;
   let currentTheme = "normal"; // "normal" | "birthday" | "anniversary"
@@ -174,7 +181,7 @@ window.AudioManager = (() => {
     }
   }
 
-  return {
+  const api = {
     isEnabled: () => enabled,
 
     setTheme(theme) {
@@ -192,6 +199,9 @@ window.AudioManager = (() => {
 
     toggle() {
       enabled = !enabled;
+      try {
+        localStorage.setItem(STORAGE_KEY, enabled ? "1" : "0");
+      } catch {}
       if (enabled) {
         ensureContext();
         startBGM();
@@ -204,6 +214,9 @@ window.AudioManager = (() => {
 
     setEnabled(val) {
       enabled = Boolean(val);
+      try {
+        localStorage.setItem(STORAGE_KEY, enabled ? "1" : "0");
+      } catch {}
       if (enabled) {
         ensureContext();
         startBGM();
@@ -310,4 +323,24 @@ window.AudioManager = (() => {
       }
     }
   };
+
+  // Mobile WebAudio autoplay unlock on first gesture
+  function unlockOnGesture() {
+    if (ctx && ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
+    }
+    if (enabled && !bgmTimer) {
+      ensureContext();
+      startBGM();
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("pointerdown", unlockOnGesture, { passive: true });
+    window.addEventListener("touchstart", unlockOnGesture, { passive: true });
+    window.addEventListener("click", unlockOnGesture, { passive: true });
+    window.addEventListener("keydown", unlockOnGesture, { passive: true });
+  }
+
+  return api;
 })();

@@ -1125,9 +1125,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("speechBubble").classList.add("hidden");
   });
 
+  const audioIconEl = document.getElementById("audioIcon");
+  if (audioIconEl && window.AudioManager) {
+    audioIconEl.textContent = AudioManager.isEnabled() ? "🔊" : "🔇";
+  }
+
   document.getElementById("btnAudio").addEventListener("click", () => {
     const on = AudioManager.toggle();
-    document.getElementById("audioIcon").textContent = on ? "🔊" : "🔇";
+    if (audioIconEl) audioIconEl.textContent = on ? "🔊" : "🔇";
     showToast(on ? "🎵 Đã bật nhạc hộp nhạc ấm áp!" : "🔇 Đã tắt âm thanh");
   });
 
