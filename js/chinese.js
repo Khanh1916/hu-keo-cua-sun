@@ -2563,8 +2563,6 @@ window.ChineseApp = (() => {
           <button class="btn-dict" id="btnNextDailySet" title="Đổi sang 5 từ tiếp theo">🎲 Đổi 5 từ</button>
         </div>
 
-        <p class="chinese-help-text">🎯 Mỗi ngày 5 từ vừa vặn, không bị dồn ép. Bấm 🔊 để luyện nghe giọng đọc ấm áp hoặc 📖 Hanzii để tra nét bút thuận hoạt họa nhé!</p>
-
         <div class="chinese-daily-list">
           ${itemsHtml}
         </div>
@@ -3202,8 +3200,6 @@ window.ChineseApp = (() => {
             <button class="btn-dict" id="btnNewMatchRound" title="Đổi sang 5 từ khác">🎲 Đổi ván</button>
           </div>
         </div>
-
-        <p class="chinese-help-text">Chạm 1 thẻ <strong>Chữ Hán</strong> bên trái và 1 thẻ <strong>Pinyin / Nghĩa</strong> bên phải tương ứng để nối cặp nhé!</p>
 
         <div class="match-columns-grid">
           <div class="match-col match-col-left">
