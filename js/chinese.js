@@ -2544,7 +2544,7 @@ window.ChineseApp = (() => {
             <span>🎁 Học xong 5 từ hôm nay:</span>
             <strong style="color: #d6336c">+2 🍬 Kẹo & +10 XP</strong>
           </div>
-          <button class="pixel-btn ${isCompletedToday ? "btn-cream disabled" : "btn-pink"}" id="btnFinishDailyChinese" ${isCompletedToday ? "disabled" : ""}>
+          <button class="btn-finish-daily ${isCompletedToday ? "completed" : ""}" id="btnFinishDailyChinese" ${isCompletedToday ? "disabled" : ""}>
             ${isCompletedToday ? "🎉 Đã Ghi Nhớ Hôm Nay" : "Đã Nhớ Cả 5 Từ ✓"}
           </button>
         </div>
@@ -2721,14 +2721,14 @@ window.ChineseApp = (() => {
 
         ${flashcardFlipped ? `
           <div class="fc-srs-rating-row">
-            <button class="pixel-btn btn-cream srs-rate-btn rate-again" id="btnSrsAgain">🔴 Chưa nhớ (Ôn lại)</button>
-            <button class="pixel-btn btn-pink srs-rate-btn rate-good" id="btnSrsGood">🟢 Đã thuộc (Nhớ tốt)</button>
+            <button class="srs-rate-btn rate-again" id="btnSrsAgain">🔴 Chưa nhớ (Ôn lại)</button>
+            <button class="srs-rate-btn rate-good" id="btnSrsGood">🟢 Đã thuộc (Nhớ tốt)</button>
           </div>
         ` : `
           <div class="fc-nav-controls">
-            <button class="pixel-btn btn-cream fc-nav-btn fc-prev-btn" id="btnFcPrev" title="Xem từ trước">◀ Trước</button>
-            <button class="pixel-btn btn-pink fc-nav-btn fc-flip-btn" id="btnFcFlip" title="Lật xem nghĩa và ví dụ">🔄 Lật Thẻ</button>
-            <button class="pixel-btn btn-cream fc-nav-btn fc-next-btn" id="btnFcNext" title="Sang từ tiếp theo">Sau ▶</button>
+            <button class="fc-nav-btn fc-prev-btn" id="btnFcPrev" title="Xem từ trước">◀ Trước</button>
+            <button class="fc-nav-btn fc-flip-btn" id="btnFcFlip" title="Lật xem nghĩa và ví dụ">🔄 Lật Thẻ</button>
+            <button class="fc-nav-btn fc-next-btn" id="btnFcNext" title="Sang từ tiếp theo">Sau ▶</button>
           </div>
         `}
       </div>
@@ -2902,8 +2902,8 @@ window.ChineseApp = (() => {
           <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${quizQuestions.length}</strong> câu (${getLevelLabel(currentLevel)})</p>
           <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 (+2 🍬 & +15 XP)" : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
           <div class="quiz-actions">
-            <button class="pixel-btn btn-pink" id="btnRestartQuiz">Làm Lại Lượt Mới</button>
-            <button class="pixel-btn btn-cream" id="btnBackToDaily">Quay lại 5 từ mỗi ngày</button>
+            <button class="btn-summary-action btn-summary-pink" id="btnRestartQuiz">Làm Lại Lượt Mới</button>
+            <button class="btn-summary-action btn-summary-cream" id="btnBackToDaily">Quay lại 5 từ mỗi ngày</button>
           </div>
         </div>
       `;
@@ -2964,7 +2964,7 @@ window.ChineseApp = (() => {
 
         <div class="quiz-feedback-box hidden" id="quizFeedback">
           <div id="quizFeedbackText"></div>
-          <button class="pixel-btn btn-pink btn-sm" id="btnNextQuiz">Câu tiếp theo ▶</button>
+          <button class="btn-next-quiz" id="btnNextQuiz">Câu tiếp theo ▶</button>
         </div>
       </div>
     `;
@@ -3110,8 +3110,8 @@ window.ChineseApp = (() => {
           <p class="quiz-score-text">Ngọc đã nối chính xác trọn vẹn <strong>${matchWords.length}/${matchWords.length}</strong> cặp chữ Hán & Pinyin (${getLevelLabel(currentLevel)})!</p>
           <p class="quiz-cheer">Trí nhớ của em siêu đỉnh luôn nè 💕 (+2 🍬 Kẹo & +10 XP)</p>
           <div class="quiz-actions">
-            <button class="pixel-btn btn-pink" id="btnRestartMatch">Chơi Ván Mới 🧩</button>
-            <button class="pixel-btn btn-cream" id="btnMatchToStarred">Xem Sổ Tay ⭐</button>
+            <button class="btn-summary-action btn-summary-pink" id="btnRestartMatch">Chơi Ván Mới 🧩</button>
+            <button class="btn-summary-action btn-summary-cream" id="btnMatchToStarred">Xem Sổ Tay ⭐</button>
           </div>
         </div>
       `;
@@ -3344,7 +3344,7 @@ window.ChineseApp = (() => {
             <h3>Sổ Tay Yêu Thích Đang Trống</h3>
             <p>Góc nhỏ này dành riêng để Ngọc lưu lại những từ vựng khó nhớ hoặc những câu nói ngọt ngào muốn ôn tập lại.</p>
             <p style="font-size: 11.5px; color: #8c7365; margin: 12px 0;">Em chỉ cần bấm nút <strong>☆ Lưu từ</strong> ở mục <strong>5 Từ Hôm Nay</strong> hoặc <strong>Flashcard</strong> là từ sẽ xuất hiện ngay tại đây nhé 💕</p>
-            <button class="pixel-btn btn-pink btn-empty-action" id="btnGoToDaily">🎯 Đến Học 5 Từ Hôm Nay</button>
+            <button class="btn-empty-action" id="btnGoToDaily">🎯 Đến Học 5 Từ Hôm Nay</button>
           </div>
         </div>
       `;
