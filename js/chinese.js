@@ -2250,10 +2250,8 @@ window.ChineseApp = (() => {
     }
   }
 
-  // Pure Single-Stream Mandarin Audio Engine (Zero Echo / Zero Overlap):
-  // 1. Vocabulary words (<= 6 chars): Pristine native studio MP3 human voice (Youdao Dict)
-  // 2. Sentences & Quotes: Clean native SpeechSynthesis (Web Speech API)
-  // Strict Mutex & speechSeq guarantees only ONE audio instance ever plays at a time.
+  // Pure Single-Stream Mandarin Audio Engine (Zero Echo / Zero Latency):
+  // Synchronous SpeechSynthesis ensures iOS Safari / WebKit executes speech within the trusted gesture token.
   function speak(text, triggerBtn = null) {
     if (!text) return;
     const cleanText = text.replace(/["'“”‘’]/g, "").trim();
@@ -2279,23 +2277,35 @@ window.ChineseApp = (() => {
       }
     };
 
-    // Determine strategy:
-    // Single vocabulary words (<= 6 chars, no sentence punctuation) use pristine studio MP3
-    const isVocab = cleanText.length <= 6 && !/[，。！？\s]/.test(cleanText);
+    // Primary: Web Speech API (Synchronous inside user tap, 100% native on iOS Safari & Android, zero lag, works offline, zero echo)
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.cancel();
+        if (typeof window.speechSynthesis.resume === "function") {
+          window.speechSynthesis.resume();
+        }
+        const utter = new SpeechSynthesisUtterance(cleanText);
+        utter.lang = "zh-CN";
+        utter.rate = 0.82;
+        const zhVoice = getBestMandarinVoice();
+        if (zhVoice) utter.voice = zhVoice;
 
-    if (isVocab) {
+        utter.onend = () => resetBtn();
+        utter.onerror = () => resetBtn();
+
+        window.speechSynthesis.speak(utter);
+        return;
+      } catch (e) {
+        console.warn("SpeechSynthesis error:", e);
+      }
+    }
+
+    // Fallback: Audio stream for browsers without Web Speech
+    try {
       const youdaoUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanText)}&le=zh`;
       const audio = new Audio(youdaoUrl);
       audio.playbackRate = 0.95;
       activeAudio = audio;
-
-      let fallbackHandled = false;
-      const doFallbackOnce = () => {
-        if (fallbackHandled || thisSpeechId !== speechSeq) return;
-        fallbackHandled = true;
-        stopAllSpeech();
-        fallbackWebSpeech(cleanText, resetBtn);
-      };
 
       audio.onended = () => {
         if (thisSpeechId === speechSeq) {
@@ -2303,20 +2313,14 @@ window.ChineseApp = (() => {
           activeAudio = null;
         }
       };
-
-      audio.onerror = () => {
-        doFallbackOnce();
-      };
+      audio.onerror = () => resetBtn();
 
       const p = audio.play();
       if (p !== undefined) {
-        p.catch(() => {
-          doFallbackOnce();
-        });
+        p.catch(() => resetBtn());
       }
-    } else {
-      // Long sentences or quotes: direct clean single Web Speech API
-      fallbackWebSpeech(cleanText, resetBtn);
+    } catch {
+      resetBtn();
     }
   }
 
@@ -3231,19 +3235,25 @@ window.ChineseApp = (() => {
 
     if (isCorrect) {
       matchedIds.add(matchSelectedHanzi.uid);
-      if (window.AudioManager) AudioManager.playCandy();
+      if (window.AudioManager && typeof AudioManager.playCandy === "function") {
+        AudioManager.playCandy();
+      }
       if (targetWord) speak(targetWord.hanzi);
       matchSelectedHanzi = null;
       matchSelectedPinyin = null;
       renderMatchBoard();
     } else {
       matchLocked = true;
-      if (window.AudioManager) AudioManager.playPoop();
+      if (window.AudioManager && typeof AudioManager.playBonk === "function") {
+        AudioManager.playBonk();
+      }
       
-      const hBtn = document.querySelector(`.match-card-hanzi[data-uid="${matchSelectedHanzi.uid}"]`);
-      const pBtn = document.querySelector(`.match-card-pinyin[data-uid="${matchSelectedPinyin.uid}"]`);
-      if (hBtn) hBtn.classList.add("shake-wrong");
-      if (pBtn) pBtn.classList.add("shake-wrong");
+      try {
+        const hBtn = document.querySelector(`.match-card-hanzi[data-uid="${matchSelectedHanzi.uid}"]`);
+        const pBtn = document.querySelector(`.match-card-pinyin[data-uid="${matchSelectedPinyin.uid}"]`);
+        if (hBtn) hBtn.classList.add("shake-wrong");
+        if (pBtn) pBtn.classList.add("shake-wrong");
+      } catch {}
 
       setTimeout(() => {
         matchSelectedHanzi = null;
@@ -3334,7 +3344,7 @@ window.ChineseApp = (() => {
             <h3>Sổ Tay Yêu Thích Đang Trống</h3>
             <p>Góc nhỏ này dành riêng để Ngọc lưu lại những từ vựng khó nhớ hoặc những câu nói ngọt ngào muốn ôn tập lại.</p>
             <p style="font-size: 11.5px; color: #8c7365; margin: 12px 0;">Em chỉ cần bấm nút <strong>☆ Lưu từ</strong> ở mục <strong>5 Từ Hôm Nay</strong> hoặc <strong>Flashcard</strong> là từ sẽ xuất hiện ngay tại đây nhé 💕</p>
-            <button class="pixel-btn btn-pink" id="btnGoToDaily">Đi đến 5 Từ Hôm Nay</button>
+            <button class="pixel-btn btn-pink btn-empty-action" id="btnGoToDaily">🎯 Đến Học 5 Từ Hôm Nay</button>
           </div>
         </div>
       `;
