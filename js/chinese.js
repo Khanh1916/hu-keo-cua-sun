@@ -2250,8 +2250,7 @@ window.ChineseApp = (() => {
     }
   }
 
-  // Pure Single-Stream Mandarin Audio Engine (Zero Echo / Zero Latency):
-  // Synchronous SpeechSynthesis ensures iOS Safari / WebKit executes speech within the trusted gesture token.
+  // Pure Single-Stream Mandarin Audio Engine (Zero Echo / Zero Latency / Reliable Fallback):
   function speak(text, triggerBtn = null) {
     if (!text) return;
     const cleanText = text.replace(/["'“”‘’]/g, "").trim();
@@ -2277,7 +2276,52 @@ window.ChineseApp = (() => {
       }
     };
 
-    // Primary: Web Speech API (Synchronous inside user tap, 100% native on iOS Safari & Android, zero lag, works offline, zero echo)
+    // Fallback audio stream player (Youdao native Chinese audio)
+    function playStreamFallback() {
+      if (thisSpeechId !== speechSeq) return;
+      try {
+        const youdaoUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanText)}&le=zh`;
+        const audio = new Audio(youdaoUrl);
+        audio.playbackRate = 0.95;
+        activeAudio = audio;
+
+        audio.onended = () => {
+          if (thisSpeechId === speechSeq) {
+            resetBtn();
+            activeAudio = null;
+          }
+        };
+        audio.onerror = () => {
+          if (thisSpeechId === speechSeq) resetBtn();
+        };
+
+        const p = audio.play();
+        if (p !== undefined) {
+          p.catch(() => {
+            if (thisSpeechId === speechSeq) resetBtn();
+          });
+        }
+      } catch {
+        resetBtn();
+      }
+    }
+
+    // Safety timeout to ensure button state is never stuck indefinitely
+    const safetyTimer = setTimeout(() => {
+      if (thisSpeechId === speechSeq) resetBtn();
+    }, 4500);
+
+    const zhVoice = getBestMandarinVoice();
+    const voicesReady = cachedVoices && cachedVoices.length > 0;
+
+    // If voices are already loaded and definitely NO Chinese voice exists on device,
+    // skip Web Speech directly and stream native Mandarin audio.
+    if (voicesReady && !zhVoice) {
+      playStreamFallback();
+      return;
+    }
+
+    // Primary: Web Speech API (Synchronous inside user tap, native on iOS Safari & Android)
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       try {
         window.speechSynthesis.cancel();
@@ -2287,11 +2331,17 @@ window.ChineseApp = (() => {
         const utter = new SpeechSynthesisUtterance(cleanText);
         utter.lang = "zh-CN";
         utter.rate = 0.82;
-        const zhVoice = getBestMandarinVoice();
         if (zhVoice) utter.voice = zhVoice;
 
-        utter.onend = () => resetBtn();
-        utter.onerror = () => resetBtn();
+        utter.onend = () => {
+          clearTimeout(safetyTimer);
+          resetBtn();
+        };
+        utter.onerror = () => {
+          clearTimeout(safetyTimer);
+          // If native TTS fails on this platform, immediately fallback to audio stream
+          playStreamFallback();
+        };
 
         window.speechSynthesis.speak(utter);
         return;
@@ -2300,28 +2350,8 @@ window.ChineseApp = (() => {
       }
     }
 
-    // Fallback: Audio stream for browsers without Web Speech
-    try {
-      const youdaoUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanText)}&le=zh`;
-      const audio = new Audio(youdaoUrl);
-      audio.playbackRate = 0.95;
-      activeAudio = audio;
-
-      audio.onended = () => {
-        if (thisSpeechId === speechSeq) {
-          resetBtn();
-          activeAudio = null;
-        }
-      };
-      audio.onerror = () => resetBtn();
-
-      const p = audio.play();
-      if (p !== undefined) {
-        p.catch(() => resetBtn());
-      }
-    } catch {
-      resetBtn();
-    }
+    // If Web Speech is unsupported, stream directly
+    playStreamFallback();
   }
 
   // True unbiased Fisher-Yates shuffle algorithm
