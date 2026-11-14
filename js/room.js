@@ -82,6 +82,17 @@ window.RoomScene = (() => {
       return;
     }
 
+    // Check MCK Vinyl Turntable hitbox (vx = 170, vy = 92)
+    const state = getStateFn ? getStateFn() : {};
+    const placed = state.placedDecor || [];
+    if (placed.includes("mck_vinyl")) {
+      if (cx >= 165 && cx <= 198 && cy >= 84 && cy <= 112) {
+        triggerVinylSpin();
+        if (onInteractFn) onInteractFn("mck_vinyl");
+        return;
+      }
+    }
+
     // Clicked elsewhere on floor -> move Khánh & Bông slightly for fun!
     if (cy >= 136 && cy <= 185) {
       khanh.targetX = Math.max(76, Math.min(182, Math.round(cx)));
@@ -114,6 +125,29 @@ window.RoomScene = (() => {
     for (let i = 0; i < 3; i++) {
       setTimeout(() => spawnHeart(bong.x, bong.y - 16, "#F49CB8"), i * 100);
     }
+  }
+
+  function spawnMusicNote(x = 180, y = 92) {
+    const colors = ["#FF4D6D", "#9D4EDD", "#FF758F", "#FFE066", "#4CC9F0"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    particles.push({
+      x: x + (Math.random() * 14 - 7),
+      y: y + (Math.random() * 6 - 3),
+      vy: -0.45 - Math.random() * 0.35,
+      vx: (Math.random() - 0.5) * 0.4,
+      life: 65,
+      maxLife: 65,
+      kind: Math.random() > 0.3 ? "note" : "sparkle",
+      variant: Math.random() > 0.5 ? 2 : 1,
+      color
+    });
+  }
+
+  function triggerVinylSpin() {
+    for (let i = 0; i < 7; i++) {
+      setTimeout(() => spawnMusicNote(180, 92), i * 130);
+    }
+    triggerKhanhHappy("happy");
   }
 
   function updateCharacters() {
@@ -164,6 +198,7 @@ window.RoomScene = (() => {
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
       p.y += p.vy;
+      if (p.vx) p.x += p.vx;
       p.life--;
       if (p.life <= 0) particles.splice(i, 1);
     }
@@ -667,6 +702,20 @@ window.RoomScene = (() => {
         px(ctx, p.x - 4, p.y - 1, 8, 2, p.color);
         px(ctx, p.x - 2, p.y + 1, 4, 2, p.color);
         px(ctx, p.x - 1, p.y + 3, 2, 1, p.color);
+      } else if (p.kind === "note") {
+        const c = p.color || "#FF4D6D";
+        px(ctx, p.x - 2, p.y, 2, 2, c);
+        px(ctx, p.x, p.y - 4, 1, 4, c);
+        px(ctx, p.x + 1, p.y - 4, 2, 1, c);
+        if (p.variant === 2) {
+          px(ctx, p.x + 3, p.y - 1, 2, 2, c);
+          px(ctx, p.x + 5, p.y - 4, 1, 3, c);
+          px(ctx, p.x + 1, p.y - 4, 5, 1, c);
+        }
+      } else if (p.kind === "sparkle") {
+        const c = p.color || "#FFE066";
+        px(ctx, p.x - 1, p.y, 3, 1, c);
+        px(ctx, p.x, p.y - 1, 1, 3, c);
       }
       ctx.globalAlpha = 1;
     });

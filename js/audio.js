@@ -278,6 +278,22 @@ window.AudioManager = (() => {
       notes.forEach((n, idx) => playTone(n, 0.2, "triangle", 0.065, null, idx * 0.08));
     },
 
+    playVinylChill() {
+      triggerHaptic([18, 28, 18]);
+      // Warm lofi chords inspired by MCK 99% / Chìm Sâu
+      const chillNotes = [
+        { f: 311.13, d: 0.25, delay: 0 },      // Eb4
+        { f: 392.00, d: 0.26, delay: 0.09 },   // G4
+        { f: 466.16, d: 0.28, delay: 0.18 },   // Bb4
+        { f: 587.33, d: 0.38, delay: 0.27 },   // D5 (Maj7 sweet touch)
+        { f: 523.25, d: 0.32, delay: 0.42 },   // C5
+        { f: 466.16, d: 0.50, delay: 0.56 }    // Bb4 cozy sustain
+      ];
+      chillNotes.forEach(n => {
+        playTone(n.f, n.d, "triangle", 0.05, null, n.delay);
+      });
+    },
+
     haptic: triggerHaptic,
 
     suspendForMic() {

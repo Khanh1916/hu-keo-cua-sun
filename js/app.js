@@ -835,6 +835,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } else if (who === "bong") {
         handlePetBong();
+      } else if (who === "mck_vinyl") {
+        AudioManager.playVinylChill();
+        const vinylQuotes = [
+          "Đang bật Album 99% MCK cực chill cho em nghe cùng nè 💕",
+          "'Chìm Sâu' cùng em mỗi ngày là điều tuyệt vời nhất của anh 💖",
+          "Nghe nhạc cùng bé Ngọc thì bài nào cũng thành tình ca ngọt ngào ✨",
+          "Giai điệu 99% này là dành riêng cho công chúa Sún đó nha 🎶",
+          "Baby gọi cho anh mỗi khi em thấy không vui... có anh đây rồi! 💕"
+        ];
+        const { item } = pickRandom(vinylQuotes);
+        showSpeech("Anh Khánh 🎵", item);
+        addRewards(2, 0);
       }
     }
   );
