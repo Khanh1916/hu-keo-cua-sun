@@ -2,7 +2,7 @@
  * Daily Couple Intimacy Diary & Question Engine (phong cách SumOne)
  * Khanh & Ngoc share daily thoughts, bonding questions, and romantic memory log.
  */
-const DiaryApp = (() => {
+window.DiaryApp = (() => {
   let getStateFn = null;
   let saveStateFn = null;
   let addRewardsFn = null;
