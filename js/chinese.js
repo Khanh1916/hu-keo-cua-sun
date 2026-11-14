@@ -2722,9 +2722,9 @@ window.ChineseApp = (() => {
           </div>
         ` : `
           <div class="fc-nav-controls">
-            <button class="pixel-btn btn-cream" id="btnFcPrev">◀ Từ Trước</button>
-            <button class="pixel-btn btn-pink" id="btnFcFlip">🔄 Lật Thẻ</button>
-            <button class="pixel-btn btn-cream" id="btnFcNext">Từ Sau ▶</button>
+            <button class="pixel-btn btn-cream fc-nav-btn fc-prev-btn" id="btnFcPrev" title="Xem từ trước">◀ Trước</button>
+            <button class="pixel-btn btn-pink fc-nav-btn fc-flip-btn" id="btnFcFlip" title="Lật xem nghĩa và ví dụ">🔄 Lật Thẻ</button>
+            <button class="pixel-btn btn-cream fc-nav-btn fc-next-btn" id="btnFcNext" title="Sang từ tiếp theo">Sau ▶</button>
           </div>
         `}
       </div>
