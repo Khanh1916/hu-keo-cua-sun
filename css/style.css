@@ -1487,13 +1487,14 @@ body {
   transform: translateY(1px);
 }
 
-@media (max-width: 350px) {
+@media (max-width: 440px) {
   .chinese-level-bar {
-    gap: 6px;
-    padding: 6px 8px;
+    gap: 8px;
+    padding: 8px 10px;
   }
   .clb-left {
     flex: 1 1 100%;
+    width: 100%;
   }
   #btnNextDailySet, #btnNewMatchRound {
     width: 100%;
@@ -1702,14 +1703,21 @@ body {
     align-items: stretch;
     text-align: center;
     gap: 10px;
-    padding: 12px;
+    padding: 12px 14px;
+    height: auto;
+    min-height: 0;
   }
   .cdf-info {
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 0;
     align-items: center;
     text-align: center;
+    width: 100%;
   }
   .btn-finish-daily {
     width: 100%;
+    flex: 0 0 auto;
   }
 }
 
