@@ -95,6 +95,14 @@ window.AudioManager = (() => {
     return ctx;
   }
 
+  function triggerHaptic(pattern) {
+    if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
+      try {
+        navigator.vibrate(pattern);
+      } catch {}
+    }
+  }
+
   function playTone(freq, duration, type = "sine", volume = 0.06, slideTo = null, delay = 0) {
     if (!enabled) return;
     const ac = ensureContext();
@@ -191,59 +199,72 @@ window.AudioManager = (() => {
     },
 
     playClick() {
+      triggerHaptic(10);
       playTone(620, 0.07, "triangle", 0.05, 740);
     },
 
     playHug() {
+      triggerHaptic([20, 50, 30]);
       playTone(523.25, 0.14, "sine", 0.06, null, 0);
       playTone(659.25, 0.16, "sine", 0.06, null, 0.09);
       playTone(783.99, 0.24, "sine", 0.07, null, 0.18);
     },
 
     playMeow() {
+      triggerHaptic([15, 35, 15]);
       playTone(680, 0.14, "triangle", 0.06, 920, 0);
       playTone(920, 0.18, "triangle", 0.05, 620, 0.13);
     },
 
     playCandy() {
+      triggerHaptic(20);
       playTone(784, 0.08, "square", 0.03, null, 0);
       playTone(1046.5, 0.14, "square", 0.03, null, 0.07);
     },
 
     playCombo(combo = 1) {
+      triggerHaptic([15, 25, 20]);
       const pentatonic = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.5];
       const base = pentatonic[Math.min(pentatonic.length - 1, Math.max(0, combo - 1))];
       playTone(base, 0.11, "triangle", 0.055, base * 1.12, 0);
     },
 
     playPowerup() {
+      triggerHaptic([20, 30, 25, 30, 35]);
       [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, idx) => {
         playTone(f, 0.12, "sine", 0.06, null, idx * 0.055);
       });
     },
 
     playFlap() {
+      triggerHaptic(10);
       playTone(360, 0.08, "sine", 0.045, 540);
     },
 
     playBonk() {
+      triggerHaptic(40);
       playTone(220, 0.18, "sawtooth", 0.045, 110);
     },
 
     playNote() {
+      triggerHaptic(16);
       playTone(587.33, 0.12, "sine", 0.05, null, 0);
       playTone(880, 0.22, "sine", 0.05, null, 0.08);
     },
 
     playLevelUp() {
+      triggerHaptic([30, 45, 35, 45, 60]);
       const notes = [523.25, 659.25, 783.99, 1046.5];
       notes.forEach((n, idx) => playTone(n, 0.18, "triangle", 0.06, null, idx * 0.09));
     },
 
     playCelebration() {
+      triggerHaptic([25, 35, 25, 35, 50]);
       const notes = [523.25, 659.25, 783.99, 1046.5, 1318.5];
       notes.forEach((n, idx) => playTone(n, 0.2, "triangle", 0.065, null, idx * 0.08));
     },
+
+    haptic: triggerHaptic,
 
     suspendForMic() {
       stopBGM();
