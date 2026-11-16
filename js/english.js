@@ -1456,11 +1456,11 @@ window.EnglishApp = (() => {
 
         <div class="match-columns-grid">
           <div class="match-col match-col-left">
-            <div class="match-col-title">🇬🇧 Tiếng Anh</div>
+            <div class="match-col-title"><svg class="flag-uk flag-uk-sm" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="60" height="40" fill="#012169" rx="3"/><clipPath id="uk-flag-clip-mg"><rect width="60" height="40" rx="3"/></clipPath><g clip-path="url(#uk-flag-clip-mg)"><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#cf142b" stroke-width="4.5"/><path d="M30,0 v40 M0,20 h60" stroke="#fff" stroke-width="13"/><path d="M30,0 v40 M0,20 h60" stroke="#cf142b" stroke-width="7.5"/></g></svg>Tiếng Anh</div>
             ${enHtml}
           </div>
           <div class="match-col match-col-right">
-            <div class="match-col-title">🇻🇳 Nghĩa Tiếng Việt</div>
+            <div class="match-col-title"><svg class="flag-vn flag-uk-sm" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="60" height="40" fill="#da251d" rx="3"/><polygon points="30,8 33.7,19.4 45.7,19.4 36,26.4 39.7,37.8 30,30.8 20.3,37.8 24,26.4 14.3,19.4 26.3,19.4" fill="#ff0"/></svg>Nghĩa Tiếng Việt</div>
             ${viHtml}
           </div>
         </div>
