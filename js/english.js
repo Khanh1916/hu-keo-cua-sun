@@ -914,6 +914,13 @@ window.EnglishApp = (() => {
     return list.filter((w) => srsMap[w.word] && srsMap[w.word].reps > 0).length;
   }
 
+  function getSRSBadge(word) {
+    const srsInfo = getSRSMap()[word];
+    if (!srsInfo || srsInfo.reps === 0) return { text: "Mới", cls: "srs-new" };
+    if (srsInfo.reps >= 3) return { text: "Đã thuộc", cls: "srs-mastered" };
+    return { text: `Cấp ${srsInfo.reps}`, cls: "srs-reviewing" };
+  }
+
   // Tab: 5 Từ Hôm Nay
   function renderDailyTab() {
     const container = document.getElementById("englishTabContent");
@@ -960,8 +967,8 @@ window.EnglishApp = (() => {
           </div>
 
           <div class="cwc-example">
-            <p class="cwc-ex-zh">"${wordObj.example}"</p>
-            <p class="cwc-ex-vi">💬 ${wordObj.exampleMeaning}</p>
+            <span class="cwc-ex-hanzi eng-ex-sentence">"${wordObj.example}"</span>
+            <span class="cwc-ex-meaning">💬 ${wordObj.exampleMeaning}</span>
           </div>
         </div>
       `;
@@ -1082,12 +1089,14 @@ window.EnglishApp = (() => {
     const wordObj = fcWords[fcIndex];
     const total = fcWords.length;
     const isStarred = isWordStarred(wordObj.word);
+    const srsBadge = getSRSBadge(wordObj.word);
+    const ukFlagSvg = `<svg class="flag-uk flag-uk-sm" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="60" height="40" fill="#012169" rx="3"/><clipPath id="uk-fc-flag"><rect width="60" height="40" rx="3"/></clipPath><g clip-path="url(#uk-fc-flag)"><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#cf142b" stroke-width="4.5"/><path d="M30,0 v40 M0,20 h60" stroke="#fff" stroke-width="13"/><path d="M30,0 v40 M0,20 h60" stroke="#cf142b" stroke-width="7.5"/></g></svg>`;
 
     container.innerHTML = `
       <div class="chinese-flashcard-wrap">
         <div class="chinese-level-bar">
           <div class="clb-left">
-            <label for="selectEnglishFcLevel">🏷️ Cấp độ:</label>
+            <label for="selectEnglishFcLevel">🏷️ Cấp:</label>
             <select id="selectEnglishFcLevel" class="pixel-select">
               <option value="b1" ${currentLevel === "b1" ? "selected" : ""}>B1 (Trung cấp)</option>
               <option value="b2" ${currentLevel === "b2" ? "selected" : ""}>B2 (Trung cao cấp)</option>
@@ -1097,44 +1106,73 @@ window.EnglishApp = (() => {
           <span class="fc-counter">Thẻ <strong>${fcIndex + 1}/${total}</strong></span>
         </div>
 
-        <div class="flashcard-box ${fcFlipped ? "flipped" : ""}" id="fcBox">
-          <div class="fc-front">
-            <span class="fc-hint-tag">Nhấn vào thẻ hoặc nút Lật để xem nghĩa 💡</span>
-            <div class="fc-hanzi-huge">${wordObj.word}</div>
-            <div class="fc-pinyin-big">${wordObj.ipa}</div>
-            <div class="fc-type-badge">${wordObj.type}</div>
-            <button class="fc-audio-btn" id="btnFcAudio" title="Nghe phát âm">🔊 Nghe</button>
-          </div>
-
-          <div class="fc-back">
-            <div class="fc-meaning-huge">${wordObj.meaning}</div>
-            <div class="fc-example-box">
-              <p class="fc-ex-zh">"${wordObj.example}"</p>
-              <p class="fc-ex-vi">💬 ${wordObj.exampleMeaning}</p>
+        <div class="flashcard-box" id="fcBox">
+          ${!fcFlipped ? `
+            <div class="fc-front">
+              <div class="fc-header-row">
+                <span class="fc-tag">${ukFlagSvg}${getLevelLabel(currentLevel).split(" ")[0]} • Thẻ ${fcIndex + 1}/${total}</span>
+                <span class="srs-badge ${srsBadge.cls}">${srsBadge.text}</span>
+              </div>
+              <div class="fc-eng-word">${wordObj.word}</div>
+              <div class="fc-pinyin">${wordObj.ipa}</div>
+              <div class="cwc-badges-row" style="margin-top: 4px;">
+                <span class="fc-type-badge">${wordObj.type}</span>
+              </div>
+              <span class="fc-hint">👆 Chạm thẻ hoặc bấm Lật Thẻ để xem nghĩa & ví dụ</span>
+              <div class="fc-actions-row">
+                <button class="btn-star ${isStarred ? "starred" : ""}" id="btnFcStar" title="${isStarred ? "Bỏ lưu từ" : "Lưu vào sổ tay"}">
+                  ${isStarred ? "⭐ Đã lưu" : "☆ Lưu"}
+                </button>
+                <button class="btn-speak" id="btnFcAudio" title="Nghe phát âm chuẩn">🔊 Nghe</button>
+                <a href="https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(wordObj.word.toLowerCase())}" target="_blank" rel="noopener noreferrer" class="btn-dict" title="Tra cứu trên Cambridge Dictionary">
+                  📖 Cambridge
+                </a>
+              </div>
             </div>
-            <div class="fc-back-actions">
-              <button class="btn-star ${isStarred ? "starred" : ""}" id="btnFcStar">
-                ${isStarred ? "⭐ Đã lưu" : "☆ Lưu từ"}
-              </button>
-              <a href="https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(wordObj.word.toLowerCase())}" target="_blank" rel="noopener noreferrer" class="btn-dict">
-                📖 Cambridge
-              </a>
+          ` : `
+            <div class="fc-back">
+              <div class="fc-header-row">
+                <span class="fc-tag">${ukFlagSvg}${wordObj.word}</span>
+                <span class="srs-badge ${srsBadge.cls}">${srsBadge.text}</span>
+              </div>
+              <div class="fc-meaning">${wordObj.meaning}</div>
+              <div class="cwc-badges-row" style="margin-top: 4px;">
+                <span class="fc-type-badge">${wordObj.type}</span>
+              </div>
+              <div class="fc-example-box">
+                <span class="fc-ex-hanzi eng-ex-sentence">"${wordObj.example}"</span>
+                <span class="fc-ex-vi">💬 ${wordObj.exampleMeaning}</span>
+              </div>
+              <div class="fc-actions-row">
+                <button class="btn-star ${isStarred ? "starred" : ""}" id="btnFcStar" title="${isStarred ? "Bỏ lưu từ" : "Lưu vào sổ tay"}">
+                  ${isStarred ? "⭐ Đã lưu" : "☆ Lưu"}
+                </button>
+                <button class="btn-speak" id="btnFcSpeakEx" data-text="${wordObj.example}" title="Nghe ví dụ">🔊 Nghe ví dụ</button>
+                <a href="https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(wordObj.word.toLowerCase())}" target="_blank" rel="noopener noreferrer" class="btn-dict" title="Tra cứu trên Cambridge Dictionary">
+                  📖 Cambridge
+                </a>
+              </div>
             </div>
-          </div>
+          `}
         </div>
 
-        <div class="fc-controls-panel">
-          <div class="fc-nav-controls">
-            <button class="fc-nav-btn fc-prev-btn" id="btnFcPrev" ${fcIndex === 0 ? "disabled" : ""}>◀ Từ Trước</button>
-            <button class="fc-nav-btn fc-flip-btn" id="btnFcFlip">🔄 Lật Thẻ</button>
-            <button class="fc-nav-btn fc-next-btn" id="btnFcNext" ${fcIndex === total - 1 ? "disabled" : ""}>Từ Sau ▶</button>
-          </div>
-
+        ${fcFlipped ? `
           <div class="fc-srs-rating-row">
-            <button class="fc-rate-btn fc-rate-forget" id="btnFcForget" title="Chưa thuộc, cần ôn lại sớm">❌ Chưa Nhớ</button>
-            <button class="fc-rate-btn fc-rate-remember" id="btnFcRemember" title="Đã ghi nhớ từ này">✅ Đã Thuộc</button>
+            <button class="srs-rate-btn rate-again" id="btnFcForget" title="Chưa thuộc, cần ôn lại">🔴 Chưa nhớ (Ôn lại)</button>
+            <button class="srs-rate-btn rate-good" id="btnFcRemember" title="Đã ghi nhớ từ này">🟢 Đã thuộc (Nhớ tốt)</button>
           </div>
-        </div>
+          <div class="fc-nav-controls" style="margin-top: 8px;">
+            <button class="fc-nav-btn fc-prev-btn" id="btnFcPrev" ${fcIndex === 0 ? "disabled" : ""}>◀ Trước</button>
+            <button class="fc-nav-btn fc-flip-btn" id="btnFcFlip">🔄 Lật lại</button>
+            <button class="fc-nav-btn fc-next-btn" id="btnFcNext" ${fcIndex === total - 1 ? "disabled" : ""}>Sau ▶</button>
+          </div>
+        ` : `
+          <div class="fc-nav-controls">
+            <button class="fc-nav-btn fc-prev-btn" id="btnFcPrev" ${fcIndex === 0 ? "disabled" : ""}>◀ Trước</button>
+            <button class="fc-nav-btn fc-flip-btn" id="btnFcFlip">🔄 Lật Thẻ</button>
+            <button class="fc-nav-btn fc-next-btn" id="btnFcNext" ${fcIndex === total - 1 ? "disabled" : ""}>Sau ▶</button>
+          </div>
+        `}
       </div>
     `;
 
@@ -1147,75 +1185,107 @@ window.EnglishApp = (() => {
     });
 
     const fcBox = document.getElementById("fcBox");
-    const doFlip = () => {
-      fcFlipped = !fcFlipped;
-      if (fcFlipped) fcBox.classList.add("flipped");
-      else fcBox.classList.remove("flipped");
-      if (window.AudioManager) AudioManager.playClick();
-    };
-    fcBox.addEventListener("click", (e) => {
-      if (e.target.closest("button") || e.target.closest("a")) return;
-      doFlip();
-    });
-    document.getElementById("btnFcFlip").addEventListener("click", doFlip);
-
-    document.getElementById("btnFcAudio").addEventListener("click", (e) => {
-      e.stopPropagation();
-      speak(wordObj.word, e.currentTarget);
-    });
-
-    document.getElementById("btnFcPrev").addEventListener("click", () => {
-      if (fcIndex > 0) {
-        fcIndex--;
-        fcFlipped = false;
+    if (fcBox) {
+      fcBox.addEventListener("click", (e) => {
+        if (e.target.closest("button") || e.target.closest("a")) return;
+        fcFlipped = !fcFlipped;
+        if (window.AudioManager) AudioManager.playClick();
         renderFlashcardTab();
-      }
-    });
+      });
+    }
 
-    document.getElementById("btnFcNext").addEventListener("click", () => {
-      if (fcIndex < total - 1) {
-        fcIndex++;
-        fcFlipped = false;
+    const btnFlip = document.getElementById("btnFcFlip");
+    if (btnFlip) {
+      btnFlip.addEventListener("click", () => {
+        fcFlipped = !fcFlipped;
+        if (window.AudioManager) AudioManager.playClick();
         renderFlashcardTab();
-      }
-    });
+      });
+    }
 
-    document.getElementById("btnFcForget").addEventListener("click", () => {
-      recordSRSReview(wordObj.word, false);
-      if (window.AudioManager) AudioManager.playBonk();
-      if (fcIndex < total - 1) {
-        fcIndex++;
-        fcFlipped = false;
-        renderFlashcardTab();
-      } else {
-        if (window.showToast) showToast("Đã xem hết 25 thẻ vựng đợt này!");
-      }
-    });
+    const btnAudio = document.getElementById("btnFcAudio");
+    if (btnAudio) {
+      btnAudio.addEventListener("click", (e) => {
+        e.stopPropagation();
+        speak(wordObj.word, btnAudio);
+      });
+    }
 
-    document.getElementById("btnFcRemember").addEventListener("click", () => {
-      recordSRSReview(wordObj.word, true);
-      if (window.AudioManager) AudioManager.playCandy();
-      if (fcIndex < total - 1) {
-        fcIndex++;
-        fcFlipped = false;
-        renderFlashcardTab();
-      } else {
-        if (window.showToast) showToast("🎉 Chúc mừng Ngọc đã ôn thuộc hết thẻ đợt này!");
-      }
-    });
+    const btnSpeakEx = document.getElementById("btnFcSpeakEx");
+    if (btnSpeakEx) {
+      btnSpeakEx.addEventListener("click", (e) => {
+        e.stopPropagation();
+        speak(wordObj.example, btnSpeakEx);
+      });
+    }
+
+    const btnPrev = document.getElementById("btnFcPrev");
+    if (btnPrev) {
+      btnPrev.addEventListener("click", () => {
+        if (fcIndex > 0) {
+          fcIndex--;
+          fcFlipped = false;
+          if (window.AudioManager) AudioManager.playClick();
+          renderFlashcardTab();
+        }
+      });
+    }
+
+    const btnNext = document.getElementById("btnFcNext");
+    if (btnNext) {
+      btnNext.addEventListener("click", () => {
+        if (fcIndex < total - 1) {
+          fcIndex++;
+          fcFlipped = false;
+          if (window.AudioManager) AudioManager.playClick();
+          renderFlashcardTab();
+        }
+      });
+    }
+
+    const btnForget = document.getElementById("btnFcForget");
+    if (btnForget) {
+      btnForget.addEventListener("click", () => {
+        recordSRSReview(wordObj.word, false);
+        if (window.AudioManager && typeof AudioManager.playBonk === "function") {
+          AudioManager.playBonk();
+        }
+        if (fcIndex < total - 1) {
+          fcIndex++;
+          fcFlipped = false;
+          renderFlashcardTab();
+        } else {
+          if (window.showToast) showToast("Đã xem hết 25 thẻ vựng đợt này!");
+        }
+      });
+    }
+
+    const btnRemember = document.getElementById("btnFcRemember");
+    if (btnRemember) {
+      btnRemember.addEventListener("click", () => {
+        recordSRSReview(wordObj.word, true);
+        if (window.AudioManager) AudioManager.playCandy();
+        if (fcIndex < total - 1) {
+          fcIndex++;
+          fcFlipped = false;
+          renderFlashcardTab();
+        } else {
+          if (window.showToast) showToast("🎉 Chúc mừng Ngọc đã ôn thuộc hết thẻ đợt này!");
+        }
+      });
+    }
 
     const btnFcStar = document.getElementById("btnFcStar");
     if (btnFcStar) {
-      btnFcStar.addEventListener("click", () => {
+      btnFcStar.addEventListener("click", (e) => {
+        e.stopPropagation();
         const nowStarred = toggleStarWord(wordObj);
+        btnFcStar.classList.toggle("starred", nowStarred);
+        btnFcStar.innerHTML = nowStarred ? "⭐ Đã lưu" : "☆ Lưu";
         if (nowStarred) {
-          btnFcStar.classList.add("starred");
-          btnFcStar.innerHTML = "⭐ Đã lưu";
           if (window.AudioManager) AudioManager.playCandy();
           if (window.showToast) showToast(`Đã lưu "${wordObj.word}" vào Sổ tay!`);
         } else {
-          btnFcStar.classList.remove("starred");
-          btnFcStar.innerHTML = "☆ Lưu từ";
           if (window.showToast) showToast(`Đã bỏ lưu "${wordObj.word}"!`);
         }
       });
@@ -1257,26 +1327,33 @@ window.EnglishApp = (() => {
 
     container.innerHTML = `
       <div class="chinese-quiz-wrap">
-        <div class="chinese-level-bar">
-          <div class="clb-left">
-            <span class="quiz-level-inline">🏷️ Cấp: <strong>${getLevelLabel(currentLevel)}</strong></span>
+        <div class="quiz-progress-track">
+          <div class="quiz-progress-fill" style="width: ${((quizIndex + 1) / quizQuestions.length) * 100}%;"></div>
+        </div>
+
+        <div class="quiz-header">
+          <div class="chinese-level-bar" style="margin-bottom: 0; padding: 0; background: none; border: none; box-shadow: none;">
+            <span class="quiz-level-inline">🏷️ Cấp: <strong>${getLevelLabel(currentLevel).split(" ")[0]}</strong></span>
           </div>
           <span class="fc-counter">Câu <strong>${quizIndex + 1}/${quizQuestions.length}</strong></span>
+          <span class="fc-counter">🎯 Điểm: <strong>${quizScore}</strong></span>
         </div>
 
-        <div class="quiz-question-box">
-          <span class="quiz-question-tag">Chọn từ vựng tiếng Anh tương ứng với nghĩa:</span>
-          <div class="quiz-target-hanzi">${q.target.meaning}</div>
-          <div class="quiz-target-pinyin">${q.target.type}</div>
+        <div class="quiz-question-card">
+          <div class="qq-prompt">Từ tiếng Anh nào mang ý nghĩa dưới đây?</div>
+          <div class="qq-meaning-en">"${q.target.meaning}"</div>
+          <div class="cwc-badges-row" style="margin-top: 4px;">
+            <span class="fc-type-badge">${q.target.type}</span>
+          </div>
         </div>
 
-        <div class="quiz-options-grid">
+        <div class="quiz-options-grid" id="quizOptionsGrid">
           ${q.options
             .map(
-              (opt) => `
+              (opt, idx) => `
             <button class="quiz-opt-btn" data-word="${opt.word}">
-              <span class="qob-hanzi">${opt.word}</span>
-              <span class="qob-pinyin">${opt.ipa}</span>
+              <span class="q-opt-label">${String.fromCharCode(65 + idx)}.</span>
+              <span class="q-opt-text"><strong>${opt.word}</strong> <em style="font-size: 11.5px; color: #8c7365; font-weight: normal; margin-left: 4px;">${opt.ipa}</em></span>
             </button>
           `
             )
@@ -1284,9 +1361,9 @@ window.EnglishApp = (() => {
         </div>
 
         <div class="quiz-feedback-box hidden" id="quizFeedback">
-          <p id="quizFeedbackText"></p>
-          <button class="btn-finish-daily" id="btnNextQuiz">
-            ${quizIndex < quizQuestions.length - 1 ? "Câu Tiếp Theo ➜" : "Xem Kết Quả 🎉"}
+          <div id="quizFeedbackText"></div>
+          <button class="btn-next-quiz" id="btnNextQuiz">
+            ${quizIndex < quizQuestions.length - 1 ? "Câu tiếp theo ▶" : "Xem kết quả 🎉"}
           </button>
         </div>
       </div>
@@ -1314,6 +1391,7 @@ window.EnglishApp = (() => {
         }
 
         recordSRSReview(q.target.word, isRight);
+        speak(q.target.word);
 
         const fbBox = document.getElementById("quizFeedback");
         const fbText = document.getElementById("quizFeedbackText");
@@ -1349,8 +1427,8 @@ window.EnglishApp = (() => {
         <p class="quiz-score-text">Ngọc đã trả lời đúng <strong>${quizScore}/${total}</strong> câu hỏi (${getLevelLabel(currentLevel)})!</p>
         <p class="quiz-score-reward">${quizScore >= 4 ? "🎁 Thưởng nóng: +2 🍬 Kẹo & +8 XP!" : "Luyện tập mỗi ngày sẽ sớm lên tay nha em yêu!"}</p>
         <div class="quiz-actions-row">
-          <button class="btn-summary-action btn-retry" id="btnRetryQuiz">🔄 Làm Lại Ván Mới</button>
-          <button class="btn-summary-action btn-change-level" id="btnNextLevelQuiz">Đổi Cấp Độ</button>
+          <button class="btn-summary-action btn-summary-pink" id="btnRetryQuiz">🔄 Làm Lại Ván Mới</button>
+          <button class="btn-summary-action btn-summary-cream" id="btnNextLevelQuiz">Đổi Cấp Độ</button>
         </div>
       </div>
     `;
@@ -1403,11 +1481,15 @@ window.EnglishApp = (() => {
             <h3 class="quiz-result-title">Ghép Đôi Hoàn Hảo!</h3>
             <p class="quiz-score-text">Ngọc đã nối chính xác trọn vẹn <strong>${matchWords.length}/${matchWords.length}</strong> cặp từ (${getLevelLabel(currentLevel)})!</p>
             <p class="quiz-score-reward">🎁 Thưởng: +1 🍬 Kẹo & +6 XP!</p>
-            <button class="btn-summary-action btn-retry" id="btnNextMatchRound">🎲 Chơi Ván Mới Tiếp</button>
+            <div class="quiz-actions-row">
+              <button class="btn-summary-action btn-summary-pink" id="btnNextMatchRound">Chơi Ván Mới 🧩</button>
+              <button class="btn-summary-action btn-summary-cream" id="btnMatchToStarred">Xem Sổ Tay ⭐</button>
+            </div>
           </div>
         </div>
       `;
       document.getElementById("btnNextMatchRound").addEventListener("click", startMatchGame);
+      document.getElementById("btnMatchToStarred").addEventListener("click", () => switchTab("starred"));
       return;
     }
 
@@ -1439,6 +1521,10 @@ window.EnglishApp = (() => {
 
     container.innerHTML = `
       <div class="chinese-match-wrap">
+        <div class="quiz-progress-track">
+          <div class="quiz-progress-fill" style="width: ${(matchedIds.size / Math.max(1, matchWords.length)) * 100}%"></div>
+        </div>
+
         <div class="chinese-level-bar">
           <div class="clb-left">
             <label for="selectEnglishMatchLevel">🏷️ Cấp:</label>
@@ -1593,8 +1679,8 @@ window.EnglishApp = (() => {
             </div>
             <div class="cwc-meaning">👉 <strong>${wordObj.meaning}</strong></div>
             <div class="cwc-example">
-              <p class="cwc-ex-zh">"${wordObj.example}"</p>
-              <p class="cwc-ex-vi">💬 ${wordObj.exampleMeaning}</p>
+              <span class="cwc-ex-hanzi eng-ex-sentence">"${wordObj.example}"</span>
+              <span class="cwc-ex-meaning">💬 ${wordObj.exampleMeaning}</span>
             </div>
           </div>
         `;
@@ -1668,15 +1754,15 @@ window.EnglishApp = (() => {
       itemsHtml += `
         <div class="love-quote-card">
           <div class="lqc-top">
-            <span class="lqc-index">💌 Câu #${idx + 1}</span>
+            <span class="lqc-badge">💕 Câu #${idx + 1}</span>
             <div class="lqc-actions">
               <button class="btn-speak" data-text="${item.quote}">🔊 Nghe</button>
-              <button class="btn-dict btn-copy-quote" data-quote="${item.quote} - ${item.meaning}">📋 Sao chép</button>
+              <button class="btn-dict btn-copy" data-copy="&ldquo;${item.quote}&rdquo; &mdash; ${item.meaning}">📋 Sao chép</button>
             </div>
           </div>
-          <div class="lqc-zh" style="font-family: var(--font-body); font-size: 15px; font-weight: 700; color: #2b1810;">"${item.quote}"</div>
-          <div class="lqc-pinyin" style="font-size: 11.5px; color: #d6336c;">— ${item.author}</div>
-          <div class="lqc-vi">💬 ${item.meaning}</div>
+          <div class="lqc-quote-en">"${item.quote}"</div>
+          <div class="lqc-author-en">— ${item.author}</div>
+          <div class="lqc-meaning">💬 ${item.meaning}</div>
         </div>
       `;
     });
@@ -1691,9 +1777,9 @@ window.EnglishApp = (() => {
       btn.addEventListener("click", () => speak(btn.dataset.text, btn));
     });
 
-    container.querySelectorAll(".btn-copy-quote").forEach((btn) => {
+    container.querySelectorAll(".btn-copy").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const text = btn.dataset.quote;
+        const text = btn.dataset.copy;
         if (navigator.clipboard) {
           navigator.clipboard.writeText(text).then(() => {
             if (window.showToast) showToast("Đã sao chép lời yêu thương vào bộ nhớ tạm! 💕");
