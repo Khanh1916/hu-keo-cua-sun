@@ -1263,6 +1263,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnQuickChinese = document.getElementById("btnQuickChinese");
   if (btnQuickChinese) btnQuickChinese.addEventListener("click", handleOpenChinese);
 
+  const handleOpenEnglish = () => {
+    AudioManager.playClick();
+    if (window.EnglishApp) {
+      EnglishApp.open();
+    } else {
+      openModal("modalEnglish");
+    }
+  };
+  const btnQuickEnglish = document.getElementById("btnQuickEnglish");
+  if (btnQuickEnglish) btnQuickEnglish.addEventListener("click", handleOpenEnglish);
+
+  // Cross-language modal switchers
+  const btnChineseToEnglish = document.getElementById("btnChineseToEnglish");
+  if (btnChineseToEnglish) {
+    btnChineseToEnglish.addEventListener("click", () => {
+      AudioManager.playClick();
+      closeModal("modalChinese");
+      handleOpenEnglish();
+    });
+  }
+
+  const btnEnglishToChinese = document.getElementById("btnEnglishToChinese");
+  if (btnEnglishToChinese) {
+    btnEnglishToChinese.addEventListener("click", () => {
+      AudioManager.playClick();
+      closeModal("modalEnglish");
+      handleOpenChinese();
+    });
+  }
+
   // Close buttons & backdrop click
   document.querySelectorAll("[data-close]").forEach((btn) => {
     btn.addEventListener("click", () => closeModal(btn.dataset.close));
@@ -1502,6 +1532,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   if (window.ChineseApp) {
     ChineseApp.init();
+  }
+  if (window.EnglishApp) {
+    EnglishApp.init();
   }
   // Auto-switch decorations, banner & music right when crossing 00:00 into/out of special dates!
   setInterval(syncClockAndEvents, 5000);

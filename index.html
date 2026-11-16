@@ -135,6 +135,10 @@
           <span class="action-emoji">🀄</span>
           <span class="action-name">Tiếng Trung</span>
         </button>
+        <button class="action-card pixel-btn btn-cream" id="btnQuickEnglish">
+          <span class="action-emoji">🇬🇧</span>
+          <span class="action-name">Tiếng Anh</span>
+        </button>
       </section>
     </main>
 
@@ -408,6 +412,10 @@
         <h2>📖 Sổ Tay Tiếng Trung HSK</h2>
         <button class="close-btn pixel-btn" data-close="modalChinese">✕</button>
       </div>
+      <div class="lang-switch-bar">
+        <button class="lang-pill-btn active" id="btnChineseActive">🀄 Tiếng Trung HSK</button>
+        <button class="lang-pill-btn" id="btnChineseToEnglish">🇬🇧 Tiếng Anh B1+</button>
+      </div>
       <div class="chinese-tabs-nav">
         <button class="chinese-nav-tab active" data-tab="daily">🎯 5 Từ Hôm Nay</button>
         <button class="chinese-nav-tab" data-tab="flashcard">📇 Thẻ Flashcard</button>
@@ -417,6 +425,29 @@
         <button class="chinese-nav-tab" data-tab="love">💌 Lời Yêu Thương</button>
       </div>
       <div id="chineseTabContent" class="chinese-tab-content"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: English B1+ Learning -->
+  <div class="modal-backdrop hidden" id="modalEnglish">
+    <div class="modal-card modal-chinese modal-english pixel-box">
+      <div class="modal-header">
+        <h2>🇬🇧 Sổ Tay Tiếng Anh (B1 - C1)</h2>
+        <button class="close-btn pixel-btn" data-close="modalEnglish">✕</button>
+      </div>
+      <div class="lang-switch-bar">
+        <button class="lang-pill-btn" id="btnEnglishToChinese">🀄 Tiếng Trung HSK</button>
+        <button class="lang-pill-btn active" id="btnEnglishActive">🇬🇧 Tiếng Anh B1+</button>
+      </div>
+      <div class="chinese-tabs-nav english-tabs-nav">
+        <button class="english-nav-tab active" data-tab="daily">🎯 5 Từ Hôm Nay</button>
+        <button class="english-nav-tab" data-tab="flashcard">📇 Thẻ Flashcard</button>
+        <button class="english-nav-tab" data-tab="quiz">✍️ Trắc Nghiệm</button>
+        <button class="english-nav-tab" data-tab="match">🧩 Nối Từ & Nghĩa</button>
+        <button class="english-nav-tab" data-tab="starred">⭐ Sổ Tay Của Ngọc</button>
+        <button class="english-nav-tab" data-tab="love">💌 Lời Yêu Thương</button>
+      </div>
+      <div id="englishTabContent" class="chinese-tab-content"></div>
     </div>
   </div>
 
@@ -473,6 +504,7 @@
   <script defer src="js/game_nonla.js?v=35"></script>
   <script defer src="js/game_memory.js?v=35"></script>
   <script defer src="js/chinese.js?v=35"></script>
+  <script defer src="js/english.js?v=35"></script>
   <script defer src="js/app.js?v=35"></script>
 </body>
 </html>
