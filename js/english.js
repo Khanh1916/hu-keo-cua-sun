@@ -1,585 +1,675 @@
 // English B1-C1 Learning App for Sun & Ngoc
 window.EnglishApp = (() => {
   const ENGLISH_DATA = {
-    b1: [
-      {
-            "word": "cherish",
-            "ipa": "/ˈtʃer.ɪʃ/",
-            "type": "Động từ",
-            "meaning": "Yêu thương, trân trọng, nâng niu",
-            "example": "I will always cherish every sweet moment we share together.",
-            "exampleMeaning": "Anh sẽ luôn nâng niu và trân trọng từng khoảnh khắc ngọt ngào chúng mình bên nhau."
-      },
-      {
-            "word": "affection",
-            "ipa": "/əˈfek.ʃən/",
-            "type": "Danh từ",
-            "meaning": "Tình cảm nồng ấm, sự yêu thương",
-            "example": "His gentle eyes were filled with warmth and deep affection for Ngoc.",
-            "exampleMeaning": "Ánh mắt dịu dàng của anh tràn ngập hơi ấm và tình cảm sâu đậm dành cho Ngọc."
-      },
-      {
-            "word": "empathy",
-            "ipa": "/ˈem.pə.θi/",
-            "type": "Danh từ",
-            "meaning": "Sự thấu cảm, đồng cảm",
-            "example": "True love grows when two people listen to each other with genuine empathy.",
-            "exampleMeaning": "Tình yêu đích thực sẽ lớn lên khi hai người lắng nghe nhau bằng sự thấu cảm chân thành."
-      },
-      {
-            "word": "reliable",
-            "ipa": "/rɪˈlaɪ.ə.bəl/",
-            "type": "Tính từ",
-            "meaning": "Đáng tin cậy, vững chãi",
-            "example": "Khanh always strives to be a strong and reliable shelter for his girl.",
-            "exampleMeaning": "Khánh luôn nỗ lực để trở thành chỗ dựa vững chãi và đáng tin cậy nhất cho cô gái của mình."
-      },
-      {
-            "word": "overcome",
-            "ipa": "/ˌoʊ.vɚˈkʌm/",
-            "type": "Động từ",
-            "meaning": "Vượt qua (khó khăn, thử thách)",
-            "example": "Together, we have the strength to overcome any distance between Hanoi and Hai Phong.",
-            "exampleMeaning": "Cùng bên nhau, chúng mình đủ sức mạnh để vượt qua mọi khoảng cách giữa Hà Nội và Hải Phòng."
-      },
-      {
-            "word": "grateful",
-            "ipa": "/ˈɡreɪt.fəl/",
-            "type": "Tính từ",
-            "meaning": "Biết ơn, cảm kích, trân quý",
-            "example": "I wake up feeling grateful each morning just knowing you are in my life.",
-            "exampleMeaning": "Mỗi sáng thức giấc anh đều cảm thấy thật biết ơn khi biết rằng cuộc đời này đã có em."
-      },
-      {
-            "word": "comfort",
-            "ipa": "/ˈkʌm.fɚt/",
-            "type": "Danh từ / Động từ",
-            "meaning": "Sự an ủi, vỗ về, cảm giác dễ chịu",
-            "example": "A warm tight hug from you is all the comfort I need after a long tiring day.",
-            "exampleMeaning": "Một cái ôm siết ấm áp từ em là tất cả sự vỗ về anh cần sau một ngày dài mệt mỏi."
-      },
-      {
-            "word": "patience",
-            "ipa": "/ˈpeɪ.ʃəns/",
-            "type": "Danh từ",
-            "meaning": "Lòng kiên nhẫn, sự nhẫn nại",
-            "example": "Patience and gentle caring make our relationship stronger through every storm.",
-            "exampleMeaning": "Sự kiên nhẫn và ân cần chăm sóc giúp tình yêu của hai đứa thêm vững vàng qua từng giông bão."
-      },
-      {
-            "word": "inspire",
-            "ipa": "/ɪnˈspaɪər/",
-            "type": "Động từ",
-            "meaning": "Truyền cảm hứng, thôi thúc",
-            "example": "Your lovely smile always inspires me to work harder and dream bigger.",
-            "exampleMeaning": "Nụ cười rạng rỡ của em luôn truyền cảm hứng thôi thúc anh nỗ lực làm việc và mơ những giấc mơ lớn hơn."
-      },
-      {
-            "word": "devoted",
-            "ipa": "/dɪˈvoʊ.t̬ɪd/",
-            "type": "Tính từ",
-            "meaning": "Hết lòng, tận tụy, chung thủy",
-            "example": "He looked at her with devoted eyes, promising to hold her hand forever.",
-            "exampleMeaning": "Anh nhìn em bằng ánh mắt hết lòng chung thủy, hứa sẽ nắm chặt tay em suốt chặng đường dài."
-      },
-      {
-            "word": "harmony",
-            "ipa": "/ˈhɑːr.mə.ni/",
-            "type": "Danh từ",
-            "meaning": "Sự hòa thuận, êm ấm, đồng điệu",
-            "example": "May our little cozy room always be filled with laughters and sweet harmony.",
-            "exampleMeaning": "Mong căn phòng nhỏ ấm cúng của hai đứa sẽ luôn ngập tràn tiếng cười và sự hòa thuận ngọt ngào."
-      },
-      {
-            "word": "sincere",
-            "ipa": "/sɪnˈsɪr/",
-            "type": "Tính từ",
-            "meaning": "Chân thành, thật lòng",
-            "example": "A sincere heart can bridge any distance, keeping lovers close even miles apart.",
-            "exampleMeaning": "Một trái tim chân thành có thể bắc cầu qua mọi khoảng cách, giữ hai người luôn kề cạnh dù xa cách ngàn dặm."
-      },
-      {
-            "word": "treasure",
-            "ipa": "/ˈtreʒ.ɚ/",
-            "type": "Danh từ / Động từ",
-            "meaning": "Báu vật, trân quý vô ngần",
-            "example": "To me, you are the most precious treasure this universe has ever created.",
-            "exampleMeaning": "Đối với anh, em chính là báu vật quý giá nhất mà vũ trụ này từng tạo ra."
-      },
-      {
-            "word": "gentle",
-            "ipa": "/ˈdʒen.t̬əl/",
-            "type": "Tính từ",
-            "meaning": "Dịu dàng, hiền hòa, êm dịu",
-            "example": "A gentle coastal breeze in Hai Phong reminds me of your sweet soothing scent.",
-            "exampleMeaning": "Làn gió biển hiền hòa ở Hải Phòng khiến anh nhớ tới hương thơm ngọt ngào dịu êm của em."
-      },
-      {
-            "word": "supportive",
-            "ipa": "/səˈpɔːr.t̬ɪv/",
-            "type": "Tính từ",
-            "meaning": "Luôn ủng hộ, sẵn sàng tương trợ",
-            "example": "Thank you for being so supportive and encouraging whenever I face challenges.",
-            "exampleMeaning": "Cảm ơn em vì đã luôn ủng hộ và tiếp thêm động lực cho anh mỗi khi đối mặt với khó khăn."
-      },
-      {
-            "word": "belong",
-            "ipa": "/bɪˈlɑːŋ/",
-            "type": "Động từ",
-            "meaning": "Thuộc về nhau, tìm thấy nơi thuộc về",
-            "example": "No matter where life takes us, my heart will always belong to you.",
-            "exampleMeaning": "Bất kể cuộc đời đưa ta đi tới đâu, trái tim anh sẽ mãi mãi thuộc về em."
-      },
-      {
-            "word": "courage",
-            "ipa": "/ˈkɝː.ɪdʒ/",
-            "type": "Danh từ",
-            "meaning": "Dũng khí, sự can đảm",
-            "example": "Holding your small hand gives me the courage to conquer any fear in life.",
-            "exampleMeaning": "Nắm lấy bàn tay nhỏ bé của em cho anh dũng khí để chiến thắng mọi nỗi sợ trong cuộc đời."
-      },
-      {
-            "word": "companion",
-            "ipa": "/kəmˈpæn.jən/",
-            "type": "Danh từ",
-            "meaning": "Người bạn đồng hành, tri kỷ",
-            "example": "I couldn't wish for a sweeter or more caring life companion than you, my dear.",
-            "exampleMeaning": "Anh không thể ước có một người bạn đồng hành cuộc đời nào ngọt ngào và ân cần hơn em."
-      },
-      {
-            "word": "precious",
-            "ipa": "/ˈpreʃ.əs/",
-            "type": "Tính từ",
-            "meaning": "Quý báu, đáng giá, thân thương",
-            "example": "Every smile you give me is a precious jewel stored safely in my memory jar.",
-            "exampleMeaning": "Mỗi nụ cười em dành cho anh đều là một viên ngọc quý được cất giữ cẩn thận trong hũ ký ức."
-      },
-      {
-            "word": "tenderness",
-            "ipa": "/ˈten.dɚ.nəs/",
-            "type": "Danh từ",
-            "meaning": "Sự dịu dàng, âu yếm, thiết tha",
-            "example": "She kissed his forehead with endless tenderness before saying good night.",
-            "exampleMeaning": "Em hôn lên trán anh bằng tất cả sự âu yếm dịu dàng trước khi chúc ngủ ngon."
-      },
-      {
-            "word": "delight",
-            "ipa": "/dɪˈlaɪt/",
-            "type": "Danh từ / Động từ",
-            "meaning": "Niềm hân hoan, thích thú, niềm vui",
-            "example": "Watching little cat Bong play with yarn brings endless delight to our room.",
-            "exampleMeaning": "Ngắm bé mèo Bông nghịch cuộn len mang lại niềm vui sướng bất tận cho căn phòng nhỏ."
-      },
-      {
-            "word": "reassure",
-            "ipa": "/ˌriː.əˈʃʊr/",
-            "type": "Động từ",
-            "meaning": "Trấn an, làm yên lòng",
-            "example": "Hearing your voice on late phone calls always reassures me that everything will be fine.",
-            "exampleMeaning": "Nghe giọng nói của em qua những cuộc gọi khuya luôn làm anh an lòng rằng mọi chuyện sẽ ổn."
-      },
-      {
-            "word": "forgive",
-            "ipa": "/fɚˈɡɪv/",
-            "type": "Động từ",
-            "meaning": "Tha thứ, bao dung",
-            "example": "To love deeply is to learn how to forgive mistakes and grow together.",
-            "exampleMeaning": "Yêu sâu đậm là học cách bao dung với lỗi lầm và cùng nhau ngày một trưởng thành hơn."
-      },
-      {
-            "word": "memorable",
-            "ipa": "/ˈmem.ər.ə.bəl/",
-            "type": "Tính từ",
-            "meaning": "Đáng ghi nhớ, không thể nào quên",
-            "example": "Our rainy evening in Hai Phong enjoying spicy bread was truly memorable.",
-            "exampleMeaning": "Buổi tối mưa ở Hải Phòng ngồi thưởng thức bánh mì cay cùng em thật sự là kỷ niệm khó quên."
-      },
-      {
-            "word": "passionate",
-            "ipa": "/ˈpæʃ.ən.ət/",
-            "type": "Tính từ",
-            "meaning": "Nồng nàn, tha thiết, say mê",
-            "example": "A gentle and passionate love that keeps our hearts glowing through winter.",
-            "exampleMeaning": "Một tình yêu nồng nàn và êm dịu giữ cho hai trái tim luôn sưởi ấm qua mùa đông buốt giá."
-      }
-],
-    b2: [
-      {
+    "b1": [
+        {
             "word": "serendipity",
             "ipa": "/ˌser.ənˈdɪp.ə.t̬i/",
             "type": "Danh từ",
-            "meaning": "Cơ duyên tình cờ kỳ diệu, may mắn bất ngờ",
-            "example": "Meeting you at that crossroad was pure serendipity, the sweetest turn in my destiny.",
-            "exampleMeaning": "Gặp được em ở ngã rẽ ấy chính là một cơ duyên tình cờ kỳ diệu, bước ngoặt ngọt ngào nhất số phận anh."
-      },
-      {
-            "word": "unconditional",
-            "ipa": "/ˌʌn.kənˈdɪʃ.ən.əl/",
-            "type": "Tính từ",
-            "meaning": "Vô điều kiện, không tính toán",
-            "example": "Unconditional love is choosing to stand beside each other through thick and thin.",
-            "exampleMeaning": "Tình yêu vô điều kiện là lựa chọn luôn đứng kề bên nhau qua mọi thăng trầm gian khó."
-      },
-      {
-            "word": "resilience",
-            "ipa": "/rɪˈzɪl.jəns/",
+            "meaning": "Sự tình cờ may mắn, duyên kỳ ngộ bất ngờ",
+            "example": "Meeting Ngoc on a gentle autumn afternoon was the sweetest serendipity of my entire life.",
+            "exampleMeaning": "Gặp được Ngọc vào một chiều thu dịu dàng là mối duyên kỳ ngộ ngọt ngào nhất cả cuộc đời anh."
+        },
+        {
+            "word": "epiphany",
+            "ipa": "/ɪˈpɪf.ən.i/",
             "type": "Danh từ",
-            "meaning": "Sự bền bỉ, kiên cường, khả năng hồi phục",
-            "example": "Our mutual resilience has turned geographical distance into a testament of true loyalty.",
-            "exampleMeaning": "Sự kiên cường của hai đứa đã biến khoảng cách địa lý thành minh chứng cho lòng thủy chung son sắt."
-      },
-      {
-            "word": "compassion",
-            "ipa": "/kəmˈpæʃ.ən/",
-            "type": "Danh từ",
-            "meaning": "Lòng trắc ẩn, sự thương cảm dịu dàng",
-            "example": "Speak with compassion, for soft words can heal the deepest wounds of the heart.",
-            "exampleMeaning": "Hãy nói bằng lòng trắc ẩn, bởi những lời lẽ dịu dàng có thể xoa dịu những vết thương lòng sâu kín nhất."
-      },
-      {
-            "word": "irreplaceable",
-            "ipa": "/ˌɪr.ɪˈpleɪ.sə.bəl/",
+            "meaning": "Khoảnh khắc giác ngộ, sự bừng sáng nhận thức",
+            "example": "In a sudden epiphany, he realized that true happiness was simply making her smile each day.",
+            "exampleMeaning": "Trong một khoảnh khắc bừng sáng nhận thức, anh nhận ra hạnh phúc đích thực chỉ đơn giản là khiến em mỉm cười mỗi ngày."
+        },
+        {
+            "word": "ambivalent",
+            "ipa": "/æmˈbɪv.ə.lənt/",
             "type": "Tính từ",
-            "meaning": "Độc nhất vô nhị, không thể thay thế",
-            "example": "Among eight billion souls on this planet, you are utterly irreplaceable to me.",
-            "exampleMeaning": "Giữa tám tỷ người trên thế giới này, em là duy nhất và không ai có thể thay thế được trong lòng anh."
-      },
-      {
-            "word": "perseverance",
-            "ipa": "/ˌpɝː.səˈvɪr.əns/",
-            "type": "Danh từ",
-            "meaning": "Sự kiên trì, bền chí theo đuổi",
-            "example": "With love and perseverance, every dream we share will eventually blossom into reality.",
-            "exampleMeaning": "Bằng tình yêu và sự kiên trì bền chí, mọi ước mơ hai đứa cùng ấp ủ sẽ nở hoa thành hiện thực."
-      },
-      {
-            "word": "nurture",
-            "ipa": "/ˈnɝː.tʃɚ/",
-            "type": "Động từ",
-            "meaning": "Nuôi dưỡng, chăm sóc, ươm mầm",
-            "example": "We make a promise to nurture our relationship every single day with tiny acts of thoughtfulness.",
-            "exampleMeaning": "Chúng mình hứa sẽ nuôi dưỡng tình cảm này mỗi ngày bằng những quan tâm nhỏ bé nhưng chân thành."
-      },
-      {
-            "word": "vulnerable",
-            "ipa": "/ˈvʌl.nɚ.ə.bəl/",
+            "meaning": "Cảm xúc mâu thuẫn, giằng xé hai chiều",
+            "example": "She felt ambivalent about leaving her hometown, torn between career ambition and missing him.",
+            "exampleMeaning": "Cô cảm thấy giằng xé khi rời quê nhà, vừa ấp ủ hoài bão sự nghiệp vừa day dứt nỗi nhớ anh."
+        },
+        {
+            "word": "ubiquitous",
+            "ipa": "/juːˈbɪk.wə.t̬əs/",
             "type": "Tính từ",
-            "meaning": "Mở lòng, sẵn sàng bộc lộ cảm xúc yếu mềm",
-            "example": "Being vulnerable with you feels safe, because I know my heart is guarded by your kindness.",
-            "exampleMeaning": "Mở lòng yếu mềm trước em cho anh cảm giác an toàn, bởi anh biết tim mình được che chở bởi sự tốt bụng của em."
-      },
-      {
-            "word": "profound",
-            "ipa": "/prəˈfaʊnd/",
+            "meaning": "Hiện diện khắp mọi nơi, phổ biến rộng rãi",
+            "example": "Her sweet fragrance seemed ubiquitous in the small apartment, lingering long after she left.",
+            "exampleMeaning": "Hương thơm dịu ngọt của em dường như hiện diện khắp căn phòng nhỏ, vương vấn mãi sau khi em rời đi."
+        },
+        {
+            "word": "meticulous",
+            "ipa": "/məˈtɪk.jə.ləs/",
             "type": "Tính từ",
-            "meaning": "Sâu sắc, thâm sâu, lắng đọng",
-            "example": "Our long conversations about life and future leave a profound sense of peace within me.",
-            "exampleMeaning": "Những cuộc trò chuyện sâu lắng về cuộc sống và tương lai luôn để lại trong anh sự bình yên sâu sắc."
-      },
-      {
-            "word": "enchanting",
-            "ipa": "/ɪnˈtʃæn.t̬ɪŋ/",
+            "meaning": "Tỉ mỉ, cẩn trọng, chu đáo từng tiểu tiết",
+            "example": "Khanh kept a meticulous diary of every train ticket and shared date between Hanoi and Hai Phong.",
+            "exampleMeaning": "Khánh cẩn thận ghi chép tỉ mỉ từng tấm vé tàu và những buổi hẹn hò giữa Hà Nội và Hải Phòng."
+        },
+        {
+            "word": "pragmatic",
+            "ipa": "/præɡˈmæt̬.ɪk/",
             "type": "Tính từ",
-            "meaning": "Mê hoặc, làm say lòng, duyên dáng tuyệt trần",
-            "example": "Her sweet giggle in the quiet evening room was the most enchanting melody Khanh had ever heard.",
-            "exampleMeaning": "Tiếng cười khúc khích của em trong căn phòng tĩnh lặng là giai điệu làm say lòng người nhất mà Khánh từng nghe."
-      },
-      {
-            "word": "commitment",
-            "ipa": "/kəˈmɪt.mənt/",
-            "type": "Danh từ",
-            "meaning": "Sự gắn kết, cam kết lâu dài, lòng tận hiến",
-            "example": "True love is not just a spark of attraction, but a lifelong commitment to care and protect.",
-            "exampleMeaning": "Tình yêu thật sự không chỉ là tia lửa rung động, mà là sự cam kết cả đời để chở che và chăm sóc."
-      },
-      {
-            "word": "effervescent",
-            "ipa": "/ˌef.ɚˈves.ənt/",
+            "meaning": "Thực tế, trọng ứng dụng hơn lý thuyết suông",
+            "example": "Despite their romantic hearts, they took a pragmatic approach to saving for their future home.",
+            "exampleMeaning": "Dù trái tim đầy lãng mạn, hai đứa vẫn rất thực tế cùng nhau tiết kiệm cho tổ ấm tương lai."
+        },
+        {
+            "word": "eloquent",
+            "ipa": "/ˈel.ə.kwənt/",
             "type": "Tính từ",
-            "meaning": "Tươi vui, rạng rỡ, tràn đầy sức sống",
-            "example": "Her effervescent spirit always brings sunshine, banishing all gloomy clouds from his mind.",
-            "exampleMeaning": "Tâm hồn tươi vui rạng rỡ của em luôn đem lại ánh nắng ấm, xua tan mọi đám mây u ám trong lòng anh."
-      },
-      {
-            "word": "solitude",
-            "ipa": "/ˈsɑː.lə.tuːd/",
-            "type": "Danh từ",
-            "meaning": "Sự tĩnh lặng riêng tư, khoảng lặng bình yên",
-            "example": "Even in peaceful solitude, my thoughts naturally gravitate toward sweet memories of you.",
-            "exampleMeaning": "Ngay cả trong những phút giây tĩnh lặng riêng tư, tâm trí anh vẫn tự nhiên hướng về những ký ức ngọt ngào bên em."
-      },
-      {
-            "word": "cherished",
-            "ipa": "/ˈtʃer.ɪʃt/",
+            "meaning": "Hùng biện, diễn đạt truyền cảm khúc chiết",
+            "example": "Her silent tear was more eloquent than any lengthy apology he could ever offer.",
+            "exampleMeaning": "Giọt nước mắt lặng thầm của em còn giàu sức gợi cảm hơn bất kỳ lời xin lỗi dài dòng nào anh có thể nói."
+        },
+        {
+            "word": "resilient",
+            "ipa": "/rɪˈzɪl.jənt/",
             "type": "Tính từ",
-            "meaning": "Được nâng niu, yêu dấu, ấp ủ",
-            "example": "You are the most cherished dream that has ever graced my ordinary world.",
-            "exampleMeaning": "Em là giấc mơ dấu yêu nhất từng ghé thăm và làm bừng sáng thế giới bình dị của anh."
-      },
-      {
-            "word": "authenticity",
-            "ipa": "/ˌɑː.θenˈtɪs.ə.t̬i/",
-            "type": "Danh từ",
-            "meaning": "Sự chân thật, mộc mạc không giả tạo",
-            "example": "I fell in love with your pure authenticity—no masks, just the sweet girl I adore.",
-            "exampleMeaning": "Anh yêu nét chân thật mộc mạc nơi em—không hề tô vẽ, chỉ đơn giản là cô gái ngọt ngào anh say đắm."
-      },
-      {
-            "word": "magnificent",
-            "ipa": "/mæɡˈnɪf.ə.sənt/",
+            "meaning": "Kiên cường, bền bỉ vượt nghịch cảnh",
+            "example": "Their resilient affection never wavered despite the miles separating Hanoi from Hai Phong.",
+            "exampleMeaning": "Tình yêu kiên cường của hai người chưa bao giờ lay chuyển trước những dặm đường cách trở."
+        },
+        {
+            "word": "clandestine",
+            "ipa": "/klænˈdes.tɪn/",
             "type": "Tính từ",
-            "meaning": "Tráng lệ, tuyệt vời, rực rỡ",
-            "example": "Watching the golden sunset over West Lake together felt like a magnificent painting.",
-            "exampleMeaning": "Cùng em ngắm hoàng hôn dát vàng trên mặt Hồ Tây tựa như một bức tranh tuyệt mỹ."
-      },
-      {
-            "word": "sympathy",
-            "ipa": "/ˈsɪm.pə.θi/",
-            "type": "Danh từ",
-            "meaning": "Sự cảm thông, thấu hiểu sẻ chia",
-            "example": "She listened with quiet sympathy, wiping his worries away with a gentle touch.",
-            "exampleMeaning": "Em lắng nghe với sự cảm thông êm đềm, gạt đi mọi âu lo của anh chỉ bằng một cái chạm tay ân cần."
-      },
-      {
-            "word": "reciprocal",
-            "ipa": "/rɪˈsɪp.rə.kəl/",
-            "type": "Tính từ",
-            "meaning": "Qua lại hai chiều, tương hỗ lẫn nhau",
-            "example": "A thriving relationship is built on reciprocal respect, trust, and steady devotion.",
-            "exampleMeaning": "Một mối quan hệ bền vững được xây dựng trên sự tôn trọng, niềm tin và tình cảm chân thành từ cả hai phía."
-      },
-      {
-            "word": "rekindle",
-            "ipa": "/ˌriːˈkɪn.dəl/",
-            "type": "Động từ",
-            "meaning": "Thắp lại, làm bùng cháy lại ngọn lửa",
-            "example": "A handwritten letter always rekindles the sweetest spark between lovers.",
-            "exampleMeaning": "Một lá thư tay nắn nót luôn thắp lại ngọn lửa ấm áp và ngọt ngào nhất giữa hai đứa."
-      },
-      {
-            "word": "tranquility",
-            "ipa": "/træŋˈkwɪl.ə.t̬i/",
-            "type": "Danh từ",
-            "meaning": "Sự thanh bình, tĩnh tại trong tâm hồn",
-            "example": "Resting my head on your shoulder brings a profound sense of tranquility.",
-            "exampleMeaning": "Tựa đầu vào vai em mang lại một cảm giác thanh bình và tĩnh tại vô ngần."
-      }
-],
-    c1: [
-      {
-            "word": "ephemeral",
-            "ipa": "/ɪˈfem.ər.əl/",
-            "type": "Tính từ",
-            "meaning": "Phù du, sớm nở tối tàn, thoáng qua",
-            "example": "While seasons and blossoms are ephemeral, my devotion to you remains timeless.",
-            "exampleMeaning": "Dẫu bốn mùa và hoa cỏ chỉ là phù du thoáng qua, tấm lòng anh trao em vẫn luôn bất biến với thời gian."
-      },
-      {
-            "word": "solace",
-            "ipa": "/ˈsɑː.lɪs/",
-            "type": "Danh từ / Động từ",
-            "meaning": "Chốn an yên, niềm an ủi vỗ về tâm hồn",
-            "example": "In the gentle warmth of your embrace, I find the quiet solace I sought for my entire life.",
-            "exampleMeaning": "Trong vòng tay ấm áp dịu dàng của em, anh tìm thấy chốn an yên tĩnh tại mà cả đời mình luôn kiếm tìm."
-      },
-      {
-            "word": "unwavering",
-            "ipa": "/ʌnˈweɪ.vɚ.ɪŋ/",
-            "type": "Tính từ",
-            "meaning": "Kiên định, son sắt, không hề lung lay",
-            "example": "His unwavering faith in their shared future kept the flame burning bright despite the distance.",
-            "exampleMeaning": "Niềm tin son sắt không hề lung lay vào tương lai hai đứa đã giữ cho ngọn lửa tình yêu luôn rực sáng bất chấp khoảng cách."
-      },
-      {
-            "word": "ineffable",
-            "ipa": "/ɪnˈef.ə.bəl/",
-            "type": "Tính từ",
-            "meaning": "Khôn xiết, không lời lẽ nào diễn tả nổi",
-            "example": "The sheer joy of reuniting at the train station after weeks apart was utterly ineffable.",
-            "exampleMeaning": "Niềm vui sướng tột cùng khi gặp lại em ở sân ga sau nhiều tuần cách xa thật khôn xiết, không lời nào tả xiết."
-      },
-      {
-            "word": "sanctuary",
-            "ipa": "/ˈsæŋk.tʃu.er.i/",
-            "type": "Danh từ",
-            "meaning": "Chốn chở che thiêng liêng, nơi trú ẩn bình yên",
-            "example": "Your kind heart is my sacred sanctuary against the harsh noise of the outer world.",
-            "exampleMeaning": "Trái tim nhân hậu của em chính là chốn chở che bình yên thiêng liêng nhất cho anh trước những ồn ã ngoài kia."
-      },
-      {
-            "word": "mellifluous",
-            "ipa": "/meˈlɪf.lu.əs/",
-            "type": "Tính từ",
-            "meaning": "Êm ái ngọt ngào như rót mật vào tai",
-            "example": "Her mellifluous voice singing soft tunes over the phone effortlessly melts away all his tiredness.",
-            "exampleMeaning": "Giọng hát êm ái ngọt ngào như rót mật của em qua điện thoại đã xua tan đi tất thảy những mệt mỏi trong anh."
-      },
-      {
-            "word": "petrichor",
-            "ipa": "/ˈpet.rɪ.kɔːr/",
-            "type": "Danh từ",
-            "meaning": "Mùi hương thanh khiết của đất sau cơn mưa rào",
-            "example": "The crisp petrichor after the summer rain reminded him of their first romantic stroll in Hanoi.",
-            "exampleMeaning": "Mùi đất thanh khiết sau cơn mưa rào mùa hạ khiến anh bồi hồi nhớ lại lần đầu hai đứa cùng tản bộ ở Hà Nội."
-      },
-      {
-            "word": "felicity",
-            "ipa": "/fəˈlɪs.ə.t̬i/",
-            "type": "Danh từ",
-            "meaning": "Hạnh phúc trọn vẹn, niềm hoan hỉ ngập tràn",
-            "example": "True felicity is found not in grand triumphs, but in waking up to see your bright morning smile.",
-            "exampleMeaning": "Hạnh phúc trọn vẹn không nằm ở những hào quang lớn lao, mà là sớm mai thức dậy được ngắm nụ cười rạng rỡ của em."
-      },
-      {
-            "word": "halcyon",
-            "ipa": "/ˈhæl.si.ən/",
-            "type": "Tính từ",
-            "meaning": "Thanh bình, êm đềm, vàng son đáng nhớ",
-            "example": "Those halcyon days wandering the sea promenade together in Hai Phong will forever warm our hearts.",
-            "exampleMeaning": "Những ngày tháng thanh bình êm ả cùng nhau dạo bước ven bờ biển Hải Phòng sẽ sưởi ấm trái tim hai đứa suốt cuộc đời."
-      },
-      {
-            "word": "luminous",
-            "ipa": "/ˈluː.mɪ.nəs/",
-            "type": "Tính từ",
-            "meaning": "Tỏa sáng rạng ngời, lấp lánh diệu kỳ",
-            "example": "Her eyes were luminous under the moonlit sky, reflecting a universe of pure tenderness.",
-            "exampleMeaning": "Đôi mắt em tỏa sáng rạng ngời dưới bầu trời trăng sáng, phản chiếu cả một vũ trụ dịu dàng và yêu thương."
-      },
-      {
+            "meaning": "Kín đáo, bí mật, giữ kín ý nhị",
+            "example": "They shared a clandestine glance across the crowded study hall, communicating without words.",
+            "exampleMeaning": "Họ trao nhau ánh nhìn kín đáo giữa phòng tự học đông đúc, hiểu thấu nhau chẳng cần một lời."
+        },
+        {
             "word": "magnanimous",
             "ipa": "/mæɡˈnæn.ə.məs/",
             "type": "Tính từ",
-            "meaning": "Độ lượng, bao dung, cao thượng",
-            "example": "A magnanimous lover forgives small flaws and cherishes the beauty of growth together.",
-            "exampleMeaning": "Một người yêu bao dung luôn bỏ qua những thiếu sót nhỏ và trân trọng vẻ đẹp của sự cùng nhau trưởng thành."
-      },
-      {
-            "word": "quintessential",
-            "ipa": "/ˌkwɪn.təˈsen.ʃəl/",
-            "type": "Tính từ",
-            "meaning": "Tinh túy, biểu tượng thuần khiết điển hình",
-            "example": "Sharing a warm cup of chrysanthemum tea on a chilly evening is our quintessential romance.",
-            "exampleMeaning": "Cùng chia nhau tách trà cúc ấm nóng giữa đêm se lạnh chính là biểu tượng tinh túy cho sự lãng mạn của hai đứa."
-      },
-      {
-            "word": "serenade",
-            "ipa": "/ˌser.əˈneɪd/",
-            "type": "Động từ / Danh từ",
-            "meaning": "Hát dạ khúc, lời tình tự êm đềm",
-            "example": "The gentle whisper of night wind seemed to serenade the two lovers walking hand in hand.",
-            "exampleMeaning": "Tiếng gió đêm xào xạc tựa như khúc tình ca dạ khúc hát ru hai đứa đang nắm chặt tay nhau dạo bước."
-      },
-      {
-            "word": "indomitable",
-            "ipa": "/ɪnˈdɑː.mɪ.t̬ə.bəl/",
-            "type": "Tính từ",
-            "meaning": "Bất khuất, kiên cường không gì khuất phục",
-            "example": "Their love possessed an indomitable spirit, triumphing over all odds and distances.",
-            "exampleMeaning": "Tình yêu của hai người mang một ý chí kiên cường bất khuất, chiến thắng mọi thử thách và khoảng cách địa lý."
-      },
-      {
-            "word": "eloquence",
-            "ipa": "/ˈel.ə.kwəns/",
+            "meaning": "Hào hiệp, độ lượng, bao dung cao thượng",
+            "example": "Ngoc was magnanimous enough to forgive his clumsiness with a gentle, forgiving chuckle.",
+            "exampleMeaning": "Ngọc rất bao dung độ lượng, luôn tha thứ cho sự vụng về của anh bằng một nụ cười khẽ hiền dịu."
+        },
+        {
+            "word": "catharsis",
+            "ipa": "/kəˈθɑːr.sɪs/",
             "type": "Danh từ",
-            "meaning": "Sự lưu loát, tài hùng biện, lời lẽ truyền cảm",
-            "example": "His handwritten letters held an innate eloquence that touched the very depths of her soul.",
-            "exampleMeaning": "Những lá thư tay của anh chan chứa những lời lẽ truyền cảm tha thiết, chạm tới nơi sâu thẳm nhất tâm hồn em."
-      },
-      {
-            "word": "quandary",
-            "ipa": "/ˈkwɑːn.dri/",
+            "meaning": "Sự thanh lọc tâm hồn, giải tỏa cảm xúc",
+            "example": "Crying softly in his warm embrace brought her an immense sense of emotional catharsis.",
+            "exampleMeaning": "Khóc nhẹ trong vòng tay ấm áp của anh đã mang lại cho em sự thanh lọc và nhẹ nhõm tâm hồn vô bờ."
+        },
+        {
+            "word": "juxtaposition",
+            "ipa": "/ˌdʒʌk.stə.pəˈzɪʃ.ən/",
             "type": "Danh từ",
-            "meaning": "Tình thế đắn đo, sự trăn trở băn khoăn",
-            "example": "Whenever caught in life's quandary, hearing her calming counsel always restored his clarity.",
-            "exampleMeaning": "Bất cứ khi nào vướng vào những trăn trở băn khoăn của cuộc đời, nghe lời khuyên dịu dàng của em luôn giúp anh tìm lại sự sáng suốt."
-      },
-      {
-            "word": "resplendent",
-            "ipa": "/rɪˈsplen.dənt/",
+            "meaning": "Nghệ thuật đặt cạnh nhau làm bật tương phản",
+            "example": "The quiet stillness of the lake offered a poignant juxtaposition to the bustling streets of Hanoi.",
+            "exampleMeaning": "Sự tĩnh lặng của mặt hồ tạo nên nét tương phản sâu lắng với phố xá tấp nập của Hà Nội."
+        },
+        {
+            "word": "nonchalant",
+            "ipa": "/ˌnɑːn.ʃəˈlɑːnt/",
             "type": "Tính từ",
-            "meaning": "Lộng lẫy, chói sáng, rực rỡ tuyệt mỹ",
-            "example": "Dressed in her favorite pastel coat, she looked resplendent against the autumn foliage.",
-            "exampleMeaning": "Khoác lên mình chiếc áo khoác màu pastel yêu thích, trông em lộng lẫy tuyệt mỹ giữa khung cảnh lá vàng mùa thu."
-      },
-      {
-            "word": "inviolable",
-            "ipa": "/ɪnˈvaɪ.ə.lə.bəl/",
+            "meaning": "Điềm nhiên, thản nhiên, tỏ vẻ bất cần",
+            "example": "He attempted a nonchalant posture, though his racing heart betrayed how nervous he truly was.",
+            "exampleMeaning": "Anh cố tỏ ra điềm nhiên bất cần, nhưng nhịp tim đập thình thịch đã tố cáo sự hồi hộp bên trong."
+        },
+        {
+            "word": "petrichor",
+            "ipa": "/ˈpet.rɪ.kɔːr/",
+            "type": "Danh từ",
+            "meaning": "Mùi đất ngai ngái dịu mát sau cơn mưa rào",
+            "example": "Walking hand in hand through the rain, they inhaled the sweet, soothing scent of petrichor.",
+            "exampleMeaning": "Nắm tay nhau dạo bước dưới mưa, hai đứa cùng hít hà mùi đất ngai ngái dịu lành sau cơn mưa rào."
+        },
+        {
+            "word": "tenacious",
+            "ipa": "/təˈneɪ.ʃəs/",
             "type": "Tính từ",
-            "meaning": "Bất khả xâm phạm, thiêng liêng tuyệt đối",
-            "example": "The solemn vow they made under the stars remained an inviolable bond between their hearts.",
-            "exampleMeaning": "Lời ước hẹn thiêng liêng hai đứa trao nhau dưới ngàn sao mãi là sợi dây liên kết bất khả xâm phạm giữa hai trái tim."
-      },
-      {
-            "word": "effulgent",
-            "ipa": "/ɪˈfʌl.dʒənt/",
+            "meaning": "Kiên trì bền bỉ, kiên định không rời",
+            "example": "Her tenacious dedication to mastering English linguistics earned immense respect from everyone.",
+            "exampleMeaning": "Sự kiên trì bền bỉ của em khi theo đuổi ngôn ngữ Anh khiến mọi người xung quanh hết sức nể phục."
+        },
+        {
+            "word": "conundrum",
+            "ipa": "/kəˈnʌn.drəm/",
+            "type": "Danh từ",
+            "meaning": "Bài toán hóc búa, tình thế nan giải",
+            "example": "Balancing rigorous university coursework and long-distance courtship was a delicate conundrum.",
+            "exampleMeaning": "Cân bằng giữa lịch học đại học dày đặc và tình yêu xa là một bài toán nan giải đầy tinh tế."
+        },
+        {
+            "word": "lucid",
+            "ipa": "/ˈluː.sɪd/",
             "type": "Tính từ",
-            "meaning": "Rực rỡ chói lòa, ngập tràn ánh sáng",
-            "example": "Her radiant smile on their anniversary day was effulgent, illuminating the entire room.",
-            "exampleMeaning": "Nụ cười rạng rỡ của em trong ngày kỷ niệm tỏa sáng rực rỡ, thắp sáng bừng lên cả căn phòng nhỏ."
-      },
-      {
-            "word": "eternal",
-            "ipa": "/ɪˈtɝː.nəl/",
+            "meaning": "Rõ ràng, khúc chiết, sáng suốt minh bạch",
+            "example": "Her lucid explanation of linguistic syntax unravelled the most convoluted concepts with ease.",
+            "exampleMeaning": "Lời giải thích khúc chiết của em về cú pháp học đã làm sáng tỏ những khái niệm rắc rối nhất một cách dễ dàng."
+        },
+        {
+            "word": "substantiate",
+            "ipa": "/səbˈstæn.ʃi.eɪt/",
+            "type": "Động từ",
+            "meaning": "Chứng minh, củng cố bằng luận cứ xác đáng",
+            "example": "His everyday thoughtful gestures substantiate the depth of his devotion far better than words.",
+            "exampleMeaning": "Những cử chỉ ân cần mỗi ngày của anh chứng minh cho tình cảm sâu đậm thuyết phục hơn ngàn lời nói."
+        },
+        {
+            "word": "scrutinize",
+            "ipa": "/ˈskruː.t̬ən.aɪz/",
+            "type": "Động từ",
+            "meaning": "Khảo sát cẩn mật, soi xét kỹ lưỡng",
+            "example": "She loved to scrutinize English literary translations to discover hidden nuances of meaning.",
+            "exampleMeaning": "Em rất thích soi xét tỉ mỉ từng bản dịch văn học Anh để khám phá những sắc thái nghĩa ẩn giấu."
+        },
+        {
+            "word": "paradigm",
+            "ipa": "/ˈpær.ə.daɪm/",
+            "type": "Danh từ",
+            "meaning": "Mô hình mẫu mực, hệ hình chuẩn mực",
+            "example": "Their tender relationship served as a shining paradigm of patient, enduring long-distance love.",
+            "exampleMeaning": "Chuyện tình êm dịu của hai đứa là một hình mẫu chuẩn mực cho tình yêu xa kiên nhẫn và bền bỉ."
+        },
+        {
+            "word": "panacea",
+            "ipa": "/ˌpæn.əˈsiː.ə/",
+            "type": "Danh từ",
+            "meaning": "Phương thuốc vạn năng, liều thuốc diệu kỳ",
+            "example": "Her sweet voice singing soft melodies was the ultimate panacea for his work fatigue.",
+            "exampleMeaning": "Giọng hát êm dịu của em chính là liều thuốc diệu kỳ xua tan mọi mỏi mệt công việc của anh."
+        },
+        {
+            "word": "equivocal",
+            "ipa": "/ɪˈkwɪv.ə.kəl/",
             "type": "Tính từ",
-            "meaning": "Vĩnh cửu, trường tồn mãi mãi",
-            "example": "Beyond the passing storms of youth lies our promise of an eternal companionship.",
-            "exampleMeaning": "Vượt qua những giông bão của năm tháng thanh xuân là lời hứa về một sự đồng hành trường tồn vĩnh cửu."
-      }
-],
-    love: [
-      {
-            "quote": "I loved you yesterday, I love you still, I always have, I always will.",
-            "author": "Elaine Davis",
-            "meaning": "Hôm qua anh đã yêu em, hôm nay vẫn yêu, từ trước tới giờ vẫn vậy, và mai sau cũng mãi như thế."
-      },
-      {
-            "quote": "In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine.",
-            "author": "Maya Angelou",
-            "meaning": "Giữa cả thế giới rộng lớn, chẳng có trái tim nào dành cho anh như của em. Và chẳng có tình yêu nào dành cho em như của anh."
-      },
-      {
-            "quote": "Distance means so little when someone means so much.",
-            "author": "Tom McNeal",
-            "meaning": "Khoảng cách trở nên thật nhỏ bé khi một ai đó có ý nghĩa quá lớn lao với cuộc đời mình."
-      },
-      {
-            "quote": "Whatever our souls are made of, yours and mine are the same.",
-            "author": "Emily Brontë",
-            "meaning": "Dẫu tâm hồn của chúng ta được tạo nên từ chất liệu gì, thì tâm hồn của em và anh cũng cùng một điệu nhịp."
-      },
-      {
-            "quote": "You are my today and all of my tomorrows.",
-            "author": "Leo Christopher",
-            "meaning": "Em là ngày hôm nay của anh, và cũng là tất cả những ngày mai sau này."
-      },
-      {
-            "quote": "I fell in love with the way you touched me without using your hands.",
-            "author": "Rupi Kaur",
-            "meaning": "Anh say đắm cái cách em chạm vào sâu thẳm trái tim anh, mà chẳng cần dùng đến đôi bàn tay."
-      },
-      {
-            "quote": "Every love story is beautiful, but ours is my absolute favorite.",
-            "author": "Sweet Couple Quote",
-            "meaning": "Mọi câu chuyện tình yêu đều đẹp, nhưng câu chuyện của hai đứa mình luôn là thiên tình sử anh yêu thích nhất."
-      },
-      {
-            "quote": "Home is not a place; it's you holding my hand.",
-            "author": "Romantic Whisper",
-            "meaning": "Nhà không phải là một địa điểm; nhà chính là khi em đang nắm chặt lấy bàn tay anh."
-      },
-      {
-            "quote": "If I know what love is, it is because of you.",
-            "author": "Hermann Hesse",
-            "meaning": "Nếu anh hiểu được tình yêu thật sự là gì, đó chính là nhờ có em trong đời."
-      },
-      {
-            "quote": "You are the peace I longed for in a restless world.",
+            "meaning": "Nước đôi, mập mờ, đa nghĩa khó đoán",
+            "example": "Her coy smile gave an equivocal answer that left him wondering for hours.",
+            "exampleMeaning": "Nụ cười e ấp của em mang lại một câu trả lời nước đôi khiến anh thắc mắc suy ngẫm suốt nhiều giờ."
+        },
+        {
+            "word": "disparate",
+            "ipa": "/ˈdɪs.pɚ.ət/",
+            "type": "Tính từ",
+            "meaning": "Khác biệt bản chất, không thể đồng nhất",
+            "example": "They wove together disparate tastes in art and music into a wonderfully harmonious shared world.",
+            "exampleMeaning": "Hai đứa đã gắn kết những sở thích nghệ thuật và âm nhạc khác biệt thành một thế giới chung êm ấm."
+        },
+        {
+            "word": "zealous",
+            "ipa": "/ˈzel.əs/",
+            "type": "Tính từ",
+            "meaning": "Nhiệt thành, say mê cuồng nhiệt lý tưởng",
+            "example": "She was a zealous scholar of English phonology, analyzing every subtle phonetic shift.",
+            "exampleMeaning": "Em là một người học ngữ âm học tiếng Anh đầy nhiệt thành, say mê phân tích từng biến đổi ngữ âm."
+        },
+        {
+            "word": "ineffable",
+            "ipa": "/ɪnˈef.ə.bəl/",
+            "type": "Tính từ",
+            "meaning": "Khôn tả, tuyệt mỹ vượt ngoài ngôn từ",
+            "example": "The serene beauty of her eyes watching the sunset stirred an ineffable wonder in his chest.",
+            "exampleMeaning": "Vẻ đẹp tĩnh lặng trong đôi mắt em khi ngắm hoàng hôn đã dấy lên trong lòng anh niềm rung động khôn tả."
+        }
+    ],
+    "b2": [
+        {
+            "word": "perspicacious",
+            "ipa": "/ˌpɝː.spəˈkeɪ.ʃəs/",
+            "type": "Tính từ",
+            "meaning": "Sáng suốt, mẫn tiệp, có tuệ nhãn sắc sảo",
+            "example": "Ngoc's perspicacious observations on English prose unlocked deeper interpretations for the entire class.",
+            "exampleMeaning": "Những quan sát mẫn tiệp của Ngọc về văn xuôi tiếng Anh đã mở ra những cách hiểu sâu sắc cho cả lớp."
+        },
+        {
+            "word": "equanimity",
+            "ipa": "/ˌek.wəˈnɪm.ə.t̬i/",
+            "type": "Danh từ",
+            "meaning": "Tâm thế bình thản, an nhiên trước sóng gió",
+            "example": "He admired her remarkable equanimity in navigating academic pressures with serene grace.",
+            "exampleMeaning": "Anh vô cùng ngưỡng mộ tâm thế an nhiên đáng nể của em khi vượt qua áp lực học tập một cách nhẹ nhàng."
+        },
+        {
+            "word": "mellifluous",
+            "ipa": "/meˈlɪf.lu.əs/",
+            "type": "Tính từ",
+            "meaning": "Ngọt ngào êm ái, như rót mật vào tai",
+            "example": "Her mellifluous voice over late-night phone calls gently dissolved all anxieties.",
+            "exampleMeaning": "Giọng nói êm ái như rót mật của em qua những cuộc gọi đêm khuya đã nhẹ nhàng xua tan mọi âu lo."
+        },
+        {
+            "word": "surreptitious",
+            "ipa": "/ˌsɝː.əpˈtɪʃ.əs/",
+            "type": "Tính từ",
+            "meaning": "Lén lút, vụng trộm một cách ý nhị",
+            "example": "He took a surreptitious photo of her lost in reading at the sunlit café corner.",
+            "exampleMeaning": "Anh lén chụp một bức ảnh em đang say sưa đọc sách bên góc quán cà phê ngập tràn vạt nắng."
+        },
+        {
+            "word": "fastidious",
+            "ipa": "/fæsˈtɪd.i.əs/",
+            "type": "Tính từ",
+            "meaning": "Kỹ tính, cầu toàn, đòi hỏi chuẩn mực cao",
+            "example": "Her fastidious attention to grammatical precision made her an exceptional English editor.",
+            "exampleMeaning": "Sự cầu toàn kỹ tính đến từng tiểu tiết ngữ pháp biến em thành một biên tập viên tiếng Anh xuất sắc."
+        },
+        {
+            "word": "alacrity",
+            "ipa": "/əˈlæk.rə.t̬i/",
+            "type": "Danh từ",
+            "meaning": "Sự sốt sắng, hăm hở nhanh nhẹn thiện chí",
+            "example": "He accepted her invitation to visit Hai Phong with joyful alacrity.",
+            "exampleMeaning": "Anh nhận lời mời về Hải Phòng thăm em với niềm sốt sắng hăm hở ngập tràn niềm vui."
+        },
+        {
+            "word": "obfuscate",
+            "ipa": "/ˈɑːb.fə.skeɪt/",
+            "type": "Động từ",
+            "meaning": "Làm rối rắm, che giấu làm lu mờ bản chất",
+            "example": "He refused to obfuscate his true intentions, declaring his genuine devotion with utmost clarity.",
+            "exampleMeaning": "Anh không muốn giấu giếm hay nói lời rối rắm, mà bày tỏ tấm lòng chân thành một cách sáng tỏ nhất."
+        },
+        {
+            "word": "idiosyncrasy",
+            "ipa": "/ˌɪd.i.oʊˈsɪŋ.krə.si/",
+            "type": "Danh từ",
+            "meaning": "Nét cá tính riêng độc đáo, thói quen đặc trưng",
+            "example": "He cherished every tiny idiosyncrasy of hers, from the way she twirled her pen to her quiet giggles.",
+            "exampleMeaning": "Anh nâng niu từng thói quen nhỏ độc đáo của em, từ cách em xoay bút đến tiếng cười khẽ khúc khích."
+        },
+        {
+            "word": "vicarious",
+            "ipa": "/vɪˈker.i.əs/",
+            "type": "Tính từ",
+            "meaning": "Cảm nhận gián tiếp qua trải nghiệm của người khác",
+            "example": "Through her vivid letters about English literature lectures, he felt a vicarious thrill of scholarship.",
+            "exampleMeaning": "Qua những bức thư sinh động kể về bài giảng văn học Anh, anh cảm nhận được niềm say mê học thuật gián tiếp."
+        },
+        {
+            "word": "cacophony",
+            "ipa": "/kəˈkɑː.fə.ni/",
+            "type": "Danh từ",
+            "meaning": "Tạp âm hỗn độn, thanh âm chói tai hỗn loạn",
+            "example": "Amid the street cacophony of rush-hour Hanoi, her whisper was the only sound he attuned to.",
+            "exampleMeaning": "Giữa những tạp âm ồn ã của giờ tan tầm Hà Nội, tiếng thì thầm của em là âm thanh duy nhất anh lắng nghe."
+        },
+        {
+            "word": "insidious",
+            "ipa": "/ɪnˈsɪd.i.əs/",
+            "type": "Tính từ",
+            "meaning": "Ngấm ngầm nguy hại, tiềm tàng phá hoại",
+            "example": "Doubt is an insidious venom in long-distance love, dispelled only through transparent honesty.",
+            "exampleMeaning": "Sự hoài nghi là liều độc dược ngấm ngầm trong tình yêu xa, chỉ có thể hóa giải bằng sự chân thành minh bạch."
+        },
+        {
+            "word": "enervate",
+            "ipa": "/ˈen.ɚ.veɪt/",
+            "type": "Động từ",
+            "meaning": "Làm suy nhược, vắt kiệt sinh lực",
+            "example": "A relentless week of thesis writing threatened to enervate her, but his sweet care revived her spirit.",
+            "exampleMeaning": "Một tuần miệt mài làm luận văn gần như vắt kiệt sức em, nhưng sự chăm sóc ngọt ngào của anh đã hồi sinh nhuệ khí."
+        },
+        {
+            "word": "epistemic",
+            "ipa": "/ˌep.əˈstiː.mɪk/",
+            "type": "Tính từ",
+            "meaning": "Thuộc về nhận thức luận, nền tảng tri thức",
+            "example": "Linguistic philosophy addresses the epistemic foundations of how words construct human reality.",
+            "exampleMeaning": "Triết học ngôn ngữ nghiên cứu nền tảng nhận thức luận về cách thức ngôn từ kiến tạo nên thực tại con người."
+        },
+        {
+            "word": "ebullient",
+            "ipa": "/ɪˈbʊl.jənt/",
+            "type": "Tính từ",
+            "meaning": "Sôi nổi, tràn trề sinh khí, hào hứng tột bậc",
+            "example": "Her ebullient laughter whenever they reunited lit up the entire train station.",
+            "exampleMeaning": "Tiếng cười rạng rỡ đầy sinh khí của em mỗi khi hai đứa hội ngộ đã thắp sáng cả sân ga."
+        },
+        {
+            "word": "supercilious",
+            "ipa": "/ˌsuː.pɚˈsɪl.i.əs/",
+            "type": "Tính từ",
+            "meaning": "Trịch thượng, kiêu kỳ tự mãn coi thường",
+            "example": "Despite her brilliant linguistic talents, Ngoc never harbored a supercilious attitude toward peers.",
+            "exampleMeaning": "Dù sở hữu tài năng ngôn ngữ xuất sắc, Ngọc chưa bao giờ giữ thái độ kiêu kỳ trịch thượng với bạn bè."
+        },
+        {
+            "word": "sycophant",
+            "ipa": "/ˈsɪk.ə.fænt/",
+            "type": "Danh từ",
+            "meaning": "Kẻ xu nịnh bợ đỡ, kẻ ton hót trục lợi",
+            "example": "True love abhors the false flattery of a sycophant, resting solely on unvarnished truth.",
+            "exampleMeaning": "Tình yêu đích thực ghét cay ghét đắng sự tâng bốc của kẻ xu nịnh, mà xây đắp trên sự chân thành mộc mạc."
+        },
+        {
+            "word": "sagacious",
+            "ipa": "/səˈɡeɪ.ʃəs/",
+            "type": "Tính từ",
+            "meaning": "Khôn ngoan mẫn tiệp, sáng suốt thấu thị",
+            "example": "Her sagacious counsel helped him navigate complex career decisions with absolute peace of mind.",
+            "exampleMeaning": "Lời khuyên sáng suốt mẫn tiệp của em đã giúp anh định hướng những quyết định sự nghiệp lớn với sự an tâm tuyệt đối."
+        },
+        {
+            "word": "trenchant",
+            "ipa": "/ˈtren.tʃənt/",
+            "type": "Tính từ",
+            "meaning": "Sắc bén, đanh thép, phê bình sâu sắc gãy gọn",
+            "example": "Her trenchant critique of Victorian literary satire impressed even the strictest senior professors.",
+            "exampleMeaning": "Bài phê bình sắc bén đanh thép của em về văn học trào phúng thời Victoria đã gây ấn tượng với các giáo sư khó tính nhất."
+        },
+        {
+            "word": "verisimilitude",
+            "ipa": "/ˌver.ə.səˈmɪl.ə.tuːd/",
+            "type": "Danh từ",
+            "meaning": "Tính chân thực như đời sống trong nghệ thuật",
+            "example": "A master novelist weaves intimate dialogue to lend the story extraordinary verisimilitude.",
+            "exampleMeaning": "Một tiểu thuyết gia bậc thầy luôn trau chuốt lời thoại để thổi vào tác phẩm tính chân thực sống động phi thường."
+        },
+        {
+            "word": "zeitgeist",
+            "ipa": "/ˈtsaɪt.ɡaɪst/",
+            "type": "Danh từ",
+            "meaning": "Tinh thần thời đại, luồng tư tưởng chủ đạo",
+            "example": "Understanding the sociolinguistic zeitgeist is essential for analyzing modern language evolution.",
+            "exampleMeaning": "Thấu hiểu tinh thần thời đại xã hội ngôn ngữ học là điều cốt lõi để phân tích sự tiến hóa của ngôn ngữ hiện đại."
+        },
+        {
+            "word": "quixotic",
+            "ipa": "/kwɪkˈsɑː.t̬ɪk/",
+            "type": "Tính từ",
+            "meaning": "Hão huyền lãng mạn, lý tưởng hóa ngây thơ",
+            "example": "Traveling hundreds of miles just to share a cup of tea might seem quixotic, but to him it was everything.",
+            "exampleMeaning": "Đi hàng trăm cây số chỉ để cùng em uống một tách trà có thể vẻ hão huyền, nhưng với anh đó là tất cả."
+        },
+        {
+            "word": "perfunctory",
+            "ipa": "/pɚˈfʌŋk.tɚ.i/",
+            "type": "Tính từ",
+            "meaning": "Chiếu lệ, qua loa đại khái không để tâm",
+            "example": "His nightly text was never a perfunctory gesture, but an affectionate outpouring of his whole heart.",
+            "exampleMeaning": "Dòng tin nhắn chúc ngủ ngon của anh chưa bao giờ là chiếu lệ, mà là tình cảm đong đầy từ tận đáy lòng."
+        },
+        {
+            "word": "taciturn",
+            "ipa": "/ˈtæs.ə.tɝːn/",
+            "type": "Tính từ",
+            "meaning": "Kín tiếng, ít nói, trầm mặc kiệm lời",
+            "example": "Though typically taciturn around strangers, he opened his soul completely when speaking with her.",
+            "exampleMeaning": "Dù vốn là người ít nói trầm mặc trước người lạ, anh lại mở rộng lòng mình hoàn toàn khi ở bên em."
+        },
+        {
+            "word": "pernicious",
+            "ipa": "/pɚˈnɪʃ.əs/",
+            "type": "Tính từ",
+            "meaning": "Độc hại ngấm ngầm, tàn phá âm ỉ",
+            "example": "Neglect exerts a pernicious toll on any relationship, which is why they nurtured each day with tenderness.",
+            "exampleMeaning": "Sự vô tâm gây ra tác hại tàn phá ngấm ngầm trong tình cảm, đó là lý do hai đứa luôn ân cần vun vén mỗi ngày."
+        },
+        {
+            "word": "proclivity",
+            "ipa": "/prəˈklɪv.ə.t̬i/",
+            "type": "Danh từ",
+            "meaning": "Thiên hướng tự nhiên, xu hướng thiên bẩm",
+            "example": "From childhood, she exhibited a remarkable proclivity for mastering foreign languages and phonetics.",
+            "exampleMeaning": "Ngay từ thuở ấu thơ, em đã bộc lộ thiên hướng thiên bẩm xuất sắc trong việc học ngoại ngữ và ngữ âm học."
+        }
+    ],
+    "c1": [
+        {
+            "word": "solipsism",
+            "ipa": "/ˈsɑː.lɪp.sɪ.zəm/",
+            "type": "Danh từ",
+            "meaning": "Thuyết duy ngã (cho rằng chỉ bản thân là có thực)",
+            "example": "Falling deeply in love rescued him from philosophical solipsism, anchoring his world in her reality.",
+            "exampleMeaning": "Tình yêu sâu đậm dành cho em đã cứu rỗi anh khỏi thuyết duy ngã cô độc, neo giữ thế giới anh vào hiện thực bên em."
+        },
+        {
+            "word": "sesquipedalian",
+            "ipa": "/ˌses.kwə.pəˈdeɪl.jən/",
+            "type": "Tính từ",
+            "meaning": "Dài ngoặc; chuộng dùng từ ngữ uyên bác đa âm tiết",
+            "example": "As an English major, she delighted in playful sesquipedalian banter that left him playfully bewildered.",
+            "exampleMeaning": "Là dân chuyên Ngôn ngữ Anh, em thích thú với những câu đùa dùng từ uyên bác dài ngoằng khiến anh vừa ngơ ngác vừa phì cười."
+        },
+        {
+            "word": "pulchritude",
+            "ipa": "/ˈpʌl.krə.tuːd/",
+            "type": "Danh từ",
+            "meaning": "Nhan sắc kiều diễm tuyệt trần, vẻ đẹp hoàn mỹ",
+            "example": "Poets often struggle to capture the ethereal pulchritude of a woman whose soul matches her grace.",
+            "exampleMeaning": "Các thi sĩ thường bất lực khi muốn lột tả nhan sắc kiều diễm tuyệt trần của người phụ nữ có tâm hồn thanh tao như em."
+        },
+        {
+            "word": "recalcitrant",
+            "ipa": "/rɪˈkæl.sə.trənt/",
+            "type": "Tính từ",
+            "meaning": "Ngoan cố, bất trị, chống đối kỷ luật cứng nhắc",
+            "example": "Even the most recalcitrant heart surrenders when touched by sincere and gentle love.",
+            "exampleMeaning": "Ngay cả trái tim ngoan cố bất trị nhất cũng sẽ tan chảy khi chạm vào một tình yêu dịu dàng và chân thành."
+        },
+        {
+            "word": "defenestration",
+            "ipa": "/ˌdiː.fen.əˈstreɪ.ʃən/",
+            "type": "Danh từ",
+            "meaning": "Hành động ném ra ngoài cửa sổ; sự phế truất đột ngột",
+            "example": "The historical Prague defenestration remains one of the most eccentric political catalysts in European annals.",
+            "exampleMeaning": "Vụ ném người qua cửa sổ thành Praha trong lịch sử vẫn là một trong những ngòi nổ kỳ lạ nhất trong biên niên sử châu Âu."
+        },
+        {
+            "word": "anachronism",
+            "ipa": "/əˈnæk.rə.nɪ.zəm/",
+            "type": "Danh từ",
+            "meaning": "Sự lỗi thời, sự sai lệch niên đại lịch sử",
+            "example": "Handwriting passionate love letters in our digital age is a delightful and romantic anachronism.",
+            "exampleMeaning": "Viết tay những lá thư tình nồng nàn trong thời đại số là một nét hoài niệm lỗi thời ngọt ngào và lãng mạn."
+        },
+        {
+            "word": "grandiloquent",
+            "ipa": "/ɡrænˈdɪl.ə.kwənt/",
+            "type": "Tính từ",
+            "meaning": "Khoa trương ngôn từ, văn hoa bóng bẩy sáo rỗng",
+            "example": "He eschewed grandiloquent speeches, choosing quiet faithfulness over hollow promises.",
+            "exampleMeaning": "Anh khước từ những lời thề thốt văn hoa sáo rỗng, chọn sự chung thủy chở che trong lặng thầm."
+        },
+        {
+            "word": "inchoate",
+            "ipa": "/ɪnˈkoʊ.eɪt/",
+            "type": "Tính từ",
+            "meaning": "Mới phôi thai, sơ khai chưa định hình rõ ràng",
+            "example": "Their shared dreams began as inchoate whispers over tea, now maturing into concrete lifelong plans.",
+            "exampleMeaning": "Ước mơ chung của hai đứa khởi đầu từ những lời thủ thỉ sơ khai bên tách trà, nay đã hóa thành dự định trăm năm."
+        },
+        {
+            "word": "laconic",
+            "ipa": "/ləˈkɑː.nɪk/",
+            "type": "Tính từ",
+            "meaning": "Cô đọng, súc tích, ngắn gọn súc tích kiệm lời",
+            "example": "His laconic reply 'Always' carried more emotional weight than a thousand verbose poems.",
+            "exampleMeaning": "Câu trả lời cô đọng 'Mãi mãi' của anh mang sức nặng tình cảm hơn ngàn bài thơ hoa mỹ dài dòng."
+        },
+        {
+            "word": "truculent",
+            "ipa": "/ˈtrʌk.jə.lənt/",
+            "type": "Tính từ",
+            "meaning": "Hung hăng, gay gắt khiêu khích thách thức",
+            "example": "Her sweet, patient demeanor disarmed his truculent mood after a grueling workday.",
+            "exampleMeaning": "Sự dịu dàng kiên nhẫn của em đã làm tan biến vẻ gay gắt bực bội của anh sau một ngày làm việc kiệt sức."
+        },
+        {
+            "word": "vicissitude",
+            "ipa": "/vɪˈsɪs.ə.tuːd/",
+            "type": "Danh từ",
+            "meaning": "Sự thăng trầm dâu bể của số phận cuộc đời",
+            "example": "Through every vicissitude of life, having her hand in his was his unwavering compass.",
+            "exampleMeaning": "Qua mọi thăng trầm dâu bể của dòng đời, nắm chặt bàn tay em là chiếc la bàn kiên định nhất của anh."
+        },
+        {
+            "word": "apocryphal",
+            "ipa": "/əˈpɑː.krə.fəl/",
+            "type": "Tính từ",
+            "meaning": "Ngụy tác, giai thoại đáng ngờ không có căn cứ",
+            "example": "Linguists quickly debunked the apocryphal legend regarding the origins of that Shakespearean idiom.",
+            "exampleMeaning": "Các nhà ngôn ngữ học đã nhanh chóng bác bỏ giai thoại ngụy tác về nguồn gốc của thành ngữ thời Shakespeare đó."
+        },
+        {
+            "word": "bellicose",
+            "ipa": "/ˈbel.ə.koʊs/",
+            "type": "Tính từ",
+            "meaning": "Hiếu chiến, say sưa muốn khơi mào tranh đấu",
+            "example": "Unlike bellicose debaters, she engaged intellectual disputes with gracious elegance.",
+            "exampleMeaning": "Khác với những người tranh biện hiếu chiến, em luôn bước vào các cuộc thảo luận học thuật bằng sự tao nhã đĩnh đạc."
+        },
+        {
+            "word": "chicanery",
+            "ipa": "/ʃɪˈkeɪ.nɚ.i/",
+            "type": "Danh từ",
+            "meaning": "Mánh khóe xảo quyệt, thủ đoạn gian lận tinh vi",
+            "example": "Academic integrity demands rigorous honesty, wholly untainted by intellectual chicanery.",
+            "exampleMeaning": "Liêm chính học thuật đòi hỏi sự trung thực nghiêm cẩn, tuyệt đối không vướng bụi bặm của những mánh khóe xảo biện."
+        },
+        {
+            "word": "deleterious",
+            "ipa": "/ˌdel.əˈtɪr.i.əs/",
+            "type": "Tính từ",
+            "meaning": "Gây tổn hại âm ỉ, có hại cho tinh thần sức khỏe",
+            "example": "Prolonged screen fatigue exerts a deleterious impact on eyesight, so he gently reminded her to rest.",
+            "exampleMeaning": "Nhìn màn hình quá lâu gây tổn hại âm ỉ cho mắt, nên anh luôn dịu dàng nhắc em nghỉ ngơi."
+        },
+        {
+            "word": "iconoclast",
+            "ipa": "/aɪˈkɑː.nə.klæst/",
+            "type": "Danh từ",
+            "meaning": "Người phá bỏ thần tượng, đả phá tín điều cổ hủ",
+            "example": "Virginia Woolf was a literary iconoclast who dismantled Victorian conventions with stream-of-consciousness.",
+            "exampleMeaning": "Virginia Woolf là một nhà cách tân đả phá quy ước văn học Victoria bằng kỹ thuật dòng ý thức độc đáo."
+        },
+        {
+            "word": "lugubrious",
+            "ipa": "/luːˈɡuː.bri.əs/",
+            "type": "Tính từ",
+            "meaning": "Thê lương tang tóc, u sầu quá mức",
+            "example": "The mournful violin melody sounded deeply lugubrious until her bright laughter dispelled the gloom.",
+            "exampleMeaning": "Giai điệu vĩ cầm vang lên u sầu thê lương cho tới khi tiếng cười trong trẻo của em xua tan bóng tối."
+        },
+        {
+            "word": "panegyric",
+            "ipa": "/ˌpæn.əˈdʒɪr.ɪk/",
+            "type": "Danh từ",
+            "meaning": "Bài tụng ca, lời tán dương nồng nhiệt trang trọng",
+            "example": "He penned a tender panegyric celebrating her quiet grace on the anniversary of their first encounter.",
+            "exampleMeaning": "Anh đã chắp bút viết bài tụng ca dịu dàng ngợi ca vẻ duyên dáng của em nhân kỷ niệm ngày đầu gặp gỡ."
+        },
+        {
+            "word": "sanguine",
+            "ipa": "/ˈsæŋ.ɡwɪn/",
+            "type": "Tính từ",
+            "meaning": "Lạc quan yêu đời, đầy hy vọng trước tương lai",
+            "example": "Her sanguine temperament always brought sunshine into his world, even during gloomy rainy seasons.",
+            "exampleMeaning": "Tâm tính lạc quan yêu đời của em luôn mang ánh nắng sưởi ấm thế giới anh, dẫu giữa những mùa mưa ảm đạm."
+        },
+        {
+            "word": "sybarite",
+            "ipa": "/ˈsɪb.ə.raɪt/",
+            "type": "Danh từ",
+            "meaning": "Người chuộng cuộc sống xa hoa thanh lịch hưởng lạc",
+            "example": "While not a lavish sybarite, she relished the quiet luxury of warm milk tea, good books, and scented candles.",
+            "exampleMeaning": "Dẫu không phải người xa hoa hưởng lạc, em vẫn say mê nét tao nhã bên ly trà sữa ấm, cuốn sách hay và ngọn nến thơm."
+        },
+        {
+            "word": "hubris",
+            "ipa": "/ˈhjuː.brɪs/",
+            "type": "Danh từ",
+            "meaning": "Sự ngạo mạn mù quáng thách thức cả số phận",
+            "example": "Greek tragedy warns that mortal hubris inevitably precedes a devastating downfall.",
+            "exampleMeaning": "Bi kịch Hy Lạp luôn cảnh tỉnh rằng sự ngạo mạn mù quáng của phàm nhân tất yếu sẽ dẫn tới sự sụp đổ."
+        },
+        {
+            "word": "apotheosis",
+            "ipa": "/əˌpɑː.θiˈoʊ.sɪs/",
+            "type": "Danh từ",
+            "meaning": "Đỉnh cao tuyệt đối, sự thần thánh hóa lý tưởng",
+            "example": "Their reunion at the seaside represented the apotheosis of romance after long months of patient yearning.",
+            "exampleMeaning": "Cuộc hội ngộ bên bờ biển là đỉnh cao tuyệt mỹ của tình yêu sau bao tháng ngày nhung nhớ đợi chờ."
+        },
+        {
+            "word": "ephemeral",
+            "ipa": "/ɪˈfem.ɚ.əl/",
+            "type": "Tính từ",
+            "meaning": "Phù du ngắn ngủi, sớm nở tối tàn",
+            "example": "Seasons and blooming petals are ephemeral, but the vows inscribed in their hearts remain eternal.",
+            "exampleMeaning": "Mùa màng và cánh hoa có thể sớm nở tối tàn, nhưng lời thề khắc ghi trong tim hai đứa sẽ mãi trường tồn."
+        },
+        {
+            "word": "chiaroscuro",
+            "ipa": "/kiˌɑːr.əˈskjʊr.oʊ/",
+            "type": "Danh từ",
+            "meaning": "Nghệ thuật tương phản sáng tối trong hội họa & văn học",
+            "example": "The chiaroscuro of candlelight across her face rendered her profile enchantingly mysterious.",
+            "exampleMeaning": "Nghệ thuật tương phản sáng tối của ánh nến trên gương mặt em khiến góc nghiêng trở nên huyền ảo diệu kỳ."
+        },
+        {
+            "word": "palimpsest",
+            "ipa": "/ˈpæl.ɪmp.sest/",
+            "type": "Danh từ",
+            "meaning": "Bản thảo viết đè nhiều lớp lưu dấu ấn thời gian",
+            "example": "The ancient city of Hanoi is a living palimpsest, where colonial villas intertwine with ancient dynastic gates.",
+            "exampleMeaning": "Thủ đô Hà Nội như một bản thảo cổ tích lưu dấu nhiều lớp thời gian, nơi những biệt thự cổ đan cài với cổng thành xưa."
+        }
+    ],
+    "love": [
+        {
+            "quote": "My bounty is as boundless as the sea, my love as deep; the more I give to thee, the more I have, for both are infinite.",
+            "author": "William Shakespeare (Romeo and Juliet)",
+            "meaning": "Tấm lòng anh rộng lớn tựa biển khơi, tình anh sâu thẳm khôn cùng; càng trao về em, anh lại càng có nhiều hơn, bởi cả hai đều là vô tận."
+        },
+        {
+            "quote": "You must allow me to tell you how ardently I admire and love you.",
+            "author": "Jane Austen (Pride and Prejudice)",
+            "meaning": "Xin em hãy cho phép anh được giãi bày rằng anh ngưỡng mộ và yêu thương em nồng nàn đến nhường nào."
+        },
+        {
+            "quote": "Whatever our souls are made of, his and mine are the same.",
+            "author": "Emily Brontë (Wuthering Heights)",
+            "meaning": "Dù cho linh hồn chúng ta được tạo nên từ chất liệu gì, thì tâm hồn anh và em cũng đều cùng một thể đồng điệu."
+        },
+        {
+            "quote": "You have given me the greatest possible happiness. You have been in every way all that anyone could be.",
+            "author": "Virginia Woolf (The Letters of Virginia Woolf)",
+            "meaning": "Em đã mang lại cho anh niềm hạnh phúc trọn vẹn nhất có thể trên đời. Em là tất cả những gì kỳ diệu nhất mà một người có thể ước mơ."
+        },
+        {
+            "quote": "I cannot exist without you; I am forgetful of everything but seeing you again: my life seems to stop there — I see no further.",
+            "author": "John Keats (Letters to Fanny Brawne)",
+            "meaning": "Anh không thể tồn tại nếu thiếu em; anh quên hết thảy mọi điều trên trần thế chỉ mong ngày tái ngộ: cuộc đời anh dường như dừng lại nơi ấy — anh chẳng nhìn thấy gì xa hơn em."
+        },
+        {
+            "quote": "He looked at her the way all women want to be looked at by a man.",
+            "author": "F. Scott Fitzgerald (The Great Gatsby)",
+            "meaning": "Anh nhìn em bằng tất cả sự nâng niu, say đắm và trân quý mà bất kỳ người con gái nào trên đời cũng khát khao được trao gửi."
+        },
+        {
+            "quote": "I have for the first time found what I can truly love — I have found you.",
+            "author": "Charlotte Brontë (Jane Eyre)",
+            "meaning": "Lần đầu tiên trong cuộc đời này, anh đã tìm thấy điều mà mình có thể toàn tâm yêu thương — anh đã tìm thấy em."
+        },
+        {
+            "quote": "She walks in beauty, like the night of cloudless climes and starry skies; and all that's best of dark and bright meet in her aspect and her eyes.",
+            "author": "Lord Byron (She Walks in Beauty)",
+            "meaning": "Nàng bước đi trong vẻ đẹp tuyệt mỹ, như đêm hè không gợn mây ngập tràn tinh tú; tất cả những gì tinh khôi nhất của ánh sáng và bóng đêm đều hội tụ nơi nét mặt và ánh mắt nàng."
+        },
+        {
+            "quote": "I carry your heart with me (I carry it in my heart). I am never without it, anywhere I go you go.",
+            "author": "E.E. Cummings",
+            "meaning": "Anh luôn mang trái tim em bên mình (anh cất giữ nó sâu thẳm trong tim). Chưa phút giây nào anh rời xa nó, bất cứ nơi nào anh tới, em cũng luôn ở bên."
+        },
+        {
+            "quote": "To love oneself is the beginning of a lifelong romance, but to love you is the crowning glory of my existence.",
+            "author": "Oscar Wilde (Adaptation)",
+            "meaning": "Biết yêu bản thân là khởi đầu của cuộc tình lãng mạn trọn đời, nhưng được yêu thương em mới là vinh quang rực rỡ nhất trong cuộc đời anh."
+        },
+        {
+            "quote": "Between the syntax of my thoughts and the lexicon of my soul, you are the most exquisite stanza ever composed.",
             "author": "Khánh dành tặng Ngọc 💕",
-            "meaning": "Em chính là sự bình yên mà anh luôn hằng khao khát giữa thế giới bộn bề không ngừng quay này."
-      }
-]
-  };
+            "meaning": "Giữa những cú pháp suy tư và kho từ vựng nơi tâm hồn anh, em là khổ thơ tinh tế và tuyệt mỹ nhất từng được chắp bút."
+        },
+        {
+            "quote": "No geographical distance between Hanoi and Hai Phong could ever attenuate the resonance of my devotion to you.",
+            "author": "Khánh dành tặng Ngọc 💕",
+            "meaning": "Không khoảng cách địa lý nào giữa Hà Nội và Hải Phòng có thể làm vơi bớt sự vang vọng của lòng chung thủy anh dành cho em."
+        }
+    ]
+};
 
   const STORAGE_KEYS = {
     starred: "hu_keo_cua_sun_english_starred_v1",
@@ -879,13 +969,13 @@ window.EnglishApp = (() => {
   function getLevelLabel(level) {
     switch (level) {
       case "b1":
-        return "B1 (Trung cấp • Giao tiếp)";
+        return "B1+ (Học thuật • Tinh tế)";
       case "b2":
-        return "B2 (Trung cao cấp • Idioms)";
+        return "C1 (Chuyên sâu • Văn phong cao)";
       case "c1":
-        return "C1 (Nâng cao • Tinh hoa)";
+        return "C2 (Tinh hoa • Văn học Anh)";
       default:
-        return "B1 (Trung cấp)";
+        return "B1+ (Học thuật • Tinh tế)";
     }
   }
 
@@ -980,9 +1070,9 @@ window.EnglishApp = (() => {
           <div class="clb-left">
             <label for="selectEnglishLevel">🏷️ Cấp độ:</label>
             <select id="selectEnglishLevel" class="pixel-select">
-              <option value="b1" ${currentLevel === "b1" ? "selected" : ""}>B1 (Trung cấp • Giao tiếp)</option>
-              <option value="b2" ${currentLevel === "b2" ? "selected" : ""}>B2 (Trung cao cấp • Idioms)</option>
-              <option value="c1" ${currentLevel === "c1" ? "selected" : ""}>C1 (Nâng cao • Tinh hoa)</option>
+              <option value="b1" ${currentLevel === "b1" ? "selected" : ""}>B1+ (Học thuật • Tinh tế)</option>
+              <option value="b2" ${currentLevel === "b2" ? "selected" : ""}>C1 (Chuyên sâu • Văn phong cao)</option>
+              <option value="c1" ${currentLevel === "c1" ? "selected" : ""}>C2 (Tinh hoa • Văn học Anh)</option>
             </select>
           </div>
           <button class="btn-dict" id="btnNextDailySetEn" title="Đổi sang 5 từ tiếp theo">🎲 Đổi 5 từ</button>
@@ -1098,9 +1188,9 @@ window.EnglishApp = (() => {
           <div class="clb-left">
             <label for="selectEnglishFcLevel">🏷️ Cấp:</label>
             <select id="selectEnglishFcLevel" class="pixel-select">
-              <option value="b1" ${currentLevel === "b1" ? "selected" : ""}>B1 (Trung cấp)</option>
-              <option value="b2" ${currentLevel === "b2" ? "selected" : ""}>B2 (Trung cao cấp)</option>
-              <option value="c1" ${currentLevel === "c1" ? "selected" : ""}>C1 (Nâng cao)</option>
+              <option value="b1" ${currentLevel === "b1" ? "selected" : ""}>B1+ (Học thuật • Tinh tế)</option>
+              <option value="b2" ${currentLevel === "b2" ? "selected" : ""}>C1 (Chuyên sâu • Văn phong cao)</option>
+              <option value="c1" ${currentLevel === "c1" ? "selected" : ""}>C2 (Tinh hoa • Văn học Anh)</option>
             </select>
           </div>
           <span class="fc-counter">Thẻ <strong>${fcIndex + 1}/${total}</strong></span>
@@ -1299,7 +1389,10 @@ window.EnglishApp = (() => {
 
     quizQuestions = selected.map((target) => {
       const others = list.filter((w) => w.word !== target.word);
-      const wrongOpts = shuffleArray(others).slice(0, 3);
+      const sameType = others.filter((w) => w.type === target.type);
+      const diffType = others.filter((w) => w.type !== target.type);
+      const candidates = [...shuffleArray(sameType), ...shuffleArray(diffType)];
+      const wrongOpts = candidates.slice(0, 3);
       const options = shuffleArray([target, ...wrongOpts]);
       return { target, options };
     });
@@ -1529,9 +1622,9 @@ window.EnglishApp = (() => {
           <div class="clb-left">
             <label for="selectEnglishMatchLevel">🏷️ Cấp:</label>
             <select id="selectEnglishMatchLevel" class="pixel-select">
-              <option value="b1" ${currentLevel === "b1" ? "selected" : ""}>B1 (Trung cấp)</option>
-              <option value="b2" ${currentLevel === "b2" ? "selected" : ""}>B2 (Trung cao cấp)</option>
-              <option value="c1" ${currentLevel === "c1" ? "selected" : ""}>C1 (Nâng cao)</option>
+              <option value="b1" ${currentLevel === "b1" ? "selected" : ""}>B1+ (Học thuật • Tinh tế)</option>
+              <option value="b2" ${currentLevel === "b2" ? "selected" : ""}>C1 (Chuyên sâu • Văn phong cao)</option>
+              <option value="c1" ${currentLevel === "c1" ? "selected" : ""}>C2 (Tinh hoa • Văn học Anh)</option>
             </select>
           </div>
           <div class="clb-right">
