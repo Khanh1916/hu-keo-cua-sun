@@ -463,7 +463,7 @@ body {
 /* Quick Actions */
 .quick-actions {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 4px;
 }
 
@@ -508,9 +508,9 @@ body {
 
 .action-name {
   font-size: 9.5px; /* fallback if clamp()/vw is unsupported */
-  /* Scales with the screen so the longest labels ("Tiếng Trung", "Chơi Game") never touch the tile border.
-     Keeps >= ~4px free around "Tiếng Trung" (the longest) from 340px up to the 440px app cap. */
-  font-size: clamp(7px, calc(2.4vw - 1px), 10px);
+  /* Scales with the screen so the longest labels ("Vuốt Bông", "Chơi Game", "Ngoại Ngữ") never touch the tile border.
+     5 tiles per row: reaches the 10px cap from ~360px up to the 440px app cap. */
+  font-size: clamp(8px, 2.8vw, 10px);
   line-height: 1.1;
   white-space: nowrap;
   max-width: 100%;

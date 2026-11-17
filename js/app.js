@@ -1309,8 +1309,27 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnClaimQuests").addEventListener("click", claimDailyQuests);
   document.getElementById("btnSettings").addEventListener("click", () => openModal("modalSettings"));
 
+  // One "Ngoại Ngữ" tile opens whichever language was used last (default Chinese); the pill bar inside each
+  // study modal switches to the other language.
+  const STUDY_LANG_KEY = "hu_keo_study_lang";
+  const rememberStudyLang = (lang) => {
+    try {
+      localStorage.setItem(STUDY_LANG_KEY, lang);
+    } catch {
+      // storage unavailable: just default to Chinese next time
+    }
+  };
+  const lastStudyLang = () => {
+    try {
+      return localStorage.getItem(STUDY_LANG_KEY) === "en" ? "en" : "zh";
+    } catch {
+      return "zh";
+    }
+  };
+
   const handleOpenChinese = () => {
     AudioManager.playClick();
+    rememberStudyLang("zh");
     if (window.ChineseApp) {
       ChineseApp.open();
     } else {
@@ -1319,19 +1338,23 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const btnChinese = document.getElementById("btnChinese");
   if (btnChinese) btnChinese.addEventListener("click", handleOpenChinese);
-  const btnQuickChinese = document.getElementById("btnQuickChinese");
-  if (btnQuickChinese) btnQuickChinese.addEventListener("click", handleOpenChinese);
 
   const handleOpenEnglish = () => {
     AudioManager.playClick();
+    rememberStudyLang("en");
     if (window.EnglishApp) {
       EnglishApp.open();
     } else {
       openModal("modalEnglish");
     }
   };
-  const btnQuickEnglish = document.getElementById("btnQuickEnglish");
-  if (btnQuickEnglish) btnQuickEnglish.addEventListener("click", handleOpenEnglish);
+  const btnQuickStudy = document.getElementById("btnQuickStudy");
+  if (btnQuickStudy) {
+    btnQuickStudy.addEventListener("click", () => {
+      if (lastStudyLang() === "en") handleOpenEnglish();
+      else handleOpenChinese();
+    });
+  }
 
   // Cross-language modal switchers
   const btnChineseToEnglish = document.getElementById("btnChineseToEnglish");
