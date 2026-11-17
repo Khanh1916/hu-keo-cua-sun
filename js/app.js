@@ -27,7 +27,15 @@ document.addEventListener("DOMContentLoaded", () => {
     dailyInteractions: {
       date: "",
       hugCount: 0,
-      petCount: 0
+      petCount: 0,
+      jarReads: 0,
+      talkCount: 0,
+      lastTalkAt: 0,
+      vinylCount: 0
+    },
+    dailyStudy: {
+      date: "",
+      count: 0
     },
     dailyQuests: {
       date: "",
@@ -38,6 +46,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // Max rewarded quiz/match rounds per day across Chinese + English (daily 5-words lessons have their own once-a-day flag).
+  const STUDY_DAILY_LIMIT = 4;
+  const ARRAY_KEYS = ["ownedDecor", "placedDecor", "unlockedAchieve", "readLetters", "foodsFed", "claimedBirthdays"];
+  const NESTED_KEYS = ["dailyInteractions", "dailyQuests", "dailyStudy"];
+
+  // DEFAULT_STATE holds nested arrays/objects, so a shallow spread would share (and later mutate) them. Always deep-copy.
+  function freshDefaults() {
+    return JSON.parse(JSON.stringify(DEFAULT_STATE));
+  }
+
+  function normalizeState(parsed) {
+    const base = freshDefaults();
+    const merged = { ...base, ...parsed };
+    ARRAY_KEYS.forEach((k) => {
+      if (!Array.isArray(merged[k])) merged[k] = base[k];
+    });
+    NESTED_KEYS.forEach((k) => {
+      const v = parsed && parsed[k];
+      merged[k] = v && typeof v === "object" && !Array.isArray(v) ? { ...base[k], ...v } : base[k];
+    });
+    return merged;
+  }
+
   let state = loadState();
   let speechTimeout = null;
   let toastTimeout = null;
@@ -47,18 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function loadState() {
     try {
       const raw = localStorage.getItem(SAVE_KEY);
-      if (!raw) return { ...DEFAULT_STATE };
-      const parsed = JSON.parse(raw);
-      const merged = { ...DEFAULT_STATE, ...parsed };
-      if (!merged.dailyInteractions || typeof merged.dailyInteractions !== "object") {
-        merged.dailyInteractions = { ...DEFAULT_STATE.dailyInteractions };
-      }
-      if (!merged.dailyQuests || typeof merged.dailyQuests !== "object") {
-        merged.dailyQuests = { ...DEFAULT_STATE.dailyQuests };
-      }
-      return merged;
+      if (!raw) return freshDefaults();
+      return normalizeState(JSON.parse(raw));
     } catch {
-      return { ...DEFAULT_STATE };
+      return freshDefaults();
     }
   }
 
@@ -74,8 +97,12 @@ document.addEventListener("DOMContentLoaded", () => {
     get: () => state,
     save: saveState,
     renderHUD: () => renderHUD(),
-    addXP: (amt) => addRewards(amt, 0)
+    addXP: (amt) => addRewards(amt, 0),
+    // Study modules (chinese.js / english.js) must go through this so quiz/match rewards stay capped per day.
+    grantStudyReward: (kind, xp, candy) => grantStudyReward(kind, xp, candy)
   };
+  // Study modules call window.showToast; it used to be closure-private so their toasts never appeared.
+  window.showToast = (msg) => showToast(msg);
 
   function xpNeededForLevel(lvl) {
     // Polynomial cozy progression curve: 50 + 35*lvl + 12*lvl^1.55
@@ -157,6 +184,20 @@ document.addEventListener("DOMContentLoaded", () => {
     renderHUD();
   }
 
+  // kind "daily" = the once-a-day 5-words lesson (guarded by its own flag, never capped here);
+  // anything else (quiz, match) counts against STUDY_DAILY_LIMIT. Returns { granted, remaining }.
+  function grantStudyReward(kind, xp, candy) {
+    syncDailyReset();
+    if (kind !== "daily") {
+      if (state.dailyStudy.count >= STUDY_DAILY_LIMIT) {
+        return { granted: false, remaining: 0 };
+      }
+      state.dailyStudy.count++;
+    }
+    addRewards(xp, candy);
+    return { granted: true, remaining: Math.max(0, STUDY_DAILY_LIMIT - state.dailyStudy.count) };
+  }
+
   function isLetterUnlocked(letter) {
     if (state.level < letter.unlockLevel) return false;
     if (letter.reqHugs && (state.hugCount || 0) < letter.reqHugs) return false;
@@ -181,14 +222,17 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     let newlyUnlocked = false;
+    let toastSlot = 0;
     DATA.achievements.forEach((ach) => {
       if (checks[ach.id] && !state.unlockedAchieve.includes(ach.id)) {
         state.unlockedAchieve.push(ach.id);
         state.candy += ach.reward;
         newlyUnlocked = true;
+        // Toasts replace each other, so space simultaneous unlocks out instead of showing only the last one.
         setTimeout(() => {
           showToast(`🏆 Thành tựu: ${ach.name} (+${ach.reward} 🍬)`);
-        }, 450);
+        }, 450 + toastSlot * 3000);
+        toastSlot++;
       }
     });
 
@@ -224,7 +268,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const now = new Date();
     let claimYear = now.getFullYear();
     if (key === "tet" && window.Amlich) {
-      claimYear = window.Amlich.getTetInfo(now).lunarYear || claimYear;
+      const tet = window.Amlich.getTetInfo(now);
+      // 23-30 thang Chap still carry the old lunar year; use the year the Tet falls in so the whole window is one key.
+      claimYear = (tet.lunarMonth === 12 ? tet.lunarYear + 1 : tet.lunarYear) || claimYear;
     }
     const claimKey = `${key}_${claimYear}`;
     if (!state.claimedBirthdays.includes(claimKey)) {
@@ -297,11 +343,11 @@ document.addEventListener("DOMContentLoaded", () => {
       changed = true;
     }
     if (!state.dailyInteractions || state.dailyInteractions.date !== todayStr) {
-      state.dailyInteractions = {
-        date: todayStr,
-        hugCount: 0,
-        petCount: 0
-      };
+      state.dailyInteractions = { ...DEFAULT_STATE.dailyInteractions, date: todayStr };
+      changed = true;
+    }
+    if (!state.dailyStudy || state.dailyStudy.date !== todayStr) {
+      state.dailyStudy = { date: todayStr, count: 0 };
       changed = true;
     }
     if (!state.dailyQuests || state.dailyQuests.date !== todayStr) {
@@ -579,7 +625,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (letter.reqHugs && (state.hugCount || 0) < letter.reqHugs) {
           parts.push(`Ôm ${state.hugCount || 0}/${letter.reqHugs}`);
         }
-        if (letter.reqDecor && (state.ownedDecor || []).length < letter.reqDecor) {
+        if (letter.reqDecor && (state.ownedDecor || []).length < letter.reqDecor && state.level < 22) {
           parts.push(`Đồ phòng ${(state.ownedDecor || []).length}/${letter.reqDecor}`);
         }
         if (letter.reqJars && (state.jarReads || 0) < letter.reqJars) {
@@ -649,9 +695,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Mood Jars
-  let jarReadsToday = 0;
-  let lastJarDate = "";
-
   function drawNoteFromJar(jarKey) {
     currentJarKey = jarKey;
     const jar = DATA.moodJars[jarKey];
@@ -671,17 +714,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     state.jarReads++;
 
-    const todayStr = new Date().toDateString();
-    if (lastJarDate !== todayStr) {
-      lastJarDate = todayStr;
-      jarReadsToday = 0;
-    }
-
-    if (jarReadsToday < 3) {
-      jarReadsToday++;
+    // Cap lives in saved state (not a JS variable) so reloading the page cannot reset it.
+    syncDailyReset();
+    const di = state.dailyInteractions;
+    if (di.jarReads < 3) {
+      di.jarReads++;
       addRewards(6, 1);
     } else {
-      addRewards(1, 0);
+      addRewards(0, 0); // still saves jarReads for the letter unlock
     }
   }
 
@@ -808,7 +848,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Initialize Room Scene
-  let lastTalkTime = 0;
   RoomScene.init(
     document.getElementById("roomCanvas"),
     () => state,
@@ -826,12 +865,14 @@ document.addEventListener("DOMContentLoaded", () => {
           const { item } = pickRandom(DATA.khanhDialogues);
           showSpeech("Anh Khánh", item);
         }
+        // Max 5 rewarded chats a day, at least 60s apart; extra taps are just for fun (no XP spam).
+        syncDailyReset();
+        const di = state.dailyInteractions;
         const now = Date.now();
-        if (now - lastTalkTime > 60000) {
-          lastTalkTime = now;
+        if (di.talkCount < 5 && now - (di.lastTalkAt || 0) > 60000) {
+          di.talkCount++;
+          di.lastTalkAt = now;
           addRewards(6, 1);
-        } else {
-          addRewards(1, 0);
         }
       } else if (who === "bong") {
         handlePetBong();
@@ -846,7 +887,11 @@ document.addEventListener("DOMContentLoaded", () => {
         ];
         const { item } = pickRandom(vinylQuotes);
         showSpeech("Anh Khánh 🎵", item);
-        addRewards(2, 0);
+        syncDailyReset();
+        if (state.dailyInteractions.vinylCount < 3) {
+          state.dailyInteractions.vinylCount++;
+          addRewards(2, 0);
+        }
       }
     }
   );
@@ -994,6 +1039,14 @@ document.addEventListener("DOMContentLoaded", () => {
     onGameOver: (res) => handleArcadeGameOver("flappy", res)
   });
 
+  function setHeardText(text) {
+    const box = document.getElementById("nonlaHeardBox");
+    box.textContent = "Nghe thấy: ";
+    const em = document.createElement("em");
+    em.textContent = text || "...";
+    box.appendChild(em);
+  }
+
   function updateNonlaUI(mode, word, lastHeard) {
     const isVoice = mode === "voice";
     document.getElementById("btnToggleNonlaMode").textContent = isVoice
@@ -1012,7 +1065,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btnB.dataset.val = pair[1];
     }
     if (lastHeard !== undefined) {
-      document.getElementById("nonlaHeardBox").innerHTML = `Nghe thấy: <em>${lastHeard || "..."}</em>`;
+      setHeardText(lastHeard);
     }
   }
 
@@ -1031,7 +1084,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     },
     onHeardUpdate(text) {
-      document.getElementById("nonlaHeardBox").innerHTML = `Nghe thấy: <em>${text || "..."}</em>`;
+      setHeardText(text);
     },
     onWordUpdate({ word, mode, lastHeard }) {
       updateNonlaUI(mode, word, lastHeard);
@@ -1349,7 +1402,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!parsed || typeof parsed !== "object" || typeof parsed.candy !== "number") {
       throw new Error("invalid");
     }
-    return { ...DEFAULT_STATE, ...parsed };
+    return normalizeState(parsed);
   }
 
   function isInAppBrowser() {
@@ -1395,9 +1448,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnResetSave").addEventListener("click", () => {
     if (confirm("Bạn có chắc muốn xóa dữ liệu lưu để chơi lại từ đầu không?")) {
       localStorage.removeItem(SAVE_KEY);
-      state = { ...DEFAULT_STATE };
+      state = freshDefaults();
       saveState();
       renderHUD();
+      updateGreetingBanner();
       closeModal("modalSettings");
       showToast("Đã đặt lại từ đầu!");
     }
@@ -1406,10 +1460,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // Ensure save flushes & mic releases cleanly when leaving, switching apps, or locking iPhone!
   function handleAppExitOrHide() {
     saveState();
-    const wasRunningNonla = NonLaGame.isRunning();
+    const modal = document.getElementById("modalMiniGame");
+    const stage = document.getElementById("arcadeStage");
+    const gameWasRunning =
+      MiniGame.isRunning() ||
+      CrossingGame.isRunning() ||
+      FlappyGame.isRunning() ||
+      NonLaGame.isRunning() ||
+      Boolean(window.MemoryGame && MemoryGame.isRunning());
     stopAllGames();
-    if (wasRunningNonla) {
-      document.getElementById("mgOverlay").classList.remove("hidden");
+    // Catch/Crossing/Flappy get stopped and Memory/Non La suspended; without an overlay the player returns to a frozen
+    // canvas with no button. openArcadeGame() shows the paused-resume overlay or a fresh-start overlay as appropriate.
+    if (gameWasRunning && modal && !modal.classList.contains("hidden") && stage && !stage.classList.contains("hidden")) {
+      openArcadeGame(activeGameKey);
     }
   }
 

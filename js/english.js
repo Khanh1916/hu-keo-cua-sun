@@ -695,6 +695,8 @@ window.EnglishApp = (() => {
   let quizIndex = 0;
   let quizScore = 0;
   let quizAnswered = false;
+  let quizRewardDone = false;
+  let quizRewardPaid = false;
 
   // Match game state
   let matchWords = [];
@@ -704,6 +706,7 @@ window.EnglishApp = (() => {
   let matchSelectedVi = null;
   let matchedIds = new Set();
   let matchRewarded = false;
+  let matchRewardPaid = false;
   let matchLocked = false;
 
   // Starred filter
@@ -1151,8 +1154,8 @@ window.EnglishApp = (() => {
         btnFinish.innerHTML = "🎉 Đã Ghi Nhớ Hôm Nay";
 
         if (window.AudioManager) AudioManager.playCelebration();
-        if (typeof window.addRewards === "function") {
-          window.addRewards(10, 2);
+        if (window.GameState) {
+          window.GameState.grantStudyReward("daily", 10, 2);
         }
         if (window.showToast) {
           showToast("🎉 Tuyệt vời! Ngọc đã hoàn thành 5 từ tiếng Anh hôm nay: +2 🍬 & +10 XP!");
@@ -1400,6 +1403,8 @@ window.EnglishApp = (() => {
     quizIndex = 0;
     quizScore = 0;
     quizAnswered = false;
+    quizRewardDone = false;
+    quizRewardPaid = false;
     renderQuizTab();
   }
 
@@ -1509,8 +1514,10 @@ window.EnglishApp = (() => {
     const total = quizQuestions.length;
     const isPerfect = quizScore === total;
 
-    if (quizScore >= 4 && typeof window.addRewards === "function") {
-      window.addRewards(8, 2);
+    // Reward once per finished round, capped per day by GameState.grantStudyReward.
+    if (quizScore >= 4 && !quizRewardDone && window.GameState) {
+      quizRewardDone = true;
+      quizRewardPaid = window.GameState.grantStudyReward("quiz", 8, 2).granted;
     }
 
     container.innerHTML = `
@@ -1518,7 +1525,7 @@ window.EnglishApp = (() => {
         <div class="quiz-result-icon">${isPerfect ? "🏆" : quizScore >= 3 ? "🎉" : "💪"}</div>
         <h3 class="quiz-result-title">${isPerfect ? "Xuất sắc tuyệt đối!" : quizScore >= 3 ? "Làm bài rất tốt!" : "Cố gắng hơn nhé!"}</h3>
         <p class="quiz-score-text">Ngọc đã trả lời đúng <strong>${quizScore}/${total}</strong> câu hỏi (${getLevelLabel(currentLevel)})!</p>
-        <p class="quiz-score-reward">${quizScore >= 4 ? "🎁 Thưởng nóng: +2 🍬 Kẹo & +8 XP!" : "Luyện tập mỗi ngày sẽ sớm lên tay nha em yêu!"}</p>
+        <p class="quiz-score-reward">${quizScore >= 4 ? (quizRewardPaid ? "🎁 Thưởng nóng: +2 🍬 Kẹo & +8 XP!" : "Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕") : "Luyện tập mỗi ngày sẽ sớm lên tay nha em yêu!"}</p>
         <div class="quiz-actions-row">
           <button class="btn-summary-action btn-summary-pink" id="btnRetryQuiz">🔄 Làm Lại Ván Mới</button>
           <button class="btn-summary-action btn-summary-cream" id="btnNextLevelQuiz">Đổi Cấp Độ</button>
@@ -1558,11 +1565,14 @@ window.EnglishApp = (() => {
     if (isCompleted && !matchRewarded) {
       matchRewarded = true;
       if (window.AudioManager) AudioManager.playCelebration();
-      if (typeof window.addRewards === "function") {
-        window.addRewards(6, 1);
+      matchRewardPaid = false;
+      if (window.GameState) {
+        matchRewardPaid = window.GameState.grantStudyReward("match", 6, 1).granted;
       }
       if (window.showToast) {
-        showToast("🎉 Nối chuẩn cả 5 từ tiếng Anh: +1 🍬 & +6 XP!");
+        showToast(matchRewardPaid
+          ? "🎉 Nối chuẩn cả 5 từ tiếng Anh: +1 🍬 & +6 XP!"
+          : "🎉 Nối chuẩn cả 5 từ! Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕");
       }
     }
 
@@ -1573,7 +1583,7 @@ window.EnglishApp = (() => {
             <div class="quiz-result-icon">🧩</div>
             <h3 class="quiz-result-title">Ghép Đôi Hoàn Hảo!</h3>
             <p class="quiz-score-text">Ngọc đã nối chính xác trọn vẹn <strong>${matchWords.length}/${matchWords.length}</strong> cặp từ (${getLevelLabel(currentLevel)})!</p>
-            <p class="quiz-score-reward">🎁 Thưởng: +1 🍬 Kẹo & +6 XP!</p>
+            <p class="quiz-score-reward">${matchRewardPaid ? "🎁 Thưởng: +1 🍬 Kẹo & +6 XP!" : "Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕"}</p>
             <div class="quiz-actions-row">
               <button class="btn-summary-action btn-summary-pink" id="btnNextMatchRound">Chơi Ván Mới 🧩</button>
               <button class="btn-summary-action btn-summary-cream" id="btnMatchToStarred">Xem Sổ Tay ⭐</button>

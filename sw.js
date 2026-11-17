@@ -1,6 +1,6 @@
 // Single source of truth for the cache/asset version.
 // When bumping: change ASSET_VERSION here AND every "?v=" in index.html to the same number.
-const ASSET_VERSION = "40";
+const ASSET_VERSION = "41";
 const CACHE_NAME = `hu-keo-sun-v${ASSET_VERSION}`;
 const q = `?v=${ASSET_VERSION}`;
 const CORE_ASSETS = [

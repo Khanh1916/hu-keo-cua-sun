@@ -26,9 +26,20 @@ window.WeatherEngine = (() => {
     65: { text: "Mưa rào lớn", icon: "🌧️", rain: true },
     80: { text: "Mưa rào ngắt quãng", icon: "🌦️", rain: true },
     81: { text: "Mưa rào rải rác", icon: "🌧️", rain: true },
+    56: { text: "Mưa phùn lạnh", icon: "🌧️", rain: true },
+    57: { text: "Mưa phùn lạnh dày", icon: "🌧️", rain: true },
+    66: { text: "Mưa lạnh", icon: "🌧️", rain: true },
+    67: { text: "Mưa lạnh nặng hạt", icon: "🌧️", rain: true },
+    71: { text: "Tuyết rơi nhẹ", icon: "🌨️", rain: false },
+    73: { text: "Tuyết rơi vừa", icon: "🌨️", rain: false },
+    75: { text: "Tuyết rơi dày", icon: "❄️", rain: false },
+    77: { text: "Hạt tuyết", icon: "🌨️", rain: false },
     82: { text: "Mưa rào to", icon: "⛈️", rain: true },
+    85: { text: "Mưa tuyết nhẹ", icon: "🌨️", rain: false },
+    86: { text: "Mưa tuyết dày", icon: "🌨️", rain: false },
     95: { text: "Mưa dông sấm sét", icon: "⛈️", rain: true },
-    96: { text: "Dông kèm mưa đá", icon: "⛈️", rain: true }
+    96: { text: "Dông kèm mưa đá", icon: "⛈️", rain: true },
+    99: { text: "Dông kèm mưa đá lớn", icon: "⛈️", rain: true }
   };
 
   // Known Vietnam cities for offline/fast distance matching

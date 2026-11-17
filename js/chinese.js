@@ -2624,10 +2624,7 @@ window.ChineseApp = (() => {
           const s = window.GameState.get();
           if (s.chineseDailyDoneDate !== todayStr) {
             s.chineseDailyDoneDate = todayStr;
-            s.candy += 2;
-            if (window.GameState.addXP) window.GameState.addXP(10);
-            window.GameState.save();
-            window.GameState.renderHUD();
+            window.GameState.grantStudyReward("daily", 10, 2);
           }
         }
 
@@ -2847,6 +2844,7 @@ window.ChineseApp = (() => {
   }
 
   let quizRewarded = false;
+  let quizRewardResult = null;
 
   function startQuiz() {
     const list = currentLevel === "starred" ? getAllStarredWords() : (HSK_DATA[currentLevel] || HSK_DATA.hsk4);
@@ -2906,6 +2904,7 @@ window.ChineseApp = (() => {
     quizScore = 0;
     quizAnswered = false;
     quizRewarded = false;
+    quizRewardResult = null;
     renderQuizQuestion();
   }
 
@@ -2916,19 +2915,16 @@ window.ChineseApp = (() => {
       if (quizScore >= 4 && !quizRewarded) {
         quizRewarded = true;
         if (window.GameState) {
-          const s = window.GameState.get();
-          s.candy = (s.candy || 0) + 2;
-          if (window.GameState.addXP) window.GameState.addXP(15);
-          window.GameState.save();
-          window.GameState.renderHUD();
+          quizRewardResult = window.GameState.grantStudyReward("quiz", 15, 2);
         }
       }
+      const quizPaid = Boolean(quizRewardResult && quizRewardResult.granted);
 
       container.innerHTML = `
         <div class="quiz-result-wrap">
           <h3>🎉 Hoàn Thành Bài Trắc Nghiệm!</h3>
           <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${quizQuestions.length}</strong> câu (${getLevelLabel(currentLevel)})</p>
-          <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 (+2 🍬 & +15 XP)" : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
+          <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 " + (quizPaid ? "(+2 🍬 & +15 XP)" : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)") : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
           <div class="quiz-actions">
             <button class="btn-summary-action btn-summary-pink" id="btnRestartQuiz">Làm Lại Lượt Mới</button>
             <button class="btn-summary-action btn-summary-cream" id="btnBackToDaily">Quay lại 5 từ mỗi ngày</button>
@@ -3062,6 +3058,7 @@ window.ChineseApp = (() => {
   let matchSelectedPinyin = null;
   let matchedIds = new Set();
   let matchRewarded = false;
+  let matchRewardPaid = false;
   let matchLocked = false;
 
   function startMatchGame() {
@@ -3123,12 +3120,9 @@ window.ChineseApp = (() => {
     if (isCompleted) {
       if (!matchRewarded) {
         matchRewarded = true;
+        matchRewardPaid = false;
         if (window.GameState) {
-          const s = window.GameState.get();
-          s.candy = (s.candy || 0) + 2;
-          if (window.GameState.addXP) window.GameState.addXP(10);
-          window.GameState.save();
-          window.GameState.renderHUD();
+          matchRewardPaid = window.GameState.grantStudyReward("match", 10, 2).granted;
         }
         if (window.AudioManager) AudioManager.playCelebration();
       }
@@ -3138,7 +3132,7 @@ window.ChineseApp = (() => {
           <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
           <h3>Xuất Sắc! Hoàn Thành Nối Từ</h3>
           <p class="quiz-score-text">Ngọc đã nối chính xác trọn vẹn <strong>${matchWords.length}/${matchWords.length}</strong> cặp chữ Hán & Pinyin (${getLevelLabel(currentLevel)})!</p>
-          <p class="quiz-cheer">Trí nhớ của em siêu đỉnh luôn nè 💕 (+2 🍬 Kẹo & +10 XP)</p>
+          <p class="quiz-cheer">Trí nhớ của em siêu đỉnh luôn nè 💕 ${matchRewardPaid ? "(+2 🍬 Kẹo & +10 XP)" : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)"}</p>
           <div class="quiz-actions">
             <button class="btn-summary-action btn-summary-pink" id="btnRestartMatch">Chơi Ván Mới 🧩</button>
             <button class="btn-summary-action btn-summary-cream" id="btnMatchToStarred">Xem Sổ Tay ⭐</button>

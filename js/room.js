@@ -194,6 +194,15 @@ window.RoomScene = (() => {
       }
     }
 
+    // Window petals fall here (fixed 60Hz step) instead of inside draw(). Window box: x=82,y=24,w=76,h=62.
+    petals.forEach((pt) => {
+      pt.y += pt.speed;
+      if (pt.y > 24 + 62 - 4) {
+        pt.y = 24 + 12;
+        pt.x = 82 + 4 + Math.random() * 56;
+      }
+    });
+
     // Update particles
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
@@ -311,11 +320,6 @@ window.RoomScene = (() => {
     } else {
       // Falling flamboyant petals in gentle breeze
       petals.forEach((pt) => {
-        pt.y += pt.speed;
-        if (pt.y > wy + wh - 4) {
-          pt.y = wy + 12;
-          pt.x = wx + 4 + Math.random() * 56;
-        }
         const ox = pt.x + Math.sin(frame * 0.04 + pt.sway) * 2.2;
         px(ctx, ox, pt.y, 2, 2, "#E63946");
       });
@@ -845,7 +849,18 @@ window.RoomScene = (() => {
   let lastTime = 0;
   let acc = 0;
 
+  let throttleTick = 0;
+
+  // The room sits behind a translucent modal most of the time; render it at ~15fps then to save battery.
+  function isCoveredByModal() {
+    return Boolean(document.querySelector(".modal-backdrop:not(.hidden)"));
+  }
+
   function loop(now) {
+    if (isCoveredByModal() && (throttleTick++ % 4) !== 0) {
+      rafId = requestAnimationFrame(loop);
+      return;
+    }
     if (!lastTime) lastTime = now || performance.now();
     const dt = Math.min(80, Math.max(0, (now || performance.now()) - lastTime));
     lastTime = now || performance.now();

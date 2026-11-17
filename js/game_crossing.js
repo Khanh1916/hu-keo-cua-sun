@@ -121,6 +121,13 @@ window.CrossingGame = (() => {
         lanes[r] = makeLane(r);
       }
     }
+    // Rows more than 10 behind the furthest point can never be visited again (backtracking stops at 4 rows).
+    const oldest = maxRowReached - 10;
+    if (oldest > 0) {
+      for (const key of Object.keys(lanes)) {
+        if (Number(key) < oldest) delete lanes[key];
+      }
+    }
   }
 
   function addPopup(x, y, text, color) {
@@ -223,6 +230,12 @@ window.CrossingGame = (() => {
       touchStart = { x: e.clientX, y: e.clientY };
     });
 
+    const clearTouch = () => {
+      touchStart = null;
+    };
+    canvasEl.addEventListener("pointercancel", clearTouch);
+    canvasEl.addEventListener("pointerleave", clearTouch);
+
     canvasEl.addEventListener("pointerup", (e) => {
       if (!running || !touchStart) return;
       const dx = e.clientX - touchStart.x;
@@ -270,6 +283,7 @@ window.CrossingGame = (() => {
     streak = 0;
     lastForwardFrame = -999;
     idleTimer = 0;
+    touchStart = null;
     bannerText = "Nhảy nhanh để ăn combo x2 nhé!";
     bannerTimer = 95;
     lanes = {};
