@@ -33,6 +33,38 @@ window.MemoryGame = (() => {
   let statusBanner = "";
   let statusTimer = 0;
 
+  // Fixed 60Hz logic step so peek/banner timing does not depend on display refresh rate (120Hz phones).
+  const FIXED_STEP = 1000 / 60;
+  let lastTime = 0;
+  let acc = 0;
+
+  // Tracked timeouts: cleared on start()/stop() so a stale callback never fires into another game or screen.
+  let timers = [];
+  // Victory/defeat that came due while the game was suspended (user in arcade menu) — delivered on resume().
+  let pendingEnd = null;
+
+  function later(fn, ms) {
+    const id = setTimeout(() => {
+      timers = timers.filter((t) => t !== id);
+      fn();
+    }, ms);
+    timers.push(id);
+  }
+
+  function clearTimers() {
+    timers.forEach(clearTimeout);
+    timers = [];
+    pendingEnd = null;
+  }
+
+  function finish(fn) {
+    if (isPaused) {
+      pendingEnd = fn;
+      return;
+    }
+    fn();
+  }
+
   function shuffle(arr) {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
@@ -122,9 +154,14 @@ window.MemoryGame = (() => {
         selected = [];
         updateHud();
 
-        // Check Victory
+        // Check Victory / out of turns right after a successful match
         if (pairsFound === 8) {
-          setTimeout(handleVictory, 500);
+          later(() => finish(handleVictory), 500);
+        } else if (turnsLeft <= 0) {
+          isLocked = true;
+          statusBanner = "Hết lượt lật rồi!";
+          statusTimer = 45;
+          later(() => finish(handleDefeat), 750);
         }
       } else {
         // Mismatch
@@ -135,11 +172,11 @@ window.MemoryGame = (() => {
         if (turnsLeft <= 0 && pairsFound < 8) {
           statusBanner = "Hết lượt lật rồi!";
           statusTimer = 45;
-          setTimeout(handleDefeat, 750);
+          later(() => finish(handleDefeat), 750);
         } else {
           statusBanner = `Chưa khớp rồi! (Còn ${turnsLeft} lượt)`;
           statusTimer = 35;
-          setTimeout(() => {
+          later(() => {
             c1.flipped = false;
             c2.flipped = false;
             selected = [];
@@ -152,7 +189,8 @@ window.MemoryGame = (() => {
 
   function handleVictory() {
     running = false;
-    const finalCandies = turnsLeft >= 5 ? 3 : (turnsLeft >= 2 ? 2 : 1);
+    // Never pay less than what the HUD already showed (pair-based candies), so the promise matches the payout.
+    const finalCandies = Math.max(candies, turnsLeft >= 5 ? 3 : (turnsLeft >= 2 ? 2 : 1));
     const finalScore = score + turnsLeft * 12;
     if (window.AudioManager) AudioManager.playCelebration();
 
@@ -172,7 +210,7 @@ window.MemoryGame = (() => {
     if (callbacks.onGameOver) {
       callbacks.onGameOver({
         score,
-        candies: 0,
+        candies,
         reason: `Hết 12 lượt rồi! Lần sau hãy tận dụng 2 giây nhìn lướt đầu ván nhé em 💕`
       });
     }
@@ -283,39 +321,43 @@ window.MemoryGame = (() => {
     // Status Banner / Flash Peek Countdown
     if (isPeeking) {
       const secLeft = Math.ceil(peekTimer / 60);
+      // Banner lives in the strip below the grid (y=262..280) so it never hides the cards being memorised.
       ctx.fillStyle = "rgba(74, 48, 44, 0.92)";
-      ctx.fillRect(12, 126, 216, 28);
+      ctx.fillRect(8, 264, 224, 14);
       ctx.fillStyle = "#FFE7A8";
-      ctx.font = "bold 11px sans-serif";
+      ctx.font = "bold 10px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(`👀 Nhìn lướt ghi nhớ nhanh (${secLeft}s)...`, 120, 140);
+      ctx.fillText(`👀 Nhìn lướt ghi nhớ nhanh (${secLeft}s)...`, 120, 271.5);
     } else if (statusTimer > 0 && statusBanner) {
-      statusTimer--;
       ctx.fillStyle = "rgba(74, 48, 44, 0.88)";
-      ctx.fillRect(14, 126, 212, 28);
+      ctx.fillRect(8, 264, 224, 14);
       ctx.fillStyle = "#FFFDF7";
-      ctx.font = "bold 11px sans-serif";
+      ctx.font = "bold 10px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(statusBanner, 120, 140);
+      ctx.fillText(statusBanner, 120, 271.5);
     }
 
     // Particles
     particles.forEach((p) => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.life--;
       ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
       px(ctx, Math.round(p.x), Math.round(p.y), 2, 2, p.color);
       ctx.globalAlpha = 1;
     });
-    particles = particles.filter((p) => p.life > 0);
   }
 
-  function loop() {
-    if (!running) return;
+  // One fixed 60Hz logic tick: all timers and particle motion live here, render() is side-effect free.
+  function update() {
     frame++;
+    if (statusTimer > 0) statusTimer--;
+
+    particles.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life--;
+    });
+    particles = particles.filter((p) => p.life > 0);
 
     if (isPeeking) {
       peekTimer--;
@@ -330,9 +372,22 @@ window.MemoryGame = (() => {
         updateHud();
       }
     }
+  }
 
-    render();
-    rafId = requestAnimationFrame(loop);
+  function loop(now) {
+    if (!running) return;
+    if (!lastTime) lastTime = now;
+    const dt = Math.min(80, Math.max(0, now - lastTime));
+    lastTime = now;
+    acc += dt;
+    while (acc >= FIXED_STEP && running) {
+      update();
+      acc -= FIXED_STEP;
+    }
+    if (running) {
+      render();
+      rafId = requestAnimationFrame(loop);
+    }
   }
 
   function init(canvasEl, cbs) {
@@ -346,8 +401,11 @@ window.MemoryGame = (() => {
   }
 
   function start() {
+    clearTimers();
     running = true;
     isPaused = false;
+    lastTime = 0;
+    acc = 0;
     turnsLeft = MAX_TURNS;
     pairsFound = 0;
     streak = 0;
@@ -382,8 +440,15 @@ window.MemoryGame = (() => {
   function resume() {
     if (!running) return false;
     isPaused = false;
+    lastTime = 0;
+    acc = 0;
     if (rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(loop);
+    if (pendingEnd) {
+      const fn = pendingEnd;
+      pendingEnd = null;
+      fn();
+    }
     return true;
   }
 
@@ -412,6 +477,7 @@ window.MemoryGame = (() => {
   }
 
   function stop() {
+    clearTimers();
     running = false;
     isPaused = false;
     isPeeking = false;

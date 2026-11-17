@@ -29,6 +29,8 @@ window.FlappyGame = (() => {
   let popups = [];
   let bannerText = "";
   let bannerTimer = 0;
+  // Each score milestone pays out once per run (score is checked on every pipe, so a range test paid twice).
+  let milestonesHit = new Set();
 
   const FIXED_STEP = 1000 / 60;
   let lastTime = 0;
@@ -70,6 +72,7 @@ window.FlappyGame = (() => {
       if (!running) return;
       if (e.code === "Space" || e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
         e.preventDefault();
+        if (e.repeat) return; // holding the key must not auto-flap
         flap();
       }
     });
@@ -87,6 +90,7 @@ window.FlappyGame = (() => {
     feathers = [];
     popups = [];
     pipeTimer = 50;
+    milestonesHit = new Set();
     started = false;
     bannerText = "Chạm (hoặc Space) để bắt đầu bay! 🪽";
     bannerTimer = 9999;
@@ -189,19 +193,25 @@ window.FlappyGame = (() => {
           life: 32
         });
 
-        if (score >= 50 && score < 65) {
-          bannerText = "✨ 50 điểm! Đúng nhịp Flappy rồi!";
-          bannerTimer = 90;
+        if (score >= 160 && !milestonesHit.has(160)) {
+          milestonesHit.add(160);
+          milestonesHit.add(100);
+          milestonesHit.add(50);
+          candies += 2;
+          bannerText = "⭐ Bay xuyên đêm luôn! +2 🍬";
+          bannerTimer = 100;
           AudioManager.playPowerup();
-        } else if (score >= 100 && score < 115) {
+        } else if (score >= 100 && !milestonesHit.has(100)) {
+          milestonesHit.add(100);
+          milestonesHit.add(50);
           candies += 1;
           bannerText = "🌙 Hoàng hôn tới rồi! +1 🍬";
           bannerTimer = 100;
           AudioManager.playPowerup();
-        } else if (score >= 160 && score < 175) {
-          candies += 2;
-          bannerText = "⭐ Bay xuyên đêm luôn! +2 🍬";
-          bannerTimer = 100;
+        } else if (score >= 50 && !milestonesHit.has(50)) {
+          milestonesHit.add(50);
+          bannerText = "✨ 50 điểm! Đúng nhịp Flappy rồi!";
+          bannerTimer = 90;
           AudioManager.playPowerup();
         }
 

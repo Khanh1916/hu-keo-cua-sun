@@ -24,7 +24,7 @@ window.NonLaGame = (() => {
     { tier: 1, target: "lấp lánh", blank: "Ánh sao đêm ___ lánh trên bầu trời", right: "lấp", wrong: "nấp", ngong: "nấp nánh" },
     { tier: 1, target: "lưu luyến", blank: "Lúc chia tay lòng đầy ___ luyến", right: "lưu", wrong: "nưu", ngong: "nưu nuyến" },
     { tier: 1, target: "nô nức", blank: "Phố phường đông vui ___ nức hội hè", right: "nô", wrong: "lô", ngong: "lô lức" },
-    { tier: 1, target: "nũng nịu", blank: "Bé Sún hay ___ đòi anh dỗ dành", right: "nũng nịu", wrong: "lũng liệu", ngong: "lũng liệu" },
+    { tier: 1, target: "nũng nịu", blank: "Bé Sún hay nũng ___ đòi anh dỗ dành", right: "nịu", wrong: "lịu", ngong: "nũng lịu" },
     { tier: 1, target: "nóng lòng", blank: "Anh rất ___ lòng muốn gặp em sớm", right: "nóng", wrong: "lóng", ngong: "lóng nòng" },
     { tier: 1, target: "lối nhỏ", blank: "Con ___ nhỏ dẫn vào ngõ nhà em", right: "lối", wrong: "nối", ngong: "nối nhỏ" },
     { tier: 1, target: "lời nói", blank: "Từng ___ nói anh đều ghi nhớ kỹ", right: "lời", wrong: "nời", ngong: "nời lói" },
@@ -42,7 +42,7 @@ window.NonLaGame = (() => {
 
     // Tier 2: Tình yêu đôi mình, Đất Cảng Hải Phòng & Nhạc MCK (30 câu)
     { tier: 2, target: "yêu lắm", blank: "Dù ở xa nhau nhưng anh thương em ___", right: "lắm", wrong: "nắm", ngong: "yêu nắm" },
-    { tier: 2, target: "nhớ lắm", blank: "Mới không gặp mấy hôm mà đã ___", right: "lắm", wrong: "nắm", ngong: "nhớ nắm" },
+    { tier: 2, target: "nhớ lắm", blank: "Mới không gặp mấy hôm mà đã nhớ ___", right: "lắm", wrong: "nắm", ngong: "nhớ nắm" },
     { tier: 2, target: "nắm lấy tay", blank: "Hãy đưa tay đây và ___ lấy tay anh", right: "Nắm", wrong: "Lắm", ngong: "lắm nấy tay" },
     { tier: 2, target: "nựng má", blank: "Mỗi lần gặp chỉ muốn véo ___ thơm má", right: "nựng", wrong: "lựng", ngong: "lựng má" },
     { tier: 2, target: "luôn luôn", blank: "Anh sẽ ___ ở bên cạnh đồng hành cùng em", right: "luôn", wrong: "nuôn", ngong: "nuôn nuôn" },
@@ -50,7 +50,7 @@ window.NonLaGame = (() => {
     { tier: 2, target: "lạc lối", blank: "Lỡ bước ___ vào đôi mắt trong veo", right: "lạc", wrong: "nạc", ngong: "nạc nối" },
     { tier: 2, target: "lên xe", blank: "Mau ___ xe anh chở em dạo phố nào", right: "lên", wrong: "nên", ngong: "nên xe" },
     { tier: 2, target: "nụ hôn", blank: "Trao cho người yêu một ___ thật ngọt ngào", right: "nụ", wrong: "lụ", ngong: "lụ hôn" },
-    { tier: 2, target: "ngọt lịm", blank: "Giọng nói của em mỗi lần gọi anh ___ lịm", right: "lịm", wrong: "nịm", ngong: "ngọt nịm" },
+    { tier: 2, target: "ngọt lịm", blank: "Giọng nói của em ngọt ___ mỗi lần gọi anh", right: "lịm", wrong: "nịm", ngong: "ngọt nịm" },
     { tier: 2, target: "bánh đa lòng cá", blank: "Món bánh đa ___ cá cay xé lưỡi", right: "lòng", wrong: "nòng", ngong: "bánh đa nòng cá" },
     { tier: 2, target: "nem cua bể", blank: "Đĩa ___ cua bể chiên giòn rụm", right: "nem", wrong: "lem", ngong: "lem cua bể" },
     { tier: 2, target: "nước dùng", blank: "Nồi ___ dùng bánh đa cua thơm nức mũi", right: "nước", wrong: "lước", ngong: "lước dùng" },

@@ -58,6 +58,15 @@ window.MiniGame = (() => {
       if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") keys.left = false;
       if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") keys.right = false;
     });
+    // Losing focus mid-press never delivers keyup, which left the basket drifting on its own.
+    const releaseKeys = () => {
+      keys.left = false;
+      keys.right = false;
+    };
+    window.addEventListener("blur", releaseKeys);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) releaseKeys();
+    });
   }
 
   function start() {
@@ -77,6 +86,8 @@ window.MiniGame = (() => {
     popups = [];
     sparks = [];
     spawnCooldown = 26;
+    keys.left = false;
+    keys.right = false;
     playerX = 120;
     frame = 0;
     lastTime = 0;

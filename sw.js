@@ -1,4 +1,8 @@
-const CACHE_NAME = "hu-keo-sun-v39";
+// Single source of truth for the cache/asset version.
+// When bumping: change ASSET_VERSION here AND every "?v=" in index.html to the same number.
+const ASSET_VERSION = "40";
+const CACHE_NAME = `hu-keo-sun-v${ASSET_VERSION}`;
+const q = `?v=${ASSET_VERSION}`;
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -6,21 +10,21 @@ const CORE_ASSETS = [
   "./favicon.svg",
   "./icon-180.png",
   "./icon-512.png",
-  "./css/style.css?v=36",
-  "./js/data.js?v=36",
-  "./js/lunar.js?v=36",
-  "./js/weather.js?v=36",
-  "./js/audio.js?v=36",
-  "./js/sprites.js?v=36",
-  "./js/room.js?v=36",
-  "./js/minigame.js?v=36",
-  "./js/game_crossing.js?v=36",
-  "./js/game_flappy.js?v=36",
-  "./js/game_nonla.js?v=36",
-  "./js/game_memory.js?v=36",
-  "./js/chinese.js?v=36",
-  "./js/english.js?v=36",
-  "./js/app.js?v=36"
+  `./css/style.css${q}`,
+  `./js/data.js${q}`,
+  `./js/lunar.js${q}`,
+  `./js/weather.js${q}`,
+  `./js/audio.js${q}`,
+  `./js/sprites.js${q}`,
+  `./js/room.js${q}`,
+  `./js/minigame.js${q}`,
+  `./js/game_crossing.js${q}`,
+  `./js/game_flappy.js${q}`,
+  `./js/game_nonla.js${q}`,
+  `./js/game_memory.js${q}`,
+  `./js/chinese.js${q}`,
+  `./js/english.js${q}`,
+  `./js/app.js${q}`
 ];
 
 self.addEventListener("install", (event) => {
@@ -44,8 +48,10 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
+  const isNavigate = event.request.mode === "navigate";
+
   event.respondWith(
-    fetch(event.request.mode === "navigate" ? new Request(event.request, { cache: "no-store" }) : event.request)
+    fetch(isNavigate ? new Request(event.request, { cache: "no-store" }) : event.request)
       .then((res) => {
         if (res && res.status === 200) {
           const copy = res.clone();
@@ -53,6 +59,13 @@ self.addEventListener("fetch", (event) => {
         }
         return res;
       })
-      .catch(() => caches.match(event.request).then((hit) => hit || caches.match("./index.html")))
+      .catch(() =>
+        caches.match(event.request).then((hit) => {
+          if (hit) return hit;
+          // Only pages may fall back to index.html; serving HTML for a missing .js/.css breaks parsing.
+          if (isNavigate) return caches.match("./index.html");
+          return Response.error();
+        })
+      )
   );
 });

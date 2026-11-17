@@ -920,9 +920,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Per-game payout limits (see handleArcadeGameOver). HUD mirrors the cap so players are not promised more than they get.
+  const ARCADE_MAX_CANDY = 3;
+  const ARCADE_MIN_SCORE_FOR_REWARD = 10;
+
   function handleArcadeHud({ score, candies, lives, livesText }) {
     document.getElementById("mgScore").textContent = score;
-    document.getElementById("mgCandy").textContent = candies;
+    document.getElementById("mgCandy").textContent = Math.min(ARCADE_MAX_CANDY, candies);
     if (livesText !== undefined) {
       document.getElementById("mgLives").textContent = livesText;
     } else if (lives !== undefined) {
@@ -936,10 +940,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isNewBest) state[meta.bestKey] = score;
     document.getElementById("mgBest").textContent = state[meta.bestKey];
 
-    // Rebalanced economy: candies capped 0-3 (+1 bonus if new best), XP 2-5
-    let finalCandies = Math.max(0, Math.min(3, candies || 0));
-    if (isNewBest && score > 0) finalCandies = Math.min(4, finalCandies + 1);
-    const xpEarned = Math.max(2, Math.min(5, Math.floor(score / 35)));
+    // Rebalanced economy: candies capped 0-3 (+1 bonus if new best), XP 2-5.
+    // Runs below ARCADE_MIN_SCORE_FOR_REWARD pay nothing, so dying instantly cannot be farmed for XP.
+    const rewarded = score >= ARCADE_MIN_SCORE_FOR_REWARD;
+    let finalCandies = rewarded ? Math.max(0, Math.min(ARCADE_MAX_CANDY, candies || 0)) : 0;
+    if (isNewBest && rewarded) finalCandies = Math.min(ARCADE_MAX_CANDY + 1, finalCandies + 1);
+    const xpEarned = rewarded ? Math.max(2, Math.min(5, Math.floor(score / 35))) : 0;
     addRewards(xpEarned, finalCandies);
 
     if (score >= 50 && state.dailyQuests && !state.dailyQuests.gameDone) {
@@ -1078,7 +1084,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (NonLaGame.drawPausedPreview) NonLaGame.drawPausedPreview();
       document.getElementById("mgBest").textContent = state[meta.bestKey];
       document.getElementById("mgScore").textContent = NonLaGame.getScore();
-      document.getElementById("mgCandy").textContent = NonLaGame.getCandies();
+      document.getElementById("mgCandy").textContent = Math.min(ARCADE_MAX_CANDY, NonLaGame.getCandies());
       document.getElementById("mgLives").textContent = "❤️".repeat(Math.max(1, NonLaGame.getLives()));
       document.getElementById("mgResultBox").classList.add("hidden");
       document.getElementById("mgOverlayTitle").textContent = "⏸ Ván Đang Tạm Dừng";
@@ -1090,7 +1096,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (MemoryGame.drawPausedPreview) MemoryGame.drawPausedPreview();
       document.getElementById("mgBest").textContent = state[meta.bestKey];
       document.getElementById("mgScore").textContent = MemoryGame.getScore();
-      document.getElementById("mgCandy").textContent = MemoryGame.getCandies();
+      document.getElementById("mgCandy").textContent = Math.min(ARCADE_MAX_CANDY, MemoryGame.getCandies());
       document.getElementById("mgLives").textContent = `${MemoryGame.getTurnsLeft()} lượt`;
       document.getElementById("mgResultBox").classList.add("hidden");
       document.getElementById("mgOverlayTitle").textContent = "⏸ Ván Đang Tạm Dừng";
