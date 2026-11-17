@@ -1,0 +1,5 @@
+# Agent / AI-assistant instruction files (kept local, not published)
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.github/copilot-instructions.md
