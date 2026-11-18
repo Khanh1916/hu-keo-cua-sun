@@ -1778,9 +1778,9 @@ window.ChineseApp = (() => {
         "pinyin": "róng huì guàn tōng",
         "type": "Thành ngữ",
         "meaning": "Hiểu sâu sắc và kết hợp nhuần nhuyễn",
-        "example": "祝 Ngọc học tiếng Trung ngày càng tinh thông, mọi ngữ pháp đều融会贯通！",
-        "examplePinyin": "Zhù Ngọc xué zhōngwén yuè lái yuè tīngtōng, róng huì guàn tōng!",
-        "exampleMeaning": "Chúc Ngọc học tiếng Trung ngày một siêu đẳng, bài thi nào cũng vượt qua nhẹ nhàng!"
+        "example": "希望 Ngọc 学中文越来越顺利，各种语法都能融会贯通！",
+        "examplePinyin": "Xīwàng Ngọc xué Zhōngwén yuèláiyuè shùnlì, gè zhǒng yǔfǎ dōu néng rónghuì-guàntōng!",
+        "exampleMeaning": "Mong Ngọc học tiếng Trung ngày càng thuận lợi, ngữ pháp nào cũng hiểu sâu và vận dụng nhuần nhuyễn!"
       },
       {
         "hanzi": "深思熟虑",
