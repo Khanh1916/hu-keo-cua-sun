@@ -253,6 +253,106 @@ window.PixelSprites = (() => {
     }
   }
 
+  // Combined hug sprite (pixel-game convention, e.g. RPG Maker "couple behaviors"): instead of two front-facing
+  // sprites, the pair turn to FACE EACH OTHER in profile and become one sprite. Khánh (left, facing right) wraps his near
+  // arm around Ngọc's shoulders; Ngọc (right, facing left) rests her head on his chest and wraps her near arm around his
+  // back; both close their eyes. Khánh's body centre = cx - 5, Ngọc's = cx + 6 (the room anchors cx from Khánh), by = floor.
+  // Mirrored with ctx.scale(-1, 1) by the room when Ngọc is on Khánh's left.
+  function drawHugCouple(ctx, cx, by, frame = 0) {
+    const squeeze = frame % 48 < 24 ? 0 : 1; // gentle "squeeze" bob
+    const POLO = "#242229";
+    const POLO_HI = "#3D3A45";
+    const PANTS = "#6D737E";
+    const K_SKIN = "#F6C9AA";
+    const K_HAIR = "#2A2124";
+    const N_SKIN = "#F8D2B8";
+    const N_HAIR = "#1B1416";
+    const N_HAIR_HI = "#3A2D31";
+    const TEE = "#FFF6EA";
+    const TEE_FOLD = "#EADCC8";
+    const SHORTS = "#7FA7C9";
+    const BLACK = "#181518";
+    const EYE = "#2B1E1C";
+
+    // Shadows
+    px(ctx, cx - 18, by - 2, 30, 3, "rgba(74, 48, 44, 0.18)");
+
+    // ---------- Khánh, profile facing right ----------
+    const kx = cx - 12;
+    const ky = by - 32 + squeeze;
+    px(ctx, kx + 2, ky + 30, 4, 2, "#2A2224"); // back shoe
+    px(ctx, kx + 4, ky + 29, 7, 3, "#2A2224"); // front shoe (toe to the right)
+    px(ctx, kx + 3, ky + 22, 7, 7, PANTS);
+    px(ctx, kx + 3, ky + 22, 7, 1, "#5E646F");
+    px(ctx, kx + 2, ky + 13, 10, 9, POLO); // chest
+    px(ctx, kx + 8, ky + 12, 3, 2, POLO_HI); // collar
+    px(ctx, kx + 8, ky + 10, 3, 3, "#E7B491"); // neck
+    // ---------- Ngọc, profile facing left (shorter, head resting on his chest) ----------
+    const nx = cx;
+    const ny = by - 30 + squeeze;
+    const hy = ny + 6; // head tucked under his chin, cheek against his chest
+    px(ctx, nx + 6, ny + 23, 3, 5, "#EDBB9C"); // back leg
+    px(ctx, nx + 3, ny + 22, 3, 6, N_SKIN); // front leg
+    px(ctx, nx + 5, ny + 28, 4, 2, "#E9A3BB"); // back slipper
+    px(ctx, nx + 1, ny + 28, 5, 2, "#F7B6CC"); // front slipper (toe to the left)
+    px(ctx, nx + 2, ny + 18, 8, 5, SHORTS);
+    px(ctx, nx + 2, ny + 18, 8, 1, "#6890B3");
+    px(ctx, nx + 1, ny + 11, 10, 8, TEE);
+    px(ctx, nx + 5, ny + 13, 1, 5, TEE_FOLD);
+    px(ctx, nx + 8, ny + 11, 3, 1, N_SKIN); // a little bare shoulder at the back (off-shoulder tee)
+    // head
+    px(ctx, nx + 1, hy + 1, 9, 8, N_SKIN);
+    px(ctx, nx + 2, hy + 9, 6, 1, N_SKIN); // chin
+    px(ctx, nx + 0, hy + 5, 1, 2, N_SKIN); // nose
+    px(ctx, nx + 1, hy - 1, 9, 3, N_HAIR); // top (normal hairline)
+    px(ctx, nx + 6, hy + 1, 5, 7, N_HAIR); // back of head
+    px(ctx, nx + 3, hy - 1, 3, 1, N_HAIR_HI);
+    // braid over her LEFT shoulder (the side facing the viewer here), down the front of the tee
+    px(ctx, nx + 6, hy + 8, 3, 10, N_HAIR);
+    for (let i = 0; i < 5; i++) px(ctx, nx + 6 + (i % 2), hy + 8 + i * 2, 2, 1, N_HAIR_HI);
+    px(ctx, nx + 6, hy + 18, 3, 1, "#F49CB8");
+    px(ctx, nx + 7, hy + 19, 1, 1, N_HAIR);
+    // big black glasses (side view)
+    px(ctx, nx + 0, hy + 3, 4, 1, BLACK);
+    px(ctx, nx + 0, hy + 6, 4, 1, BLACK);
+    px(ctx, nx + 0, hy + 3, 1, 4, BLACK);
+    px(ctx, nx + 3, hy + 3, 1, 4, BLACK);
+    px(ctx, nx + 4, hy + 4, 3, 1, BLACK); // temple arm to the ear
+    px(ctx, nx + 1, hy + 5, 2, 1, EYE); // closed eye
+    px(ctx, nx + 1, hy + 7, 2, 1, "#F49CB8"); // blush
+    px(ctx, nx + 0, hy + 8, 1, 1, "#C65D6B"); // smile
+
+    // Khánh's head goes in front of her hair: he rests his chin on top of her head
+    px(ctx, kx + 5, ky + 3, 9, 8, K_SKIN);
+    px(ctx, kx + 14, ky + 6, 1, 2, K_SKIN); // nose
+    px(ctx, kx + 6, ky + 6, 2, 3, "#E7B491"); // ear
+    px(ctx, kx + 4, ky + 1, 10, 3, K_HAIR); // top
+    px(ctx, kx + 4, ky + 3, 3, 4, K_HAIR); // back of head
+    px(ctx, kx + 11, ky + 3, 3, 1, K_HAIR); // fringe
+    px(ctx, kx + 6, ky + 0, 6, 1, K_HAIR);
+    // glasses (side view): lens frame + temple arm to the ear
+    px(ctx, kx + 10, ky + 5, 4, 1, BLACK);
+    px(ctx, kx + 10, ky + 8, 4, 1, BLACK);
+    px(ctx, kx + 10, ky + 5, 1, 4, BLACK);
+    px(ctx, kx + 13, ky + 5, 1, 4, BLACK);
+    px(ctx, kx + 8, ky + 6, 2, 1, BLACK);
+    px(ctx, kx + 11, ky + 7, 2, 1, EYE); // closed eye
+    px(ctx, kx + 11, ky + 9, 2, 1, "#F49CB8"); // blush
+    px(ctx, kx + 13, ky + 10, 1, 1, "#C65D6B"); // smile
+
+
+    // ---------- Arms around each other (drawn last so they sit on top) ----------
+    // Khánh's near arm over her shoulders: sleeve, then forearm across her back, hand + watch on her far side
+    px(ctx, kx + 8, ky + 15, 3, 3, POLO);
+    px(ctx, kx + 11, ky + 17, nx + 10 - (kx + 11), 2, K_SKIN); // just under her chin, across her upper back
+    px(ctx, nx + 7, ky + 17, 2, 2, "#DCE3EC"); // silver watch
+    px(ctx, nx + 10, ky + 16, 2, 3, K_SKIN); // hand on her back
+    // Ngọc's near arm around his waist: sleeve, forearm across his back, hand on his far side
+    px(ctx, nx + 4, ny + 15, 3, 3, TEE);
+    px(ctx, kx + 2, ny + 19, nx + 6 - (kx + 2), 2, N_SKIN); // around his waist
+    px(ctx, kx + 0, ny + 18, 2, 3, N_SKIN); // hand on his back
+  }
+
   // Draw Bé mèo Bông: lông trắng với vàng trộn lẫn, mũi mồm trắng rõ nét
   function drawBong(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
     const hop = state === "happy" ? Math.abs(Math.round(Math.sin(frame * 0.3) * 3)) : 0;
@@ -589,6 +689,7 @@ window.PixelSprites = (() => {
   return {
     drawKhanh,
     drawNgoc,
+    drawHugCouple,
     drawBong,
     drawDecor,
     drawCatchItem,

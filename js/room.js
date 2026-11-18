@@ -245,7 +245,8 @@ window.RoomScene = (() => {
     }
     if (ngoc.mode === "toKhanh") {
       const side = ngoc.x <= khanh.x ? -1 : 1;
-      const goal = khanh.x + side * 12; // close enough for her arm to reach him without covering his face
+      // 11 px = where drawHugCouple places her body, so switching to the hug sprite doesn't make anyone jump
+      const goal = khanh.x + side * 11;
       const dx = goal - ngoc.x;
       if (Math.abs(dx) > 1.2) {
         ngoc.state = "walk";
@@ -858,17 +859,36 @@ window.RoomScene = (() => {
       drawNoelDecor();
     }
 
-    // 3. Depth-sorted characters (Khánh Mini & Bé mèo Bông)
-    [
-      { y: khanh.y, draw: () => PixelSprites.drawKhanh(ctx, khanh.x, khanh.y, khanh.state, frame) },
-      { y: ngoc.y, draw: () => PixelSprites.drawNgoc(ctx, ngoc.x, ngoc.y, ngoc.dir, ngoc.state, frame) },
-      { y: bong.y, draw: () => PixelSprites.drawBong(ctx, bong.x, bong.y, bong.dir, bong.state, frame) }
-    ]
+    // 3. Depth-sorted characters (Khánh, Ngọc, Bông). While hugging, Khánh + Ngọc become ONE face-to-face sprite
+    //    (pixel-game convention), mirrored when Ngọc is on his left.
+    const hugging = ngoc.mode === "hug";
+    const people = hugging
+      ? [{
+        y: ngoc.y,
+        draw: () => {
+          const side = ngoc.x >= khanh.x ? 1 : -1;
+          const cx = Math.round(khanh.x + side * 5);
+          if (side > 0) {
+            PixelSprites.drawHugCouple(ctx, cx, khanh.y + 1, frame);
+          } else {
+            ctx.save();
+            ctx.translate(cx * 2, 0);
+            ctx.scale(-1, 1);
+            PixelSprites.drawHugCouple(ctx, cx, khanh.y + 1, frame);
+            ctx.restore();
+          }
+        }
+      }]
+      : [
+        { y: khanh.y, draw: () => PixelSprites.drawKhanh(ctx, khanh.x, khanh.y, khanh.state, frame) },
+        { y: ngoc.y, draw: () => PixelSprites.drawNgoc(ctx, ngoc.x, ngoc.y, ngoc.dir, ngoc.state, frame) }
+      ];
+    [...people, { y: bong.y, draw: () => PixelSprites.drawBong(ctx, bong.x, bong.y, bong.dir, bong.state, frame) }]
       .sort((a, b) => a.y - b.y)
       .forEach((c) => c.draw());
 
     // Ngọc's festive hat (birthdays & Noel), placed on top of her hair
-    if (specialDay === "ngoc" || specialDay === "khanh" || specialDay === "noel") {
+    if (!hugging && (specialDay === "ngoc" || specialDay === "khanh" || specialDay === "noel")) {
       const px = PixelSprites.px;
       const lively = ngoc.state === "happy" || ngoc.state === "hug";
       const nbob = lively ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
