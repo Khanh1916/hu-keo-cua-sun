@@ -260,8 +260,17 @@ window.PixelSprites = (() => {
   // sprites, the pair turn to FACE EACH OTHER in profile and become one sprite. Khánh (left, facing right) wraps his near
   // arm around Ngọc's shoulders; Ngọc (right, facing left) rests her head on his chest and wraps her near arm around his
   // back; both close their eyes. Khánh's body centre = cx - 5, Ngọc's = cx + 6 (the room anchors cx from Khánh), by = floor.
-  // Mirrored with ctx.scale(-1, 1) by the room when Ngọc is on Khánh's left.
-  function drawHugCouple(ctx, cx, by, frame = 0) {
+  // flip = true draws the mirror image for when Ngọc stands on Khánh's LEFT. It is a proper redraw, not just a flipped
+  // copy: Khánh then shows his left arm (his silver watch is on the far, right wrist, so it is hidden) and Ngọc shows her
+  // right side (bare off-shoulder with its black strap; her braid, which lies over her left shoulder, hangs behind her back).
+  function drawHugCouple(realCtx, cx, by, frame = 0, flip = false) {
+    // Mirror every rectangle around x = cx when flipped
+    const ctx = flip
+      ? {
+        set fillStyle(v) { realCtx.fillStyle = v; },
+        fillRect: (x, y, w, h) => realCtx.fillRect(2 * cx - x - w, y, w, h)
+      }
+      : realCtx;
     const squeeze = frame % 48 < 24 ? 0 : 1; // gentle "squeeze" bob
     const POLO = "#242229";
     const POLO_HI = "#3D3A45";
@@ -310,11 +319,22 @@ window.PixelSprites = (() => {
     px(ctx, nx + 1, hy - 1, 9, 3, N_HAIR); // top (normal hairline)
     px(ctx, nx + 6, hy + 1, 5, 7, N_HAIR); // back of head
     px(ctx, nx + 3, hy - 1, 3, 1, N_HAIR_HI);
-    // braid over her LEFT shoulder (the side facing the viewer here), down the front of the tee
-    px(ctx, nx + 6, hy + 8, 3, 10, N_HAIR);
-    for (let i = 0; i < 5; i++) px(ctx, nx + 6 + (i % 2), hy + 8 + i * 2, 2, 1, N_HAIR_HI);
-    px(ctx, nx + 6, hy + 18, 3, 1, "#F49CB8");
-    px(ctx, nx + 7, hy + 19, 1, 1, N_HAIR);
+    if (!flip) {
+      // braid over her LEFT shoulder (the side facing the viewer here), down the front of the tee
+      px(ctx, nx + 6, hy + 8, 3, 10, N_HAIR);
+      for (let i = 0; i < 5; i++) px(ctx, nx + 6 + (i % 2), hy + 8 + i * 2, 2, 1, N_HAIR_HI);
+      px(ctx, nx + 6, hy + 18, 3, 1, "#F49CB8");
+      px(ctx, nx + 7, hy + 19, 1, 1, N_HAIR);
+    } else {
+      // her left side faces away: the braid hangs down her back, just peeking out behind the tee
+      px(ctx, nx + 10, hy + 8, 2, 8, N_HAIR);
+      for (let i = 0; i < 4; i++) px(ctx, nx + 10 + (i % 2), hy + 8 + i * 2, 1, 1, N_HAIR_HI);
+      px(ctx, nx + 10, hy + 16, 2, 1, "#F49CB8");
+      px(ctx, nx + 10, hy + 17, 1, 1, N_HAIR);
+      // near shoulder is her right one: bare, with the black strap
+      px(ctx, nx + 8, ny + 11, 3, 1, N_SKIN);
+      px(ctx, nx + 9, ny + 12, 1, 2, "#2A2224");
+    }
     // big black glasses (side view)
     px(ctx, nx + 0, hy + 3, 4, 1, BLACK);
     px(ctx, nx + 0, hy + 6, 4, 1, BLACK);
@@ -350,7 +370,7 @@ window.PixelSprites = (() => {
     // Khánh's near arm round her shoulders: sleeve, short forearm with the watch, hand on her shoulder blade
     px(ctx, kx + 8, ky + 15, 3, 3, POLO);
     px(ctx, kx + 11, ky + 17, 5, 2, K_SKIN);
-    px(ctx, kx + 14, ky + 17, 2, 2, "#DCE3EC"); // silver watch
+    px(ctx, kx + 14, ky + 17, 2, 2, flip ? K_SKIN : "#DCE3EC"); // silver watch (right wrist: only visible unflipped)
     px(ctx, kx + 16, ky + 17, 2, 2, K_SKIN); // hand, flush with the forearm (a taller block reads as a bump)
     px(ctx, kx + 17, ky + 17, 1, 2, "#E7B491"); // fingertips
     // Ngọc's near arm round his waist: sleeve, short forearm, hand on his side

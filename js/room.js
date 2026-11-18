@@ -945,15 +945,8 @@ window.RoomScene = (() => {
         draw: () => {
           const side = ngoc.x >= khanh.x ? 1 : -1;
           const cx = Math.round(khanh.x + side * 5);
-          if (side > 0) {
-            PixelSprites.drawHugCouple(ctx, cx, khanh.y + 1, frame);
-          } else {
-            ctx.save();
-            ctx.translate(cx * 2, 0);
-            ctx.scale(-1, 1);
-            PixelSprites.drawHugCouple(ctx, cx, khanh.y + 1, frame);
-            ctx.restore();
-          }
+          // flip = true is a proper mirrored redraw (watch / braid / strap on the right sides), not a flipped copy
+          PixelSprites.drawHugCouple(ctx, cx, khanh.y + 1, frame, side < 0);
         }
       }]
       : [

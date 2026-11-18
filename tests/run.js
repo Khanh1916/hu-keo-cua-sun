@@ -183,7 +183,8 @@ check("Ngọc is drawn in the room and has tap dialogue",
   [!/function drawNgoc\(/.test(sprites) && "sprites.js lacks drawNgoc", !room.includes("PixelSprites.drawNgoc(") && "room.js never draws Ngọc",
    !(Array.isArray(data.ngocCompliments) && data.ngocCompliments.length) && "GAME_DATA.ngocCompliments missing/empty"]);
 check("hug uses the combined face-to-face sprite",
-  [!/function drawHugCouple\(/.test(sprites) && "sprites.js lacks drawHugCouple", !room.includes("PixelSprites.drawHugCouple(") && "room.js never draws the hug sprite"]);
+  [!/function drawHugCouple\(/.test(sprites) && "sprites.js lacks drawHugCouple", !room.includes("PixelSprites.drawHugCouple(") && "room.js never draws the hug sprite",
+   !/drawHugCouple\([^)]*flip/.test(sprites) && "drawHugCouple lost its flip (left-side) variant", /ctx\.scale\(-1, ?1\)/.test(room) && "room.js mirrors the hug with ctx.scale again"]);
 check("Ngọc reacts to the room: pets Bông, watches the rain, gets sleepy at night",
   [!/mode === "toBong"/.test(room) && "room.js lacks the pet-Bông behaviour", !/mode === "watch"/.test(room) && "room.js lacks the rain-watching behaviour",
    !/"sleepy"/.test(room) && "room.js never sets Ngọc's sleepy state", !/state === "sleepy"/.test(sprites) && "drawNgoc lacks the sleepy pose",
