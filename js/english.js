@@ -201,6 +201,126 @@ window.EnglishApp = (() => {
             "meaning": "Khôn tả, tuyệt mỹ vượt ngoài ngôn từ",
             "example": "The serene beauty of her eyes watching the sunset stirred an ineffable wonder in his chest.",
             "exampleMeaning": "Vẻ đẹp tĩnh lặng trong đôi mắt em khi ngắm hoàng hôn đã dấy lên trong lòng anh niềm rung động khôn tả."
+        },
+        {
+            "word": "cherish",
+            "ipa": "/ˈtʃer.ɪʃ/",
+            "type": "Động từ",
+            "meaning": "Trân trọng, nâng niu",
+            "example": "I cherish every late-night call with Ngoc, even when we are both too sleepy to talk.",
+            "exampleMeaning": "Anh trân trọng từng cuộc gọi đêm khuya với Ngọc, kể cả khi cả hai đều buồn ngủ díp mắt."
+        },
+        {
+            "word": "nostalgia",
+            "ipa": "/nɑːˈstæl.dʒə/",
+            "type": "Danh từ",
+            "meaning": "Nỗi hoài niệm, nhớ về quá khứ",
+            "example": "The smell of grilled bread fills me with nostalgia for our first walk together in Hai Phong.",
+            "exampleMeaning": "Mùi bánh mì nướng làm anh hoài niệm về buổi đi dạo đầu tiên của hai đứa ở Hải Phòng."
+        },
+        {
+            "word": "benevolent",
+            "ipa": "/bəˈnev.əl.ənt/",
+            "type": "Tính từ",
+            "meaning": "Nhân hậu, giàu lòng tốt",
+            "example": "Her benevolent heart always finds time to feed the stray cats near her house.",
+            "exampleMeaning": "Trái tim nhân hậu của em luôn dành thời gian cho những chú mèo hoang gần nhà ăn."
+        },
+        {
+            "word": "ambiguous",
+            "ipa": "/æmˈbɪɡ.ju.əs/",
+            "type": "Tính từ",
+            "meaning": "Mơ hồ, có thể hiểu theo nhiều cách",
+            "example": "Her ambiguous \"ừ\" could mean yes, no, or \"guess what I am thinking\".",
+            "exampleMeaning": "Một chữ \"ừ\" mơ hồ của em có thể là có, là không, hoặc là \"đoán xem em đang nghĩ gì\"."
+        },
+        {
+            "word": "diligent",
+            "ipa": "/ˈdɪl.ə.dʒənt/",
+            "type": "Tính từ",
+            "meaning": "Chăm chỉ, cần mẫn",
+            "example": "She is so diligent that she reviews her Chinese words even on the bus to work.",
+            "exampleMeaning": "Em chăm chỉ đến mức ôn từ vựng tiếng Trung cả trên xe buýt đi làm."
+        },
+        {
+            "word": "empathy",
+            "ipa": "/ˈem.pə.θi/",
+            "type": "Danh từ",
+            "meaning": "Sự thấu cảm, đặt mình vào vị trí người khác",
+            "example": "Real empathy is listening to her bad day without rushing to give advice.",
+            "exampleMeaning": "Thấu cảm thật sự là lắng nghe ngày tồi tệ của em mà không vội vàng khuyên nhủ."
+        },
+        {
+            "word": "gratitude",
+            "ipa": "/ˈɡræt̬.ə.tuːd/",
+            "type": "Danh từ",
+            "meaning": "Lòng biết ơn",
+            "example": "I write down one thing every night that fills me with gratitude, and it is usually her.",
+            "exampleMeaning": "Mỗi tối anh ghi lại một điều khiến anh biết ơn, và thường thì đó là em."
+        },
+        {
+            "word": "profound",
+            "ipa": "/prəˈfaʊnd/",
+            "type": "Tính từ",
+            "meaning": "Sâu sắc, sâu đậm",
+            "example": "A simple \"đi đường cẩn thận nha\" from her has a profound effect on my whole day.",
+            "exampleMeaning": "Một câu \"đi đường cẩn thận nha\" giản dị của em có ảnh hưởng sâu sắc đến cả ngày của anh."
+        },
+        {
+            "word": "reminisce",
+            "ipa": "/ˌrem.əˈnɪs/",
+            "type": "Động từ",
+            "meaning": "Hồi tưởng, ôn lại kỷ niệm",
+            "example": "We like to reminisce about the rainy evening we got lost looking for bánh đa cua.",
+            "exampleMeaning": "Hai đứa thích ôn lại buổi tối mưa lạc đường đi tìm bánh đa cua."
+        },
+        {
+            "word": "tranquil",
+            "ipa": "/ˈtræŋ.kwəl/",
+            "type": "Tính từ",
+            "meaning": "Yên bình, tĩnh lặng",
+            "example": "Sitting by the tranquil lake, we forgot all about our deadlines.",
+            "exampleMeaning": "Ngồi bên hồ nước yên bình, hai đứa quên sạch mọi hạn chót công việc."
+        },
+        {
+            "word": "vulnerable",
+            "ipa": "/ˈvʌl.nɚ.ə.bəl/",
+            "type": "Tính từ",
+            "meaning": "Dễ tổn thương, yếu lòng",
+            "example": "It takes courage to be vulnerable and say \"I miss you\" first.",
+            "exampleMeaning": "Phải can đảm lắm mới dám yếu lòng mà nói \"anh nhớ em\" trước."
+        },
+        {
+            "word": "wholehearted",
+            "ipa": "/ˌhoʊlˈhɑːr.t̬ɪd/",
+            "type": "Tính từ",
+            "meaning": "Hết lòng, toàn tâm toàn ý",
+            "example": "She has my wholehearted support in every exam she takes.",
+            "exampleMeaning": "Em có sự ủng hộ hết lòng của anh trong mọi kỳ thi em tham gia."
+        },
+        {
+            "word": "endeavor",
+            "ipa": "/ɪnˈdev.ɚ/",
+            "type": "Danh từ",
+            "meaning": "Sự nỗ lực, công cuộc cố gắng",
+            "example": "Learning two languages at once is a huge endeavor, and she is doing it beautifully.",
+            "exampleMeaning": "Học hai ngoại ngữ cùng lúc là một nỗ lực lớn, và em đang làm điều đó thật tuyệt."
+        },
+        {
+            "word": "inevitable",
+            "ipa": "/ɪˈnev.ə.t̬ə.bəl/",
+            "type": "Tính từ",
+            "meaning": "Không thể tránh khỏi, tất yếu",
+            "example": "Falling for her smile was inevitable from the very first video call.",
+            "exampleMeaning": "Việc say nụ cười của em là điều không thể tránh khỏi ngay từ cuộc gọi video đầu tiên."
+        },
+        {
+            "word": "compassion",
+            "ipa": "/kəmˈpæʃ.ən/",
+            "type": "Danh từ",
+            "meaning": "Lòng trắc ẩn, lòng thương người",
+            "example": "Her compassion shows in the way she treats waiters, strangers and little Bông alike.",
+            "exampleMeaning": "Lòng trắc ẩn của em thể hiện qua cách em đối xử với người phục vụ, người lạ và cả bé Bông."
         }
     ],
     "b2": [
@@ -403,6 +523,126 @@ window.EnglishApp = (() => {
             "meaning": "Thiên hướng tự nhiên, xu hướng thiên bẩm",
             "example": "From childhood, she exhibited a remarkable proclivity for mastering foreign languages and phonetics.",
             "exampleMeaning": "Ngay từ thuở ấu thơ, em đã bộc lộ thiên hướng thiên bẩm xuất sắc trong việc học ngoại ngữ và ngữ âm học."
+        },
+        {
+            "word": "effervescent",
+            "ipa": "/ˌef.ɚˈves.ənt/",
+            "type": "Tính từ",
+            "meaning": "Sôi nổi, rạng rỡ tràn đầy sức sống",
+            "example": "Her effervescent laugh can turn a grey Monday into a holiday.",
+            "exampleMeaning": "Tiếng cười rạng rỡ của em có thể biến một ngày thứ Hai xám xịt thành ngày lễ."
+        },
+        {
+            "word": "halcyon",
+            "ipa": "/ˈhæl.si.ən/",
+            "type": "Tính từ",
+            "meaning": "Êm đềm, thanh bình (thường nói về quãng thời gian hạnh phúc đã qua)",
+            "example": "We still talk about the halcyon days of our first summer together.",
+            "exampleMeaning": "Hai đứa vẫn hay nhắc về những ngày êm đềm của mùa hè đầu tiên bên nhau."
+        },
+        {
+            "word": "incandescent",
+            "ipa": "/ˌɪn.kænˈdes.ənt/",
+            "type": "Tính từ",
+            "meaning": "Rực sáng, bừng cháy (nghĩa bóng: mãnh liệt)",
+            "example": "Her smile was incandescent when she finally passed the HSK exam.",
+            "exampleMeaning": "Nụ cười của em bừng sáng khi cuối cùng cũng thi đỗ HSK."
+        },
+        {
+            "word": "luminous",
+            "ipa": "/ˈluː.mə.nəs/",
+            "type": "Tính từ",
+            "meaning": "Sáng ngời, phát sáng dịu dàng",
+            "example": "Her eyes looked luminous under the paper lanterns of the old town.",
+            "exampleMeaning": "Đôi mắt em sáng ngời dưới những chiếc đèn lồng giấy ở phố cổ."
+        },
+        {
+            "word": "reverie",
+            "ipa": "/ˈrev.ɚ.i/",
+            "type": "Danh từ",
+            "meaning": "Sự mơ màng, giấc mộng tưởng giữa ban ngày",
+            "example": "Her message pulled me out of a long reverie about our next trip.",
+            "exampleMeaning": "Tin nhắn của em kéo anh ra khỏi giấc mơ màng dài về chuyến đi tới của hai đứa."
+        },
+        {
+            "word": "steadfast",
+            "ipa": "/ˈsted.fæst/",
+            "type": "Tính từ",
+            "meaning": "Kiên định, son sắt không lay chuyển",
+            "example": "Across the 100 kilometres between Hanoi and Hai Phong, his love stayed steadfast.",
+            "exampleMeaning": "Qua 100 cây số giữa Hà Nội và Hải Phòng, tình yêu của anh vẫn son sắt không đổi."
+        },
+        {
+            "word": "ardent",
+            "ipa": "/ˈɑːr.dənt/",
+            "type": "Tính từ",
+            "meaning": "Nồng nhiệt, cháy bỏng, hăng hái",
+            "example": "He is an ardent fan of her cooking, especially her spicy bánh mì.",
+            "exampleMeaning": "Anh là fan cuồng nhiệt của tài nấu ăn của em, nhất là món bánh mì cay."
+        },
+        {
+            "word": "propitious",
+            "ipa": "/prəˈpɪʃ.əs/",
+            "type": "Tính từ",
+            "meaning": "Thuận lợi, đúng thời điểm, có điềm lành",
+            "example": "A sunny Sunday felt like a propitious moment to finally meet her parents.",
+            "exampleMeaning": "Một ngày Chủ nhật nắng đẹp có vẻ là thời điểm thuận lợi để cuối cùng cũng ra mắt bố mẹ em."
+        },
+        {
+            "word": "beguile",
+            "ipa": "/bɪˈɡaɪl/",
+            "type": "Động từ",
+            "meaning": "Mê hoặc, quyến rũ (đôi khi để đánh lừa)",
+            "example": "She can beguile me into buying milk tea with a single puppy-eyed sticker.",
+            "exampleMeaning": "Em có thể mê hoặc anh mua trà sữa chỉ bằng một cái sticker mắt cún con."
+        },
+        {
+            "word": "ineluctable",
+            "ipa": "/ˌɪn.ɪˈlʌk.tə.bəl/",
+            "type": "Tính từ",
+            "meaning": "Tất yếu, không thể cưỡng lại",
+            "example": "There was an ineluctable pull that made me open her chat first every morning.",
+            "exampleMeaning": "Có một sức hút không thể cưỡng lại khiến mỗi sáng anh đều mở khung chat của em đầu tiên."
+        },
+        {
+            "word": "wistful",
+            "ipa": "/ˈwɪst.fəl/",
+            "type": "Tính từ",
+            "meaning": "Bâng khuâng, man mác nhớ nhung",
+            "example": "She gave a wistful look at the train leaving for Hanoi.",
+            "exampleMeaning": "Em nhìn theo chuyến tàu về Hà Nội với ánh mắt bâng khuâng."
+        },
+        {
+            "word": "assiduous",
+            "ipa": "/əˈsɪdʒ.u.əs/",
+            "type": "Tính từ",
+            "meaning": "Cần cù, chuyên tâm bền bỉ",
+            "example": "Thanks to assiduous practice, her pronunciation of L and N is now perfect.",
+            "exampleMeaning": "Nhờ luyện tập bền bỉ, em giờ đã phát âm L và N chuẩn chỉnh."
+        },
+        {
+            "word": "capricious",
+            "ipa": "/kəˈprɪʃ.əs/",
+            "type": "Tính từ",
+            "meaning": "Thất thường, đỏng đảnh khó đoán",
+            "example": "Hai Phong weather is as capricious as her mood before lunch.",
+            "exampleMeaning": "Thời tiết Hải Phòng thất thường y như tâm trạng của em trước giờ ăn trưa."
+        },
+        {
+            "word": "ameliorate",
+            "ipa": "/əˈmiːl.jə.reɪt/",
+            "type": "Động từ",
+            "meaning": "Cải thiện, làm cho tốt hơn",
+            "example": "A warm cup of chrysanthemum tea can ameliorate even her worst headache.",
+            "exampleMeaning": "Một cốc trà cúc ấm có thể làm dịu cả những cơn đau đầu tệ nhất của em."
+        },
+        {
+            "word": "felicity",
+            "ipa": "/fəˈlɪs.ə.t̬i/",
+            "type": "Danh từ",
+            "meaning": "Niềm hạnh phúc lớn lao, sự sung sướng",
+            "example": "Waking up to her good-morning message is a small daily felicity.",
+            "exampleMeaning": "Thức dậy với tin nhắn chào buổi sáng của em là niềm hạnh phúc nhỏ mỗi ngày."
         }
     ],
     "c1": [
@@ -605,6 +845,126 @@ window.EnglishApp = (() => {
             "meaning": "Bản thảo viết đè nhiều lớp lưu dấu ấn thời gian",
             "example": "The ancient city of Hanoi is a living palimpsest, where colonial villas intertwine with ancient dynastic gates.",
             "exampleMeaning": "Thủ đô Hà Nội như một bản thảo cổ tích lưu dấu nhiều lớp thời gian, nơi những biệt thự cổ đan cài với cổng thành xưa."
+        },
+        {
+            "word": "limerence",
+            "ipa": "/ˈlɪm.ɚ.əns/",
+            "type": "Danh từ",
+            "meaning": "Trạng thái say mê, phải lòng ai đó mãnh liệt",
+            "example": "In the early months of limerence, he checked his phone every minute for her reply.",
+            "exampleMeaning": "Trong những tháng đầu say mê, anh cứ mỗi phút lại xem điện thoại chờ em trả lời."
+        },
+        {
+            "word": "lambent",
+            "ipa": "/ˈlæm.bənt/",
+            "type": "Tính từ",
+            "meaning": "Lung linh, chập chờn dịu nhẹ (ánh sáng)",
+            "example": "The lambent glow of the fairy lights made her room look like a dream.",
+            "exampleMeaning": "Ánh sáng lung linh của dây đèn nhỏ khiến căn phòng của em như trong mơ."
+        },
+        {
+            "word": "susurrus",
+            "ipa": "/suːˈsɝː.əs/",
+            "type": "Danh từ",
+            "meaning": "Tiếng rì rào, xì xào khẽ khàng",
+            "example": "We fell asleep on the call to the susurrus of rain on her window.",
+            "exampleMeaning": "Hai đứa ngủ quên trong cuộc gọi giữa tiếng mưa rì rào bên cửa sổ nhà em."
+        },
+        {
+            "word": "eudaimonia",
+            "ipa": "/ˌjuː.daɪˈmoʊ.ni.ə/",
+            "type": "Danh từ",
+            "meaning": "Hạnh phúc viên mãn, sống trọn vẹn (triết học Hy Lạp)",
+            "example": "For him, eudaimonia is a quiet evening, a bowl of noodles and her head on his shoulder.",
+            "exampleMeaning": "Với anh, hạnh phúc viên mãn là một buổi tối yên ả, bát mì nóng và em tựa đầu vào vai."
+        },
+        {
+            "word": "sempiternal",
+            "ipa": "/ˌsem.pɪˈtɝː.nəl/",
+            "type": "Tính từ",
+            "meaning": "Vĩnh hằng, bất diệt",
+            "example": "Poets write of sempiternal love; he just promises to buy her bánh mì forever.",
+            "exampleMeaning": "Các nhà thơ viết về tình yêu vĩnh hằng; còn anh chỉ hứa mua bánh mì cho em mãi mãi."
+        },
+        {
+            "word": "numinous",
+            "ipa": "/ˈnuː.mə.nəs/",
+            "type": "Tính từ",
+            "meaning": "Thiêng liêng, huyền nhiệm",
+            "example": "Watching the sunrise over Cat Ba together felt almost numinous.",
+            "exampleMeaning": "Cùng nhau ngắm bình minh trên Cát Bà mang một cảm giác gần như thiêng liêng."
+        },
+        {
+            "word": "querulous",
+            "ipa": "/ˈkwer.ə.ləs/",
+            "type": "Tính từ",
+            "meaning": "Hay càu nhàu, cằn nhằn",
+            "example": "Hungry Bông becomes querulous, meowing at the door until someone feeds him.",
+            "exampleMeaning": "Bé Bông lúc đói trở nên cằn nhằn, cứ meo meo ở cửa cho tới khi có người cho ăn."
+        },
+        {
+            "word": "obstreperous",
+            "ipa": "/əbˈstrep.ɚ.əs/",
+            "type": "Tính từ",
+            "meaning": "Ồn ào, ương bướng khó bảo",
+            "example": "The obstreperous crowd at the concert could not drown out her singing along.",
+            "exampleMeaning": "Đám đông ồn ào ở buổi hòa nhạc cũng không át được tiếng em hát theo."
+        },
+        {
+            "word": "pellucid",
+            "ipa": "/pəˈluː.sɪd/",
+            "type": "Tính từ",
+            "meaning": "Trong veo; rõ ràng, dễ hiểu",
+            "example": "Her explanation of Chinese grammar was so pellucid that even he understood it.",
+            "exampleMeaning": "Lời giải thích ngữ pháp tiếng Trung của em rõ ràng đến mức ngay cả anh cũng hiểu."
+        },
+        {
+            "word": "evanescent",
+            "ipa": "/ˌev.əˈnes.ənt/",
+            "type": "Tính từ",
+            "meaning": "Thoáng qua, tan biến rất nhanh",
+            "example": "The evanescent scent of hoa sữa reminds them that autumn in Hanoi is short.",
+            "exampleMeaning": "Hương hoa sữa thoảng qua nhắc hai đứa rằng mùa thu Hà Nội thật ngắn."
+        },
+        {
+            "word": "insouciance",
+            "ipa": "/ɪnˈsuː.si.əns/",
+            "type": "Danh từ",
+            "meaning": "Sự vô tư, thảnh thơi không lo nghĩ",
+            "example": "He envies the insouciance with which Bông naps through every thunderstorm.",
+            "exampleMeaning": "Anh ghen tị với sự vô tư của Bông, ngủ ngon lành qua mọi cơn giông."
+        },
+        {
+            "word": "verdant",
+            "ipa": "/ˈvɝː.dənt/",
+            "type": "Tính từ",
+            "meaning": "Xanh mướt, tươi tốt",
+            "example": "They rode their bikes past verdant rice fields on the way to Thuy Nguyen.",
+            "exampleMeaning": "Hai đứa đạp xe qua những cánh đồng lúa xanh mướt trên đường về Thủy Nguyên."
+        },
+        {
+            "word": "tintinnabulation",
+            "ipa": "/ˌtɪn.tɪˌnæb.jəˈleɪ.ʃən/",
+            "type": "Danh từ",
+            "meaning": "Tiếng chuông leng keng ngân vang",
+            "example": "The tintinnabulation of the wind chimes greeted her every time she came home.",
+            "exampleMeaning": "Tiếng chuông gió leng keng ngân vang chào đón em mỗi lần em về nhà."
+        },
+        {
+            "word": "effulgent",
+            "ipa": "/ɪˈfʌl.dʒənt/",
+            "type": "Tính từ",
+            "meaning": "Chói lọi, rực rỡ",
+            "example": "In the effulgent light of the Tết fireworks, she looked happier than ever.",
+            "exampleMeaning": "Trong ánh pháo hoa Tết rực rỡ, em trông hạnh phúc hơn bao giờ hết."
+        },
+        {
+            "word": "propinquity",
+            "ipa": "/prəˈpɪŋ.kwə.t̬i/",
+            "type": "Danh từ",
+            "meaning": "Sự gần gũi (về khoảng cách hoặc mối quan hệ)",
+            "example": "Love does not depend on propinquity; it survives the road from Hanoi to Hai Phong.",
+            "exampleMeaning": "Tình yêu không phụ thuộc vào khoảng cách gần xa; nó vẫn sống qua quãng đường Hà Nội – Hải Phòng."
         }
     ],
     "love": [
