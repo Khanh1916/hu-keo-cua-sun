@@ -47,6 +47,17 @@ window.GAME_DATA = {
     "Hôm nào anh xuống, bật nhạc MCK trên xe rồi hai đứa mình lượn phố Hải Phòng nha."
   ],
 
+  // Khánh's lines when the player taps Ngọc in the room
+  ngocCompliments: [
+    "Hôm nay em đeo kính nhìn trí thức ghê, anh phải học chăm hơn mới xứng 🤓💕",
+    "Tóc dài đen óng thế này, cho anh vuốt một cái được không? 🥰",
+    "Mặc đồ ở nhà thôi mà sao vẫn xinh thế hả em?",
+    "Đi lại cả ngày mỏi chân chưa? Ngồi xuống đây anh bóp vai cho nè.",
+    "Được em chạm vào là anh hết mệt luôn, sạc pin còn nhanh hơn sạc nhanh 😆",
+    "Má hồng hồng thế kia, đang nghĩ đến anh đúng không?",
+    "Ở Hải Phòng có một cô gái đeo kính, tóc dài, cười rất xinh… là em đó!",
+    "Em là điều đáng yêu nhất căn phòng này, bé Bông cũng phải nhường 🐱💕"
+  ],
   bongDialogues: [
     "Meooo~ (Bông chạy lại gần, cọ cọ đầu vào chân em 🐱)",
     "Rừ rừ... rừ rừ... (Bông nằm ngửa phơi bụng đòi gãi cằm)",

@@ -179,6 +179,9 @@ check("every decor item has a sprite", data.decorItems.filter((d) => !sprites.in
 const ids = (list) => list.map((x) => x.id).filter((id, i, a) => a.indexOf(id) !== i);
 check("ids are unique (letters, decor, foods, achievements)",
   [...ids(data.secretLetters), ...ids(data.decorItems), ...ids(data.foods), ...ids(data.achievements)]);
+check("Ngọc is drawn in the room and has tap dialogue",
+  [!/function drawNgoc\(/.test(sprites) && "sprites.js lacks drawNgoc", !room.includes("PixelSprites.drawNgoc(") && "room.js never draws Ngọc",
+   !(Array.isArray(data.ngocCompliments) && data.ngocCompliments.length) && "GAME_DATA.ngocCompliments missing/empty"]);
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",

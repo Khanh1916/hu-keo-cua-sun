@@ -112,6 +112,127 @@ window.PixelSprites = (() => {
     }
   }
 
+  // Draw Ngọc: tóc dài thẳng đen, kính gọng mảnh, má hồng, áo phông đen rộng trễ một bên vai (lộ dây áo),
+  // quần đùi xám ghi, dép lê hồng. States: idle | walk | happy | hug. dir = side she faces (-1 left, 1 right).
+  function drawNgoc(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
+    const lively = state === "happy" || state === "hug";
+    const bob = lively ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
+    const x = Math.round(cx - 11);
+    const y = Math.round(by - 30 + bob);
+    const SKIN = "#F8D2B8";
+    const HAIR = "#1B1416";
+    const HAIR_HI = "#3A2D31";
+    const TEE = "#1F1C22";
+    const TEE_FOLD = "#2F2B34";
+    const SHORTS = "#6D737E";
+    const SHORTS_DK = "#5E646F";
+    const FRAME = "#4A3532";
+    const SLIPPER = "#F7B6CC";
+
+    // Shadow on floor
+    px(ctx, cx - 8, by - 2, 16, 3, "rgba(74, 48, 44, 0.18)");
+
+    // Long straight hair, back layer (falls behind the shoulders to mid-back)
+    px(ctx, x + 4, y + 2, 14, 18, HAIR);
+
+    // Legs + pink slippers (simple walk cycle)
+    const step = state === "walk" ? (frame % 16 < 8 ? 1 : -1) : 0;
+    const lUp = step > 0 ? 1 : 0;
+    const rUp = step < 0 ? 1 : 0;
+    px(ctx, x + 7, y + 22 - lUp, 3, 6, SKIN);
+    px(ctx, x + 12, y + 22 - rUp, 3, 6, SKIN);
+    px(ctx, x + 6, y + 28 - lUp, 5, 2, SLIPPER);
+    px(ctx, x + 11, y + 28 - rUp, 5, 2, SLIPPER);
+
+    // Short grey shorts (quần đùi xám ghi)
+    px(ctx, x + 6, y + 18, 10, 3, SHORTS);
+    px(ctx, x + 6, y + 21, 4, 2, SHORTS);
+    px(ctx, x + 12, y + 21, 4, 2, SHORTS);
+    px(ctx, x + 6, y + 18, 10, 1, SHORTS_DK);
+
+    // Oversized black tee, worn off the viewer-left shoulder: bare shoulder with a thin strap
+    // Neckline slants from the neck down to the bare shoulder (reads as off-shoulder, not as a hand)
+    px(ctx, x + 5, y + 11, 6, 1, SKIN);
+    px(ctx, x + 3, y + 12, 6, 1, SKIN);
+    px(ctx, x + 6, y + 11, 1, 2, "#2A2224"); // strap
+    px(ctx, x + 11, y + 11, 6, 1, TEE);
+    px(ctx, x + 9, y + 12, 9, 1, TEE);
+    px(ctx, x + 4, y + 13, 14, 7, TEE); // loose hem covers the top of the shorts
+    px(ctx, x + 8, y + 15, 1, 4, TEE_FOLD);
+    px(ctx, x + 13, y + 14, 1, 5, TEE_FOLD);
+
+    // Arms
+    if (state === "hug") {
+      // Both arms reach toward Khánh's side
+      if (dir < 0) {
+        px(ctx, x + 2, y + 13, 3, 3, TEE);
+        px(ctx, x - 3, y + 14, 6, 2, SKIN);
+        px(ctx, x + 9, y + 16, 9, 2, SKIN); // far arm across the body
+      } else {
+        px(ctx, x + 17, y + 13, 3, 3, TEE);
+        px(ctx, x + 19, y + 14, 6, 2, SKIN);
+        px(ctx, x + 4, y + 16, 9, 2, SKIN);
+      }
+    } else {
+      const raise = state === "happy" ? -2 : 0;
+      // Viewer-left arm: the sleeve has slipped down below the bare shoulder
+      px(ctx, x + 2, y + 12 + raise, 2, 2, SKIN);
+      px(ctx, x + 1, y + 13 + raise, 3, 4, TEE);
+      px(ctx, x + 1, y + 17 + raise, 3, 4, SKIN);
+      // Viewer-right arm
+      px(ctx, x + 18, y + 12 + raise, 3, 5, TEE);
+      px(ctx, x + 18, y + 17 + raise, 3, 4, SKIN);
+    }
+
+    // Head
+    px(ctx, x + 5, y + 1, 12, 10, SKIN);
+
+    // Hair: top with centre part + curtains framing the face + one strand over the right shoulder
+    px(ctx, x + 4, y - 1, 14, 3, HAIR);
+    px(ctx, x + 10, y - 1, 2, 1, HAIR_HI);
+    px(ctx, x + 6, y + 0, 3, 1, HAIR_HI);
+    px(ctx, x + 4, y + 1, 2, 10, HAIR);
+    px(ctx, x + 16, y + 1, 2, 10, HAIR);
+    px(ctx, x + 16, y + 11, 2, 6, HAIR);
+
+    // Eyes (behind glasses)
+    if (state === "happy" || state === "hug") {
+      px(ctx, x + 7, y + 6, 2, 1, "#2B1E1C");
+      px(ctx, x + 13, y + 6, 2, 1, "#2B1E1C");
+    } else if (frame % 130 > 125) {
+      px(ctx, x + 7, y + 7, 2, 1, "#2B1E1C");
+      px(ctx, x + 13, y + 7, 2, 1, "#2B1E1C");
+    } else {
+      px(ctx, x + 7, y + 6, 2, 2, "#2B1E1C");
+      px(ctx, x + 13, y + 6, 2, 2, "#2B1E1C");
+      px(ctx, x + 7, y + 6, 1, 1, "#FFFFFF");
+      px(ctx, x + 13, y + 6, 1, 1, "#FFFFFF");
+    }
+
+    // Thin glasses frame (kính gọng mảnh)
+    px(ctx, x + 6, y + 5, 4, 1, FRAME);
+    px(ctx, x + 6, y + 8, 4, 1, FRAME);
+    px(ctx, x + 6, y + 5, 1, 4, FRAME);
+    px(ctx, x + 9, y + 5, 1, 4, FRAME);
+    px(ctx, x + 10, y + 6, 2, 1, FRAME);
+    px(ctx, x + 12, y + 5, 4, 1, FRAME);
+    px(ctx, x + 12, y + 8, 4, 1, FRAME);
+    px(ctx, x + 12, y + 5, 1, 4, FRAME);
+    px(ctx, x + 15, y + 5, 1, 4, FRAME);
+
+    // Blush (má hồng)
+    px(ctx, x + 6, y + 9, 2, 1, "#F49CB8");
+    px(ctx, x + 14, y + 9, 2, 1, "#F49CB8");
+
+    // Mouth
+    if (state === "happy" || state === "hug") {
+      px(ctx, x + 9, y + 9, 4, 1, "#C65D6B");
+      px(ctx, x + 10, y + 10, 2, 1, "#C65D6B");
+    } else {
+      px(ctx, x + 10, y + 10, 2, 1, "#C9707A");
+    }
+  }
+
   // Draw Bé mèo Bông: lông trắng với vàng trộn lẫn, mũi mồm trắng rõ nét
   function drawBong(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
     const hop = state === "happy" ? Math.abs(Math.round(Math.sin(frame * 0.3) * 3)) : 0;
@@ -447,6 +568,7 @@ window.PixelSprites = (() => {
 
   return {
     drawKhanh,
+    drawNgoc,
     drawBong,
     drawDecor,
     drawCatchItem,

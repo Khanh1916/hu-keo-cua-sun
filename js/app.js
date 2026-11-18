@@ -736,6 +736,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleHug() {
     AudioManager.playHug();
     RoomScene.triggerKhanhHappy("happy");
+    if (RoomScene.triggerHug) RoomScene.triggerHug(); // Ngọc runs over and hugs Khánh
     state.hugCount++;
 
     syncDailyReset();
@@ -881,6 +882,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } else if (who === "bong") {
         handlePetBong();
+      } else if (who === "ngoc") {
+        // Just affection: no XP/candy (hug/pet already carry the daily rewards)
+        AudioManager.playClick();
+        showSpeech("Anh Khánh 💕", pickRandom(DATA.ngocCompliments || ["Em xinh lắm đó! 💕"]).item);
       } else if (who === "mck_vinyl") {
         AudioManager.playVinylChill();
         const vinylQuotes = [

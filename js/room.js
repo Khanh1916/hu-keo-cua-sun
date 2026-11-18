@@ -26,6 +26,19 @@ window.RoomScene = (() => {
     pauseTimer: 60
   };
 
+  // Ngọc: wanders the room; "Ôm anh" sends her to Khánh for a hug (mode: wander | toKhanh | hug)
+  const ngoc = {
+    x: 92,
+    y: 161,
+    dir: 1,
+    targetX: 92,
+    state: "idle",
+    stateTimer: 0,
+    pauseTimer: 150,
+    mode: "wander",
+    hugTimer: 0
+  };
+
   // Ambient falling hoa phượng petals outside window
   const petals = Array.from({ length: 8 }, (_, i) => ({
     x: 90 + (i * 9) % 60,
@@ -72,6 +85,13 @@ window.RoomScene = (() => {
     if (Math.abs(cx - bong.x) <= 14 && cy >= bong.y - 20 && cy <= bong.y + 6) {
       triggerBongHappy();
       if (onInteractFn) onInteractFn("bong");
+      return;
+    }
+
+    // Check Ngọc hitbox
+    if (Math.abs(cx - ngoc.x) <= 12 && cy >= ngoc.y - 32 && cy <= ngoc.y + 4) {
+      triggerNgocHappy();
+      if (onInteractFn) onInteractFn("ngoc");
       return;
     }
 
@@ -125,6 +145,24 @@ window.RoomScene = (() => {
     for (let i = 0; i < 3; i++) {
       setTimeout(() => spawnHeart(bong.x, bong.y - 16, "#F49CB8"), i * 100);
     }
+  }
+
+  function triggerNgocHappy() {
+    if (ngoc.mode !== "wander") return;
+    ngoc.state = "happy";
+    ngoc.stateTimer = 80;
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => spawnHeart(ngoc.x, ngoc.y - 32, "#F49CB8"), i * 100);
+    }
+  }
+
+  // "Ôm anh": Ngọc walks to Khánh's nearest side and hugs him for ~2.5 s
+  function triggerHug() {
+    if (ngoc.mode === "hug") {
+      ngoc.hugTimer = Math.max(ngoc.hugTimer, 90);
+      return;
+    }
+    ngoc.mode = "toKhanh";
   }
 
   function spawnMusicNote(x = 180, y = 92) {
@@ -190,6 +228,62 @@ window.RoomScene = (() => {
         } else {
           bong.state = "idle";
           bong.pauseTimer = 90 + Math.floor(Math.random() * 110);
+        }
+      }
+    }
+
+    // Update Ngọc
+    if (ngoc.stateTimer > 0) {
+      ngoc.stateTimer--;
+      if (ngoc.stateTimer === 0 && ngoc.mode === "wander") ngoc.state = "idle";
+    }
+    if (ngoc.mode === "toKhanh" || ngoc.mode === "hug") {
+      // Keep Khánh in place (and smiling) while she comes over and hugs him
+      khanh.targetX = khanh.x;
+      khanh.state = "happy";
+      khanh.stateTimer = Math.max(khanh.stateTimer, 2);
+    }
+    if (ngoc.mode === "toKhanh") {
+      const side = ngoc.x <= khanh.x ? -1 : 1;
+      const goal = khanh.x + side * 12; // close enough for her arm to reach him without covering his face
+      const dx = goal - ngoc.x;
+      if (Math.abs(dx) > 1.2) {
+        ngoc.state = "walk";
+        ngoc.dir = dx > 0 ? 1 : -1;
+        ngoc.x += ngoc.dir * 1.2;
+      } else {
+        ngoc.x = goal;
+        ngoc.mode = "hug";
+        ngoc.state = "hug";
+        ngoc.dir = khanh.x > ngoc.x ? 1 : -1;
+        ngoc.hugTimer = 150;
+      }
+    } else if (ngoc.mode === "hug") {
+      ngoc.hugTimer--;
+      if (ngoc.hugTimer % 30 === 0) spawnHeart((ngoc.x + khanh.x) / 2, khanh.y - 36);
+      if (ngoc.hugTimer <= 0) {
+        ngoc.mode = "wander";
+        ngoc.state = "happy";
+        ngoc.stateTimer = 45;
+        ngoc.targetX = ngoc.x;
+        ngoc.pauseTimer = 120;
+      }
+    } else if (ngoc.state !== "happy") {
+      if (ngoc.pauseTimer > 0) {
+        ngoc.pauseTimer--;
+        ngoc.state = "idle";
+        if (ngoc.pauseTimer === 0) {
+          ngoc.targetX = 70 + Math.floor(Math.random() * 110);
+        }
+      } else {
+        const dx = ngoc.targetX - ngoc.x;
+        if (Math.abs(dx) > 1) {
+          ngoc.state = "walk";
+          ngoc.dir = dx > 0 ? 1 : -1;
+          ngoc.x += ngoc.dir * 0.5;
+        } else {
+          ngoc.state = "idle";
+          ngoc.pauseTimer = 140 + Math.floor(Math.random() * 160);
         }
       }
     }
@@ -765,12 +859,31 @@ window.RoomScene = (() => {
     }
 
     // 3. Depth-sorted characters (Khánh Mini & Bé mèo Bông)
-    if (khanh.y <= bong.y) {
-      PixelSprites.drawKhanh(ctx, khanh.x, khanh.y, khanh.state, frame);
-      PixelSprites.drawBong(ctx, bong.x, bong.y, bong.dir, bong.state, frame);
-    } else {
-      PixelSprites.drawBong(ctx, bong.x, bong.y, bong.dir, bong.state, frame);
-      PixelSprites.drawKhanh(ctx, khanh.x, khanh.y, khanh.state, frame);
+    [
+      { y: khanh.y, draw: () => PixelSprites.drawKhanh(ctx, khanh.x, khanh.y, khanh.state, frame) },
+      { y: ngoc.y, draw: () => PixelSprites.drawNgoc(ctx, ngoc.x, ngoc.y, ngoc.dir, ngoc.state, frame) },
+      { y: bong.y, draw: () => PixelSprites.drawBong(ctx, bong.x, bong.y, bong.dir, bong.state, frame) }
+    ]
+      .sort((a, b) => a.y - b.y)
+      .forEach((c) => c.draw());
+
+    // Ngọc's festive hat (birthdays & Noel), placed on top of her hair
+    if (specialDay === "ngoc" || specialDay === "khanh" || specialDay === "noel") {
+      const px = PixelSprites.px;
+      const lively = ngoc.state === "happy" || ngoc.state === "hug";
+      const nbob = lively ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
+      const nx = Math.round(ngoc.x);
+      const ny = Math.round(ngoc.y - 33 + nbob);
+      if (specialDay === "noel") {
+        px(ctx, nx - 4, ny + 1, 8, 2, "#FFFFFF");
+        px(ctx, nx - 3, ny - 2, 6, 3, "#D90429");
+        px(ctx, nx - 2, ny - 5, 4, 3, "#D90429");
+        px(ctx, nx + 2, ny - 6, 2, 2, "#FFFFFF");
+      } else {
+        px(ctx, nx - 3, ny, 6, 2, "#F49CB8");
+        px(ctx, nx - 2, ny - 2, 4, 2, "#FFE066");
+        px(ctx, nx - 1, ny - 4, 2, 2, "#8ED6FF");
+      }
     }
 
     // Cute tiny party hat on Khánh Mini during birthdays!
@@ -878,6 +991,8 @@ window.RoomScene = (() => {
     init,
     triggerKhanhHappy,
     triggerBongHappy,
+    triggerNgocHappy,
+    triggerHug,
     spawnHeart
   };
 })();
