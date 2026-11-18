@@ -1,0 +1,8 @@
+{
+  "name": "hu-keo-cua-sun",
+  "private": true,
+  "description": "Static PWA game; no build step. Scripts are only for checks.",
+  "scripts": {
+    "test": "node tests/run.js"
+  }
+}
