@@ -3,6 +3,7 @@ window.MiniGame = (() => {
   let ctx = null;
   let rafId = null;
   let running = false;
+  let isPaused = false;
   let frame = 0;
 
   let playerX = 120;
@@ -39,7 +40,7 @@ window.MiniGame = (() => {
     callbacks = cbs || {};
 
     const updatePointer = (clientX) => {
-      if (!running) return;
+      if (!running || isPaused) return;
       const rect = canvas.getBoundingClientRect();
       const nx = ((clientX - rect.left) / rect.width) * canvas.width;
       playerX = Math.max(20, Math.min(canvas.width - 20, nx));
@@ -93,6 +94,7 @@ window.MiniGame = (() => {
     lastTime = 0;
     acc = 0;
     running = true;
+    isPaused = false;
 
     if (callbacks.onHudUpdate) callbacks.onHudUpdate({ score, candies, lives });
     if (rafId) cancelAnimationFrame(rafId);
@@ -101,6 +103,7 @@ window.MiniGame = (() => {
 
   function stop() {
     running = false;
+    isPaused = false;
     if (rafId) {
       cancelAnimationFrame(rafId);
       rafId = null;
@@ -463,10 +466,46 @@ window.MiniGame = (() => {
     }
   }
 
+
+  // Suspend keeps the run (score, positions) while the player is in the menu / another app; resume continues it.
+  function suspend() {
+    if (!running) return;
+    isPaused = true;
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  function resume() {
+    if (!running || !isPaused) return false;
+    isPaused = false;
+    keys.left = false;
+    keys.right = false;
+    lastTime = 0;
+    acc = 0;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+    return true;
+  }
+
+  // Frozen frame + dim layer; the HTML overlay (app.js) shows the "paused" text and the resume button.
+  function drawPausedPreview() {
+    if (!running || !isPaused || !ctx) return;
+    draw();
+    ctx.fillStyle = "rgba(40, 24, 20, 0.55)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
   return {
     init,
     start,
     stop,
-    isRunning: () => running
+    suspend,
+    resume,
+    drawPausedPreview,
+    isPaused: () => isPaused,
+    isRunning: () => running,
+    getHud: () => ({ score, candies, lives })
   };
 })();

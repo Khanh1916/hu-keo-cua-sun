@@ -3,6 +3,7 @@ window.CrossingGame = (() => {
   let ctx = null;
   let rafId = null;
   let running = false;
+  let isPaused = false;
   let frame = 0;
   let callbacks = {};
 
@@ -142,7 +143,7 @@ window.CrossingGame = (() => {
   }
 
   function move(dCol, dRow) {
-    if (!running) return;
+    if (!running || isPaused) return;
     const nextCol = Math.round(playerCol + dCol);
     const nextRow = playerRow + dRow;
 
@@ -226,7 +227,7 @@ window.CrossingGame = (() => {
 
   function bindInput(canvasEl) {
     canvasEl.addEventListener("pointerdown", (e) => {
-      if (!running) return;
+      if (!running || isPaused) return;
       touchStart = { x: e.clientX, y: e.clientY };
     });
 
@@ -237,7 +238,7 @@ window.CrossingGame = (() => {
     canvasEl.addEventListener("pointerleave", clearTouch);
 
     canvasEl.addEventListener("pointerup", (e) => {
-      if (!running || !touchStart) return;
+      if (!running || isPaused || !touchStart) return;
       const dx = e.clientX - touchStart.x;
       const dy = e.clientY - touchStart.y;
       touchStart = null;
@@ -254,7 +255,7 @@ window.CrossingGame = (() => {
     });
 
     window.addEventListener("keydown", (e) => {
-      if (!running) return;
+      if (!running || isPaused) return;
       if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") { e.preventDefault(); move(0, 1); }
       if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") { e.preventDefault(); move(0, -1); }
       if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") { e.preventDefault(); move(-1, 0); }
@@ -293,6 +294,7 @@ window.CrossingGame = (() => {
     lastTime = 0;
     acc = 0;
     running = true;
+    isPaused = false;
     ensureLanes();
     if (callbacks.onHudUpdate) callbacks.onHudUpdate({ score, candies, livesText: "🐱" });
     if (rafId) cancelAnimationFrame(rafId);
@@ -301,6 +303,7 @@ window.CrossingGame = (() => {
 
   function stop() {
     running = false;
+    isPaused = false;
     if (rafId) {
       cancelAnimationFrame(rafId);
       rafId = null;
@@ -555,11 +558,45 @@ window.CrossingGame = (() => {
     }
   }
 
+
+  // Suspend keeps the run (score, positions) while the player is in the menu / another app; resume continues it.
+  function suspend() {
+    if (!running) return;
+    isPaused = true;
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  function resume() {
+    if (!running || !isPaused) return false;
+    isPaused = false;
+    lastTime = 0;
+    acc = 0;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+    return true;
+  }
+
+  // Frozen frame + dim layer; the HTML overlay (app.js) shows the "paused" text and the resume button.
+  function drawPausedPreview() {
+    if (!running || !isPaused || !ctx) return;
+    draw();
+    ctx.fillStyle = "rgba(40, 24, 20, 0.55)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
   return {
     init,
     start,
     stop,
     move,
-    isRunning: () => running
+    suspend,
+    resume,
+    drawPausedPreview,
+    isPaused: () => isPaused,
+    isRunning: () => running,
+    getHud: () => ({ score, candies, livesText: "🐱" })
   };
 })();

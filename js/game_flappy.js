@@ -3,6 +3,9 @@ window.FlappyGame = (() => {
   let ctx = null;
   let rafId = null;
   let running = false;
+  let isPaused = false;
+  // After resuming, the bird hangs in place until the next tap so the player isn't dropped into a pipe.
+  let holdUntilTap = false;
   let started = false; // "Get Ready!" hover until first tap, just like real Flappy Bird!
   let frame = 0;
   let callbacks = {};
@@ -37,7 +40,12 @@ window.FlappyGame = (() => {
   let acc = 0;
 
   function flap() {
-    if (!running) return;
+    if (!running || isPaused) return;
+    if (holdUntilTap) {
+      holdUntilTap = false;
+      bannerText = "";
+      bannerTimer = 0;
+    }
     if (!started) {
       started = true;
       bannerText = "";
@@ -63,13 +71,13 @@ window.FlappyGame = (() => {
     callbacks = cbs || {};
 
     canvas.addEventListener("pointerdown", (e) => {
-      if (!running) return;
+      if (!running || isPaused) return;
       e.preventDefault();
       flap();
     });
 
     window.addEventListener("keydown", (e) => {
-      if (!running) return;
+      if (!running || isPaused) return;
       if (e.code === "Space" || e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
         e.preventDefault();
         if (e.repeat) return; // holding the key must not auto-flap
@@ -98,6 +106,8 @@ window.FlappyGame = (() => {
     lastTime = 0;
     acc = 0;
     running = true;
+    isPaused = false;
+    holdUntilTap = false;
 
     if (callbacks.onHudUpdate) callbacks.onHudUpdate({ score, candies, livesText: "🪽" });
     if (rafId) cancelAnimationFrame(rafId);
@@ -106,6 +116,8 @@ window.FlappyGame = (() => {
 
   function stop() {
     running = false;
+    isPaused = false;
+    holdUntilTap = false;
     if (rafId) {
       cancelAnimationFrame(rafId);
       rafId = null;
@@ -140,6 +152,7 @@ window.FlappyGame = (() => {
 
   function update() {
     frame++;
+    if (holdUntilTap) return; // frozen until the first tap after resume
     if (bannerTimer > 0 && started) bannerTimer--;
 
     // "Get Ready!" gentle hover until first tap
@@ -372,10 +385,49 @@ window.FlappyGame = (() => {
     }
   }
 
+
+  // Suspend keeps the run (score, positions) while the player is in the menu / another app; resume continues it.
+  function suspend() {
+    if (!running) return;
+    isPaused = true;
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  function resume() {
+    if (!running || !isPaused) return false;
+    isPaused = false;
+    lastTime = 0;
+    acc = 0;
+    if (started) {
+      holdUntilTap = true;
+      bannerText = "Chạm (hoặc Space) để bay tiếp! 🪽";
+      bannerTimer = 9999;
+    }
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+    return true;
+  }
+
+  // Frozen frame + dim layer; the HTML overlay (app.js) shows the "paused" text and the resume button.
+  function drawPausedPreview() {
+    if (!running || !isPaused || !ctx) return;
+    draw();
+    ctx.fillStyle = "rgba(40, 24, 20, 0.55)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
   return {
     init,
     start,
     stop,
-    isRunning: () => running
+    suspend,
+    resume,
+    drawPausedPreview,
+    isPaused: () => isPaused,
+    isRunning: () => running,
+    getHud: () => ({ score, candies, livesText: "🪽" })
   };
 })();

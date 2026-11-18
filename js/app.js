@@ -953,21 +953,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // Default: every running game is *suspended* (run kept, resumable from the overlay). forceStop ends them.
   function stopAllGames(forceStop = false) {
-    MiniGame.stop();
-    CrossingGame.stop();
-    FlappyGame.stop();
-    if (forceStop) {
-      NonLaGame.stop();
-      if (window.MemoryGame) MemoryGame.stop();
-    } else {
-      if (NonLaGame.isRunning()) {
-        NonLaGame.suspend();
-      }
-      if (window.MemoryGame && MemoryGame.isRunning()) {
-        MemoryGame.suspend();
-      }
-    }
+    const games = [MiniGame, CrossingGame, FlappyGame, NonLaGame, window.MemoryGame].filter(Boolean);
+    games.forEach((g) => {
+      if (forceStop) g.stop();
+      else if (g.isRunning()) g.suspend();
+    });
+  }
+
+  function isPausedRun(mod) {
+    return Boolean(mod && mod.isRunning() && mod.isPaused && mod.isPaused());
   }
 
   // Per-game payout limits (see handleArcadeGameOver). HUD mirrors the cap so players are not promised more than they get.
@@ -1150,6 +1146,18 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("mgTouchHint").textContent = meta.hint;
       document.getElementById("btnStartMiniGame").textContent = "▶ Tiếp Tục Chơi";
       if (restartBtn) restartBtn.classList.remove("hidden");
+    } else if (gameKey !== "nonla" && gameKey !== "memory" && isPausedRun(meta.mod())) {
+      // Catch / Crossing / Flappy: generic paused overlay from the game's own HUD snapshot.
+      const mod = meta.mod();
+      mod.drawPausedPreview();
+      handleArcadeHud(mod.getHud());
+      document.getElementById("mgBest").textContent = state[meta.bestKey];
+      document.getElementById("mgResultBox").classList.add("hidden");
+      document.getElementById("mgOverlayTitle").textContent = "⏸ Ván Đang Tạm Dừng";
+      document.getElementById("mgOverlayDesc").innerHTML = `Em đang tạm dừng ván này ở <strong>${mod.getHud().score} điểm</strong>.<br />Bấm nút dưới để chơi tiếp nhé!`;
+      document.getElementById("mgTouchHint").textContent = meta.hint;
+      document.getElementById("btnStartMiniGame").textContent = "▶ Tiếp Tục Chơi";
+      if (restartBtn) restartBtn.classList.remove("hidden");
     } else if (isMemoryPaused) {
       if (MemoryGame.drawPausedPreview) MemoryGame.drawPausedPreview();
       document.getElementById("mgBest").textContent = state[meta.bestKey];
@@ -1233,12 +1241,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const restartBtn = document.getElementById("btnRestartMiniGame");
     if (restartBtn) restartBtn.classList.add("hidden");
 
-    if (activeGameKey === "nonla" && NonLaGame.isRunning() && NonLaGame.isPaused()) {
-      NonLaGame.resume();
-    } else if (activeGameKey === "memory" && window.MemoryGame && MemoryGame.isRunning() && MemoryGame.isPaused()) {
-      MemoryGame.resume();
+    const mod = ARCADE_META[activeGameKey].mod();
+    if (isPausedRun(mod)) {
+      mod.resume();
     } else {
-      ARCADE_META[activeGameKey].mod().start();
+      mod.start();
     }
   });
 
@@ -1248,15 +1255,9 @@ document.addEventListener("DOMContentLoaded", () => {
       AudioManager.playClick();
       document.getElementById("mgOverlay").classList.add("hidden");
       btnRestartMiniGame.classList.add("hidden");
-      if (activeGameKey === "nonla") {
-        NonLaGame.stop();
-        NonLaGame.start();
-      } else if (activeGameKey === "memory" && window.MemoryGame) {
-        MemoryGame.stop();
-        MemoryGame.start();
-      } else {
-        ARCADE_META[activeGameKey].mod().start();
-      }
+      const mod = ARCADE_META[activeGameKey].mod();
+      mod.stop();
+      mod.start();
     });
   }
 
