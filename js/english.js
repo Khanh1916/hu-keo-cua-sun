@@ -1173,7 +1173,8 @@ window.EnglishApp = (() => {
 
   // Tab: Flashcard
   function startFlashcards() {
-    fcWords = (ENGLISH_DATA[currentLevel] || []).slice(0, 25);
+    // All words of the level (was hard-coded to the first 25, so newly added words never showed up as cards).
+    fcWords = (ENGLISH_DATA[currentLevel] || []).slice();
     fcIndex = 0;
     fcFlipped = false;
     renderFlashcardTab();
@@ -1355,7 +1356,7 @@ window.EnglishApp = (() => {
           fcFlipped = false;
           renderFlashcardTab();
         } else {
-          if (window.showToast) showToast("Đã xem hết 25 thẻ vựng đợt này!");
+          if (window.showToast) showToast(`Đã xem hết ${total} thẻ vựng đợt này!`);
         }
       });
     }
