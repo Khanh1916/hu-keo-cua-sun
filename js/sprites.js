@@ -348,12 +348,13 @@ window.PixelSprites = (() => {
     px(ctx, kx + 8, ky + 15, 3, 3, POLO);
     px(ctx, kx + 11, ky + 17, 5, 2, K_SKIN);
     px(ctx, kx + 14, ky + 17, 2, 2, "#DCE3EC"); // silver watch
-    px(ctx, kx + 16, ky + 16, 2, 3, K_SKIN); // hand
+    px(ctx, kx + 16, ky + 17, 2, 2, K_SKIN); // hand, flush with the forearm (a taller block reads as a bump)
+    px(ctx, kx + 17, ky + 17, 1, 2, "#E7B491"); // fingertips
     // Ngọc's near arm round his waist: sleeve, short forearm, hand on his side
     px(ctx, nx + 4, ny + 17, 3, 2, TEE);
     px(ctx, nx + 4, ny + 19, 3, 1, TEE_FOLD); // sleeve hem, so it reads apart from the tee
     px(ctx, nx - 2, ny + 19, 6, 2, N_SKIN);
-    px(ctx, nx - 3, ny + 18, 2, 3, N_SKIN); // hand
+    px(ctx, nx - 3, ny + 19, 1, 2, "#EDBB9C"); // fingertips, flush with the forearm
   }
 
   // Draw Bé mèo Bông: lông trắng với vàng trộn lẫn, mũi mồm trắng rõ nét
