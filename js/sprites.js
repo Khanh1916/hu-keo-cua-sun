@@ -126,7 +126,7 @@ window.PixelSprites = (() => {
     const TEE_FOLD = "#EADCC8";
     const SHORTS = "#7FA7C9"; // light denim shorts
     const SHORTS_DK = "#6890B3";
-    const FRAME = "#7A5A55"; // softer brown so the thin half-rims read lighter
+    const FRAME = "#181518"; // black frames, same size as Khánh's
     const SLIPPER = "#F7B6CC";
 
     // Shadow on floor
@@ -199,33 +199,43 @@ window.PixelSprites = (() => {
     px(ctx, x + 4, y + 1, 2, 10, HAIR);
     px(ctx, x + 16, y + 1, 2, 10, HAIR);
     px(ctx, x + 16, y + 11, 2, 6, HAIR);
+    // Curtain bangs: parted in the middle, each side sweeps down and out to the temples
+    px(ctx, x + 10, y + 0, 2, 1, SKIN); // visible centre part
+    px(ctx, x + 5, y + 1, 4, 1, HAIR);
+    px(ctx, x + 13, y + 1, 4, 1, HAIR);
+    px(ctx, x + 5, y + 2, 3, 1, HAIR);
+    px(ctx, x + 14, y + 2, 3, 1, HAIR);
+    px(ctx, x + 5, y + 3, 1, 1, HAIR);
+    px(ctx, x + 16, y + 3, 1, 1, HAIR);
 
     // Eyes (behind glasses)
     if (state === "happy" || state === "hug") {
-      px(ctx, x + 7, y + 6, 2, 1, "#2B1E1C");
-      px(ctx, x + 13, y + 6, 2, 1, "#2B1E1C");
+      px(ctx, x + 6, y + 5, 3, 1, "#2B1E1C");
+      px(ctx, x + 13, y + 5, 3, 1, "#2B1E1C");
     } else if (frame % 130 > 125) {
-      px(ctx, x + 7, y + 7, 2, 1, "#2B1E1C");
-      px(ctx, x + 13, y + 7, 2, 1, "#2B1E1C");
+      px(ctx, x + 6, y + 6, 3, 1, "#2B1E1C");
+      px(ctx, x + 13, y + 6, 3, 1, "#2B1E1C");
     } else {
-      px(ctx, x + 7, y + 6, 2, 2, "#2B1E1C");
-      px(ctx, x + 13, y + 6, 2, 2, "#2B1E1C");
-      px(ctx, x + 7, y + 6, 1, 1, "#FFFFFF");
-      px(ctx, x + 13, y + 6, 1, 1, "#FFFFFF");
+      px(ctx, x + 7, y + 5, 2, 2, "#2B1E1C");
+      px(ctx, x + 13, y + 5, 2, 2, "#2B1E1C");
+      px(ctx, x + 7, y + 5, 1, 1, "#FFFFFF");
+      px(ctx, x + 13, y + 5, 1, 1, "#FFFFFF");
     }
 
-    // Very thin half-rim glasses (kính gọng mảnh): top rim + short sides only, no bottom rim
-    px(ctx, x + 6, y + 5, 4, 1, FRAME);
-    px(ctx, x + 6, y + 6, 1, 1, FRAME);
-    px(ctx, x + 9, y + 6, 1, 1, FRAME);
+    // Big black glasses, same frame size as Khánh's (5×4 lenses), sitting over the hair at the temples
+    px(ctx, x + 5, y + 4, 5, 1, FRAME); // left top rim
+    px(ctx, x + 5, y + 7, 5, 1, FRAME); // left bottom rim
+    px(ctx, x + 5, y + 4, 1, 4, FRAME); // left outer
+    px(ctx, x + 9, y + 4, 1, 4, FRAME); // left inner
     px(ctx, x + 10, y + 5, 2, 1, FRAME); // bridge
-    px(ctx, x + 12, y + 5, 4, 1, FRAME);
-    px(ctx, x + 12, y + 6, 1, 1, FRAME);
-    px(ctx, x + 15, y + 6, 1, 1, FRAME);
+    px(ctx, x + 12, y + 4, 5, 1, FRAME); // right top rim
+    px(ctx, x + 12, y + 7, 5, 1, FRAME); // right bottom rim
+    px(ctx, x + 12, y + 4, 1, 4, FRAME); // right inner
+    px(ctx, x + 16, y + 4, 1, 4, FRAME); // right outer
 
-    // Blush (má hồng), inside the rounded cheeks
-    px(ctx, x + 7, y + 9, 2, 1, "#F49CB8");
-    px(ctx, x + 13, y + 9, 2, 1, "#F49CB8");
+    // Blush (má hồng), just under the frames
+    px(ctx, x + 6, y + 8, 2, 1, "#F49CB8");
+    px(ctx, x + 14, y + 8, 2, 1, "#F49CB8");
 
     // Mouth
     if (state === "happy" || state === "hug") {
