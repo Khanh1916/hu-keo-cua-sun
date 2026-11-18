@@ -2813,3 +2813,26 @@ body {
 .hidden {
   display: none !important;
 }
+
+/* Accessibility: visible keyboard focus (mouse/touch clicks don't trigger :focus-visible) */
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+.pixel-select:focus-visible {
+  outline: 3px solid var(--pink-accent);
+  outline-offset: 2px;
+}
+
+/* Accessibility: respect "reduce motion" (CSS animations/transitions; canvas shake is handled in minigame.js) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

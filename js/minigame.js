@@ -31,6 +31,8 @@ window.MiniGame = (() => {
   let spawnCooldown = 25;
 
   const keys = { left: false, right: false };
+  // Players who ask the OS for reduced motion get no screen shake on hits.
+  const reduceMotionQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
   let callbacks = {};
 
   function init(canvasEl, cbs) {
@@ -366,7 +368,7 @@ window.MiniGame = (() => {
   function draw() {
     const px = PixelSprites.px;
     ctx.save();
-    if (shakeTimer > 0) {
+    if (shakeTimer > 0 && !(reduceMotionQuery && reduceMotionQuery.matches)) {
       const dx = Math.round((Math.random() - 0.5) * 5);
       const dy = Math.round((Math.random() - 0.5) * 5);
       ctx.translate(dx, dy);

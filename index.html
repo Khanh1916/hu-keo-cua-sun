@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=45" />
+  <link rel="stylesheet" href="css/style.css?v=46" />
 </head>
 <body>
   <!-- iOS Native Taptic Engine Haptic Bridge (iOS 18+ WebKit Switch Trick) -->
@@ -27,7 +27,7 @@
     <!-- In-App Browser / QR Scanner Tip (only visible inside Zalo/Messenger/WebView) -->
     <div id="webviewTip" class="webview-tip pixel-box hidden">
       <span>💡 Đang mở trong app quét QR/Zalo! Bấm <strong>⋮ → Mở bằng Chrome / Safari</strong> rồi <strong>Thêm vào màn hình chính</strong> để không bị mất điểm kẹo nhé.</span>
-      <button class="pixel-btn btn-cream btn-sm" id="btnDismissTip">✕</button>
+      <button class="pixel-btn btn-cream btn-sm" id="btnDismissTip" aria-label="Ẩn gợi ý">✕</button>
     </div>
 
     <!-- Top HUD -->
@@ -171,7 +171,7 @@
     <div class="modal-card pixel-box">
       <div class="modal-header">
         <h2>🍽️ Món Ngon Cho Hai Đứa & Bé Bông</h2>
-        <button class="close-btn pixel-btn" data-close="modalFood">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalFood">✕</button>
       </div>
       <p class="modal-subtitle">Chọn món ngon cho anh Khánh & bé Bông nhé:</p>
       <div class="food-grid" id="foodGrid"></div>
@@ -186,7 +186,7 @@
           <button class="pixel-btn btn-cream btn-sm hidden" id="btnBackArcade">◀ Đổi game</button>
           <h2 id="arcadeTitle">🎮 Vườn Trẻ Kim Đồng</h2>
         </div>
-        <button class="close-btn pixel-btn" id="btnCloseMiniGame">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" id="btnCloseMiniGame">✕</button>
       </div>
 
       <!-- Arcade Menu (5 Games) -->
@@ -268,12 +268,12 @@
 
         <!-- Crossing Road D-pad -->
         <div id="crossingControls" class="crossing-dpad hidden">
-          <button class="pixel-btn btn-cream dpad-btn" id="dpadLeft">◀</button>
+          <button class="pixel-btn btn-cream dpad-btn" id="dpadLeft" aria-label="Sang trái">◀</button>
           <div class="dpad-mid">
-            <button class="pixel-btn btn-pink dpad-btn" id="dpadUp">▲</button>
-            <button class="pixel-btn btn-cream dpad-btn" id="dpadDown">▼</button>
+            <button class="pixel-btn btn-pink dpad-btn" id="dpadUp" aria-label="Nhảy lên">▲</button>
+            <button class="pixel-btn btn-cream dpad-btn" id="dpadDown" aria-label="Lùi xuống">▼</button>
           </div>
-          <button class="pixel-btn btn-cream dpad-btn" id="dpadRight">▶</button>
+          <button class="pixel-btn btn-cream dpad-btn" id="dpadRight" aria-label="Sang phải">▶</button>
         </div>
 
         <!-- Non La L-N Controls -->
@@ -302,7 +302,7 @@
     <div class="modal-card pixel-box">
       <div class="modal-header">
         <h2>🫙 Lọ Lời Nhắn Của Anh</h2>
-        <button class="close-btn pixel-btn" data-close="modalJars">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalJars">✕</button>
       </div>
       <p class="modal-subtitle">Hôm nay tâm trạng thế nào rồi? Chọn một chiếc lọ để mở lời nhắn nhé:</p>
 
@@ -341,7 +341,7 @@
     <div class="modal-card pixel-box">
       <div class="modal-header">
         <h2>🛋️ Cửa Hàng Trang Trí Phòng</h2>
-        <button class="close-btn pixel-btn" data-close="modalShop">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalShop">✕</button>
       </div>
       <p class="modal-subtitle">Dùng kẹo kiếm được để sắm đồ làm đẹp góc nhỏ chung của tụi mình nha (có <strong id="shopCandyText">0</strong> 🍬):</p>
       <div class="shop-list" id="shopList"></div>
@@ -353,7 +353,7 @@
     <div class="modal-card pixel-box">
       <div class="modal-header">
         <h2>💌 Hộp Thư Bí Mật</h2>
-        <button class="close-btn pixel-btn" data-close="modalLetters">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalLetters">✕</button>
       </div>
       <p class="modal-subtitle">Gắn bó cùng góc nhỏ, tích lũy thân mật & trang trí phòng để mở khóa dần từng lá thư anh viết nhé:</p>
 
@@ -375,7 +375,7 @@
     <div class="modal-card pixel-box">
       <div class="modal-header">
         <h2>🏆 Kỷ Niệm & Thành Tựu</h2>
-        <button class="close-btn pixel-btn" data-close="modalAchieve">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalAchieve">✕</button>
       </div>
       <p class="modal-subtitle">Mỗi cột mốc nhỏ đều có kẹo thưởng dành cho "trẻ hiểu chuyện" đó!</p>
       <div class="achieve-list" id="achieveList"></div>
@@ -387,7 +387,7 @@
     <div class="modal-card pixel-box">
       <div class="modal-header">
         <h2>📋 Nhiệm Vụ Mỗi Ngày</h2>
-        <button class="close-btn pixel-btn" data-close="modalQuests">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalQuests">✕</button>
       </div>
       <p class="modal-subtitle">Hoàn thành 3 việc nhỏ mỗi ngày cùng nhau để nhận kẹo &amp; điểm thân mật (Làm mới vào 00:00):</p>
       <div class="quest-list" id="questList"></div>
@@ -406,7 +406,7 @@
     <div class="modal-card modal-chinese pixel-box">
       <div class="modal-header">
         <h2>📖 Sổ Tay Tiếng Trung HSK</h2>
-        <button class="close-btn pixel-btn" data-close="modalChinese">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalChinese">✕</button>
       </div>
       <div class="lang-switch-bar">
         <button class="lang-pill-btn active" id="btnChineseActive">🀄 Tiếng Trung HSK</button>
@@ -429,7 +429,7 @@
     <div class="modal-card modal-chinese modal-english pixel-box">
       <div class="modal-header">
         <h2><svg class="flag-uk flag-uk-sm" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="60" height="40" fill="#012169" rx="3"/><clipPath id="uk-flag-clip-hdr"><rect width="60" height="40" rx="3"/></clipPath><g clip-path="url(#uk-flag-clip-hdr)"><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#cf142b" stroke-width="4.5"/><path d="M30,0 v40 M0,20 h60" stroke="#fff" stroke-width="13"/><path d="M30,0 v40 M0,20 h60" stroke="#cf142b" stroke-width="7.5"/></g></svg>Sổ Tay Tiếng Anh (B1+ - C2)</h2>
-        <button class="close-btn pixel-btn" data-close="modalEnglish">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalEnglish">✕</button>
       </div>
       <div class="lang-switch-bar">
         <button class="lang-pill-btn" id="btnEnglishToChinese">🀄 Tiếng Trung HSK</button>
@@ -452,7 +452,7 @@
     <div class="modal-card pixel-box">
       <div class="modal-header">
         <h2>⚙️ Góc Tùy Chỉnh</h2>
-        <button class="close-btn pixel-btn" data-close="modalSettings">✕</button>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalSettings">✕</button>
       </div>
       <div class="settings-body">
         <div class="setting-block">
@@ -488,19 +488,19 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=45"></script>
-  <script defer src="js/lunar.js?v=45"></script>
-  <script defer src="js/weather.js?v=45"></script>
-  <script defer src="js/audio.js?v=45"></script>
-  <script defer src="js/sprites.js?v=45"></script>
-  <script defer src="js/room.js?v=45"></script>
-  <script defer src="js/minigame.js?v=45"></script>
-  <script defer src="js/game_crossing.js?v=45"></script>
-  <script defer src="js/game_flappy.js?v=45"></script>
-  <script defer src="js/game_nonla.js?v=45"></script>
-  <script defer src="js/game_memory.js?v=45"></script>
-  <script defer src="js/chinese.js?v=45"></script>
-  <script defer src="js/english.js?v=45"></script>
-  <script defer src="js/app.js?v=45"></script>
+  <script defer src="js/data.js?v=46"></script>
+  <script defer src="js/lunar.js?v=46"></script>
+  <script defer src="js/weather.js?v=46"></script>
+  <script defer src="js/audio.js?v=46"></script>
+  <script defer src="js/sprites.js?v=46"></script>
+  <script defer src="js/room.js?v=46"></script>
+  <script defer src="js/minigame.js?v=46"></script>
+  <script defer src="js/game_crossing.js?v=46"></script>
+  <script defer src="js/game_flappy.js?v=46"></script>
+  <script defer src="js/game_nonla.js?v=46"></script>
+  <script defer src="js/game_memory.js?v=46"></script>
+  <script defer src="js/chinese.js?v=46"></script>
+  <script defer src="js/english.js?v=46"></script>
+  <script defer src="js/app.js?v=46"></script>
 </body>
 </html>
