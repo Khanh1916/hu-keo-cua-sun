@@ -112,7 +112,7 @@ window.PixelSprites = (() => {
     }
   }
 
-  // Draw Ngọc: tóc dài thẳng đen, kính gọng mảnh, má hồng, áo phông kem rộng trễ một bên vai (lộ dây áo đen),
+  // Draw Ngọc: tóc đen tết đuôi sam vắt qua vai trái của Ngọc (bên phải màn hình), kính gọng đen to, má hồng, áo phông kem rộng trễ một bên vai (lộ dây áo đen),
   // quần đùi jean nhạt, dép lê hồng. States: idle | walk | happy | hug. dir = side she faces (-1 left, 1 right).
   function drawNgoc(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
     const lively = state === "happy" || state === "hug";
@@ -132,8 +132,8 @@ window.PixelSprites = (() => {
     // Shadow on floor
     px(ctx, cx - 8, by - 2, 16, 3, "rgba(74, 48, 44, 0.18)");
 
-    // Long straight hair, back layer (falls behind the shoulders to mid-back)
-    px(ctx, x + 4, y + 2, 14, 18, HAIR);
+    // Back of the head (all hair goes into one braid, so nothing hangs down behind the shoulders)
+    px(ctx, x + 4, y + 0, 14, 8, HAIR);
 
     // Legs + pink slippers (simple walk cycle)
     const step = state === "walk" ? (frame % 16 < 8 ? 1 : -1) : 0;
@@ -184,29 +184,29 @@ window.PixelSprites = (() => {
       px(ctx, x + 18, y + 17 + raise, 3, 4, SKIN);
     }
 
+    // Side braid (tóc tết đuôi sam) over Ngọc's LEFT shoulder = viewer's right, drawn over the tee
+    px(ctx, x + 15, y + 7, 3, 12, HAIR);
+    for (let i = 0; i < 6; i++) {
+      px(ctx, x + 15 + (i % 2), y + 7 + i * 2, 2, 1, HAIR_HI); // woven strands
+    }
+    px(ctx, x + 15, y + 19, 3, 1, "#F49CB8"); // pink hair tie
+    px(ctx, x + 15, y + 20, 3, 1, HAIR);
+    px(ctx, x + 16, y + 21, 1, 1, HAIR); // tuft
+
     // Head: rounded (narrower forehead row, tapered cheeks and chin); the back hair shows around the jaw
     px(ctx, x + 6, y + 1, 10, 1, SKIN);
     px(ctx, x + 5, y + 2, 12, 7, SKIN);
     px(ctx, x + 6, y + 9, 10, 1, SKIN);
     px(ctx, x + 8, y + 10, 6, 1, SKIN);
 
-    // Hair: rounded crown with centre part + curtains framing the face + one strand over the right shoulder
+    // Hair: rounded crown, pulled back; short side sections down to ear level
     px(ctx, x + 7, y - 2, 8, 1, HAIR);
     px(ctx, x + 5, y - 1, 12, 1, HAIR);
     px(ctx, x + 4, y + 0, 14, 2, HAIR);
     px(ctx, x + 10, y - 2, 2, 1, HAIR_HI);
     px(ctx, x + 7, y - 1, 3, 1, HAIR_HI);
-    px(ctx, x + 4, y + 1, 2, 10, HAIR);
-    px(ctx, x + 16, y + 1, 2, 10, HAIR);
-    px(ctx, x + 16, y + 11, 2, 6, HAIR);
-    // Curtain bangs: parted in the middle, each side sweeps down and out to the temples
-    px(ctx, x + 10, y + 0, 2, 1, SKIN); // visible centre part
-    px(ctx, x + 5, y + 1, 4, 1, HAIR);
-    px(ctx, x + 13, y + 1, 4, 1, HAIR);
-    px(ctx, x + 5, y + 2, 3, 1, HAIR);
-    px(ctx, x + 14, y + 2, 3, 1, HAIR);
-    px(ctx, x + 5, y + 3, 1, 1, HAIR);
-    px(ctx, x + 16, y + 3, 1, 1, HAIR);
+    px(ctx, x + 4, y + 1, 2, 6, HAIR);
+    px(ctx, x + 16, y + 1, 2, 6, HAIR);
 
     // Eyes (behind glasses)
     if (state === "happy" || state === "hug") {
