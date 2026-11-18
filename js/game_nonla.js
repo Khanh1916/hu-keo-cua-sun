@@ -225,8 +225,16 @@ window.NonLaGame = (() => {
       if (exact.includes(targetExact) || toneFree.includes(targetToneFree)) {
         return true;
       }
+      // Words must be said in the right ORDER (extra words in between are fine, e.g. "ừm lại cứ chìm sâu")
       const heardTokens = toneFree.split(" ");
-      if (targetTokens.every((t) => heardTokens.includes(t))) {
+      let from = 0;
+      const inOrder = targetTokens.every((t) => {
+        const i = heardTokens.indexOf(t, from);
+        if (i < 0) return false;
+        from = i + 1;
+        return true;
+      });
+      if (inOrder) {
         return true;
       }
     }

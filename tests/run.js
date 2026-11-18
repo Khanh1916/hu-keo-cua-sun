@@ -101,6 +101,26 @@ const usedNotes = [...new Set([...audio.matchAll(/\bN\.([A-G]\d)\b/g)].map((m) =
 check("every N.<note> used in a tune is defined", usedNotes.filter((n) => !(n in noteTable)).map((n) => `N.${n} is undefined (silent)`));
 
 // ---------------------------------------------------------------------------------------------------------------
+console.log("\nNón Lá voice matching");
+check("voice mode needs the words in the right order (extra words allowed)", (() => {
+  const src = read("js/game_nonla.js");
+  const a = src.indexOf("function normalizeVN");
+  const b = src.indexOf("const usedTargets");
+  const c = src.indexOf("function matchesTarget");
+  const d = src.indexOf("function handleSpeechResults");
+  if (a < 0 || b < 0 || c < 0 || d < 0) return ["could not locate the matching functions"];
+  const match = new Function(`${src.slice(a, b)}\n${src.slice(c, d)}\nreturn matchesTarget;`)();
+  const cases = [
+    [["lại cứ chìm sâu"], "lại cứ chìm sâu", true],
+    [["ừm lại cứ chìm sâu nha"], "lại cứ chìm sâu", true],   // extra words around
+    [["lại chìm cứ sâu"], "lại cứ chìm sâu", false],          // same words, wrong order
+    [["sâu chìm cứ lại"], "lại cứ chìm sâu", false],
+    [["nại cứ chìm sâu"], "lại cứ chìm sâu", false],          // L↔N confusion must still fail
+    [["Nhớ lắm"], "nhớ lắm", true]
+  ];
+  return cases.filter(([heard, target, want]) => match(heard, target) !== want).map(([h, t, w]) => `heard "${h}" vs "${t}" should be ${w}`);
+})());
+
 console.log("\nNón Lá L-N questions");
 const challenges = extractLiteral(read("js/game_nonla.js"), "const CHALLENGES =");
 const lnFold = (s) => s.toLowerCase().normalize("NFC").replace(/l/g, "n");
