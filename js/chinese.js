@@ -123,9 +123,9 @@ window.ChineseApp = (() => {
         pinyin: "xuéxí",
         type: "Động từ",
         meaning: "Học tập, rèn luyện",
-        example: "每天进步一点点就很棒。",
-        examplePinyin: "Měitiān jìnbù yī diǎndiǎn jiù hěn bàng.",
-        exampleMeaning: "Mỗi ngày tiến bộ một chút xíu thôi đã rất cừ rồi."
+        example: "每天学习一点点，就会进步很多。",
+        examplePinyin: "Měitiān xuéxí yī diǎndiǎn, jiù huì jìnbù hěn duō.",
+        exampleMeaning: "Mỗi ngày học một chút thôi là sẽ tiến bộ rất nhiều."
       },
       {
         hanzi: "明天",
@@ -155,24 +155,6 @@ window.ChineseApp = (() => {
         exampleMeaning: "Buổi tối đừng thức khuya, ngủ sớm đi em."
       },
       {
-        hanzi: "身体",
-        pinyin: "shēntǐ",
-        type: "Danh từ",
-        meaning: "Sức khỏe, cơ thể",
-        example: "身体健康是第一位的。",
-        examplePinyin: "Shēntǐ jiànkāng shì dì-yī wèi de.",
-        exampleMeaning: "Sức khỏe luôn là điều quan trọng hàng đầu."
-      },
-      {
-        hanzi: "快乐",
-        pinyin: "kuàilè",
-        type: "Tính từ",
-        meaning: "Vui vẻ, hạnh phúc",
-        example: "祝你每天都开开心心。",
-        examplePinyin: "Zhù nǐ měitiān dōu kāikāi-xīnxīn.",
-        exampleMeaning: "Chúc em mỗi ngày đều ngập tràn niềm vui."
-      },
-      {
         hanzi: "谢谢",
         pinyin: "xièxie",
         type: "Động từ",
@@ -196,9 +178,9 @@ window.ChineseApp = (() => {
       "pinyin": "bù kèqi",
       "type": "Cụm từ",
       "meaning": "Đừng khách sáo, không có chi",
-      "example": "对我不用客气，为你做什么我都乐意。",
-      "examplePinyin": "Duì wǒ bùyòng kèqi, wèi nǐ zuò shénme wǒ dōu lèyì.",
-      "exampleMeaning": "Với anh không cần khách sáo, làm gì cho em anh cũng vui vẻ."
+      "example": "不客气，为你做什么我都乐意。",
+      "examplePinyin": "Bú kèqi, wèi nǐ zuò shénme wǒ dōu lèyì.",
+      "exampleMeaning": "Không có chi, làm gì cho em anh cũng vui lòng."
 },
       {
       "hanzi": "再见",
@@ -307,8 +289,8 @@ window.ChineseApp = (() => {
         pinyin: "bāngzhù",
         type: "Động từ",
         meaning: "Giúp đỡ",
-        example: "无论遇到什么困难，我都会帮你。",
-        examplePinyin: "Wúlùn yùdào shénme kùnnan, wǒ dōu huì bāng nǐ.",
+        example: "无论遇到什么困难，我都会帮助你。",
+        examplePinyin: "Wúlùn yùdào shénme kùnnan, wǒ dōu huì bāngzhù nǐ.",
         exampleMeaning: "Dù gặp bất cứ khó khăn nào, anh cũng sẽ giúp em."
       },
       {
@@ -660,15 +642,6 @@ window.ChineseApp = (() => {
       "exampleMeaning": "Vì tương lai của hai đứa, mình cùng nhau nỗ lực nhé."
 },
       {
-      "hanzi": "感动",
-      "pinyin": "gǎndòng",
-      "type": "Động từ/Tính từ",
-      "meaning": "Cảm động",
-      "example": "看到你细心准备的小礼物，我特别感动。",
-      "examplePinyin": "Kàndào nǐ xìxīn zhǔnbèi de xiǎo lǐwù, wǒ tèbié gǎndòng.",
-      "exampleMeaning": "Nhìn món quà nhỏ em chu đáo chuẩn bị, anh cảm động lắm."
-},
-      {
       "hanzi": "担心",
       "pinyin": "dānxīn",
       "type": "Động từ",
@@ -694,15 +667,6 @@ window.ChineseApp = (() => {
       "example": "我心里很清楚，你就是我想相伴一生的人。",
       "examplePinyin": "Wǒ xīn lǐ hěn qīngchu, nǐ jiù shì wǒ xiǎng xiāngbàn yīshēng de rén.",
       "exampleMeaning": "Lòng anh hiểu rất rõ, em chính là người anh muốn gắn bó trọn đời."
-},
-      {
-      "hanzi": "互相",
-      "pinyin": "hùxiāng",
-      "type": "Phó từ",
-      "meaning": "Lẫn nhau, qua lại",
-      "example": "互相包容、互相理解，爱情才能长久。",
-      "examplePinyin": "Hùxiāng bāoróng, hùxiāng lǐjiě, àiqíng cáinǐng chángjiǔ.",
-      "exampleMeaning": "Biết bao dung và thấu hiểu nhau thì tình yêu mới bền lâu."
 },
       {
       "hanzi": "秘密",
@@ -862,15 +826,6 @@ window.ChineseApp = (() => {
         exampleMeaning: "Mỗi ngày có em đồng hành đều ngập tràn hạnh phúc."
       },
       {
-        hanzi: "陪伴",
-        pinyin: "péibàn",
-        type: "Động từ/Danh từ",
-        meaning: "Đồng hành, ở bên",
-        example: "陪伴是最长情的告白。",
-        examplePinyin: "Péibàn shì zuì chángqíng de gàobái.",
-        exampleMeaning: "Sự đồng hành bền bỉ chính là lời tỏ tình sâu sắc nhất."
-      },
-      {
         hanzi: "坚持",
         pinyin: "jiānchí",
         type: "Động từ",
@@ -923,15 +878,6 @@ window.ChineseApp = (() => {
         example: "相互信任是感情最坚固的基石。",
         examplePinyin: "Xiānghù xìnrèn shì gǎnqíng zuì jiāngù de jīshí.",
         exampleMeaning: "Tin tưởng lẫn nhau là nền tảng vững chắc nhất của tình cảm."
-      },
-      {
-        hanzi: "珍惜",
-        pinyin: "zhēnxī",
-        type: "Động từ",
-        meaning: "Trân trọng, quý trọng",
-        example: "我会倍加珍惜与你相处的时光。",
-        examplePinyin: "Wǒ huì bèijiā zhēnxī yǔ nǐ xiāngchǔ de shíguāng.",
-        exampleMeaning: "Anh sẽ trân trọng gấp bội từng phút giây bên cạnh em."
       },
       {
         hanzi: "羡慕",
@@ -1056,9 +1002,9 @@ window.ChineseApp = (() => {
         "pinyin": "shùnlì",
         "type": "Tính từ",
         "meaning": "Thuận lợi, suôn sẻ",
-        "example": "祝 Ngọc hôm nay làm việc thật thuận lợi và nhiều niềm vui!",
-        "examplePinyin": "Zhù Ngọc jīntiān gōngzuò shífēn shùnlì!",
-        "exampleMeaning": "Chúc Ngọc hôm nay đi làm thật thuận lợi, suôn sẻ và rạng rỡ nhé!"
+        "example": "祝你今天工作顺利，开开心心！",
+        "examplePinyin": "Zhù nǐ jīntiān gōngzuò shùnlì, kāikāi-xīnxīn!",
+        "exampleMeaning": "Chúc em hôm nay đi làm thật suôn sẻ, vui vẻ nhé!"
       },
       {
         "hanzi": "丰富",
@@ -1732,9 +1678,9 @@ window.ChineseApp = (() => {
         pinyin: "qián yí mò huà",
         type: "Thành ngữ",
         meaning: "Thấm nhuần tự nhiên từng ngày",
-        example: "在你的影响下，我也变得更热爱生活了。",
-        examplePinyin: "Zài nǐ de yǐngxiǎng xià, wǒ yě biànde gèng rè'ài shēnghuó le.",
-        exampleMeaning: "Nhờ nguồn năng lượng ấm áp từ em, anh cũng thêm yêu từng phút giây cuộc sống."
+        example: "在你潜移默化的影响下，我也变得更热爱生活了。",
+        examplePinyin: "Zài nǐ qiányí-mòhuà de yǐngxiǎng xià, wǒ yě biànde gèng rè'ài shēnghuó le.",
+        exampleMeaning: "Nhờ em âm thầm ảnh hưởng mỗi ngày, anh cũng thêm yêu cuộc sống hơn."
       },
       {
         hanzi: "循序渐进",
@@ -1805,9 +1751,9 @@ window.ChineseApp = (() => {
         "pinyin": "yī jiàn zhōng qíng",
         "type": "Thành ngữ",
         "meaning": "Vừa gặp đã yêu, trúng tiếng sét ái tình",
-        "example": "也许第一次聊天，便早已是一见倾心。",
-        "examplePinyin": "Yěxǔ dì-yī cì liáotiān, biàn zǎoyǐ shì yījiàn qīngxīn.",
-        "exampleMeaning": "Có lẽ ngay từ cuộc trò chuyện đầu tiên, trái tim đã thầm rung động."
+        "example": "也许第一次聊天，我就对你一见钟情了。",
+        "examplePinyin": "Yěxǔ dì-yī cì liáotiān, wǒ jiù duì nǐ yījiàn-zhōngqíng le.",
+        "exampleMeaning": "Có lẽ ngay từ lần trò chuyện đầu tiên, anh đã phải lòng em rồi."
       },
       {
         "hanzi": "患难与共",
@@ -2251,6 +2197,13 @@ window.ChineseApp = (() => {
   }
 
   // Pure Single-Stream Mandarin Audio Engine (Zero Echo / Zero Latency / Reliable Fallback):
+  // Public stop (used when the modal closes). Bumping speechSeq matters: cancelling speechSynthesis fires the
+  // utterance's onerror, which would otherwise start the Youdao audio fallback right after the modal closed.
+  function stopSpeech() {
+    speechSeq++;
+    stopAllSpeech();
+  }
+
   function speak(text, triggerBtn = null) {
     if (!text) return;
     const cleanText = text.replace(/["'“”‘’]/g, "").trim();
@@ -3495,6 +3448,7 @@ window.ChineseApp = (() => {
   return {
     init,
     open,
-    speak
+    speak,
+    stopSpeech
   };
 })();

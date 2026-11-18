@@ -760,6 +760,13 @@ window.EnglishApp = (() => {
     }
   }
 
+  // Public stop (used when the modal closes). Bumping speechSeq matters: cancelling speechSynthesis fires the
+  // utterance's onerror, which would otherwise start the Youdao audio fallback right after the modal closed.
+  function stopSpeech() {
+    speechSeq++;
+    stopAllSpeech();
+  }
+
   function speak(text, triggerBtn = null) {
     if (!text) return;
     const cleanText = text.replace(/["'“”‘’]/g, "").trim();
@@ -1923,7 +1930,7 @@ window.EnglishApp = (() => {
     const modal = document.getElementById("modalEnglish");
     if (modal) {
       modal.classList.add("hidden");
-      stopAllSpeech();
+      stopSpeech();
     }
   }
 
@@ -1951,6 +1958,7 @@ window.EnglishApp = (() => {
     close,
     switchTab,
     speak,
+    stopSpeech,
     isWordStarred
   };
 })();

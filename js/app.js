@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     freeMealsDate: "",
     freeMealsLeft: 3,
     chineseDailyDoneDate: "",
+    lastBackupAt: 0,
+    lastBackupReminder: "",
     dailyInteractions: {
       date: "",
       hugCount: 0,
@@ -159,6 +161,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (id === "modalMiniGame") {
       stopAllGames();
     }
+    // Closing a study notebook must also silence any word/sentence still being read aloud.
+    if (id === "modalEnglish" && window.EnglishApp && EnglishApp.stopSpeech) EnglishApp.stopSpeech();
+    if (id === "modalChinese" && window.ChineseApp && ChineseApp.stopSpeech) ChineseApp.stopSpeech();
     document.getElementById(id).classList.add("hidden");
   }
 
@@ -1382,8 +1387,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".modal-backdrop").forEach((bd) => {
     bd.addEventListener("click", (e) => {
       if (e.target === bd) {
-        if (bd.id === "modalMiniGame") stopAllGames();
-        bd.classList.add("hidden");
+        closeModal(bd.id); // same cleanup as the ✕ button (stop games / speech)
       }
     });
   });
@@ -1435,6 +1439,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btnCopySave").addEventListener("click", async () => {
     AudioManager.playClick();
+    state.lastBackupAt = Date.now(); // stops the backup reminder for a week
     saveState();
     const code = encodeSaveCode();
     try {
@@ -1591,6 +1596,40 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Save-data protection. Everything lives in localStorage; Safari (not added to Home Screen) may wipe it after ~7 days
+  // without a visit, and any browser may evict it under storage pressure.
+  function isInstalledApp() {
+    return Boolean(window.navigator.standalone) ||
+      Boolean(window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+  }
+
+  async function requestPersistentStorage() {
+    try {
+      // Chrome/Edge/Safari decide silently; Firefox shows a permission prompt, so it is skipped there.
+      if (!navigator.storage || !navigator.storage.persist || /Firefox\//.test(navigator.userAgent)) return;
+      if (await navigator.storage.persisted()) return;
+      await navigator.storage.persist();
+    } catch {
+      // not supported: the backup reminder below still helps
+    }
+  }
+
+  // At most once a day, only for players with real progress, only outside the installed app,
+  // and only if no backup code was copied in the last 7 days.
+  function maybeRemindBackup() {
+    if (isInstalledApp()) return;
+    const hasProgress = state.level >= 2 || (state.ownedDecor || []).length > 0;
+    if (!hasProgress) return;
+    const today = new Date().toDateString();
+    if (state.lastBackupReminder === today) return;
+    if (Date.now() - (state.lastBackupAt || 0) < 7 * 24 * 60 * 60 * 1000) return;
+    state.lastBackupReminder = today;
+    saveState();
+    setTimeout(() => {
+      showToast("💾 Nhớ vào ⚙️ → Sao chép mã lưu (hoặc thêm game vào màn hình chính) để giữ tiến trình nha!");
+    }, 4000);
+  }
+
   // Boot
   let lastObservedDateStamp = "";
   let lastObservedHour = -1;
@@ -1619,6 +1658,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   syncClockAndEvents();
+  requestPersistentStorage();
+  maybeRemindBackup();
   if (window.WeatherEngine) {
     WeatherEngine.init();
   }
