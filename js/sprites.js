@@ -112,8 +112,8 @@ window.PixelSprites = (() => {
     }
   }
 
-  // Draw Ngọc: tóc dài thẳng đen, kính gọng mảnh, má hồng, áo phông đen rộng trễ một bên vai (lộ dây áo),
-  // quần đùi xám ghi, dép lê hồng. States: idle | walk | happy | hug. dir = side she faces (-1 left, 1 right).
+  // Draw Ngọc: tóc dài thẳng đen, kính gọng mảnh, má hồng, áo phông kem rộng trễ một bên vai (lộ dây áo đen),
+  // quần đùi jean nhạt, dép lê hồng. States: idle | walk | happy | hug. dir = side she faces (-1 left, 1 right).
   function drawNgoc(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
     const lively = state === "happy" || state === "hug";
     const bob = lively ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
@@ -122,10 +122,10 @@ window.PixelSprites = (() => {
     const SKIN = "#F8D2B8";
     const HAIR = "#1B1416";
     const HAIR_HI = "#3A2D31";
-    const TEE = "#1F1C22";
-    const TEE_FOLD = "#2F2B34";
-    const SHORTS = "#6D737E";
-    const SHORTS_DK = "#5E646F";
+    const TEE = "#FFF6EA"; // cream tee
+    const TEE_FOLD = "#EADCC8";
+    const SHORTS = "#7FA7C9"; // light denim shorts
+    const SHORTS_DK = "#6890B3";
     const FRAME = "#4A3532";
     const SLIPPER = "#F7B6CC";
 
@@ -144,13 +144,13 @@ window.PixelSprites = (() => {
     px(ctx, x + 6, y + 28 - lUp, 5, 2, SLIPPER);
     px(ctx, x + 11, y + 28 - rUp, 5, 2, SLIPPER);
 
-    // Short grey shorts (quần đùi xám ghi)
+    // Short light-denim shorts (quần đùi jean nhạt)
     px(ctx, x + 6, y + 18, 10, 3, SHORTS);
     px(ctx, x + 6, y + 21, 4, 2, SHORTS);
     px(ctx, x + 12, y + 21, 4, 2, SHORTS);
     px(ctx, x + 6, y + 18, 10, 1, SHORTS_DK);
 
-    // Oversized black tee, worn off the viewer-left shoulder: bare shoulder with a thin strap
+    // Oversized cream tee, worn off the viewer-left shoulder: bare shoulder with a thin black strap
     // Neckline slants from the neck down to the bare shoulder (reads as off-shoulder, not as a hand)
     px(ctx, x + 5, y + 11, 6, 1, SKIN);
     px(ctx, x + 3, y + 12, 6, 1, SKIN);
