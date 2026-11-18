@@ -113,7 +113,7 @@ window.PixelSprites = (() => {
   }
 
   // Draw Ngọc: tóc đen tết đuôi sam vắt qua vai trái của Ngọc (bên phải màn hình), kính gọng đen to, má hồng, áo phông kem rộng trễ một bên vai (lộ dây áo đen),
-  // quần đùi jean nhạt, dép lê hồng. States: idle | walk | happy | hug. dir = side she faces (-1 left, 1 right).
+  // quần đùi jean nhạt, dép lê hồng. States: idle | walk | happy | hug | sleepy. dir = side she faces (-1 left, 1 right).
   function drawNgoc(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
     const lively = state === "happy" || state === "hug";
     const bob = lively ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
@@ -219,7 +219,8 @@ window.PixelSprites = (() => {
     if (state === "happy" || state === "hug") {
       px(ctx, x + 6, y + 5, 3, 1, "#2B1E1C");
       px(ctx, x + 13, y + 5, 3, 1, "#2B1E1C");
-    } else if (frame % 130 > 125) {
+    } else if (state === "sleepy" || frame % 130 > 125) {
+      // sleepy = eyes closed (blink pose held)
       px(ctx, x + 6, y + 6, 3, 1, "#2B1E1C");
       px(ctx, x + 13, y + 6, 3, 1, "#2B1E1C");
     } else {
@@ -248,6 +249,8 @@ window.PixelSprites = (() => {
     if (state === "happy" || state === "hug") {
       px(ctx, x + 9, y + 9, 4, 1, "#C65D6B");
       px(ctx, x + 10, y + 10, 2, 1, "#C65D6B");
+    } else if (state === "sleepy") {
+      px(ctx, x + 10, y + 9, 2, 2, "#C9707A"); // small yawn
     } else {
       px(ctx, x + 10, y + 10, 2, 1, "#C9707A");
     }

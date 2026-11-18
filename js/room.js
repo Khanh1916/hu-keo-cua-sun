@@ -35,8 +35,9 @@ window.RoomScene = (() => {
     state: "idle",
     stateTimer: 0,
     pauseTimer: 150,
-    mode: "wander",
-    hugTimer: 0
+    mode: "wander", // wander | toKhanh | hug | toBong | pet | toWindow | watch
+    hugTimer: 0,
+    modeTimer: 0
   };
 
   // Ambient falling hoa phượng petals outside window
@@ -165,6 +166,37 @@ window.RoomScene = (() => {
     ngoc.mode = "toKhanh";
   }
 
+  function isRainingNow() {
+    const w = window.WeatherEngine ? WeatherEngine.getWeather() : null;
+    return !!(w && w.isRaining);
+  }
+
+  // Walks Ngọc towards goalX; returns true once she has arrived
+  function ngocWalkTo(goalX, speed) {
+    const dx = goalX - ngoc.x;
+    if (Math.abs(dx) > speed) {
+      ngoc.state = "walk";
+      ngoc.dir = dx > 0 ? 1 : -1;
+      ngoc.x += ngoc.dir * speed;
+      return false;
+    }
+    ngoc.x = goalX;
+    return true;
+  }
+
+  // Back to wandering after petting Bông / watching the rain
+  function endNgocActivity(smile) {
+    ngoc.mode = "wander";
+    ngoc.state = smile ? "happy" : "idle";
+    ngoc.stateTimer = smile ? 45 : 0;
+    ngoc.targetX = ngoc.x;
+    ngoc.pauseTimer = 150;
+  }
+
+  function spawnSleepZ(x, y) {
+    particles.push({ x, y, vy: -0.3, vx: 0.18, life: 80, maxLife: 80, kind: "z", color: "#8E9BD6" });
+  }
+
   function spawnMusicNote(x = 180, y = 92) {
     const colors = ["#FF4D6D", "#9D4EDD", "#FF758F", "#FFE066", "#4CC9F0"];
     const color = colors[Math.floor(Math.random() * colors.length)];
@@ -269,21 +301,58 @@ window.RoomScene = (() => {
         ngoc.targetX = ngoc.x;
         ngoc.pauseTimer = 120;
       }
+    } else if (ngoc.mode === "toBong") {
+      // Walk to Bông's side (Bông is held in place while she comes), then pet her
+      const side = ngoc.x <= bong.x ? -1 : 1;
+      bong.pauseTimer = Math.max(bong.pauseTimer, 5);
+      if (ngocWalkTo(Math.max(60, Math.min(190, bong.x + side * 11)), 0.6)) {
+        ngoc.mode = "pet";
+        ngoc.state = "happy";
+        ngoc.dir = bong.x > ngoc.x ? 1 : -1;
+        ngoc.modeTimer = 170;
+        bong.state = "happy";
+        bong.stateTimer = 170;
+      }
+    } else if (ngoc.mode === "pet") {
+      ngoc.modeTimer--;
+      if (ngoc.modeTimer % 40 === 0) spawnHeart(bong.x, bong.y - 16, "#F49CB8");
+      if (ngoc.modeTimer <= 0) endNgocActivity(true);
+    } else if (ngoc.mode === "toWindow") {
+      if (ngocWalkTo(120, 0.5)) {
+        ngoc.mode = "watch";
+        ngoc.state = "idle";
+        ngoc.modeTimer = 300;
+      }
+    } else if (ngoc.mode === "watch") {
+      // Stands under the window and watches the rain; gives up early if the rain stops
+      ngoc.modeTimer--;
+      if (ngoc.modeTimer <= 0 || !isRainingNow()) endNgocActivity(false);
     } else if (ngoc.state !== "happy") {
+      const night = getActiveTimeOfDay() === "night";
       if (ngoc.pauseTimer > 0) {
         ngoc.pauseTimer--;
-        ngoc.state = "idle";
+        ngoc.state = night ? "sleepy" : "idle";
+        if (night && frame % 90 === 0) spawnSleepZ(ngoc.x + 9, ngoc.y - 33);
         if (ngoc.pauseTimer === 0) {
-          ngoc.targetX = 70 + Math.floor(Math.random() * 110);
+          const roll = Math.random();
+          const windowChance = isRainingNow() ? 0.3 : 0;
+          if (roll < windowChance) {
+            ngoc.mode = "toWindow";
+          } else if (roll < windowChance + 0.22) {
+            ngoc.mode = "toBong";
+          } else {
+            ngoc.targetX = 70 + Math.floor(Math.random() * 110);
+          }
         }
       } else {
+        // Sleepy at night: she shuffles around more slowly
         const dx = ngoc.targetX - ngoc.x;
         if (Math.abs(dx) > 1) {
           ngoc.state = "walk";
           ngoc.dir = dx > 0 ? 1 : -1;
-          ngoc.x += ngoc.dir * 0.5;
+          ngoc.x += ngoc.dir * (night ? 0.3 : 0.5);
         } else {
-          ngoc.state = "idle";
+          ngoc.state = night ? "sleepy" : "idle";
           ngoc.pauseTimer = 140 + Math.floor(Math.random() * 160);
         }
       }
@@ -815,6 +884,14 @@ window.RoomScene = (() => {
         const c = p.color || "#FFE066";
         px(ctx, p.x - 1, p.y, 3, 1, c);
         px(ctx, p.x, p.y - 1, 1, 3, c);
+      } else if (p.kind === "z") {
+        const zx = Math.round(p.x);
+        const zy = Math.round(p.y);
+        px(ctx, zx, zy, 4, 1, p.color);
+        px(ctx, zx + 3, zy + 1, 1, 1, p.color);
+        px(ctx, zx + 2, zy + 2, 1, 1, p.color);
+        px(ctx, zx + 1, zy + 3, 1, 1, p.color);
+        px(ctx, zx, zy + 4, 4, 1, p.color);
       }
       ctx.globalAlpha = 1;
     });
@@ -887,8 +964,22 @@ window.RoomScene = (() => {
       .sort((a, b) => a.y - b.y)
       .forEach((c) => c.draw());
 
+    // Thought bubble with a raindrop while Ngọc watches the rain from under the window
+    if (ngoc.mode === "watch") {
+      const px = PixelSprites.px;
+      const bx = Math.round(ngoc.x);
+      const byy = Math.round(ngoc.y - 52);
+      px(ctx, bx - 6, byy, 12, 8, "#FFFFFF");
+      px(ctx, bx - 5, byy - 1, 10, 1, "#FFFFFF");
+      px(ctx, bx - 5, byy + 8, 10, 1, "#FFFFFF");
+      px(ctx, bx - 1, byy + 9, 2, 2, "#FFFFFF");
+      px(ctx, bx - 1, byy + 1, 2, 1, "#5B9BD5");
+      px(ctx, bx - 2, byy + 2, 4, 3, "#5B9BD5");
+      px(ctx, bx - 1, byy + 5, 2, 1, "#5B9BD5");
+    }
+
     // Ngọc's festive hat (birthdays & Noel), placed on top of her hair
-    if (!hugging && (specialDay === "ngoc" || specialDay === "khanh" || specialDay === "noel")) {
+    if (!hugging &&(specialDay === "ngoc" || specialDay === "khanh" || specialDay === "noel")) {
       const px = PixelSprites.px;
       const lively = ngoc.state === "happy" || ngoc.state === "hug";
       const nbob = lively ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);

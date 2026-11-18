@@ -184,6 +184,10 @@ check("Ngọc is drawn in the room and has tap dialogue",
    !(Array.isArray(data.ngocCompliments) && data.ngocCompliments.length) && "GAME_DATA.ngocCompliments missing/empty"]);
 check("hug uses the combined face-to-face sprite",
   [!/function drawHugCouple\(/.test(sprites) && "sprites.js lacks drawHugCouple", !room.includes("PixelSprites.drawHugCouple(") && "room.js never draws the hug sprite"]);
+check("Ngọc reacts to the room: pets Bông, watches the rain, gets sleepy at night",
+  [!/mode === "toBong"/.test(room) && "room.js lacks the pet-Bông behaviour", !/mode === "watch"/.test(room) && "room.js lacks the rain-watching behaviour",
+   !/"sleepy"/.test(room) && "room.js never sets Ngọc's sleepy state", !/state === "sleepy"/.test(sprites) && "drawNgoc lacks the sleepy pose",
+   !/kind === "z"/.test(room) && "room.js cannot draw the sleep particle"]);
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",
