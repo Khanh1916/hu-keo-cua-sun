@@ -342,15 +342,18 @@ window.PixelSprites = (() => {
 
 
     // ---------- Arms around each other (drawn last so they sit on top) ----------
-    // Khánh's near arm over her shoulders: sleeve, then forearm across her back, hand + watch on her far side
+    // Arms keep their normal length (~9 px, as in the standing sprites): each one reaches the partner's side and the
+    // hand rests there, as if the rest of the arm goes round behind the body. Never stretch an arm across a whole body.
+    // Khánh's near arm round her shoulders: sleeve, short forearm with the watch, hand on her shoulder blade
     px(ctx, kx + 8, ky + 15, 3, 3, POLO);
-    px(ctx, kx + 11, ky + 17, nx + 10 - (kx + 11), 2, K_SKIN); // just under her chin, across her upper back
-    px(ctx, nx + 7, ky + 17, 2, 2, "#DCE3EC"); // silver watch
-    px(ctx, nx + 10, ky + 16, 2, 3, K_SKIN); // hand on her back
-    // Ngọc's near arm around his waist: sleeve, forearm across his back, hand on his far side
-    px(ctx, nx + 4, ny + 15, 3, 3, TEE);
-    px(ctx, kx + 2, ny + 19, nx + 6 - (kx + 2), 2, N_SKIN); // around his waist
-    px(ctx, kx + 0, ny + 18, 2, 3, N_SKIN); // hand on his back
+    px(ctx, kx + 11, ky + 17, 5, 2, K_SKIN);
+    px(ctx, kx + 14, ky + 17, 2, 2, "#DCE3EC"); // silver watch
+    px(ctx, kx + 16, ky + 16, 2, 3, K_SKIN); // hand
+    // Ngọc's near arm round his waist: sleeve, short forearm, hand on his side
+    px(ctx, nx + 4, ny + 17, 3, 2, TEE);
+    px(ctx, nx + 4, ny + 19, 3, 1, TEE_FOLD); // sleeve hem, so it reads apart from the tee
+    px(ctx, nx - 2, ny + 19, 6, 2, N_SKIN);
+    px(ctx, nx - 3, ny + 18, 2, 3, N_SKIN); // hand
   }
 
   // Draw Bé mèo Bông: lông trắng với vàng trộn lẫn, mũi mồm trắng rõ nét
