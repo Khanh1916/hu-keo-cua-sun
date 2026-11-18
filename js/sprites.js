@@ -161,25 +161,18 @@ window.PixelSprites = (() => {
     px(ctx, x + 8, y + 15, 1, 4, TEE_FOLD);
     px(ctx, x + 13, y + 14, 1, 5, TEE_FOLD);
 
-    // Arms
-    if (state === "hug") {
-      // Both arms reach toward Khánh's side
-      if (dir < 0) {
-        px(ctx, x + 2, y + 13, 3, 3, TEE);
-        px(ctx, x - 3, y + 14, 6, 2, SKIN);
-        px(ctx, x + 9, y + 16, 9, 2, SKIN); // far arm across the body
-      } else {
-        px(ctx, x + 17, y + 13, 3, 3, TEE);
-        px(ctx, x + 19, y + 14, 6, 2, SKIN);
-        px(ctx, x + 4, y + 16, 9, 2, SKIN);
-      }
-    } else {
-      const raise = state === "happy" ? -2 : 0;
+    // Arms. In a hug only the arm away from Khánh hangs here; the arm around him is drawn after the braid (below)
+    // so it stays one continuous piece instead of being cut by the braid or crossing her own body.
+    const raise = state === "happy" ? -2 : 0;
+    const drawLeftArm = state !== "hug" || dir > 0;   // viewer-left arm hangs unless it is the hugging arm
+    const drawRightArm = state !== "hug" || dir < 0;  // viewer-right arm hangs unless it is the hugging arm
+    if (drawLeftArm) {
       // Viewer-left arm: the sleeve has slipped down below the bare shoulder
       px(ctx, x + 2, y + 12 + raise, 2, 2, SKIN);
       px(ctx, x + 1, y + 13 + raise, 3, 4, TEE);
       px(ctx, x + 1, y + 17 + raise, 3, 4, SKIN);
-      // Viewer-right arm
+    }
+    if (drawRightArm) {
       px(ctx, x + 18, y + 12 + raise, 3, 5, TEE);
       px(ctx, x + 18, y + 17 + raise, 3, 4, SKIN);
     }
@@ -192,6 +185,20 @@ window.PixelSprites = (() => {
     px(ctx, x + 15, y + 19, 3, 1, "#F49CB8"); // pink hair tie
     px(ctx, x + 15, y + 20, 3, 1, HAIR);
     px(ctx, x + 16, y + 21, 1, 1, HAIR); // tuft
+
+    // Hugging arm: shoulder -> short sleeve -> forearm bent sideways around Khánh's waist (she stands 12 px from him)
+    if (state === "hug") {
+      if (dir < 0) {
+        px(ctx, x + 2, y + 12, 2, 2, SKIN);  // bare shoulder side
+        px(ctx, x + 1, y + 13, 3, 2, TEE);   // slipped sleeve
+        px(ctx, x - 6, y + 15, 10, 2, SKIN); // forearm across his waist
+        px(ctx, x - 7, y + 15, 1, 2, "#EDBB9C"); // hand
+      } else {
+        px(ctx, x + 18, y + 12, 3, 3, TEE);  // sleeve
+        px(ctx, x + 18, y + 15, 10, 2, SKIN);
+        px(ctx, x + 28, y + 15, 1, 2, "#EDBB9C");
+      }
+    }
 
     // Head: rounded (narrower forehead row, tapered cheeks and chin); the back hair shows around the jaw
     px(ctx, x + 6, y + 1, 10, 1, SKIN);
