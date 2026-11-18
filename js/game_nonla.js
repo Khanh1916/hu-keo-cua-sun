@@ -59,7 +59,7 @@ window.NonLaGame = (() => {
     { tier: 2, target: "đồ sơn lộng gió", blank: "Bờ biển Đồ Sơn chiều về ___ gió mát rượi", right: "lộng", wrong: "nộng", ngong: "đồ sơn nộng gió" },
     { tier: 2, target: "cát bà lung linh", blank: "Vịnh đảo Cát Bà ___ linh sóng nước", right: "lung", wrong: "nung", ngong: "cát bà nung ninh" },
     { tier: 2, target: "cột đèn nức tiếng", blank: "Pate Cột Đèn Hải Phòng ___ tiếng gần xa", right: "nức", wrong: "lức", ngong: "cột đèn lức tiếng" },
-    { tier: 2, target: "chìm sâu", blank: "Tại vì sao lại cứ ___ sâu trong mắt em (MCK)", right: "chìm", wrong: "nhìm", ngong: "nại cứ chìm sâu" },
+    { tier: 2, target: "lại cứ chìm sâu", blank: "Tại vì sao ___ cứ chìm sâu trong mắt em (MCK)", right: "lại", wrong: "nại", ngong: "nại cứ chìm sâu" },
     { tier: 2, target: "lời đường mật", blank: "Chẳng cần những ___ đường mật phù phiếm trên môi", right: "lời", wrong: "nời", ngong: "nời đường mật" },
     { tier: 2, target: "lặng thinh", blank: "Ngồi một góc ngắm nhìn em rồi ___ thinh", right: "lặng", wrong: "nặng", ngong: "nặng thinh" },
     { tier: 2, target: "lối đi", blank: "Dù cuộc đời có trăm ngàn ngã rẽ ___ đi", right: "lối", wrong: "nối", ngong: "nối đi" },
