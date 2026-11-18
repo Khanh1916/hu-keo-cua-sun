@@ -126,7 +126,7 @@ window.PixelSprites = (() => {
     const TEE_FOLD = "#EADCC8";
     const SHORTS = "#7FA7C9"; // light denim shorts
     const SHORTS_DK = "#6890B3";
-    const FRAME = "#4A3532";
+    const FRAME = "#7A5A55"; // softer brown so the thin half-rims read lighter
     const SLIPPER = "#F7B6CC";
 
     // Shadow on floor
@@ -184,13 +184,18 @@ window.PixelSprites = (() => {
       px(ctx, x + 18, y + 17 + raise, 3, 4, SKIN);
     }
 
-    // Head
-    px(ctx, x + 5, y + 1, 12, 10, SKIN);
+    // Head: rounded (narrower forehead row, tapered cheeks and chin); the back hair shows around the jaw
+    px(ctx, x + 6, y + 1, 10, 1, SKIN);
+    px(ctx, x + 5, y + 2, 12, 7, SKIN);
+    px(ctx, x + 6, y + 9, 10, 1, SKIN);
+    px(ctx, x + 8, y + 10, 6, 1, SKIN);
 
-    // Hair: top with centre part + curtains framing the face + one strand over the right shoulder
-    px(ctx, x + 4, y - 1, 14, 3, HAIR);
-    px(ctx, x + 10, y - 1, 2, 1, HAIR_HI);
-    px(ctx, x + 6, y + 0, 3, 1, HAIR_HI);
+    // Hair: rounded crown with centre part + curtains framing the face + one strand over the right shoulder
+    px(ctx, x + 7, y - 2, 8, 1, HAIR);
+    px(ctx, x + 5, y - 1, 12, 1, HAIR);
+    px(ctx, x + 4, y + 0, 14, 2, HAIR);
+    px(ctx, x + 10, y - 2, 2, 1, HAIR_HI);
+    px(ctx, x + 7, y - 1, 3, 1, HAIR_HI);
     px(ctx, x + 4, y + 1, 2, 10, HAIR);
     px(ctx, x + 16, y + 1, 2, 10, HAIR);
     px(ctx, x + 16, y + 11, 2, 6, HAIR);
@@ -209,20 +214,18 @@ window.PixelSprites = (() => {
       px(ctx, x + 13, y + 6, 1, 1, "#FFFFFF");
     }
 
-    // Thin glasses frame (kính gọng mảnh)
+    // Very thin half-rim glasses (kính gọng mảnh): top rim + short sides only, no bottom rim
     px(ctx, x + 6, y + 5, 4, 1, FRAME);
-    px(ctx, x + 6, y + 8, 4, 1, FRAME);
-    px(ctx, x + 6, y + 5, 1, 4, FRAME);
-    px(ctx, x + 9, y + 5, 1, 4, FRAME);
-    px(ctx, x + 10, y + 6, 2, 1, FRAME);
+    px(ctx, x + 6, y + 6, 1, 1, FRAME);
+    px(ctx, x + 9, y + 6, 1, 1, FRAME);
+    px(ctx, x + 10, y + 5, 2, 1, FRAME); // bridge
     px(ctx, x + 12, y + 5, 4, 1, FRAME);
-    px(ctx, x + 12, y + 8, 4, 1, FRAME);
-    px(ctx, x + 12, y + 5, 1, 4, FRAME);
-    px(ctx, x + 15, y + 5, 1, 4, FRAME);
+    px(ctx, x + 12, y + 6, 1, 1, FRAME);
+    px(ctx, x + 15, y + 6, 1, 1, FRAME);
 
-    // Blush (má hồng)
-    px(ctx, x + 6, y + 9, 2, 1, "#F49CB8");
-    px(ctx, x + 14, y + 9, 2, 1, "#F49CB8");
+    // Blush (má hồng), inside the rounded cheeks
+    px(ctx, x + 7, y + 9, 2, 1, "#F49CB8");
+    px(ctx, x + 13, y + 9, 2, 1, "#F49CB8");
 
     // Mouth
     if (state === "happy" || state === "hug") {
