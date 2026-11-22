@@ -1537,6 +1537,7 @@ window.EnglishApp = (() => {
   let quizAnswered = false;
   let quizRewardDone = false;
   let quizRewardPaid = false;
+  let quizMissed = [];
 
   // Match game state
   let matchWords = [];
@@ -1771,10 +1772,27 @@ window.EnglishApp = (() => {
       entry.reps = 0;
       entry.interval = 1;
       entry.due = Date.now() + 86400000;
+      entry.mistakes = (entry.mistakes || 0) + 1;
     }
 
     srsMap[word] = entry;
     saveSRSMap(srsMap);
+  }
+
+  // A word needs review when the last answer was wrong (reps back to 0) or its review date has come.
+  function isWeakSRS(entry, now = Date.now()) {
+    if (!entry) return false;
+    return entry.reps === 0 || entry.due <= now;
+  }
+
+  // Quiz targets: up to 3 words that need review first (wrong answers come back), the rest random.
+  function pickQuizTargets(list, count = 5) {
+    const srsMap = getSRSMap();
+    const now = Date.now();
+    const weak = shuffleArray(list.filter((w) => isWeakSRS(srsMap[w.word], now))).slice(0, 3);
+    const rest = shuffleArray(list.filter((w) => !weak.includes(w)));
+    return [...weak.map((w) => ({ word: w, review: true })), ...rest.map((w) => ({ word: w, review: false }))]
+      .slice(0, Math.min(count, list.length));
   }
 
   function shuffleArray(arr) {
@@ -2235,21 +2253,22 @@ window.EnglishApp = (() => {
 
   // Tab: Quiz (Trắc Nghiệm)
   function startQuiz() {
-    const list = shuffleArray(ENGLISH_DATA[currentLevel] || ENGLISH_DATA.b1);
-    const selected = list.slice(0, 5);
+    const list = ENGLISH_DATA[currentLevel] || ENGLISH_DATA.b1;
+    const selected = shuffleArray(pickQuizTargets(list, 5));
 
-    quizQuestions = selected.map((target) => {
+    quizQuestions = selected.map(({ word: target, review }) => {
       const others = list.filter((w) => w.word !== target.word);
       const sameType = others.filter((w) => w.type === target.type);
       const diffType = others.filter((w) => w.type !== target.type);
       const candidates = [...shuffleArray(sameType), ...shuffleArray(diffType)];
       const wrongOpts = candidates.slice(0, 3);
       const options = shuffleArray([target, ...wrongOpts]);
-      return { target, options };
+      return { target, options, review };
     });
 
     quizIndex = 0;
     quizScore = 0;
+    quizMissed = [];
     quizAnswered = false;
     quizRewardDone = false;
     quizRewardPaid = false;
@@ -2286,6 +2305,7 @@ window.EnglishApp = (() => {
         </div>
 
         <div class="quiz-question-card">
+          ${q.review ? '<div class="qq-review-tag">🔁 Từ cần ôn lại</div>' : ""}
           <div class="qq-prompt">Từ tiếng Anh nào mang ý nghĩa dưới đây?</div>
           <div class="qq-meaning-en">"${q.target.meaning}"</div>
           <div class="cwc-badges-row" style="margin-top: 4px;">
@@ -2337,6 +2357,7 @@ window.EnglishApp = (() => {
         }
 
         recordSRSReview(q.target.word, isRight);
+        if (!isRight && !quizMissed.includes(q.target)) quizMissed.push(q.target);
         speak(q.target.word);
 
         const fbBox = document.getElementById("quizFeedback");
@@ -2373,6 +2394,7 @@ window.EnglishApp = (() => {
         <div class="quiz-result-icon">${isPerfect ? "🏆" : quizScore >= 3 ? "🎉" : "💪"}</div>
         <h3 class="quiz-result-title">${isPerfect ? "Xuất sắc tuyệt đối!" : quizScore >= 3 ? "Làm bài rất tốt!" : "Cố gắng hơn nhé!"}</h3>
         <p class="quiz-score-text">Ngọc đã trả lời đúng <strong>${quizScore}/${total}</strong> câu hỏi (${getLevelLabel(currentLevel)})!</p>
+        ${quizMissed.length ? `<div class="quiz-missed-box"><div class="quiz-missed-title">🔁 Từ cần ôn (sẽ quay lại ở lượt sau):</div><ul>${quizMissed.map((w) => `<li><strong>${w.word}</strong> [${w.ipa}]: ${w.meaning}</li>`).join("")}</ul></div>` : ""}
         <p class="quiz-score-reward">${quizScore >= 4 ? (quizRewardPaid ? "🎁 Thưởng nóng: +2 🍬 Kẹo & +8 XP!" : "Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕") : "Luyện tập mỗi ngày sẽ sớm lên tay nha em yêu!"}</p>
         <div class="quiz-actions-row">
           <button class="btn-summary-action btn-summary-pink" id="btnRetryQuiz">🔄 Làm Lại Ván Mới</button>

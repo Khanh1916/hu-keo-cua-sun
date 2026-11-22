@@ -30,6 +30,19 @@ function check(name, problems) {
 
 // Extract a JS object/array literal that follows `marker` (string-aware brace matching), then evaluate it.
 function extractLiteral(src, marker) {
+  const { open: i, end } = balancedRange(src, marker);
+  // eslint-disable-next-line no-new-func
+  return Function(`"use strict"; return (${src.slice(i, end)});`)();
+}
+
+// Source text of a whole function declaration, e.g. extractFunction(src, "pickQuizTargets").
+function extractFunction(src, name) {
+  const marker = `function ${name}(`;
+  return src.slice(src.indexOf(marker), balancedRange(src, marker).end);
+}
+
+// From `marker`, find the first { or [ and its matching close (string-aware). Returns { at, open, end }.
+function balancedRange(src, marker) {
   const at = src.indexOf(marker);
   if (at < 0) throw new Error(`marker not found: ${marker}`);
   let i = at + marker.length;
@@ -53,8 +66,7 @@ function extractLiteral(src, marker) {
       depth--;
       if (depth === 0) {
         if (c !== close) throw new Error("unbalanced literal");
-        // eslint-disable-next-line no-new-func
-        return Function(`"use strict"; return (${src.slice(i, k + 1)});`)();
+        return { at, open: i, end: k + 1 };
       }
     }
   }
@@ -209,6 +221,38 @@ check("Ngọc reacts to the room: pets Bông, watches the rain, gets sleepy at n
   [!/mode === "toBong"/.test(room) && "room.js lacks the pet-Bông behaviour", !/mode === "watch"/.test(room) && "room.js lacks the rain-watching behaviour",
    !/"sleepy"/.test(room) && "room.js never sets Ngọc's sleepy state", !/state === "sleepy"/.test(sprites) && "drawNgoc lacks the sleepy pose",
    !/kind === "z"/.test(room) && "room.js cannot draw the sleep particle"]);
+check("study quizzes bring wrong / due words back first (max 3 of 5)", ["js/chinese.js", "js/english.js"].flatMap((f) => {
+  const src = read(f);
+  const isZh = f.includes("chinese");
+  const key = isZh ? "hanzi" : "word";
+  let pick;
+  try {
+    pick = new Function("getSRSMap", "shuffleArray",
+      `${extractFunction(src, "isWeakSRS")}
+${extractFunction(src, "pickQuizTargets")}
+return pickQuizTargets;`);
+  } catch (e) {
+    return [`${f}: cannot load isWeakSRS/pickQuizTargets (${e.message})`];
+  }
+  const list = Array.from({ length: 12 }, (_, i) => ({ [key]: `w${i}` }));
+  const day = 86400000;
+  const now = Date.now();
+  const wrong = isZh ? { repetition: 0, mistakes: 1, dueDate: now + day } : { reps: 0, due: now + day, mistakes: 1 };
+  const learned = isZh ? { repetition: 3, mistakes: 0, dueDate: now + 7 * day } : { reps: 3, due: now + 7 * day };
+  const due = isZh ? { repetition: 2, mistakes: 0, dueDate: now - 1000 } : { reps: 2, due: now - 1000 };
+  const srs = { w0: wrong, w1: wrong, w2: due, w3: wrong, w4: learned, w5: learned };
+  const out = pick(() => srs, (a) => [...a])(list, 5);
+  const problems = [];
+  if (out.length !== 5) problems.push(`${f}: picked ${out.length} targets, want 5`);
+  const reviews = out.filter((o) => o.review).map((o) => o.word[key]);
+  if (reviews.length !== 3) problems.push(`${f}: ${reviews.length} review words, want 3`);
+  if (reviews.some((w) => !["w0", "w1", "w2", "w3"].includes(w))) problems.push(`${f}: a review word is not wrong/due (${reviews})`);
+  const allWords = out.map((o) => o.word[key]);
+  if (new Set(allWords).size !== allWords.length) problems.push(`${f}: duplicate quiz target`);
+  if (pick(() => ({}), (a) => [...a])(list.slice(0, 3), 5).length !== 3) problems.push(`${f}: short list should give all its words`);
+  if (!src.includes("pickQuizTargets(list, 5)")) problems.push(`${f}: startQuiz does not use pickQuizTargets`);
+  return problems;
+}));
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",

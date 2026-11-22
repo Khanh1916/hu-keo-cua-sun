@@ -2116,6 +2116,22 @@ window.ChineseApp = (() => {
     return item;
   }
 
+  // A word needs review when it was answered wrong and not yet re-learned, or its review date has come.
+  function isWeakSRS(srs, now = Date.now()) {
+    if (!srs) return false;
+    return (srs.mistakes > 0 && srs.repetition < 2) || Boolean(srs.dueDate && srs.dueDate <= now);
+  }
+
+  // Quiz targets: up to 3 words that need review first (wrong answers come back), the rest random.
+  function pickQuizTargets(list, count = 5) {
+    const srsMap = getSRSMap();
+    const now = Date.now();
+    const weak = shuffleArray(list.filter((w) => isWeakSRS(srsMap[w.hanzi], now))).slice(0, 3);
+    const rest = shuffleArray(list.filter((w) => !weak.includes(w)));
+    return [...weak.map((w) => ({ word: w, review: true })), ...rest.map((w) => ({ word: w, review: false }))]
+      .slice(0, Math.min(count, list.length));
+  }
+
   function getSRSBadge(hanzi) {
     const item = getSRSItem(hanzi);
     if (item.repetition >= 3) return { text: "Đã thuộc", cls: "srs-mastered" };
@@ -2333,7 +2349,7 @@ window.ChineseApp = (() => {
     list.forEach((w) => {
       const srs = srsMap[w.hanzi];
       if (srs) {
-        if ((srs.mistakes > 0 && srs.repetition < 2) || (srs.dueDate && srs.dueDate <= now)) {
+        if (isWeakSRS(srs, now)) {
           dueOrMistakes.push(w);
         } else {
           others.push(w);
@@ -2798,6 +2814,7 @@ window.ChineseApp = (() => {
 
   let quizRewarded = false;
   let quizRewardResult = null;
+  let quizMissed = [];
 
   function startQuiz() {
     const list = currentLevel === "starred" ? getAllStarredWords() : (HSK_DATA[currentLevel] || HSK_DATA.hsk4);
@@ -2839,10 +2856,9 @@ window.ChineseApp = (() => {
     // High quality distractor fallback pool to guarantee exactly 4 unique options
     const fallbackPool = [...(HSK_DATA.hsk4 || []), ...(HSK_DATA.hsk3 || []), ...(HSK_DATA.hsk2 || [])];
 
-    const shuffled = shuffleArray(list);
-    const questionTargets = shuffled.slice(0, Math.min(5, shuffled.length));
+    const questionTargets = shuffleArray(pickQuizTargets(list, 5));
 
-    quizQuestions = questionTargets.map((target) => {
+    quizQuestions = questionTargets.map(({ word: target, review }) => {
       let pool = list.filter((item) => item.hanzi !== target.hanzi && item.meaning !== target.meaning);
       if (pool.length < 3) {
         const extra = fallbackPool.filter((item) => item.hanzi !== target.hanzi && item.meaning !== target.meaning && !pool.some((p) => p.hanzi === item.hanzi));
@@ -2850,15 +2866,22 @@ window.ChineseApp = (() => {
       }
       const randomWrong = shuffleArray(pool).slice(0, 3);
       const options = shuffleArray([target, ...randomWrong]);
-      return { target, options };
+      return { target, options, review };
     });
 
     quizIndex = 0;
     quizScore = 0;
+    quizMissed = [];
     quizAnswered = false;
     quizRewarded = false;
     quizRewardResult = null;
     renderQuizQuestion();
+  }
+
+  function quizMissedHtml() {
+    if (!quizMissed.length) return "";
+    const items = quizMissed.map((w) => `<li><strong>${w.hanzi}</strong> [${w.pinyin}]: ${w.meaning}</li>`).join("");
+    return `<div class="quiz-missed-box"><div class="quiz-missed-title">🔁 Từ cần ôn (sẽ quay lại ở lượt sau):</div><ul>${items}</ul></div>`;
   }
 
   function renderQuizQuestion() {
@@ -2877,6 +2900,7 @@ window.ChineseApp = (() => {
         <div class="quiz-result-wrap">
           <h3>🎉 Hoàn Thành Bài Trắc Nghiệm!</h3>
           <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${quizQuestions.length}</strong> câu (${getLevelLabel(currentLevel)})</p>
+          ${quizMissedHtml()}
           <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 " + (quizPaid ? "(+2 🍬 & +15 XP)" : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)") : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
           <div class="quiz-actions">
             <button class="btn-summary-action btn-summary-pink" id="btnRestartQuiz">Làm Lại Lượt Mới</button>
@@ -2927,6 +2951,7 @@ window.ChineseApp = (() => {
         </div>
 
         <div class="quiz-question-card">
+          ${q.review ? '<div class="qq-review-tag">🔁 Từ cần ôn lại</div>' : ""}
           <div class="qq-prompt">Từ này có nghĩa là gì?</div>
           <div class="qq-hanzi">${q.target.hanzi}</div>
           <div class="fc-actions-row">
@@ -2982,8 +3007,9 @@ window.ChineseApp = (() => {
           });
         }
 
-        // Update SRS review status
+        // Update SRS review status (a wrong word comes back in the next quizzes and daily lessons)
         recordSRSReview(q.target.hanzi, isRight);
+        if (!isRight && !quizMissed.includes(q.target)) quizMissed.push(q.target);
 
         const fbBox = document.getElementById("quizFeedback");
         const fbText = document.getElementById("quizFeedbackText");
