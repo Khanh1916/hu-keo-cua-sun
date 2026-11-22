@@ -1603,6 +1603,20 @@ window.EnglishApp = (() => {
 
   // Public stop (used when the modal closes). Bumping speechSeq matters: cancelling speechSynthesis fires the
   // utterance's onerror, which would otherwise start the Youdao audio fallback right after the modal closed.
+  // The Youdao fallback needs a network. When it can't play (offline, blocked, server error) tell the player instead of
+  // failing silently; at most one toast every 15 s so repeated taps don't spam.
+  let lastSpeechNotice = 0;
+  function notifySpeechUnavailable() {
+    const now = Date.now();
+    if (now - lastSpeechNotice < 15000) return;
+    lastSpeechNotice = now;
+    const offline = typeof navigator !== "undefined" && navigator.onLine === false;
+    const msg = offline
+      ? "📴 Máy chưa có giọng đọc tiếng Anh mà đang offline, có mạng lại em bấm nghe nha"
+      : "🔇 Chưa phát âm được từ này, em thử lại chút nữa nha";
+    if (window.showToast) window.showToast(msg);
+  }
+
   function stopSpeech() {
     speechSeq++;
     stopAllSpeech();
@@ -1631,6 +1645,15 @@ window.EnglishApp = (() => {
 
     function playStreamFallback() {
       if (thisSpeechId !== speechSeq) return;
+      const fail = () => {
+        if (thisSpeechId !== speechSeq) return; // cancelled on purpose (new word / modal closed): stay quiet
+        resetBtn();
+        notifySpeechUnavailable();
+      };
+      if (typeof navigator !== "undefined" && navigator.onLine === false) {
+        fail();
+        return;
+      }
       try {
         const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanText)}&type=2`;
         const audio = new Audio(url);
@@ -1643,18 +1666,12 @@ window.EnglishApp = (() => {
             activeAudio = null;
           }
         };
-        audio.onerror = () => {
-          if (thisSpeechId === speechSeq) resetBtn();
-        };
+        audio.onerror = fail;
 
         const p = audio.play();
-        if (p !== undefined) {
-          p.catch(() => {
-            if (thisSpeechId === speechSeq) resetBtn();
-          });
-        }
+        if (p !== undefined) p.catch(fail);
       } catch {
-        resetBtn();
+        fail();
       }
     }
 

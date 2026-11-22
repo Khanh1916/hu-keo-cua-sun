@@ -228,6 +228,14 @@ check("Ngọc reacts to the room: pets Bông, watches the rain, gets sleepy at n
   [!/mode === "toBong"/.test(room) && "room.js lacks the pet-Bông behaviour", !/mode === "watch"/.test(room) && "room.js lacks the rain-watching behaviour",
    !/"sleepy"/.test(room) && "room.js never sets Ngọc's sleepy state", !/state === "sleepy"/.test(sprites) && "drawNgoc lacks the sleepy pose",
    !/kind === "z"/.test(room) && "room.js cannot draw the sleep particle"]);
+check("pronunciation fallback tells the player when it cannot play (offline / error)",
+  ["js/chinese.js", "js/english.js"].flatMap((f) => {
+    const s = read(f);
+    const fb = s.slice(s.indexOf("function playStreamFallback"), s.indexOf("const safetyTimer"));
+    return [!/function notifySpeechUnavailable/.test(s) && `${f} lacks notifySpeechUnavailable`,
+      !/navigator\.onLine === false/.test(fb) && `${f}: fallback does not check navigator.onLine`,
+      !/onerror = fail/.test(fb) && `${f}: audio error is silent`, !/catch\(fail\)/.test(fb) && `${f}: play() rejection is silent`];
+  }));
 check("study quizzes bring wrong / due words back first (max 3 of 5)", ["js/chinese.js", "js/english.js"].flatMap((f) => {
   const src = read(f);
   const isZh = f.includes("chinese");
