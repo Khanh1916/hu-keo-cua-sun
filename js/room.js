@@ -107,7 +107,7 @@ window.RoomScene = (() => {
     const state = getStateFn ? getStateFn() : {};
     const placed = state.placedDecor || [];
     if (placed.includes("mck_vinyl")) {
-      if (cx >= 165 && cx <= 198 && cy >= 84 && cy <= 112) {
+      if (cx >= 165 && cx <= 193 && cy >= 84 && cy <= 106) {
         triggerVinylSpin();
         if (onInteractFn) onInteractFn("mck_vinyl");
         return;
@@ -910,20 +910,20 @@ window.RoomScene = (() => {
     drawBaseRoom(state, tod);
 
     // 2. Background & Wall Decor
-    if (placed.includes("fairy_lights")) PixelSprites.drawDecor(ctx, "fairy_lights", frame);
-    if (placed.includes("photo")) PixelSprites.drawDecor(ctx, "photo", frame);
-    if (placed.includes("bookshelf")) PixelSprites.drawDecor(ctx, "bookshelf", frame);
-    if (placed.includes("plant")) PixelSprites.drawDecor(ctx, "plant", frame);
-    if (placed.includes("succulent")) PixelSprites.drawDecor(ctx, "succulent", frame);
-    if (placed.includes("lamp")) PixelSprites.drawDecor(ctx, "lamp", frame);
-    if (placed.includes("mck_vinyl")) PixelSprites.drawDecor(ctx, "mck_vinyl", frame);
-    if (placed.includes("teddy")) PixelSprites.drawDecor(ctx, "teddy", frame);
-    if (placed.includes("cat_tree")) PixelSprites.drawDecor(ctx, "cat_tree", frame);
-    if (placed.includes("mirror")) PixelSprites.drawDecor(ctx, "mirror", frame);
-    if (placed.includes("rug")) PixelSprites.drawDecor(ctx, "rug", frame);
-    if (placed.includes("bong_bed")) PixelSprites.drawDecor(ctx, "bong_bed", frame);
-    if (placed.includes("tea_table")) PixelSprites.drawDecor(ctx, "tea_table", frame);
-    if (placed.includes("couple_mugs")) PixelSprites.drawDecor(ctx, "couple_mugs", frame);
+    if (placed.includes("fairy_lights")) PixelSprites.drawDecor(ctx, "fairy_lights", frame, placed);
+    if (placed.includes("photo")) PixelSprites.drawDecor(ctx, "photo", frame, placed);
+    if (placed.includes("bookshelf")) PixelSprites.drawDecor(ctx, "bookshelf", frame, placed);
+    if (placed.includes("plant")) PixelSprites.drawDecor(ctx, "plant", frame, placed);
+    if (placed.includes("succulent")) PixelSprites.drawDecor(ctx, "succulent", frame, placed);
+    if (placed.includes("lamp")) PixelSprites.drawDecor(ctx, "lamp", frame, placed);
+    if (placed.includes("mck_vinyl")) PixelSprites.drawDecor(ctx, "mck_vinyl", frame, placed);
+    if (placed.includes("teddy")) PixelSprites.drawDecor(ctx, "teddy", frame, placed);
+    if (placed.includes("cat_tree")) PixelSprites.drawDecor(ctx, "cat_tree", frame, placed);
+    if (placed.includes("mirror")) PixelSprites.drawDecor(ctx, "mirror", frame, placed);
+    if (placed.includes("rug")) PixelSprites.drawDecor(ctx, "rug", frame, placed);
+    if (placed.includes("bong_bed")) PixelSprites.drawDecor(ctx, "bong_bed", frame, placed);
+    if (placed.includes("tea_table")) PixelSprites.drawDecor(ctx, "tea_table", frame, placed);
+    if (placed.includes("couple_mugs")) PixelSprites.drawDecor(ctx, "couple_mugs", frame, placed);
 
     // Hidden Special Day Decorations (15/04, 01/06 Birthdays, 11/02 Anniversary, Tết Âm Lịch & Noel)
     if (specialDay === "ngoc" || specialDay === "khanh") {
@@ -990,11 +990,16 @@ window.RoomScene = (() => {
       }
     }
 
-    // Cute tiny party hat on Khánh Mini during birthdays!
+    // Cute tiny party hat on Khánh Mini during birthdays! During a hug his head is the profile one in drawHugCouple
+    // (centre 2 px towards Ngọc, same 48-frame squeeze bob), so the hat follows that head instead.
     if (specialDay === "ngoc" || specialDay === "khanh") {
       const px = PixelSprites.px;
-      const hx = Math.round(khanh.x);
-      const hy = Math.round(khanh.y - 34 + (khanh.state === "happy" ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1)));
+      const hugSide = ngoc.x >= khanh.x ? 1 : -1;
+      const hx = Math.round(khanh.x + (hugging ? hugSide * 2 : 0));
+      const kbob = hugging
+        ? (frame % 48 < 24 ? 0 : 1) + 1
+        : (khanh.state === "happy" ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1));
+      const hy = Math.round(khanh.y - 34 + kbob);
       px(ctx, hx - 3, hy, 6, 2, "#E46B94");
       px(ctx, hx - 2, hy - 2, 4, 2, "#FFE066");
       px(ctx, hx - 1, hy - 4, 2, 2, "#8ED6FF");

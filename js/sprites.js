@@ -113,7 +113,8 @@ window.PixelSprites = (() => {
   }
 
   // Draw Ngọc: tóc đen tết đuôi sam vắt qua vai trái của Ngọc (bên phải màn hình), kính gọng đen to, má hồng, áo phông kem rộng trễ một bên vai (lộ dây áo đen),
-  // quần đùi jean nhạt, dép lê hồng. States: idle | walk | happy | hug | sleepy. dir = side she faces (-1 left, 1 right).
+  // quần đùi jean nhạt, dép lê hồng. States: idle | walk | happy | sleepy ("hug" is drawn like "happy": the room swaps both
+  // characters for drawHugCouple during a hug). dir = side she faces (-1 left, 1 right).
   function drawNgoc(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
     const lively = state === "happy" || state === "hug";
     const bob = lively ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
@@ -161,21 +162,14 @@ window.PixelSprites = (() => {
     px(ctx, x + 8, y + 15, 1, 4, TEE_FOLD);
     px(ctx, x + 13, y + 14, 1, 5, TEE_FOLD);
 
-    // Arms. In a hug only the arm away from Khánh hangs here; the arm around him is drawn after the braid (below)
-    // so it stays one continuous piece instead of being cut by the braid or crossing her own body.
-    const raise = state === "happy" ? -2 : 0;
-    const drawLeftArm = state !== "hug" || dir > 0;   // viewer-left arm hangs unless it is the hugging arm
-    const drawRightArm = state !== "hug" || dir < 0;  // viewer-right arm hangs unless it is the hugging arm
-    if (drawLeftArm) {
-      // Viewer-left arm: the sleeve has slipped down below the bare shoulder
-      px(ctx, x + 2, y + 12 + raise, 2, 2, SKIN);
-      px(ctx, x + 1, y + 13 + raise, 3, 4, TEE);
-      px(ctx, x + 1, y + 17 + raise, 3, 4, SKIN);
-    }
-    if (drawRightArm) {
-      px(ctx, x + 18, y + 12 + raise, 3, 5, TEE);
-      px(ctx, x + 18, y + 17 + raise, 3, 4, SKIN);
-    }
+    // Arms
+    const raise = lively ? -2 : 0;
+    // Viewer-left arm: the sleeve has slipped down below the bare shoulder
+    px(ctx, x + 2, y + 12 + raise, 2, 2, SKIN);
+    px(ctx, x + 1, y + 13 + raise, 3, 4, TEE);
+    px(ctx, x + 1, y + 17 + raise, 3, 4, SKIN);
+    px(ctx, x + 18, y + 12 + raise, 3, 5, TEE);
+    px(ctx, x + 18, y + 17 + raise, 3, 4, SKIN);
 
     // Side braid (tóc tết đuôi sam) over Ngọc's LEFT shoulder = viewer's right, drawn over the tee
     px(ctx, x + 15, y + 7, 3, 12, HAIR);
@@ -185,20 +179,6 @@ window.PixelSprites = (() => {
     px(ctx, x + 15, y + 19, 3, 1, "#F49CB8"); // pink hair tie
     px(ctx, x + 15, y + 20, 3, 1, HAIR);
     px(ctx, x + 16, y + 21, 1, 1, HAIR); // tuft
-
-    // Hugging arm: shoulder -> short sleeve -> forearm bent sideways around Khánh's waist (she stands 12 px from him)
-    if (state === "hug") {
-      if (dir < 0) {
-        px(ctx, x + 2, y + 12, 2, 2, SKIN);  // bare shoulder side
-        px(ctx, x + 1, y + 13, 3, 2, TEE);   // slipped sleeve
-        px(ctx, x - 6, y + 15, 10, 2, SKIN); // forearm across his waist
-        px(ctx, x - 7, y + 15, 1, 2, "#EDBB9C"); // hand
-      } else {
-        px(ctx, x + 18, y + 12, 3, 3, TEE);  // sleeve
-        px(ctx, x + 18, y + 15, 10, 2, SKIN);
-        px(ctx, x + 28, y + 15, 1, 2, "#EDBB9C");
-      }
-    }
 
     // Head: rounded (narrower forehead row, tapered cheeks and chin); the back hair shows around the jaw
     px(ctx, x + 6, y + 1, 10, 1, SKIN);
@@ -216,7 +196,7 @@ window.PixelSprites = (() => {
     px(ctx, x + 16, y + 1, 2, 6, HAIR);
 
     // Eyes (behind glasses)
-    if (state === "happy" || state === "hug") {
+    if (lively) {
       px(ctx, x + 6, y + 5, 3, 1, "#2B1E1C");
       px(ctx, x + 13, y + 5, 3, 1, "#2B1E1C");
     } else if (state === "sleepy" || frame % 130 > 125) {
@@ -246,7 +226,7 @@ window.PixelSprites = (() => {
     px(ctx, x + 14, y + 8, 2, 1, "#F49CB8");
 
     // Mouth
-    if (state === "happy" || state === "hug") {
+    if (lively) {
       px(ctx, x + 9, y + 9, 4, 1, "#C65D6B");
       px(ctx, x + 10, y + 10, 2, 1, "#C65D6B");
     } else if (state === "sleepy") {
@@ -436,8 +416,9 @@ window.PixelSprites = (() => {
     px(ctx, x + 9, y + 7, 1, 1, "#D6828E");
   }
 
-  // Draw small decorative pixel items inside the room
-  function drawDecor(ctx, id, frame) {
+  // Draw small decorative pixel items inside the room. `placed` = ids of all placed decor, for items that sit on another
+  // item when it is there (the couple mugs go on the tea table and replace its two little cups).
+  function drawDecor(ctx, id, frame, placed = []) {
     switch (id) {
       case "rug": {
         // Soft pastel pink oval rug in center floor
@@ -503,14 +484,16 @@ window.PixelSprites = (() => {
         px(ctx, tx + 8, ty, 10, 6, "#FFFDF7");
         px(ctx, tx + 10, ty - 2, 6, 2, "#F6C957");
         px(ctx, tx + 18, ty + 2, 3, 2, "#FFFDF7");
-        // Two little cups
-        px(ctx, tx + 23, ty + 3, 4, 3, "#F9C8D9");
-        px(ctx, tx + 29, ty + 3, 4, 3, "#F9C8D9");
+        // Two little cups (the couple mugs take their place when they are placed too)
+        if (!placed.includes("couple_mugs")) {
+          px(ctx, tx + 23, ty + 3, 4, 3, "#F9C8D9");
+          px(ctx, tx + 29, ty + 3, 4, 3, "#F9C8D9");
+        }
         break;
       }
       case "lamp": {
-        // Glowing moon lamp on shelf/side table
-        const lx = 198, ly = 104;
+        // Glowing moon lamp on the left end of the jar shelf (it used to sit inside the candy jar), under the vinyl player
+        const lx = 186, ly = 105;
         px(ctx, lx - 6, ly - 6, 22, 22, "rgba(255, 234, 156, 0.28)");
         px(ctx, lx + 2, ly + 10, 6, 3, "#8B5A42");
         px(ctx, lx + 1, ly + 2, 8, 8, "#FFE787");
@@ -534,8 +517,9 @@ window.PixelSprites = (() => {
         break;
       }
       case "cat_tree": {
-        // Cute 3-tier cat climbing post & scratching tree for bé Bông
-        const cx = 52, cy = 124;
+        // Cute 3-tier cat climbing post & scratching tree for bé Bông, just right of the bed (it used to overlap the bed
+        // frame) and left of the rug
+        const cx = 66, cy = 121;
         px(ctx, cx, cy + 24, 18, 4, "#D4A373");
         px(ctx, cx + 7, cy + 6, 4, 18, "#E6CCB2");
         // Sisal rope wrapping
@@ -629,8 +613,11 @@ window.PixelSprites = (() => {
         break;
       }
       case "couple_mugs": {
-        // Interlocking couple mugs (HN Blue - HP Pink with steaming heart)
-        const kx = 188, ky = 138;
+        // Interlocking couple mugs (HN Blue - HP Pink with steaming heart): on the tea table where its cups were, or on the
+        // window sill when there is no table (they used to float in the air over the teapot)
+        const onTable = placed.includes("tea_table");
+        const kx = onTable ? 208 : 114;
+        const ky = onTable ? 143 : 83;
         // Blue Hanoi mug (Khánh)
         px(ctx, kx, ky + 2, 5, 5, "#4EA8DE");
         px(ctx, kx - 1, ky + 3, 1, 3, "#4EA8DE");

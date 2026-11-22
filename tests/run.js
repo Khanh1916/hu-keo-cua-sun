@@ -260,6 +260,21 @@ return pickQuizTargets;`);
   if (!src.includes("pickQuizTargets(list, 5)")) problems.push(`${f}: startQuiz does not use pickQuizTargets`);
   return problems;
 }));
+check("room decor does not overlap fixed furniture", (() => {
+  // Bounding boxes of the fixed furniture drawn in room.js (bed frame, candy jar) vs decor anchors in sprites.js
+  const num = (re) => { const m = sprites.match(re); return m ? [Number(m[1]), Number(m[2])] : null; };
+  const lamp = num(/const lx = (\d+), ly = (\d+);/);
+  const tree = num(/const cx = (\d+), cy = (\d+);/);
+  const out = [];
+  if (!lamp || !tree) return ["could not find the lamp / cat tree anchors"];
+  // lamp body x lx+1..lx+9; candy jar glass x 196..215, y 95..115
+  if (lamp[0] + 9 > 196 && lamp[0] + 1 < 216 && lamp[1] + 13 > 95 && lamp[1] < 116) out.push(`moon lamp at ${lamp} sits inside the candy jar`);
+  // cat tree x cx-2..cx+17; bed frame x 8..63, y 114..145
+  if (tree[0] - 2 <= 63 && tree[1] + 3 <= 145) out.push(`cat tree at ${tree} overlaps the bed`);
+  if (!/drawDecor\(ctx, id, frame, placed/.test(sprites)) out.push("drawDecor lost its placed argument");
+  if (!/drawDecor\(ctx, "couple_mugs", frame, placed\)/.test(room)) out.push("room.js does not pass placed to drawDecor");
+  return out;
+})());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",
