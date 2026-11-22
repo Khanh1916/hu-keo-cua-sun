@@ -283,6 +283,10 @@ check("room decor does not overlap fixed furniture", (() => {
   if (!/drawDecor\(ctx, "couple_mugs", frame, placed\)/.test(room)) out.push("room.js does not pass placed to drawDecor");
   return out;
 })());
+check("Ngọc dances to the vinyl and reads by the bookshelf",
+  [!/mode === "dance"/.test(room) && "room.js lacks the dance behaviour", !/ngoc\.mode = "dance"/.test(room.slice(room.indexOf("function triggerVinylSpin"))) && "tapping the vinyl doesn't start the dance",
+   !/mode === "read"/.test(room) && "room.js lacks the reading behaviour", !/includes\("bookshelf"\)/.test(room) && "reading isn't tied to the bookshelf",
+   !/state === "dance"/.test(sprites) && "drawNgoc lacks the dance pose", !/state === "read"/.test(sprites) && "drawNgoc lacks the reading pose"]);
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",

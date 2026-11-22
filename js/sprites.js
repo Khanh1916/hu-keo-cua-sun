@@ -113,12 +113,15 @@ window.PixelSprites = (() => {
   }
 
   // Draw Ngọc: tóc đen tết đuôi sam vắt qua vai trái của Ngọc (bên phải màn hình), kính gọng đen to, má hồng, áo phông kem rộng trễ một bên vai (lộ dây áo đen),
-  // quần đùi jean nhạt, dép lê hồng. States: idle | walk | happy | sleepy ("hug" is drawn like "happy": the room swaps both
-  // characters for drawHugCouple during a hug). dir = side she faces (-1 left, 1 right).
+  // quần đùi jean nhạt, dép lê hồng. States: idle | walk | happy | sleepy | dance | read ("hug" is drawn like "happy": the
+  // room swaps both characters for drawHugCouple during a hug). dir = side she faces (-1 left, 1 right).
+  // dance = sways and raises one arm, then the other (to the vinyl music); read = holds an open book, eyes down.
   function drawNgoc(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
-    const lively = state === "happy" || state === "hug";
+    const dancing = state === "dance";
+    const reading = state === "read";
+    const lively = state === "happy" || state === "hug" || dancing;
     const bob = lively ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
-    const x = Math.round(cx - 11);
+    const x = Math.round(cx - 11 + ngocSway(state, frame));
     const y = Math.round(by - 30 + bob);
     const SKIN = "#F8D2B8";
     const HAIR = "#1B1416";
@@ -162,14 +165,28 @@ window.PixelSprites = (() => {
     px(ctx, x + 8, y + 15, 1, 4, TEE_FOLD);
     px(ctx, x + 13, y + 14, 1, 5, TEE_FOLD);
 
-    // Arms
-    const raise = lively ? -2 : 0;
-    // Viewer-left arm: the sleeve has slipped down below the bare shoulder
-    px(ctx, x + 2, y + 12 + raise, 2, 2, SKIN);
-    px(ctx, x + 1, y + 13 + raise, 3, 4, TEE);
-    px(ctx, x + 1, y + 17 + raise, 3, 4, SKIN);
-    px(ctx, x + 18, y + 12 + raise, 3, 5, TEE);
-    px(ctx, x + 18, y + 17 + raise, 3, 4, SKIN);
+    // Arms (dancing: one arm straight up, switching with the sway)
+    const raise = lively && !dancing ? -2 : 0;
+    const armUp = dancing ? (frame % 24 < 12 ? "left" : "right") : null;
+    if (armUp === "left") {
+      px(ctx, x + 2, y + 12, 2, 1, SKIN);
+      px(ctx, x + 1, y + 10, 3, 3, TEE);
+      px(ctx, x + 1, y + 5, 2, 5, SKIN);
+      px(ctx, x + 1, y + 4, 2, 1, "#EDBB9C"); // hand
+    } else {
+      // Viewer-left arm: the sleeve has slipped down below the bare shoulder
+      px(ctx, x + 2, y + 12 + raise, 2, 2, SKIN);
+      px(ctx, x + 1, y + 13 + raise, 3, 4, TEE);
+      px(ctx, x + 1, y + 17 + raise, 3, 4, SKIN);
+    }
+    if (armUp === "right") {
+      px(ctx, x + 18, y + 10, 3, 3, TEE);
+      px(ctx, x + 19, y + 5, 2, 5, SKIN);
+      px(ctx, x + 19, y + 4, 2, 1, "#EDBB9C");
+    } else {
+      px(ctx, x + 18, y + 12 + raise, 3, 5, TEE);
+      px(ctx, x + 18, y + 17 + raise, 3, 4, SKIN);
+    }
 
     // Side braid (tóc tết đuôi sam) over Ngọc's LEFT shoulder = viewer's right, drawn over the tee
     px(ctx, x + 15, y + 7, 3, 12, HAIR);
@@ -179,6 +196,21 @@ window.PixelSprites = (() => {
     px(ctx, x + 15, y + 19, 3, 1, "#F49CB8"); // pink hair tie
     px(ctx, x + 15, y + 20, 3, 1, HAIR);
     px(ctx, x + 16, y + 21, 1, 1, HAIR); // tuft
+
+    // Open book held in front of her (over the braid), hands on both edges; a page lifts now and then
+    if (reading) {
+      px(ctx, x + 4, y + 14, 14, 6, "#E46B94"); // pink cover
+      px(ctx, x + 5, y + 14, 6, 5, "#FFFDF7"); // left page
+      px(ctx, x + 11, y + 14, 6, 5, "#FFFDF7"); // right page
+      px(ctx, x + 11, y + 14, 1, 5, "#D9C6B3"); // spine
+      px(ctx, x + 6, y + 15, 4, 1, "#C9B8A8"); // lines of text
+      px(ctx, x + 6, y + 17, 3, 1, "#C9B8A8");
+      px(ctx, x + 13, y + 15, 3, 1, "#C9B8A8");
+      px(ctx, x + 13, y + 17, 3, 1, "#C9B8A8");
+      if (frame % 150 < 12) px(ctx, x + 12, y + 12, 4, 3, "#FFFDF7"); // page turning
+      px(ctx, x + 3, y + 16, 2, 2, SKIN); // hands
+      px(ctx, x + 17, y + 16, 2, 2, SKIN);
+    }
 
     // Head: rounded (narrower forehead row, tapered cheeks and chin); the back hair shows around the jaw
     px(ctx, x + 6, y + 1, 10, 1, SKIN);
@@ -199,6 +231,10 @@ window.PixelSprites = (() => {
     if (lively) {
       px(ctx, x + 6, y + 5, 3, 1, "#2B1E1C");
       px(ctx, x + 13, y + 5, 3, 1, "#2B1E1C");
+    } else if (reading) {
+      // looking down at the book
+      px(ctx, x + 7, y + 6, 2, 1, "#2B1E1C");
+      px(ctx, x + 13, y + 6, 2, 1, "#2B1E1C");
     } else if (state === "sleepy" || frame % 130 > 125) {
       // sleepy = eyes closed (blink pose held)
       px(ctx, x + 6, y + 6, 3, 1, "#2B1E1C");
@@ -234,6 +270,11 @@ window.PixelSprites = (() => {
     } else {
       px(ctx, x + 10, y + 10, 2, 1, "#C9707A");
     }
+  }
+
+  // Sideways sway while dancing (shared with the room so her festive hat sways along)
+  function ngocSway(state, frame) {
+    return state === "dance" ? (frame % 24 < 12 ? -1 : 1) : 0;
   }
 
   // Combined hug sprite (pixel-game convention, e.g. RPG Maker "couple behaviors"): instead of two front-facing
@@ -703,6 +744,7 @@ window.PixelSprites = (() => {
   return {
     drawKhanh,
     drawNgoc,
+    ngocSway,
     drawHugCouple,
     drawBong,
     drawDecor,

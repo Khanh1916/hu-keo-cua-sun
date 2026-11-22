@@ -35,7 +35,7 @@ window.RoomScene = (() => {
     state: "idle",
     stateTimer: 0,
     pauseTimer: 150,
-    mode: "wander", // wander | toKhanh | hug | toBong | pet | toWindow | watch
+    mode: "wander", // wander | toKhanh | hug | toBong | pet | toWindow | watch | dance | toShelf | read
     hugTimer: 0,
     modeTimer: 0
   };
@@ -218,6 +218,12 @@ window.RoomScene = (() => {
       setTimeout(() => spawnMusicNote(180, 92), i * 130);
     }
     triggerKhanhHappy("happy");
+    // Ngọc dances to the music (~4 s) unless she is busy hugging / petting / watching the rain / reading
+    if (ngoc.mode === "wander" || ngoc.mode === "dance") {
+      ngoc.mode = "dance";
+      ngoc.state = "dance";
+      ngoc.modeTimer = 240;
+    }
   }
 
   function updateCharacters() {
@@ -323,6 +329,21 @@ window.RoomScene = (() => {
         ngoc.state = "idle";
         ngoc.modeTimer = 300;
       }
+    } else if (ngoc.mode === "dance") {
+      ngoc.modeTimer--;
+      if (ngoc.modeTimer % 40 === 0) spawnMusicNote(ngoc.x, ngoc.y - 36);
+      if (ngoc.modeTimer <= 0) endNgocActivity(true);
+    } else if (ngoc.mode === "toShelf") {
+      // Walks over to the bookshelf, then reads a book in front of it (~6 s)
+      if (ngocWalkTo(172, 0.5)) {
+        ngoc.mode = "read";
+        ngoc.state = "read";
+        ngoc.dir = 1;
+        ngoc.modeTimer = 360;
+      }
+    } else if (ngoc.mode === "read") {
+      ngoc.modeTimer--;
+      if (ngoc.modeTimer <= 0) endNgocActivity(true);
     } else if (ngoc.mode === "watch") {
       // Stands under the window and watches the rain; gives up early if the rain stops
       ngoc.modeTimer--;
@@ -336,10 +357,14 @@ window.RoomScene = (() => {
         if (ngoc.pauseTimer === 0) {
           const roll = Math.random();
           const windowChance = isRainingNow() ? 0.3 : 0;
+          const state = getStateFn ? getStateFn() : {};
+          const shelfChance = (state.placedDecor || []).includes("bookshelf") ? 0.18 : 0;
           if (roll < windowChance) {
             ngoc.mode = "toWindow";
           } else if (roll < windowChance + 0.22) {
             ngoc.mode = "toBong";
+          } else if (roll < windowChance + 0.22 + shelfChance) {
+            ngoc.mode = "toShelf";
           } else {
             ngoc.targetX = 70 + Math.floor(Math.random() * 110);
           }
@@ -974,9 +999,9 @@ window.RoomScene = (() => {
     // Ngọc's festive hat (birthdays & Noel), placed on top of her hair
     if (!hugging &&(specialDay === "ngoc" || specialDay === "khanh" || specialDay === "noel")) {
       const px = PixelSprites.px;
-      const lively = ngoc.state === "happy" || ngoc.state === "hug";
+      const lively = ngoc.state === "happy" || ngoc.state === "hug" || ngoc.state === "dance";
       const nbob = lively ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
-      const nx = Math.round(ngoc.x);
+      const nx = Math.round(ngoc.x + PixelSprites.ngocSway(ngoc.state, frame));
       const ny = Math.round(ngoc.y - 33 + nbob);
       if (specialDay === "noel") {
         px(ctx, nx - 4, ny + 1, 8, 2, "#FFFFFF");
