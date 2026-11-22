@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hũ Kẹo — browser tests</title>
+  <!--
+    Zero-dependency browser smoke tests. Serve the repo root (python -m http.server 8123) and open
+    http://localhost:8123/tests/browser.html. The app runs in the iframe below; this page drives it the way a player would
+    (clicks, pagehide) and checks the result. It backs up this origin's localStorage first and restores it at the end, so
+    your own save in this browser is kept. Results also land in window.__testResults for automation.
+  -->
+  <style>
+    body { font: 14px/1.45 system-ui, sans-serif; margin: 16px; background: #fffaf3; color: #2b1b17; }
+    h1 { font-size: 18px; margin: 0 0 8px; }
+    #summary { font-weight: 700; margin: 8px 0; }
+    #results { list-style: none; padding: 0; margin: 0; }
+    #results li { padding: 2px 0; }
+    .ok { color: #1f7a3a; }
+    .fail { color: #b3261e; }
+    .detail { color: #6b5550; font-size: 12px; margin-left: 22px; }
+    iframe { width: 390px; height: 760px; border: 2px solid #2b1b17; border-radius: 10px; margin-top: 12px; background: #fff; }
+  </style>
+</head>
+<body>
+  <h1>Hũ Kẹo Của Sún — browser tests</h1>
+  <div id="summary">Đang chạy…</div>
+  <ul id="results"></ul>
+  <iframe id="app" title="App under test"></iframe>
+
+  <script>
+  "use strict";
+  (async () => {
+    const out = document.getElementById("results");
+    const summary = document.getElementById("summary");
+    const results = [];
+    window.__testResults = { done: false, passed: 0, failed: 0, results };
+
+    // ---- keep the real save: snapshot every localStorage key of this origin, restore at the end ----
+    const snapshot = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      snapshot[k] = localStorage.getItem(k);
+    }
+    let restored = false;
+    function restoreStorage() {
+      if (restored) return;
+      restored = true;
+      localStorage.clear();
+      Object.entries(snapshot).forEach(([k, v]) => localStorage.setItem(k, v));
+    }
+    window.addEventListener("pagehide", () => {
+      // the app saves on its own pagehide; drop the frame first so it can't write after the restore
+      document.getElementById("app").remove();
+      restoreStorage();
+    });
+
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    async function waitFor(fn, ms = 4000) {
+      const end = Date.now() + ms;
+      while (Date.now() < end) {
+        try { if (fn()) return true; } catch {}
+        await sleep(50);
+      }
+      return false;
+    }
+    function record(name, problems) {
+      const list = (Array.isArray(problems) ? problems : [problems]).filter(Boolean);
+      const ok = list.length === 0;
+      results.push({ name, ok, problems: list });
+      const li = document.createElement("li");
+      li.className = ok ? "ok" : "fail";
+      li.textContent = `${ok ? "✔" : "✘"} ${name}`;
+      list.forEach((p) => {
+        const d = document.createElement("div");
+        d.className = "detail";
+        d.textContent = p;
+        li.appendChild(d);
+      });
+      out.appendChild(li);
+    }
+    async function test(name, fn) {
+      try {
+        record(name, await fn());
+      } catch (e) {
+        record(name, `threw: ${e && e.message ? e.message : e}`);
+      }
+    }
+
+    // ---- load the app ----
+    const frame = document.getElementById("app");
+    frame.src = `../index.html?browsertest=${Date.now()}`;
+    await new Promise((r) => frame.addEventListener("load", r, { once: true }));
+    const w = frame.contentWindow;
+    const doc = frame.contentDocument;
+    const errors = [];
+    w.addEventListener("error", (e) => errors.push(e.message || String(e)));
+    w.addEventListener("unhandledrejection", (e) => errors.push(`unhandled rejection: ${e.reason}`));
+    w.confirm = () => true; // the reset-save test answers its confirm() dialog
+    await waitFor(() => w.GameState && w.RoomScene && w.EnglishApp);
+    await sleep(600);
+    const $ = (id) => doc.getElementById(id);
+    const click = (el) => el && el.click();
+    const visible = (el) => Boolean(el) && !el.classList.contains("hidden");
+
+    await test("app loads: every module is on window", () => {
+      const names = ["GameState", "RoomScene", "PixelSprites", "AudioManager", "MiniGame", "CrossingGame", "FlappyGame",
+        "NonLaGame", "MemoryGame", "EnglishApp", "ChineseApp", "GAME_DATA", "showToast"];
+      return names.filter((n) => !w[n]).map((n) => `window.${n} missing`);
+    });
+
+    await test("room canvas is drawn", async () => {
+      await sleep(300);
+      const c = $("roomCanvas");
+      const data = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+      const colours = new Set();
+      for (let i = 0; i < data.length; i += 4 * 37) colours.add(`${data[i]},${data[i + 1]},${data[i + 2]}`);
+      return colours.size > 12 ? null : `only ${colours.size} colours on the room canvas`;
+    });
+
+    // ---- every mini-game: start → leave the app (pagehide) → paused overlay → resume ----
+    const GAMES = { catch: "MiniGame", crossing: "CrossingGame", flappy: "FlappyGame", nonla: "NonLaGame", memory: "MemoryGame" };
+    for (const [key, modName] of Object.entries(GAMES)) {
+      await test(`${key}: leaving mid-game pauses it, resume continues`, async () => {
+        const mod = w[modName];
+        const problems = [];
+        if (key === "nonla") mod.setMode("quiet"); // voice mode would ask for the microphone
+        click($("btnPlayMiniGame"));
+        await sleep(100);
+        click(doc.querySelector(`.arcade-card[data-game="${key}"]`));
+        await sleep(150);
+        if (mod.isPaused()) mod.stop(); // a paused run left over from earlier: start fresh
+        click($("btnStartMiniGame"));
+        if (!(await waitFor(() => mod.isRunning(), 2000))) problems.push("did not start");
+        await sleep(400);
+        w.dispatchEvent(new w.Event("pagehide"));
+        await sleep(150);
+        if (!mod.isPaused()) problems.push("not paused after pagehide");
+        if (!visible($("mgOverlay"))) problems.push("no overlay after pagehide");
+        else if (!/Tạm Dừng/.test($("mgOverlayTitle").textContent)) problems.push(`overlay title "${$("mgOverlayTitle").textContent}"`);
+        click($("btnStartMiniGame"));
+        await sleep(200);
+        if (mod.isPaused() || !mod.isRunning()) problems.push("resume did not continue the run");
+        mod.stop();
+        click($("btnCloseMiniGame"));
+        await sleep(100);
+        if (visible($("modalMiniGame"))) problems.push("arcade modal did not close");
+        return problems;
+      });
+    }
+
+    await test("study rewards stop at 4 per day", () => {
+      const st = w.GameState.get();
+      st.dailyStudy.count = 0;
+      const granted = [];
+      for (let i = 0; i < 6; i++) granted.push(w.GameState.grantStudyReward("quiz", 1, 0).granted);
+      const n = granted.filter(Boolean).length;
+      return n === 4 && granted.slice(4).every((g) => !g) ? null : `granted pattern ${granted.join(",")}`;
+    });
+
+    await test("English quiz brings 3 words answered wrong back first", async () => {
+      const due = Date.now() + 86400000;
+      const words = ["grateful", "reliable", "curious"];
+      w.localStorage.setItem("hu_keo_cua_sun_english_srs_v1",
+        JSON.stringify(Object.fromEntries(words.map((x) => [x, { reps: 0, interval: 1, due, mistakes: 1 }]))));
+      w.localStorage.setItem("hu_keo_cua_sun_english_level_v1", "b1");
+      w.localStorage.setItem("hu_keo_study_lang", "en");
+      click($("btnQuickStudy"));
+      await sleep(300);
+      w.EnglishApp.switchTab("quiz");
+      await sleep(150);
+      let tags = 0;
+      for (let i = 0; i < 5; i++) {
+        if (doc.querySelector("#englishTabContent .qq-review-tag")) tags++;
+        click(doc.querySelector("#englishTabContent .quiz-opt-btn"));
+        click($("btnNextQuiz"));
+        await sleep(60);
+      }
+      const summaryShown = Boolean(doc.querySelector("#englishTabContent .quiz-result-wrap"));
+      w.EnglishApp.stopSpeech();
+      click(doc.querySelector("#modalEnglish [aria-label='Đóng']"));
+      return [tags !== 3 && `${tags} review-tagged questions, want 3`, !summaryShown && "result screen not shown"];
+    });
+
+    await test("closing a modal from its ✕ goes through closeModal (modal hidden)", async () => {
+      click($("btnQuickStudy"));
+      await sleep(200);
+      const open = [...doc.querySelectorAll(".modal-backdrop:not(.hidden)")];
+      if (!open.length) return "no study modal opened";
+      open.forEach((m) => click(m.querySelector("[aria-label='Đóng']")));
+      await sleep(100);
+      const still = [...doc.querySelectorAll(".modal-backdrop:not(.hidden)")].map((m) => m.id);
+      return still.length ? `still open: ${still.join(", ")}` : null;
+    });
+
+    await test("reset save clears purchases and arrays", async () => {
+      const st = w.GameState.get();
+      st.ownedDecor.push("rug");
+      st.placedDecor.push("rug");
+      click($("btnResetSave"));
+      await sleep(100);
+      const now = w.GameState.get();
+      return [now.ownedDecor.length && `ownedDecor kept ${now.ownedDecor}`, now.placedDecor.length && `placedDecor kept ${now.placedDecor}`];
+    });
+
+    await test("no uncaught errors in the app", () => errors.map((e) => e));
+
+    // ---- finish: drop the app frame (it saves on pagehide), then put the real save back ----
+    frame.remove();
+    restoreStorage();
+    const passed = results.filter((r) => r.ok).length;
+    const failed = results.length - passed;
+    Object.assign(window.__testResults, { done: true, passed, failed });
+    summary.textContent = `${passed} passed, ${failed} failed`;
+    summary.className = failed ? "fail" : "ok";
+  })();
+  </script>
+</body>
+</html>
