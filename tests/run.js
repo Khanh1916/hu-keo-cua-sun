@@ -103,6 +103,13 @@ check("every versioned script/style in index.html is precached", htmlAssets.filt
 check("every precached file exists", coreFiles.filter((f) => !exists(f)));
 check("every manifest icon exists and is precached",
   manifest.icons.flatMap((ic) => [!exists(ic.src) && `${ic.src} missing`, !coreFiles.includes(ic.src) && `${ic.src} not in CORE_ASSETS`]));
+const viewport = (html.match(/<meta name="viewport" content="([^"]*)"/) || [])[1] || "";
+const css = read("css/style.css");
+check("page can be pinch-zoomed, game canvases cannot", [
+  !viewport && "viewport meta not found",
+  /user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(\.0)?/.test(viewport) && `viewport blocks zoom: ${viewport}`,
+  !/\.minigame-canvas-wrap\s*\{[^}]*touch-action:\s*none/.test(css) && ".minigame-canvas-wrap lost touch-action: none",
+  !/html\s*\{[^}]*touch-action:\s*manipulation/.test(css) && "html lost touch-action: manipulation (double-tap zoom on buttons)"]);
 check("font cache survives activate", /k !== FONT_CACHE/.test(sw) ? null : "activate deletes FONT_CACHE");
 
 // ---------------------------------------------------------------------------------------------------------------

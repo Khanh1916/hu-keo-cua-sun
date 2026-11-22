@@ -39,6 +39,12 @@ html, body {
   overscroll-behavior-y: none;
 }
 
+/* Pinch-zoom is allowed (accessibility), but double-tap zoom is not: fast taps on game buttons must not zoom the page.
+   The game canvases also use touch-action: none (.minigame-canvas-wrap), so pinching there never zooms. */
+html {
+  touch-action: manipulation;
+}
+
 body {
   display: flex;
   justify-content: center;
