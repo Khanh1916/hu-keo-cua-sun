@@ -64,11 +64,8 @@ window.RoomScene = (() => {
     }
   }
 
+  // Always the real clock (the old manual "Khung cảnh" picker was removed on purpose).
   function getActiveTimeOfDay() {
-    const state = getStateFn ? getStateFn() : {};
-    if (state.timeOverride && state.timeOverride !== "auto") {
-      return state.timeOverride;
-    }
     const h = new Date().getHours();
     if (h >= 6 && h < 16) return "morning";
     if (h >= 16 && h < 19) return "sunset";

@@ -347,6 +347,9 @@ check("daily question + mood log: data, saved state, safe text, one reward a day
   if (!/dailyQSharePanel"\)\.classList\.remove\("hidden"\)/.test(share)) out.push("Gửi cho anh must always show the message box (it looked dead when the share sheet did not open)");
   return out;
 })());
+check("window scene follows the real clock only (owner removed the manual picker)",
+  [/timeOverride/.test(room) && "room.js still reads timeOverride", /id="timeModes"/.test(read("index.html")) && "index.html still has the time picker",
+   !/getHours\(\)/.test(extractFunction(room, "getActiveTimeOfDay")) && "getActiveTimeOfDay no longer uses the clock"]);
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",

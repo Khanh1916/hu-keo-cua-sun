@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     foodsFed: [],
     jarReads: 0,
     claimedBirthdays: [],
-    timeOverride: "auto",
     freeMealsDate: "",
     freeMealsLeft: 3,
     chineseDailyDoneDate: "",
@@ -65,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function normalizeState(parsed) {
     const base = freshDefaults();
     const merged = { ...base, ...parsed };
+    delete merged.timeOverride; // old saves: the window scene used to be pickable; it now always follows the real clock
     ARRAY_KEYS.forEach((k) => {
       if (!Array.isArray(merged[k])) merged[k] = base[k];
     });
@@ -366,10 +366,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateQuestDot();
 
-    // Update time-mode active button
-    document.querySelectorAll("#timeModes button").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.time === state.timeOverride);
-    });
   }
 
   // Daily Reset & Quests Management
@@ -1620,17 +1616,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnBackLetters").addEventListener("click", () => {
     AudioManager.playClick();
     renderLetters();
-  });
-
-  // Time Override in Settings
-  document.querySelectorAll("#timeModes button").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      AudioManager.playClick();
-      state.timeOverride = btn.dataset.time;
-      saveState();
-      renderHUD();
-      showToast("Đã đổi khung cảnh cửa sổ ✨");
-    });
   });
 
   // Backup & Restore helpers (UTF-8 safe Base64)
