@@ -2433,6 +2433,8 @@ window.ChineseApp = (() => {
     }
   }
 
+  // Candy per study reward (quiz/match still count toward app.js STUDY_DAILY_LIMIT = 4 per day across both languages).
+  const STUDY_CANDY = { daily: 5, quiz: 4, match: 3 };
   const STREAK_KEY = "hu_keo_sun_hsk_streak";
 
   function getStreakData() {
@@ -2556,7 +2558,7 @@ window.ChineseApp = (() => {
         <div class="chinese-daily-finish-box">
           <div class="cdf-info">
             <span>🎁 Học xong 5 từ hôm nay:</span>
-            <strong style="color: #d6336c">+2 🍬 Kẹo & +10 XP</strong>
+            <strong style="color: #d6336c">+${STUDY_CANDY.daily} 🍬 Kẹo & +10 XP</strong>
           </div>
           <button class="btn-finish-daily ${isCompletedToday ? "completed" : ""}" id="btnFinishDailyChinese" ${isCompletedToday ? "disabled" : ""}>
             ${isCompletedToday ? "🎉 Đã Ghi Nhớ Hôm Nay" : "Đã Nhớ Cả 5 Từ ✓"}
@@ -2610,7 +2612,7 @@ window.ChineseApp = (() => {
           const s = window.GameState.get();
           if (s.chineseDailyDoneDate !== todayStr) {
             s.chineseDailyDoneDate = todayStr;
-            window.GameState.grantStudyReward("daily", 10, 2);
+            window.GameState.grantStudyReward("daily", 10, STUDY_CANDY.daily);
           }
         }
 
@@ -2623,7 +2625,7 @@ window.ChineseApp = (() => {
 
         const streak = recordStreakToday();
         const streakMsg = streak > 1 ? ` 🔥 Chuỗi ${streak} ngày đỉnh nóc kịch trần!` : "";
-        if (window.showToast) window.showToast(`🎉 Giỏi quá! Đã nhận thưởng học bài: +2 🍬 & +10 XP!${streakMsg}`);
+        if (window.showToast) window.showToast(`🎉 Giỏi quá! Đã nhận thưởng học bài: +${STUDY_CANDY.daily} 🍬 & +10 XP!${streakMsg}`);
 
         renderDailyTab();
       });
@@ -2908,7 +2910,7 @@ window.ChineseApp = (() => {
       if (quizScore >= 4 && !quizRewarded) {
         quizRewarded = true;
         if (window.GameState) {
-          quizRewardResult = window.GameState.grantStudyReward("quiz", 15, 2);
+          quizRewardResult = window.GameState.grantStudyReward("quiz", 15, STUDY_CANDY.quiz);
         }
       }
       const quizPaid = Boolean(quizRewardResult && quizRewardResult.granted);
@@ -2918,7 +2920,7 @@ window.ChineseApp = (() => {
           <h3>🎉 Hoàn Thành Bài Trắc Nghiệm!</h3>
           <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${quizQuestions.length}</strong> câu (${getLevelLabel(currentLevel)})</p>
           ${quizMissedHtml()}
-          <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 " + (quizPaid ? "(+2 🍬 & +15 XP)" : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)") : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
+          <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 " + (quizPaid ? `(+${STUDY_CANDY.quiz} 🍬 & +15 XP)` : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)") : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
           <div class="quiz-actions">
             <button class="btn-summary-action btn-summary-pink" id="btnRestartQuiz">Làm Lại Lượt Mới</button>
             <button class="btn-summary-action btn-summary-cream" id="btnBackToDaily">Quay lại 5 từ mỗi ngày</button>
@@ -3118,7 +3120,7 @@ window.ChineseApp = (() => {
         matchRewarded = true;
         matchRewardPaid = false;
         if (window.GameState) {
-          matchRewardPaid = window.GameState.grantStudyReward("match", 10, 2).granted;
+          matchRewardPaid = window.GameState.grantStudyReward("match", 10, STUDY_CANDY.match).granted;
         }
         if (window.AudioManager) AudioManager.playCelebration();
       }
@@ -3128,7 +3130,7 @@ window.ChineseApp = (() => {
           <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
           <h3>Xuất Sắc! Hoàn Thành Nối Từ</h3>
           <p class="quiz-score-text">Ngọc đã nối chính xác trọn vẹn <strong>${matchWords.length}/${matchWords.length}</strong> cặp chữ Hán & Pinyin (${getLevelLabel(currentLevel)})!</p>
-          <p class="quiz-cheer">Trí nhớ của em siêu đỉnh luôn nè 💕 ${matchRewardPaid ? "(+2 🍬 Kẹo & +10 XP)" : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)"}</p>
+          <p class="quiz-cheer">Trí nhớ của em siêu đỉnh luôn nè 💕 ${matchRewardPaid ? `(+${STUDY_CANDY.match} 🍬 Kẹo & +10 XP)` : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)"}</p>
           <div class="quiz-actions">
             <button class="btn-summary-action btn-summary-pink" id="btnRestartMatch">Chơi Ván Mới 🧩</button>
             <button class="btn-summary-action btn-summary-cream" id="btnMatchToStarred">Xem Sổ Tay ⭐</button>

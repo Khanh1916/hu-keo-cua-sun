@@ -384,6 +384,20 @@ return handleArcadeGameOver;`)(doc, st, (xp, c) => { paid += c; });
   if (!/arcadeCandy: 0/.test(app.slice(app.indexOf("dailyInteractions: {"), app.indexOf("dailyStudy: {")))) out.push("arcadeCandy missing from DEFAULT_STATE.dailyInteractions (daily reset)");
   return out;
 })());
+check("study candy: one STUDY_CANDY table per module, used by every reward and its text", ["js/chinese.js", "js/english.js"].flatMap((f) => {
+  const s = read(f);
+  const out = [];
+  const m = s.match(/const STUDY_CANDY = (\{[^}]*\});/);
+  if (!m) return [`${f} lacks STUDY_CANDY`];
+  // eslint-disable-next-line no-new-func
+  const t = Function(`return (${m[1]});`)();
+  ["daily", "quiz", "match"].forEach((k) => { if (!(t[k] >= 1 && t[k] <= 8)) out.push(`${f}: STUDY_CANDY.${k} = ${t[k]}, keep 1–8`); });
+  [...s.matchAll(/grantStudyReward\("(\w+)", \d+, ([^)]+)\)/g)].forEach(([, kind, candy]) => {
+    if (candy.trim() !== `STUDY_CANDY.${kind}`) out.push(`${f}: ${kind} reward pays ${candy} instead of STUDY_CANDY.${kind}`);
+  });
+  (s.match(/\+\d+ 🍬/g) || []).forEach((x) => out.push(`${f}: hard-coded "${x}" in a reward text (use STUDY_CANDY)`));
+  return out;
+}));
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",
