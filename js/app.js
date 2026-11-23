@@ -503,13 +503,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     q.claimed = true;
-    addRewards(35, 20);
+    addRewards(35, 25);
     saveState();
     renderHUD();
     renderQuestsModal();
     updateQuestDot();
     AudioManager.playLevelUp();
-    showToast("🎉 Đã nhận thưởng ngày: +20 🍬 & +35 XP!");
+    showToast("🎉 Đã nhận thưởng ngày: +25 🍬 & +35 XP!");
   }
 
   // Render Food Tray with Daily Free Meals & Candy Sink
@@ -758,7 +758,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const di = state.dailyInteractions;
     if (di.jarReads < 3) {
       di.jarReads++;
-      addRewards(6, 1);
+      addRewards(6, 2);
     } else {
       addRewards(0, 0); // still saves jarReads for the letter unlock
     }
@@ -1039,7 +1039,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (di.talkCount < 5 && now - (di.lastTalkAt || 0) > 60000) {
           di.talkCount++;
           di.lastTalkAt = now;
-          addRewards(6, 1);
+          addRewards(6, 2);
         }
       } else if (who === "bong") {
         handlePetBong();
@@ -1136,10 +1136,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Per-game payout limits (see handleArcadeGameOver). HUD mirrors the cap so players are not promised more than they get.
-  const ARCADE_MAX_CANDY = 3;
+  const ARCADE_MAX_CANDY = 4;
   const ARCADE_MIN_SCORE_FOR_REWARD = 10;
   // Candy from mini-games per local day (saved in dailyInteractions, so reloading can't reset it). XP keeps flowing.
-  const ARCADE_DAILY_CANDY = 30;
+  const ARCADE_DAILY_CANDY = 45;
 
   function arcadeCandyLeft() {
     syncDailyReset();
@@ -1169,7 +1169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isNewBest) state[meta.bestKey] = score;
     document.getElementById("mgBest").textContent = state[meta.bestKey];
 
-    // Rebalanced economy: candies capped 0-3 (+1 bonus if new best), XP 2-5.
+    // Candies capped 0-4 per run (+1 bonus if new best), XP 2-5; ARCADE_DAILY_CANDY caps the day.
     // Runs below ARCADE_MIN_SCORE_FOR_REWARD pay nothing, so dying instantly cannot be farmed for XP.
     const rewarded = score >= ARCADE_MIN_SCORE_FOR_REWARD;
     let finalCandies = rewarded ? Math.max(0, Math.min(ARCADE_MAX_CANDY, candies || 0)) : 0;

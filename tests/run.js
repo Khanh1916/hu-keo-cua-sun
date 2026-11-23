@@ -366,7 +366,7 @@ check("economy: decor affordable in ~2–3 months, mini-game candy capped per da
   try {
     run = new Function("document", "state", "addRewards",
       `const ARCADE_META = { catch: { bestKey: "bestScore" } };
-const ARCADE_MAX_CANDY = 3; const ARCADE_MIN_SCORE_FOR_REWARD = 10;
+${(app.match(/const ARCADE_MAX_CANDY = \d+;/) || [""])[0]} const ARCADE_MIN_SCORE_FOR_REWARD = 10;
 ${(app.match(/const ARCADE_DAILY_CANDY = \d+;/) || [""])[0]}
 function syncDailyReset() {} function saveState() {} function updateQuestDot() {}
 ${extractFunction(app, "arcadeCandyLeft")}
@@ -375,9 +375,11 @@ return handleArcadeGameOver;`)(doc, st, (xp, c) => { paid += c; });
   } catch (e) {
     return [...out, `cannot load handleArcadeGameOver/arcadeCandyLeft (${e.message})`];
   }
-  for (let i = 0; i < 20; i++) run("catch", { score: 100, candies: 3 });
-  if (paid !== 30) out.push(`20 runs of 3 candy paid ${paid}, want the daily cap of 30`);
-  if (st.dailyInteractions.arcadeCandy !== 30) out.push(`dailyInteractions.arcadeCandy = ${st.dailyInteractions.arcadeCandy}, want 30`);
+  const cap = Number((app.match(/const ARCADE_DAILY_CANDY = (\d+);/) || [])[1]);
+  if (!(cap >= 20 && cap <= 60)) out.push(`ARCADE_DAILY_CANDY = ${cap}, keep it 20–60 (decor pacing)`);
+  for (let i = 0; i < 40; i++) run("catch", { score: 100, candies: 9 });
+  if (paid !== cap) out.push(`40 big runs paid ${paid}, want the daily cap of ${cap}`);
+  if (st.dailyInteractions.arcadeCandy !== cap) out.push(`dailyInteractions.arcadeCandy = ${st.dailyInteractions.arcadeCandy}, want ${cap}`);
   if (!/cap|đủ/.test(els.mgResultBox.innerHTML)) out.push("the result screen doesn't say the daily game candy is used up");
   if (!/arcadeCandy: 0/.test(app.slice(app.indexOf("dailyInteractions: {"), app.indexOf("dailyStudy: {")))) out.push("arcadeCandy missing from DEFAULT_STATE.dailyInteractions (daily reset)");
   return out;
