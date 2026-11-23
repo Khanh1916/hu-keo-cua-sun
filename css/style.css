@@ -912,6 +912,16 @@ body {
   font-size: 14px;
 }
 
+.arcade-candy-left {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--gold-soft);
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
+  padding: 4px 8px;
+}
+
 /* Mood Jars */
 .jar-grid {
   display: grid;

@@ -36,7 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
       jarReads: 0,
       talkCount: 0,
       lastTalkAt: 0,
-      vinylCount: 0
+      vinylCount: 0,
+      arcadeCandy: 0 // candy paid by mini-games today (capped by ARCADE_DAILY_CANDY)
     },
     dailyStudy: {
       date: "",
@@ -502,13 +503,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     q.claimed = true;
-    addRewards(35, 15);
+    addRewards(35, 20);
     saveState();
     renderHUD();
     renderQuestsModal();
     updateQuestDot();
     AudioManager.playLevelUp();
-    showToast("🎉 Đã nhận thưởng ngày: +15 🍬 & +35 XP!");
+    showToast("🎉 Đã nhận thưởng ngày: +20 🍬 & +35 XP!");
   }
 
   // Render Food Tray with Daily Free Meals & Candy Sink
@@ -799,7 +800,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("dailyQText").textContent = DATA.dailyQuestions[qIdx] || DATA.dailyQuestions[0];
     const input = document.getElementById("dailyQAnswer");
     if (document.activeElement !== input) input.value = saved ? saved.text : "";
-    document.getElementById("dailyQStatus").textContent = saved ? "✔ Đã lưu câu trả lời hôm nay" : "+6 XP, +1 🍬 cho câu trả lời đầu tiên mỗi ngày";
+    document.getElementById("dailyQStatus").textContent = saved ? "✔ Đã lưu câu trả lời hôm nay" : "+6 XP, +3 🍬 cho câu trả lời đầu tiên mỗi ngày";
 
     const past = Object.keys(state.dailyAnswers).filter((k) => k !== key).sort().reverse().slice(0, 30);
     document.getElementById("dailyQHistoryCount").textContent = String(past.length);
@@ -835,7 +836,7 @@ document.addEventListener("DOMContentLoaded", () => {
     state.dailyAnswers[key] = { q, text };
     pruneDateMap(state.dailyAnswers);
     if (first) {
-      addRewards(6, 1);
+      addRewards(6, 3);
       AudioManager.playPowerup();
     } else {
       saveState();
@@ -920,7 +921,7 @@ document.addEventListener("DOMContentLoaded", () => {
       lastHugTime = now;
       saveState();
       speech = "Cái ôm chào ngày mới nè! Chúc em một ngày thật vui nha 🤗";
-      addRewards(12, 1);
+      addRewards(12, 3);
     } else if (hCount < 3) {
       if (elapsed > 60000) {
         state.dailyInteractions.hugCount++;
@@ -932,7 +933,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "Đứng yên anh ôm cái nào, lúc nào rảnh nhắn tin cho anh nha."
         ];
         speech = pickRandom(lines).item;
-        addRewards(4, 0);
+        addRewards(4, 1);
       } else {
         const quickLines = [
           "Vừa ôm xong mà, nhớ anh đến thế cơ à? 🥰",
@@ -983,14 +984,14 @@ document.addEventListener("DOMContentLoaded", () => {
       lastPetTime = now;
       saveState();
       speech = "Meooo~ (Bông dụi đầu vào tay em chào ngày mới rừ rừ 🐱)";
-      addRewards(10, 1);
+      addRewards(10, 3);
     } else if (pCount < 3) {
       if (elapsed > 60000) {
         state.dailyInteractions.petCount++;
         lastPetTime = now;
         saveState();
         speech = pickRandom(DATA.bongDialogues).item;
-        addRewards(3, 0);
+        addRewards(3, 1);
       } else {
         const restingBong = [
           "(Bông ngáp một cái thật to, thỏa mãn cuộn tròn nằm ngủ tiếp)",
@@ -1137,6 +1138,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // Per-game payout limits (see handleArcadeGameOver). HUD mirrors the cap so players are not promised more than they get.
   const ARCADE_MAX_CANDY = 3;
   const ARCADE_MIN_SCORE_FOR_REWARD = 10;
+  // Candy from mini-games per local day (saved in dailyInteractions, so reloading can't reset it). XP keeps flowing.
+  const ARCADE_DAILY_CANDY = 30;
+
+  function arcadeCandyLeft() {
+    syncDailyReset();
+    return Math.max(0, ARCADE_DAILY_CANDY - (state.dailyInteractions.arcadeCandy || 0));
+  }
+
+  function renderArcadeCandyLeft() {
+    const left = arcadeCandyLeft();
+    document.getElementById("arcadeCandyLeft").textContent = left > 0
+      ? `🍬 Kẹo từ game hôm nay: còn ${left}/${ARCADE_DAILY_CANDY}`
+      : `🍬 Hôm nay đã nhận đủ ${ARCADE_DAILY_CANDY} kẹo từ game, vẫn chơi được để lấy thân mật & kỷ lục nha`;
+  }
 
   function handleArcadeHud({ score, candies, lives, livesText }) {
     document.getElementById("mgScore").textContent = score;
@@ -1159,6 +1174,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const rewarded = score >= ARCADE_MIN_SCORE_FOR_REWARD;
     let finalCandies = rewarded ? Math.max(0, Math.min(ARCADE_MAX_CANDY, candies || 0)) : 0;
     if (isNewBest && rewarded) finalCandies = Math.min(ARCADE_MAX_CANDY + 1, finalCandies + 1);
+    const earnedCandies = finalCandies;
+    finalCandies = Math.min(finalCandies, arcadeCandyLeft());
+    state.dailyInteractions.arcadeCandy = (state.dailyInteractions.arcadeCandy || 0) + finalCandies;
     const xpEarned = rewarded ? Math.max(2, Math.min(5, Math.floor(score / 35))) : 0;
     addRewards(xpEarned, finalCandies);
 
@@ -1185,6 +1203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resultBox.innerHTML = `
       Điểm số: <strong>${score}</strong> ${isNewBest ? "🏆 (Kỷ lục mới!)" : ""}<br />
       Thu hoạch: <strong>+${finalCandies} 🍬</strong> và <strong>+${xpEarned} thân mật</strong>!
+      ${earnedCandies > finalCandies ? `<br /><small>Hôm nay kẹo từ game đã đủ ${ARCADE_DAILY_CANDY} 🍬, mai chơi tiếp nha!</small>` : ""}
     `;
     resultBox.classList.remove("hidden");
     const restartBtn = document.getElementById("btnRestartMiniGame");
@@ -1283,6 +1302,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const bestMemEl = document.getElementById("bestMemoryText");
     if (bestMemEl) bestMemEl.textContent = `Kỷ lục: ${state.bestMemory || 0}`;
     document.getElementById("arcadeTitle").textContent = "🎮 Vườn Trẻ Kim Đồng";
+    renderArcadeCandyLeft();
     document.getElementById("btnBackArcade").classList.add("hidden");
     document.getElementById("arcadeMenu").classList.remove("hidden");
     document.getElementById("arcadeStage").classList.add("hidden");

@@ -350,6 +350,38 @@ check("daily question + mood log: data, saved state, safe text, one reward a day
 check("window scene follows the real clock only (owner removed the manual picker)",
   [/timeOverride/.test(room) && "room.js still reads timeOverride", /id="timeModes"/.test(read("index.html")) && "index.html still has the time picker",
    !/getHours\(\)/.test(extractFunction(room, "getActiveTimeOfDay")) && "getActiveTimeOfDay no longer uses the clock"]);
+check("economy: decor affordable in ~2–3 months, mini-game candy capped per day", (() => {
+  const out = [];
+  const prices = data.decorItems.map((d) => d.price);
+  const total = prices.reduce((a, b) => a + b, 0);
+  if (total < 4000 || total > 7000) out.push(`decor costs ${total} in total; ~40–70 candy/day means it should be 4,000–7,000`);
+  prices.forEach((p, i) => { if (i && p < prices[i - 1]) out.push(`${data.decorItems[i].id} (${p}) is cheaper than the item before it`); });
+  // Run the real handleArcadeGameOver + arcadeCandyLeft against stub state/DOM
+  const el = () => ({ textContent: "", innerHTML: "", classList: { add() {}, remove() {} } });
+  const els = {};
+  const doc = { getElementById: (id) => (els[id] = els[id] || el()) };
+  const st = { bestScore: 999, dailyInteractions: { arcadeCandy: 0 }, dailyQuests: { gameDone: true } };
+  let paid = 0;
+  let run;
+  try {
+    run = new Function("document", "state", "addRewards",
+      `const ARCADE_META = { catch: { bestKey: "bestScore" } };
+const ARCADE_MAX_CANDY = 3; const ARCADE_MIN_SCORE_FOR_REWARD = 10;
+${(app.match(/const ARCADE_DAILY_CANDY = \d+;/) || [""])[0]}
+function syncDailyReset() {} function saveState() {} function updateQuestDot() {}
+${extractFunction(app, "arcadeCandyLeft")}
+${(() => { const m = "function handleArcadeGameOver(gameKey, { score, candies, hitPoop, reason })"; return app.slice(app.indexOf(m), balancedRange(app, m).end); })()}
+return handleArcadeGameOver;`)(doc, st, (xp, c) => { paid += c; });
+  } catch (e) {
+    return [...out, `cannot load handleArcadeGameOver/arcadeCandyLeft (${e.message})`];
+  }
+  for (let i = 0; i < 20; i++) run("catch", { score: 100, candies: 3 });
+  if (paid !== 30) out.push(`20 runs of 3 candy paid ${paid}, want the daily cap of 30`);
+  if (st.dailyInteractions.arcadeCandy !== 30) out.push(`dailyInteractions.arcadeCandy = ${st.dailyInteractions.arcadeCandy}, want 30`);
+  if (!/cap|đủ/.test(els.mgResultBox.innerHTML)) out.push("the result screen doesn't say the daily game candy is used up");
+  if (!/arcadeCandy: 0/.test(app.slice(app.indexOf("dailyInteractions: {"), app.indexOf("dailyStudy: {")))) out.push("arcadeCandy missing from DEFAULT_STATE.dailyInteractions (daily reset)");
+  return out;
+})());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",
