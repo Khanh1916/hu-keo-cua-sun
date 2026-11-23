@@ -446,6 +446,55 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
     }
   ],
 
+  // "Câu hỏi hôm nay" in the jar modal: one per day, same for the whole day. Agent-written: the owner should proofread.
+  dailyQuestions: [
+    "Hôm nay điều gì làm em cười nhiều nhất?",
+    "Món ăn em đang thèm nhất lúc này là gì?",
+    "Nếu được gặp anh ngay bây giờ, em muốn làm gì đầu tiên?",
+    "Một bài hát em muốn hai đứa cùng nghe là bài gì?",
+    "Hôm nay em có mệt không? Mệt vì chuyện gì thì kể anh nghe.",
+    "Kỷ niệm nào của hai đứa em nhớ nhất?",
+    "Lần gặp tới em muốn hai đứa đi đâu?",
+    "Việc nhỏ nào anh làm khiến em vui nhất?",
+    "Nếu Bông biết nói, em nghĩ Bông sẽ nói gì với anh?",
+    "Có điều gì em muốn anh làm nhiều hơn không?",
+    "Hôm nay em đã ăn gì ngon chưa?",
+    "Lúc buồn em thích được dỗ kiểu nào nhất?",
+    "Một chỗ ở Hải Phòng em muốn dẫn anh đi là đâu?",
+    "Một chỗ ở Hà Nội em muốn anh dẫn đi là đâu?",
+    "Dạo này có chuyện gì làm em thấy tự hào về bản thân không?",
+    "Nếu được đi du lịch cùng anh, em chọn đi đâu?",
+    "Món quà nhỏ nào em đang muốn có?",
+    "Em thấy hai đứa giống nhau ở điểm nào nhất?",
+    "Hai đứa khác nhau ở điểm nào mà em thấy dễ thương?",
+    "Hôm nay có chuyện gì em muốn kể anh mà chưa kịp kể không?",
+    "Tuần này em đang mong chờ điều gì nhất?",
+    "Ba từ em dùng để tả anh là gì?",
+    "Lúc nào trong ngày em nhớ anh nhất?",
+    "Em muốn hai đứa cùng học thêm điều gì?",
+    "Bộ phim nào em muốn xem cùng anh?",
+    "Nếu hôm nay được nghỉ cả ngày, em sẽ làm gì?",
+    "Có điều gì đang làm em lo không? Kể anh nghe với.",
+    "Em muốn được anh khen điều gì nhất?",
+    "Em thích mùa nào trong năm nhất, vì sao?",
+    "Một thói quen nhỏ của anh mà em thấy buồn cười là gì?",
+    "Nếu được đặt tên cho căn phòng nhỏ này, em đặt tên gì?",
+    "Em muốn trang trí thêm gì cho phòng của hai đứa?",
+    "Ước mơ nhỏ nào em muốn làm được trong năm nay?",
+    "Điều gì làm em thấy bình yên nhất?",
+    "Hôm nay em uống đủ nước chưa? Thành thật nha 😆",
+    "Sau này em muốn hai đứa có một buổi hẹn như thế nào?",
+    "Câu nào anh từng nói mà em nhớ mãi?",
+    "Nếu được gửi cho anh một món ăn Hải Phòng ngay bây giờ, em gửi món gì?",
+    "Em muốn nhắn gì cho hai đứa của một năm sau?",
+    "Hôm nay em cho ngày của mình mấy điểm trên 10?"
+  ],
+  dailyQuestionReplies: [
+    "Em viết xong rồi hả? Gửi anh đọc với, anh tò mò lắm đó 👀",
+    "Câu trả lời này anh muốn đọc ghê, bấm gửi cho anh nha 💌",
+    "Cảm ơn em đã kể anh nghe nha, mai lại có câu hỏi mới đó ✨"
+  ],
+
   // Khánh's lines for the wall calendar (tap it). {days} = days left. Agent-written copy: the owner should proofread it.
   meetLines: {
     far: [

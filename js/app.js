@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
     lastBackupReminder: "",
     nextMeetDate: "", // "YYYY-MM-DD" of the next time they meet (set in Cài đặt); drives the wall calendar
     meetGreetedDate: "", // meeting day whose greeting was already shown
+    dailyAnswers: {}, // "YYYY-MM-DD" -> { q: question index, text } for "Câu hỏi hôm nay" (last 90 days kept)
+    moodLog: {}, // "YYYY-MM-DD" -> last mood jar opened that day (miss | tired | sad | playful)
     dailyInteractions: {
       date: "",
       hugCount: 0,
@@ -53,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Max rewarded quiz/match rounds per day across Chinese + English (daily 5-words lessons have their own once-a-day flag).
   const STUDY_DAILY_LIMIT = 4;
   const ARRAY_KEYS = ["ownedDecor", "placedDecor", "unlockedAchieve", "readLetters", "foodsFed", "claimedBirthdays"];
-  const NESTED_KEYS = ["dailyInteractions", "dailyQuests", "dailyStudy"];
+  const NESTED_KEYS = ["dailyInteractions", "dailyQuests", "dailyStudy", "dailyAnswers", "moodLog"];
 
   // DEFAULT_STATE holds nested arrays/objects, so a shallow spread would share (and later mutate) them. Always deep-copy.
   function freshDefaults() {
@@ -750,6 +752,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("notePaper").classList.remove("hidden");
 
     state.jarReads++;
+    state.moodLog[window.SpecialDays.localDateKey()] = jarKey;
+    pruneDateMap(state.moodLog);
+    renderMoodStrip();
 
     // Cap lives in saved state (not a JS variable) so reloading the page cannot reset it.
     syncDailyReset();
@@ -759,6 +764,108 @@ document.addEventListener("DOMContentLoaded", () => {
       addRewards(6, 1);
     } else {
       addRewards(0, 0); // still saves jarReads for the letter unlock
+    }
+  }
+
+  // Keep only the newest 90 days of a "YYYY-MM-DD" -> value map so the save stays small.
+  function pruneDateMap(map, keep = 90) {
+    Object.keys(map).sort().slice(0, -keep).forEach((k) => delete map[k]);
+  }
+
+  // Mood check-in: the jar picked each day, shown as a 14-day strip under the jars.
+  const MOOD_EMOJI = { miss: "💕", tired: "☁️", sad: "🌧️", playful: "😜" };
+  function renderMoodStrip() {
+    const strip = document.getElementById("moodStrip");
+    strip.textContent = "";
+    const today = new Date();
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+      const mood = state.moodLog[window.SpecialDays.localDateKey(d)];
+      const cell = document.createElement("span");
+      cell.className = `mood-cell${i === 0 ? " today" : ""}`;
+      cell.textContent = MOOD_EMOJI[mood] || "·";
+      cell.title = `${d.getDate()}/${d.getMonth() + 1}`;
+      strip.appendChild(cell);
+    }
+  }
+
+  // "Câu hỏi hôm nay": the same question all day, answer kept on this device, shareable to Khánh (Zalo etc.).
+  function getTodayQuestionIndex() {
+    const t = new Date();
+    const dayNumber = Math.floor(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()) / 86400000);
+    return dayNumber % DATA.dailyQuestions.length;
+  }
+
+  function renderDailyQuestion() {
+    const key = window.SpecialDays.localDateKey();
+    const saved = state.dailyAnswers[key];
+    const qIdx = saved ? saved.q : getTodayQuestionIndex();
+    document.getElementById("dailyQText").textContent = DATA.dailyQuestions[qIdx] || DATA.dailyQuestions[0];
+    const input = document.getElementById("dailyQAnswer");
+    if (document.activeElement !== input) input.value = saved ? saved.text : "";
+    document.getElementById("dailyQStatus").textContent = saved ? "✔ Đã lưu câu trả lời hôm nay" : "+6 XP, +1 🍬 cho câu trả lời đầu tiên mỗi ngày";
+
+    const past = Object.keys(state.dailyAnswers).filter((k) => k !== key).sort().reverse().slice(0, 30);
+    document.getElementById("dailyQHistoryCount").textContent = String(past.length);
+    document.getElementById("dailyQHistoryWrap").classList.toggle("hidden", past.length === 0);
+    const list = document.getElementById("dailyQHistory");
+    list.textContent = "";
+    past.forEach((k) => {
+      const a = state.dailyAnswers[k];
+      const item = document.createElement("div");
+      item.className = "daily-q-past";
+      const [y, m, d] = k.split("-");
+      const head = document.createElement("div");
+      head.className = "daily-q-past-q";
+      head.textContent = `${Number(d)}/${Number(m)}/${y} — ${DATA.dailyQuestions[a.q] || ""}`;
+      const body = document.createElement("div");
+      body.className = "daily-q-past-a";
+      body.textContent = a.text;
+      item.append(head, body);
+      list.appendChild(item);
+    });
+  }
+
+  // Saves today's answer; the first answer of the day (≥ 5 characters) pays +6 XP, +1 candy. Returns false if too short.
+  function saveDailyAnswer() {
+    const text = document.getElementById("dailyQAnswer").value.trim();
+    if (text.length < 5) {
+      showToast("✏️ Em viết thêm chút nữa nha (ít nhất 5 chữ cái)!");
+      return false;
+    }
+    const key = window.SpecialDays.localDateKey();
+    const first = !state.dailyAnswers[key];
+    const q = first ? getTodayQuestionIndex() : state.dailyAnswers[key].q;
+    state.dailyAnswers[key] = { q, text };
+    pruneDateMap(state.dailyAnswers);
+    if (first) {
+      addRewards(6, 1);
+      AudioManager.playPowerup();
+      showSpeech("Anh Khánh 💌", pickRandom(DATA.dailyQuestionReplies).item);
+    } else {
+      saveState();
+    }
+    renderDailyQuestion();
+    return true;
+  }
+
+  async function shareDailyAnswer() {
+    if (!saveDailyAnswer()) return;
+    const a = state.dailyAnswers[window.SpecialDays.localDateKey()];
+    const text = `💭 Câu hỏi hôm nay: ${DATA.dailyQuestions[a.q]}\n💌 Ngọc trả lời: ${a.text}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ text });
+        return;
+      } catch (e) {
+        if (e && e.name === "AbortError") return; // she closed the share sheet
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast("📋 Đã chép câu trả lời, dán vào Zalo gửi anh nha!");
+    } catch {
+      showToast("Máy chưa cho chép tự động, em chép tay giúp anh nha 🙏");
     }
   }
 
@@ -1333,7 +1440,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Nav Dock
-  document.getElementById("navJars").addEventListener("click", () => openModal("modalJars"));
+  document.getElementById("navJars").addEventListener("click", () => {
+    renderDailyQuestion();
+    renderMoodStrip();
+    openModal("modalJars");
+  });
+  document.getElementById("btnSaveDailyQ").addEventListener("click", () => {
+    if (saveDailyAnswer()) showToast("💾 Đã lưu câu trả lời hôm nay!");
+  });
+  document.getElementById("btnShareDailyQ").addEventListener("click", shareDailyAnswer);
   document.getElementById("navShop").addEventListener("click", () => {
     renderShop();
     openModal("modalShop");

@@ -983,6 +983,130 @@ body {
   font-style: italic;
 }
 
+/* "Câu hỏi hôm nay" + mood strip (jar modal) */
+.daily-q-card {
+  background: #fff8fb;
+  border: 2.5px solid var(--ink);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.daily-q-label {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  color: var(--pink-accent);
+}
+
+.daily-q-text {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.daily-q-input {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  padding: 7px 9px;
+  border: 2px solid var(--ink);
+  border-radius: 7px;
+  background: #fffdf9;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.daily-q-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.daily-q-status {
+  flex: 1 1 100%;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+
+.daily-q-actions .pixel-btn {
+  flex: 1;
+}
+
+.daily-q-history summary {
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.daily-q-past {
+  padding: 6px 0;
+  border-top: 1.5px dashed var(--cream-dark);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.daily-q-past-q {
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.daily-q-past-a {
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.mood-strip-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mood-strip-label {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.mood-strip {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 2px;
+}
+
+.mood-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  font-size: 13px;
+  background: #fffdf9;
+  border: 1.5px solid var(--cream-dark);
+  border-radius: 5px;
+  color: var(--ink-soft);
+}
+
+.mood-cell.today {
+  border-color: var(--pink-accent);
+  background: var(--pink-soft);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 /* Shop List */
 .shop-list, .letter-list, .achieve-list, .quest-list {
   display: flex;

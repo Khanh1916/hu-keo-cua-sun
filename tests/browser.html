@@ -182,6 +182,34 @@
       return [tags !== 3 && `${tags} review-tagged questions, want 3`, !summaryShown && "result screen not shown"];
     });
 
+    await test("daily question: short answer refused, first save pays once, text kept as text", async () => {
+      const st = w.GameState.get();
+      const key = w.SpecialDays.localDateKey();
+      delete st.dailyAnswers[key];
+      click($("navJars"));
+      await sleep(150);
+      const problems = [];
+      $("dailyQAnswer").value = "hi";
+      click($("btnSaveDailyQ"));
+      if (st.dailyAnswers[key]) problems.push("a 2-letter answer was saved");
+      const before = st.xp + st.level * 100000;
+      $("dailyQAnswer").value = "<b>bánh đa cua</b> nha";
+      click($("btnSaveDailyQ"));
+      const afterFirst = st.xp + st.level * 100000;
+      $("dailyQAnswer").value = "sửa lại câu trả lời";
+      click($("btnSaveDailyQ"));
+      if (afterFirst <= before) problems.push("first answer paid no XP");
+      if (st.xp + st.level * 100000 !== afterFirst) problems.push("editing the answer paid again");
+      if (!st.dailyAnswers[key] || st.dailyAnswers[key].text !== "sửa lại câu trả lời") problems.push("edit not saved");
+      st.dailyAnswers["2000-01-01"] = { q: 0, text: "<img src=x>" };
+      click($("navJars"));
+      await sleep(100);
+      if ($("dailyQHistory").querySelector("img")) problems.push("history renders saved text as HTML");
+      delete st.dailyAnswers["2000-01-01"];
+      click(doc.querySelector("#modalJars [aria-label='Đóng']"));
+      return problems;
+    });
+
     await test("closing a modal from its ✕ goes through closeModal (modal hidden)", async () => {
       click($("btnQuickStudy"));
       await sleep(200);

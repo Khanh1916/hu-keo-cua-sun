@@ -326,6 +326,24 @@ check("meeting countdown: day maths, wall calendar, no candy door", (() => {
   ["far", "soon", "tomorrow", "today"].forEach((k) => { if (!(data.meetLines && data.meetLines[k] && data.meetLines[k].length)) out.push(`meetLines.${k} empty`); });
   return out;
 })());
+check("daily question + mood log: data, saved state, safe text, one reward a day", (() => {
+  const out = [];
+  const qs = data.dailyQuestions || [];
+  if (qs.length < 30) out.push(`only ${qs.length} daily questions`);
+  qs.filter((q, i) => qs.indexOf(q) !== i).forEach((q) => out.push(`duplicate question: ${q}`));
+  if (!(data.dailyQuestionReplies || []).length) out.push("dailyQuestionReplies empty");
+  const nested = app.match(/const NESTED_KEYS = \[([^\]]*)\]/);
+  ["dailyAnswers", "moodLog"].forEach((k) => {
+    if (!nested || !nested[1].includes(`"${k}"`)) out.push(`${k} not in NESTED_KEYS (reset / restore would break it)`);
+  });
+  ["renderDailyQuestion", "renderMoodStrip"].forEach((fn) => {
+    if (/innerHTML/.test(extractFunction(app, fn))) out.push(`${fn} uses innerHTML for saved text`);
+  });
+  const save = extractFunction(app, "saveDailyAnswer");
+  if (!/const first = !state\.dailyAnswers\[key\]/.test(save) || !/if \(first\) \{\s*addRewards/.test(save)) out.push("saveDailyAnswer must pay only the first answer of the day");
+  if (!/state\.moodLog\[/.test(extractFunction(app, "drawNoteFromJar"))) out.push("opening a mood jar does not log the mood");
+  return out;
+})());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",
