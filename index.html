@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=76" />
+  <link rel="stylesheet" href="css/style.css?v=77" />
 </head>
 <body>
   <!-- iOS Native Taptic Engine Haptic Bridge (iOS 18+ WebKit Switch Trick) -->
@@ -371,11 +371,16 @@
   <div class="modal-backdrop hidden" id="modalShop">
     <div class="modal-card pixel-box">
       <div class="modal-header">
-        <h2>🛋️ Cửa Hàng Trang Trí Phòng</h2>
+        <h2>🛋️ Cửa Hàng Của Hai Đứa</h2>
         <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalShop">✕</button>
       </div>
       <p class="modal-subtitle">Dùng kẹo kiếm được để sắm đồ làm đẹp góc nhỏ chung của tụi mình nha (có <strong id="shopCandyText">0</strong> 🍬):</p>
+      <div class="shop-tabs" role="tablist">
+        <button class="shop-tab pixel-btn btn-cream btn-sm active" data-shop-tab="decor">🛋️ Đồ trang trí</button>
+        <button class="shop-tab pixel-btn btn-cream btn-sm" data-shop-tab="wardrobe">👗 Tủ quần áo</button>
+      </div>
       <div class="shop-list" id="shopList"></div>
+      <div class="shop-list hidden" id="wardrobeList"></div>
     </div>
   </div>
 
@@ -518,19 +523,19 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=76"></script>
-  <script defer src="js/lunar.js?v=76"></script>
-  <script defer src="js/weather.js?v=76"></script>
-  <script defer src="js/audio.js?v=76"></script>
-  <script defer src="js/sprites.js?v=76"></script>
-  <script defer src="js/room.js?v=76"></script>
-  <script defer src="js/minigame.js?v=76"></script>
-  <script defer src="js/game_crossing.js?v=76"></script>
-  <script defer src="js/game_flappy.js?v=76"></script>
-  <script defer src="js/game_nonla.js?v=76"></script>
-  <script defer src="js/game_memory.js?v=76"></script>
-  <script defer src="js/chinese.js?v=76"></script>
-  <script defer src="js/english.js?v=76"></script>
-  <script defer src="js/app.js?v=76"></script>
+  <script defer src="js/data.js?v=77"></script>
+  <script defer src="js/lunar.js?v=77"></script>
+  <script defer src="js/weather.js?v=77"></script>
+  <script defer src="js/audio.js?v=77"></script>
+  <script defer src="js/sprites.js?v=77"></script>
+  <script defer src="js/room.js?v=77"></script>
+  <script defer src="js/minigame.js?v=77"></script>
+  <script defer src="js/game_crossing.js?v=77"></script>
+  <script defer src="js/game_flappy.js?v=77"></script>
+  <script defer src="js/game_nonla.js?v=77"></script>
+  <script defer src="js/game_memory.js?v=77"></script>
+  <script defer src="js/chinese.js?v=77"></script>
+  <script defer src="js/english.js?v=77"></script>
+  <script defer src="js/app.js?v=77"></script>
 </body>
 </html>

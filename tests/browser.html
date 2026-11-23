@@ -229,10 +229,13 @@
       const st = w.GameState.get();
       st.ownedDecor.push("rug");
       st.placedDecor.push("rug");
+      st.ownedOutfits.push("b_bow");
+      st.wornOutfits.bong = "b_bow";
       click($("btnResetSave"));
       await sleep(100);
       const now = w.GameState.get();
-      return [now.ownedDecor.length && `ownedDecor kept ${now.ownedDecor}`, now.placedDecor.length && `placedDecor kept ${now.placedDecor}`];
+      return [now.ownedDecor.length && `ownedDecor kept ${now.ownedDecor}`, now.placedDecor.length && `placedDecor kept ${now.placedDecor}`,
+        now.ownedOutfits.length && `ownedOutfits kept ${now.ownedOutfits}`, now.wornOutfits.bong && `Bông still wears ${now.wornOutfits.bong}`];
     });
 
     await test("no uncaught errors in the app", () => errors.map((e) => e));

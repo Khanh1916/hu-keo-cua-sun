@@ -4,8 +4,31 @@ window.PixelSprites = (() => {
     ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
   }
 
-  // Draw Khánh Mini (approx 22w x 32h logical pixels, anchor at bottom-center x, y)
-  function drawKhanh(ctx, cx, by, state = "idle", frame = 0) {
+  // Wardrobe (shop "Tủ quần áo"): palette swaps + small shape flags for the room sprites. Ids must match GAME_DATA.outfits.
+  //   top/fold or hi = shirt colours, longSleeve = sleeves down to the hand, covered = no bare off-shoulder (Ngọc),
+  //   skirt = skirt instead of shorts, panel = áo dài front flap over the legs, legs/pants = trouser colour, trim = gold edging.
+  const OUTFITS = {
+    n_sweater: { top: "#F7A8C4", fold: "#E68BAD", longSleeve: true, covered: true },
+    n_sundress: { top: "#FFE58A", fold: "#F2CF5B", covered: true, skirt: "#FFE58A", skirtDk: "#EBC24E" },
+    n_hoodie: { top: "#B9A6E8", fold: "#9F8BD6", longSleeve: true, covered: true, pocket: true },
+    n_aodai: { top: "#D9264A", fold: "#B81C3C", longSleeve: true, covered: true, panel: true, trim: "#FFD166", legs: "#FFFDF7" },
+    k_sweater: { top: "#3B5A8C", hi: "#4D6EA3", longSleeve: true },
+    k_shirt: { top: "#F4F2EC", hi: "#D9D5CC", pants: "#3A4660", pantsDk: "#2F3A52" },
+    k_hoodie: { top: "#9AA3AE", hi: "#B3BBC5", longSleeve: true },
+    k_aodai: { top: "#2B6CB0", hi: "#FFD166", longSleeve: true, panel: true, pants: "#FFFDF7", pantsDk: "#E8E2D8" },
+    b_bow: { accessory: "bow" },
+    b_scarf: { accessory: "scarf" },
+    b_frog: { accessory: "frog" }
+  };
+  const outfitStyle = (id) => OUTFITS[id] || {};
+
+  // Draw Khánh Mini (approx 22w x 32h logical pixels, anchor at bottom-center x, y). outfitId = worn wardrobe item or "".
+  function drawKhanh(ctx, cx, by, state = "idle", frame = 0, outfitId = "") {
+    const o = outfitStyle(outfitId);
+    const TOP = o.top || "#242229";
+    const TOP_HI = o.hi || "#3D3A45";
+    const PANTS = o.pants || "#6D737E";
+    const PANTS_DK = o.pantsDk || "#5E646F";
     const bob = state === "happy" ? Math.round(Math.sin(frame * 0.25) * 1.5) : (frame % 40 < 20 ? 0 : 1);
     const x = Math.round(cx - 11);
     const y = Math.round(by - 32 + bob);
@@ -17,33 +40,44 @@ window.PixelSprites = (() => {
     px(ctx, x + 5, y + 29, 5, 3, "#2A2224");
     px(ctx, x + 12, y + 29, 5, 3, "#2A2224");
 
-    // Grey trousers (quần âu xám ghi) - sturdy legs
-    px(ctx, x + 5, y + 23, 5, 6, "#6D737E");
-    px(ctx, x + 12, y + 23, 5, 6, "#6D737E");
-    px(ctx, x + 5, y + 22, 12, 2, "#5E646F"); // waist/belt area
+    // Trousers (default: quần âu xám ghi) - sturdy legs
+    px(ctx, x + 5, y + 23, 5, 6, PANTS);
+    px(ctx, x + 12, y + 23, 5, 6, PANTS);
+    px(ctx, x + 5, y + 22, 12, 2, PANTS_DK); // waist/belt area
     px(ctx, x + 10, y + 22, 2, 1, "#B8BFC9"); // belt buckle
 
-    // Torso: Black Polo shirt (áo polo đen, dáng đầm ấm áp)
-    px(ctx, x + 4, y + 14, 14, 9, "#242229");
-    px(ctx, x + 5, y + 13, 12, 2, "#242229");
-    // Polo collar (dark charcoal for visibility)
-    px(ctx, x + 7, y + 13, 3, 2, "#3D3A45");
-    px(ctx, x + 12, y + 13, 3, 2, "#3D3A45");
-    px(ctx, x + 10, y + 14, 2, 3, "#36333D");
-    px(ctx, x + 10, y + 15, 1, 1, "#8B8794"); // collar button
+    // Torso (default: black polo, áo polo đen)
+    px(ctx, x + 4, y + 14, 14, 9, TOP);
+    px(ctx, x + 5, y + 13, 12, 2, TOP);
+    if (o.panel) {
+      // áo dài: long front flap over the trousers, mandarin collar and gold edging
+      px(ctx, x + 6, y + 22, 10, 6, TOP);
+      px(ctx, x + 6, y + 27, 10, 1, TOP_HI);
+      px(ctx, x + 8, y + 13, 6, 1, TOP_HI);
+      px(ctx, x + 10, y + 14, 1, 8, TOP_HI);
+    } else {
+      // Collar (polo / shirt)
+      px(ctx, x + 7, y + 13, 3, 2, TOP_HI);
+      px(ctx, x + 12, y + 13, 3, 2, TOP_HI);
+      px(ctx, x + 10, y + 14, 2, 3, o.top ? TOP_HI : "#36333D");
+      px(ctx, x + 10, y + 15, 1, 1, "#8B8794"); // collar button
+    }
 
-    // Arms (polo sleeves + skin forearms)
+    // Arms (sleeves + skin forearms; long sleeves cover the forearm and the watch)
     const armRaise = state === "happy" ? -2 : 0;
+    const sleeveLen = o.longSleeve ? 8 : 5;
     // Viewer's LEFT = Khánh's RIGHT arm (wears silver metal watch!)
-    px(ctx, x + 1, y + 14 + armRaise, 3, 5, "#242229"); // black sleeve
-    px(ctx, x + 1, y + 19 + armRaise, 3, 4, "#F5C6A5"); // right forearm/hand
-    // Silver metal watch on Khánh's RIGHT wrist (viewer's left)
-    px(ctx, x + 1, y + 20 + armRaise, 3, 2, "#DCE3EC");
-    px(ctx, x + 2, y + 20 + armRaise, 1, 1, "#FFFFFF"); // watch gleam
+    px(ctx, x + 1, y + 14 + armRaise, 3, sleeveLen, TOP);
+    px(ctx, x + 1, y + 14 + sleeveLen + armRaise, 3, 9 - sleeveLen, "#F5C6A5"); // forearm/hand
+    if (!o.longSleeve) {
+      // Silver metal watch on Khánh's RIGHT wrist (viewer's left)
+      px(ctx, x + 1, y + 20 + armRaise, 3, 2, "#DCE3EC");
+      px(ctx, x + 2, y + 20 + armRaise, 1, 1, "#FFFFFF"); // watch gleam
+    }
 
     // Viewer's RIGHT = Khánh's LEFT arm
-    px(ctx, x + 18, y + 14 + armRaise, 3, 5, "#242229");
-    px(ctx, x + 18, y + 19 + armRaise, 3, 4, "#F5C6A5");
+    px(ctx, x + 18, y + 14 + armRaise, 3, sleeveLen, TOP);
+    px(ctx, x + 18, y + 14 + sleeveLen + armRaise, 3, 9 - sleeveLen, "#F5C6A5");
 
     // Neck
     px(ctx, x + 9, y + 11, 4, 3, "#E7B491");
@@ -116,7 +150,8 @@ window.PixelSprites = (() => {
   // quần đùi jean nhạt, dép lê hồng. States: idle | walk | happy | sleepy | dance | read ("hug" is drawn like "happy": the
   // room swaps both characters for drawHugCouple during a hug). dir = side she faces (-1 left, 1 right).
   // dance = sways and raises one arm, then the other (to the vinyl music); read = holds an open book, eyes down.
-  function drawNgoc(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
+  function drawNgoc(ctx, cx, by, dir = 1, state = "idle", frame = 0, outfitId = "") {
+    const o = outfitStyle(outfitId);
     const dancing = state === "dance";
     const reading = state === "read";
     const lively = state === "happy" || state === "hug" || dancing;
@@ -126,8 +161,10 @@ window.PixelSprites = (() => {
     const SKIN = "#F8D2B8";
     const HAIR = "#1B1416";
     const HAIR_HI = "#3A2D31";
-    const TEE = "#FFF6EA"; // cream tee
-    const TEE_FOLD = "#EADCC8";
+    const TEE = o.top || "#FFF6EA"; // default: cream tee
+    const TEE_FOLD = o.fold || "#EADCC8";
+    const FOREARM = o.longSleeve ? TEE : SKIN;
+    const LEGS = o.legs || SKIN;
     const SHORTS = "#7FA7C9"; // light denim shorts
     const SHORTS_DK = "#6890B3";
     const FRAME = "#181518"; // black frames, same size as Khánh's
@@ -143,49 +180,74 @@ window.PixelSprites = (() => {
     const step = state === "walk" ? (frame % 16 < 8 ? 1 : -1) : 0;
     const lUp = step > 0 ? 1 : 0;
     const rUp = step < 0 ? 1 : 0;
-    px(ctx, x + 7, y + 22 - lUp, 3, 6, SKIN);
-    px(ctx, x + 12, y + 22 - rUp, 3, 6, SKIN);
+    px(ctx, x + 7, y + 22 - lUp, 3, 6, LEGS);
+    px(ctx, x + 12, y + 22 - rUp, 3, 6, LEGS);
     px(ctx, x + 6, y + 28 - lUp, 5, 2, SLIPPER);
     px(ctx, x + 11, y + 28 - rUp, 5, 2, SLIPPER);
 
-    // Short light-denim shorts (quần đùi jean nhạt)
-    px(ctx, x + 6, y + 18, 10, 3, SHORTS);
-    px(ctx, x + 6, y + 21, 4, 2, SHORTS);
-    px(ctx, x + 12, y + 21, 4, 2, SHORTS);
-    px(ctx, x + 6, y + 18, 10, 1, SHORTS_DK);
+    if (o.skirt) {
+      // Flared skirt (váy) instead of shorts
+      px(ctx, x + 5, y + 18, 12, 5, o.skirt);
+      px(ctx, x + 4, y + 21, 14, 2, o.skirt);
+      px(ctx, x + 4, y + 22, 14, 1, o.skirtDk);
+    } else if (!o.panel) {
+      // Short light-denim shorts (quần đùi jean nhạt)
+      px(ctx, x + 6, y + 18, 10, 3, SHORTS);
+      px(ctx, x + 6, y + 21, 4, 2, SHORTS);
+      px(ctx, x + 12, y + 21, 4, 2, SHORTS);
+      px(ctx, x + 6, y + 18, 10, 1, SHORTS_DK);
+    } else {
+      px(ctx, x + 6, y + 18, 10, 4, LEGS); // áo dài trousers
+    }
 
-    // Oversized cream tee, worn off the viewer-left shoulder: bare shoulder with a thin black strap
-    // Neckline slants from the neck down to the bare shoulder (reads as off-shoulder, not as a hand)
-    px(ctx, x + 5, y + 11, 6, 1, SKIN);
-    px(ctx, x + 3, y + 12, 6, 1, SKIN);
-    px(ctx, x + 6, y + 11, 1, 2, "#2A2224"); // strap
-    px(ctx, x + 11, y + 11, 6, 1, TEE);
-    px(ctx, x + 9, y + 12, 9, 1, TEE);
+    if (o.covered) {
+      // Wardrobe tops cover both shoulders; a little skin at the neck
+      px(ctx, x + 5, y + 11, 12, 1, TEE);
+      px(ctx, x + 9, y + 11, 4, 1, o.panel ? o.trim : SKIN);
+      px(ctx, x + 3, y + 12, 15, 1, TEE);
+    } else {
+      // Oversized cream tee, worn off the viewer-left shoulder: bare shoulder with a thin black strap
+      // Neckline slants from the neck down to the bare shoulder (reads as off-shoulder, not as a hand)
+      px(ctx, x + 5, y + 11, 6, 1, SKIN);
+      px(ctx, x + 3, y + 12, 6, 1, SKIN);
+      px(ctx, x + 6, y + 11, 1, 2, "#2A2224"); // strap
+      px(ctx, x + 11, y + 11, 6, 1, TEE);
+      px(ctx, x + 9, y + 12, 9, 1, TEE);
+    }
     px(ctx, x + 4, y + 13, 14, 7, TEE); // loose hem covers the top of the shorts
     px(ctx, x + 8, y + 15, 1, 4, TEE_FOLD);
     px(ctx, x + 13, y + 14, 1, 5, TEE_FOLD);
+    if (o.pocket) px(ctx, x + 7, y + 17, 8, 2, TEE_FOLD); // hoodie pocket
+    if (o.panel) {
+      // áo dài: long front flap down over the white trousers, gold edging
+      px(ctx, x + 7, y + 20, 8, 7, TEE);
+      px(ctx, x + 7, y + 26, 8, 1, o.trim);
+      px(ctx, x + 10, y + 12, 1, 8, o.trim);
+    }
 
     // Arms (dancing: one arm straight up, switching with the sway)
     const raise = lively && !dancing ? -2 : 0;
     const armUp = dancing ? (frame % 24 < 12 ? "left" : "right") : null;
     if (armUp === "left") {
-      px(ctx, x + 2, y + 12, 2, 1, SKIN);
+      px(ctx, x + 2, y + 12, 2, 1, o.covered ? TEE : SKIN);
       px(ctx, x + 1, y + 10, 3, 3, TEE);
-      px(ctx, x + 1, y + 5, 2, 5, SKIN);
+      px(ctx, x + 1, y + 5, 2, 5, FOREARM);
       px(ctx, x + 1, y + 4, 2, 1, "#EDBB9C"); // hand
     } else {
-      // Viewer-left arm: the sleeve has slipped down below the bare shoulder
-      px(ctx, x + 2, y + 12 + raise, 2, 2, SKIN);
+      // Viewer-left arm: the sleeve has slipped down below the bare shoulder (default tee only)
+      px(ctx, x + 2, y + 12 + raise, 2, 2, o.covered ? TEE : SKIN);
       px(ctx, x + 1, y + 13 + raise, 3, 4, TEE);
-      px(ctx, x + 1, y + 17 + raise, 3, 4, SKIN);
+      px(ctx, x + 1, y + 17 + raise, 3, 4, FOREARM);
+      if (o.longSleeve) px(ctx, x + 1, y + 20 + raise, 3, 1, SKIN); // hand peeking out of the sleeve
     }
     if (armUp === "right") {
       px(ctx, x + 18, y + 10, 3, 3, TEE);
-      px(ctx, x + 19, y + 5, 2, 5, SKIN);
+      px(ctx, x + 19, y + 5, 2, 5, FOREARM);
       px(ctx, x + 19, y + 4, 2, 1, "#EDBB9C");
     } else {
       px(ctx, x + 18, y + 12 + raise, 3, 5, TEE);
-      px(ctx, x + 18, y + 17 + raise, 3, 4, SKIN);
+      px(ctx, x + 18, y + 17 + raise, 3, 4, FOREARM);
+      if (o.longSleeve) px(ctx, x + 18, y + 20 + raise, 3, 1, SKIN);
     }
 
     // Side braid (tóc tết đuôi sam) over Ngọc's LEFT shoulder = viewer's right, drawn over the tee
@@ -284,7 +346,9 @@ window.PixelSprites = (() => {
   // flip = true draws the mirror image for when Ngọc stands on Khánh's LEFT. It is a proper redraw, not just a flipped
   // copy: Khánh then shows his left arm (his silver watch is on the far, right wrist, so it is hidden) and Ngọc shows her
   // right side (bare off-shoulder with its black strap; her braid, which lies over her left shoulder, hangs behind her back).
-  function drawHugCouple(realCtx, cx, by, frame = 0, flip = false) {
+  function drawHugCouple(realCtx, cx, by, frame = 0, flip = false, khanhOutfit = "", ngocOutfit = "") {
+    const ko = outfitStyle(khanhOutfit);
+    const no = outfitStyle(ngocOutfit);
     // Mirror every rectangle around x = cx when flipped
     const ctx = flip
       ? {
@@ -293,17 +357,18 @@ window.PixelSprites = (() => {
       }
       : realCtx;
     const squeeze = frame % 48 < 24 ? 0 : 1; // gentle "squeeze" bob
-    const POLO = "#242229";
-    const POLO_HI = "#3D3A45";
-    const PANTS = "#6D737E";
+    const POLO = ko.top || "#242229";
+    const POLO_HI = ko.hi || "#3D3A45";
+    const PANTS = ko.pants || "#6D737E";
     const K_SKIN = "#F6C9AA";
     const K_HAIR = "#2A2124";
     const N_SKIN = "#F8D2B8";
     const N_HAIR = "#1B1416";
     const N_HAIR_HI = "#3A2D31";
-    const TEE = "#FFF6EA";
-    const TEE_FOLD = "#EADCC8";
-    const SHORTS = "#7FA7C9";
+    const TEE = no.top || "#FFF6EA";
+    const TEE_FOLD = no.fold || "#EADCC8";
+    const SHORTS = no.skirt || no.legs || "#7FA7C9";
+    const N_LEGS = no.legs || N_SKIN;
     const BLACK = "#181518";
     const EYE = "#2B1E1C";
 
@@ -316,7 +381,8 @@ window.PixelSprites = (() => {
     px(ctx, kx + 2, ky + 30, 4, 2, "#2A2224"); // back shoe
     px(ctx, kx + 4, ky + 29, 7, 3, "#2A2224"); // front shoe (toe to the right)
     px(ctx, kx + 3, ky + 22, 7, 7, PANTS);
-    px(ctx, kx + 3, ky + 22, 7, 1, "#5E646F");
+    px(ctx, kx + 3, ky + 22, 7, 1, ko.pantsDk || "#5E646F");
+    if (ko.panel) px(ctx, kx + 2, ky + 21, 9, 6, POLO); // áo dài flap
     px(ctx, kx + 2, ky + 13, 10, 9, POLO); // chest
     px(ctx, kx + 8, ky + 12, 3, 2, POLO_HI); // collar
     px(ctx, kx + 8, ky + 10, 3, 3, "#E7B491"); // neck
@@ -324,15 +390,16 @@ window.PixelSprites = (() => {
     const nx = cx;
     const ny = by - 30 + squeeze;
     const hy = ny + 6; // head tucked under his chin, cheek against his chest
-    px(ctx, nx + 6, ny + 23, 3, 5, "#EDBB9C"); // back leg
-    px(ctx, nx + 3, ny + 22, 3, 6, N_SKIN); // front leg
+    px(ctx, nx + 6, ny + 23, 3, 5, no.legs ? "#E8E2D8" : "#EDBB9C"); // back leg
+    px(ctx, nx + 3, ny + 22, 3, 6, N_LEGS); // front leg
     px(ctx, nx + 5, ny + 28, 4, 2, "#E9A3BB"); // back slipper
     px(ctx, nx + 1, ny + 28, 5, 2, "#F7B6CC"); // front slipper (toe to the left)
     px(ctx, nx + 2, ny + 18, 8, 5, SHORTS);
-    px(ctx, nx + 2, ny + 18, 8, 1, "#6890B3");
+    px(ctx, nx + 2, ny + 18, 8, 1, no.skirtDk || (no.legs ? "#E8E2D8" : "#6890B3"));
     px(ctx, nx + 1, ny + 11, 10, 8, TEE);
     px(ctx, nx + 5, ny + 13, 1, 5, TEE_FOLD);
-    px(ctx, nx + 8, ny + 11, 3, 1, N_SKIN); // a little bare shoulder at the back (off-shoulder tee)
+    if (no.panel) px(ctx, nx + 2, ny + 18, 7, 8, TEE); // áo dài flap
+    if (!no.covered) px(ctx, nx + 8, ny + 11, 3, 1, N_SKIN); // a little bare shoulder at the back (off-shoulder tee)
     // head
     px(ctx, nx + 1, hy + 1, 9, 8, N_SKIN);
     px(ctx, nx + 2, hy + 9, 6, 1, N_SKIN); // chin
@@ -352,9 +419,11 @@ window.PixelSprites = (() => {
       for (let i = 0; i < 4; i++) px(ctx, nx + 10 + (i % 2), hy + 8 + i * 2, 1, 1, N_HAIR_HI);
       px(ctx, nx + 10, hy + 16, 2, 1, "#F49CB8");
       px(ctx, nx + 10, hy + 17, 1, 1, N_HAIR);
-      // near shoulder is her right one: bare, with the black strap
-      px(ctx, nx + 8, ny + 11, 3, 1, N_SKIN);
-      px(ctx, nx + 9, ny + 12, 1, 2, "#2A2224");
+      // near shoulder is her right one: bare, with the black strap (default off-shoulder tee only)
+      if (!no.covered) {
+        px(ctx, nx + 8, ny + 11, 3, 1, N_SKIN);
+        px(ctx, nx + 9, ny + 12, 1, 2, "#2A2224");
+      }
     }
     // big black glasses (side view)
     px(ctx, nx + 0, hy + 3, 4, 1, BLACK);
@@ -390,19 +459,19 @@ window.PixelSprites = (() => {
     // hand rests there, as if the rest of the arm goes round behind the body. Never stretch an arm across a whole body.
     // Khánh's near arm round her shoulders: sleeve, short forearm with the watch, hand on her shoulder blade
     px(ctx, kx + 8, ky + 15, 3, 3, POLO);
-    px(ctx, kx + 11, ky + 17, 5, 2, K_SKIN);
-    px(ctx, kx + 14, ky + 17, 2, 2, flip ? K_SKIN : "#DCE3EC"); // silver watch (right wrist: only visible unflipped)
+    px(ctx, kx + 11, ky + 17, 5, 2, ko.longSleeve ? POLO : K_SKIN);
+    if (!ko.longSleeve) px(ctx, kx + 14, ky + 17, 2, 2, flip ? K_SKIN : "#DCE3EC"); // silver watch (right wrist: only visible unflipped)
     px(ctx, kx + 16, ky + 17, 2, 2, K_SKIN); // hand, flush with the forearm (a taller block reads as a bump)
     px(ctx, kx + 17, ky + 17, 1, 2, "#E7B491"); // fingertips
     // Ngọc's near arm round his waist: sleeve, short forearm, hand on his side
     px(ctx, nx + 4, ny + 17, 3, 2, TEE);
     px(ctx, nx + 4, ny + 19, 3, 1, TEE_FOLD); // sleeve hem, so it reads apart from the tee
-    px(ctx, nx - 2, ny + 19, 6, 2, N_SKIN);
+    px(ctx, nx - 2, ny + 19, 6, 2, no.longSleeve ? TEE : N_SKIN);
     px(ctx, nx - 3, ny + 19, 1, 2, "#EDBB9C"); // fingertips, flush with the forearm
   }
 
   // Draw Bé mèo Bông: lông trắng với vàng trộn lẫn, mũi mồm trắng rõ nét
-  function drawBong(ctx, cx, by, dir = 1, state = "idle", frame = 0) {
+  function drawBong(ctx, cx, by, dir = 1, state = "idle", frame = 0, accessoryId = "") {
     const hop = state === "happy" ? Math.abs(Math.round(Math.sin(frame * 0.3) * 3)) : 0;
     const x = Math.round(cx - 8);
     const y = Math.round(by - 14 - hop);
@@ -455,6 +524,29 @@ window.PixelSprites = (() => {
     px(ctx, x + 7, y + 5, 2, 1, "#F48CA8"); // tiny pink nose
     px(ctx, x + 7, y + 7, 1, 1, "#D6828E"); // cute mouth hint
     px(ctx, x + 9, y + 7, 1, 1, "#D6828E");
+
+    // Wardrobe accessory
+    const acc = outfitStyle(accessoryId).accessory;
+    if (acc === "bow") {
+      px(ctx, x + 9, y - 1, 2, 3, "#FF6FA3");
+      px(ctx, x + 12, y - 1, 2, 3, "#FF6FA3");
+      px(ctx, x + 11, y, 1, 1, "#E0457F");
+    } else if (acc === "scarf") {
+      px(ctx, x + 3, y + 7, 10, 2, "#D9264A");
+      px(ctx, x + 5, y + 7, 1, 2, "#FFFDF7");
+      px(ctx, x + 9, y + 7, 1, 2, "#FFFDF7");
+      px(ctx, x + (dir >= 0 ? 10 : 4), y + 9, 2, 3, "#D9264A");
+    } else if (acc === "frog") {
+      px(ctx, x + 2, y + 0, 12, 3, "#6CC070");
+      px(ctx, x + 3, y - 2, 3, 2, "#6CC070");
+      px(ctx, x + 10, y - 2, 3, 2, "#6CC070");
+      px(ctx, x + 4, y - 2, 1, 1, "#FFFFFF");
+      px(ctx, x + 11, y - 2, 1, 1, "#FFFFFF");
+      px(ctx, x + 4, y - 1, 1, 1, "#2B1E1C");
+      px(ctx, x + 11, y - 1, 1, 1, "#2B1E1C");
+      px(ctx, x + 2, y + 3, 1, 3, "#6CC070"); // ear flaps
+      px(ctx, x + 13, y + 3, 1, 3, "#6CC070");
+    }
   }
 
   // Draw small decorative pixel items inside the room. `placed` = ids of all placed decor, for items that sit on another
@@ -743,6 +835,7 @@ window.PixelSprites = (() => {
 
   return {
     drawKhanh,
+    OUTFIT_IDS: Object.keys(OUTFITS),
     drawNgoc,
     ngocSway,
     drawHugCouple,

@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     bestMemory: 0,
     ownedDecor: [],
     placedDecor: [],
+    ownedOutfits: [], // wardrobe items bought (shop tab "Tủ quần áo")
+    wornOutfits: { ngoc: "", khanh: "", bong: "" }, // outfit id each character wears ("" = default clothes)
     unlockedAchieve: [],
     readLetters: [],
     hugCount: 0,
@@ -54,8 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Max rewarded quiz/match rounds per day across Chinese + English (daily 5-words lessons have their own once-a-day flag).
   const STUDY_DAILY_LIMIT = 4;
-  const ARRAY_KEYS = ["ownedDecor", "placedDecor", "unlockedAchieve", "readLetters", "foodsFed", "claimedBirthdays"];
-  const NESTED_KEYS = ["dailyInteractions", "dailyQuests", "dailyStudy", "dailyAnswers", "moodLog"];
+  const ARRAY_KEYS = ["ownedDecor", "placedDecor", "ownedOutfits", "unlockedAchieve", "readLetters", "foodsFed", "claimedBirthdays"];
+  const NESTED_KEYS = ["dailyInteractions", "dailyQuests", "dailyStudy", "dailyAnswers", "moodLog", "wornOutfits"];
 
   // DEFAULT_STATE holds nested arrays/objects, so a shallow spread would share (and later mutate) them. Always deep-copy.
   function freshDefaults() {
@@ -636,6 +638,76 @@ document.addEventListener("DOMContentLoaded", () => {
         renderShop();
       });
     });
+  }
+
+  // Wardrobe tab of the shop: buy an outfit (it is put on right away), then wear / take it off any time.
+  const WARDROBE_GROUPS = [["ngoc", "👧 Ngọc"], ["khanh", "👦 Anh Khánh"], ["bong", "🐱 Bé Bông"]];
+  function renderWardrobe() {
+    const list = document.getElementById("wardrobeList");
+    list.innerHTML = "";
+    document.getElementById("shopCandyText").textContent = state.candy;
+    WARDROBE_GROUPS.forEach(([who, label]) => {
+      const head = document.createElement("div");
+      head.className = "wardrobe-group";
+      head.textContent = label;
+      list.appendChild(head);
+      DATA.outfits.filter((o) => o.who === who).forEach((item) => {
+        const owned = state.ownedOutfits.includes(item.id);
+        const worn = state.wornOutfits[who] === item.id;
+        const row = document.createElement("div");
+        row.className = "shop-row";
+        let btnHtml;
+        if (!owned) {
+          btnHtml = `<button class="pixel-btn btn-gold btn-sm" data-buy-outfit="${item.id}" ${state.candy < item.price ? "disabled" : ""}>Mua ${item.price} 🍬</button>`;
+        } else {
+          btnHtml = `<button class="pixel-btn ${worn ? "btn-pink" : "btn-cream"} btn-sm" data-wear="${item.id}">${worn ? "Đang mặc ✓" : "Mặc"}</button>`;
+        }
+        row.innerHTML = `
+          <div class="item-left">
+            <span class="item-emoji">${item.emoji}</span>
+            <div class="item-meta">
+              <span class="item-title">${item.name}</span>
+              <span class="item-desc">${item.desc}</span>
+            </div>
+          </div>
+          ${btnHtml}
+        `;
+        list.appendChild(row);
+      });
+    });
+
+    list.querySelectorAll("[data-buy-outfit]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const item = DATA.outfits.find((o) => o.id === btn.dataset.buyOutfit);
+        if (!item || state.candy < item.price || state.ownedOutfits.includes(item.id)) return;
+        state.candy -= item.price;
+        state.ownedOutfits.push(item.id);
+        state.wornOutfits[item.who] = item.id;
+        AudioManager.playLevelUp();
+        showToast(`👗 Đã sắm ${item.name}, mặc vào luôn rồi nè!`);
+        addRewards(12, 0);
+        renderWardrobe();
+      });
+    });
+    list.querySelectorAll("[data-wear]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const item = DATA.outfits.find((o) => o.id === btn.dataset.wear);
+        if (!item) return;
+        AudioManager.playClick();
+        // Tapping the worn one takes it off (back to the default clothes)
+        state.wornOutfits[item.who] = state.wornOutfits[item.who] === item.id ? "" : item.id;
+        saveState();
+        renderWardrobe();
+      });
+    });
+  }
+
+  function showShopTab(tab) {
+    document.querySelectorAll("[data-shop-tab]").forEach((b) => b.classList.toggle("active", b.dataset.shopTab === tab));
+    document.getElementById("shopList").classList.toggle("hidden", tab !== "decor");
+    document.getElementById("wardrobeList").classList.toggle("hidden", tab !== "wardrobe");
+    if (tab === "wardrobe") renderWardrobe();
+    else renderShop();
   }
 
   // Render Secret Letters
@@ -1496,8 +1568,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnCopyDailyQ").addEventListener("click", copyShareText);
   document.getElementById("btnNativeShareDailyQ").addEventListener("click", nativeShare);
   document.getElementById("navShop").addEventListener("click", () => {
-    renderShop();
+    showShopTab("decor");
     openModal("modalShop");
+  });
+  document.querySelectorAll("[data-shop-tab]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      AudioManager.playClick();
+      showShopTab(btn.dataset.shopTab);
+    });
   });
   document.getElementById("navLetters").addEventListener("click", () => {
     renderLetters();

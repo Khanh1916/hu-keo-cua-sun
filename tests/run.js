@@ -398,6 +398,26 @@ check("study candy: one STUDY_CANDY table per module, used by every reward and i
   (s.match(/\+\d+ 🍬/g) || []).forEach((x) => out.push(`${f}: hard-coded "${x}" in a reward text (use STUDY_CANDY)`));
   return out;
 }));
+check("wardrobe: every outfit has a look, saved state is safe, room draws what is worn", (() => {
+  const out = [];
+  const win = {};
+  // eslint-disable-next-line no-new-func
+  Function("window", sprites)(win);
+  const looks = win.PixelSprites.OUTFIT_IDS || [];
+  const outfits = data.outfits || [];
+  outfits.forEach((o) => {
+    if (!looks.includes(o.id)) out.push(`${o.id} has no look in sprites.js OUTFITS`);
+    if (!["ngoc", "khanh", "bong"].includes(o.who)) out.push(`${o.id}: who = ${o.who}`);
+    if (!(o.price > 0)) out.push(`${o.id}: no price`);
+  });
+  looks.filter((id) => !outfits.some((o) => o.id === id)).forEach((id) => out.push(`sprites.js look ${id} is not sold`));
+  ids(outfits).forEach((id) => out.push(`duplicate outfit id ${id}`));
+  if (!/const ARRAY_KEYS = \[[^\]]*"ownedOutfits"/.test(app)) out.push("ownedOutfits not in ARRAY_KEYS (reset would keep purchases)");
+  if (!/const NESTED_KEYS = \[[^\]]*"wornOutfits"/.test(app)) out.push("wornOutfits not in NESTED_KEYS");
+  ["drawKhanh(ctx, khanh.x, khanh.y, khanh.state, frame, worn.khanh)", "drawNgoc(ctx, ngoc.x, ngoc.y, ngoc.dir, ngoc.state, frame, worn.ngoc)",
+    "frame, worn.bong)", "side < 0, worn.khanh, worn.ngoc)"].forEach((call) => { if (!room.includes(call)) out.push(`room.js does not pass outfits: ${call}`); });
+  return out;
+})());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",

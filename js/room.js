@@ -1124,6 +1124,7 @@ window.RoomScene = (() => {
     // 3. Depth-sorted characters (Khánh, Ngọc, Bông). While hugging, Khánh + Ngọc become ONE face-to-face sprite
     //    (pixel-game convention), mirrored when Ngọc is on his left.
     const hugging = ngoc.mode === "hug";
+    const worn = state.wornOutfits || {};
     const people = hugging
       ? [{
         y: ngoc.y,
@@ -1131,14 +1132,14 @@ window.RoomScene = (() => {
           const side = ngoc.x >= khanh.x ? 1 : -1;
           const cx = Math.round(khanh.x + side * 5);
           // flip = true is a proper mirrored redraw (watch / braid / strap on the right sides), not a flipped copy
-          PixelSprites.drawHugCouple(ctx, cx, khanh.y + 1, frame, side < 0);
+          PixelSprites.drawHugCouple(ctx, cx, khanh.y + 1, frame, side < 0, worn.khanh, worn.ngoc);
         }
       }]
       : [
-        { y: khanh.y, draw: () => PixelSprites.drawKhanh(ctx, khanh.x, khanh.y, khanh.state, frame) },
-        { y: ngoc.y, draw: () => PixelSprites.drawNgoc(ctx, ngoc.x, ngoc.y, ngoc.dir, ngoc.state, frame) }
+        { y: khanh.y, draw: () => PixelSprites.drawKhanh(ctx, khanh.x, khanh.y, khanh.state, frame, worn.khanh) },
+        { y: ngoc.y, draw: () => PixelSprites.drawNgoc(ctx, ngoc.x, ngoc.y, ngoc.dir, ngoc.state, frame, worn.ngoc) }
       ];
-    [...people, { y: bong.y, draw: () => PixelSprites.drawBong(ctx, bong.x, bong.y, bong.dir, bong.state, frame) }]
+    [...people, { y: bong.y, draw: () => PixelSprites.drawBong(ctx, bong.x, bong.y, bong.dir, bong.state, frame, worn.bong) }]
       .sort((a, b) => a.y - b.y)
       .forEach((c) => c.draw());
 

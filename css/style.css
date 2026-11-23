@@ -922,6 +922,24 @@ body {
   padding: 4px 8px;
 }
 
+.shop-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.shop-tab.active {
+  background: var(--pink-soft) !important;
+  border-color: var(--pink-hot) !important;
+}
+
+.wardrobe-group {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  color: var(--pink-accent);
+  margin-top: 4px;
+}
+
 /* Mood Jars */
 .jar-grid {
   display: grid;

@@ -150,6 +150,21 @@ window.GAME_DATA = {
     }
   ],
 
+  // Wardrobe (shop tab "Tủ quần áo"): who = ngoc | khanh | bong. Looks live in sprites.js OUTFITS (same ids).
+  outfits: [
+    { id: "n_sweater", who: "ngoc", name: "Áo len hồng", emoji: "🧶", price: 300, desc: "Áo len hồng tay dài, mùa đông Hải Phòng mặc cho ấm." },
+    { id: "n_hoodie", who: "ngoc", name: "Hoodie tím", emoji: "💜", price: 350, desc: "Hoodie tím rộng có túi trước bụng, mặc ở nhà lười lười." },
+    { id: "n_sundress", who: "ngoc", name: "Váy hè vàng", emoji: "🌻", price: 450, desc: "Váy vàng tươi cho mùa hè, đi biển Đồ Sơn là hợp nhất." },
+    { id: "n_aodai", who: "ngoc", name: "Áo dài đỏ", emoji: "🧧", price: 800, desc: "Áo dài đỏ viền vàng với quần trắng, mặc đi chơi Tết." },
+    { id: "k_sweater", who: "khanh", name: "Áo len xanh navy", emoji: "🧥", price: 300, desc: "Áo len xanh navy tay dài cho anh, trời lạnh Hà Nội." },
+    { id: "k_hoodie", who: "khanh", name: "Hoodie xám", emoji: "🩶", price: 350, desc: "Hoodie xám tay dài, mặc đôi với hoodie tím của em được đó." },
+    { id: "k_shirt", who: "khanh", name: "Sơ mi trắng", emoji: "👔", price: 350, desc: "Sơ mi trắng với quần xanh đậm, mặc đi hẹn hò." },
+    { id: "k_aodai", who: "khanh", name: "Áo dài xanh", emoji: "🎋", price: 800, desc: "Áo dài nam xanh viền vàng, đứng cạnh áo dài đỏ của em." },
+    { id: "b_bow", who: "bong", name: "Nơ hồng cho Bông", emoji: "🎀", price: 200, desc: "Chiếc nơ hồng nhỏ cài bên tai Bông." },
+    { id: "b_scarf", who: "bong", name: "Khăn len đỏ", emoji: "🧣", price: 250, desc: "Khăn len đỏ sọc trắng quàng cổ cho Bông đỡ lạnh." },
+    { id: "b_frog", who: "bong", name: "Mũ ếch xanh", emoji: "🐸", price: 500, desc: "Mũ ếch xanh có hai mắt lồi, Bông đội vào là thành ếch." }
+  ],
+
   decorItems: [
     {
       id: "teddy",
