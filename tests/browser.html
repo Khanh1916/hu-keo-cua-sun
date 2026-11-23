@@ -201,6 +201,10 @@
       if (afterFirst <= before) problems.push("first answer paid no XP");
       if (st.xp + st.level * 100000 !== afterFirst) problems.push("editing the answer paid again");
       if (!st.dailyAnswers[key] || st.dailyAnswers[key].text !== "sửa lại câu trả lời") problems.push("edit not saved");
+      click($("btnShareDailyQ"));
+      await sleep(150);
+      if (!visible($("dailyQSharePanel"))) problems.push("Gửi cho anh showed no message box");
+      else if (!$("dailyQShareText").value.includes("sửa lại câu trả lời")) problems.push("message box lacks the answer");
       st.dailyAnswers["2000-01-01"] = { q: 0, text: "<img src=x>" };
       click($("navJars"));
       await sleep(100);

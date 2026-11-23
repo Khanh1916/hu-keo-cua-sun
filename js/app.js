@@ -841,32 +841,59 @@ document.addEventListener("DOMContentLoaded", () => {
     if (first) {
       addRewards(6, 1);
       AudioManager.playPowerup();
-      showSpeech("Anh Khánh 💌", pickRandom(DATA.dailyQuestionReplies).item);
     } else {
       saveState();
     }
     renderDailyQuestion();
+    // Khánh's reply goes in the card: the room's speech bubble sits under the modal and was never seen
+    if (first) document.getElementById("dailyQStatus").textContent = `💌 Anh Khánh: ${pickRandom(DATA.dailyQuestionReplies).item}`;
     return true;
   }
 
-  async function shareDailyAnswer() {
+  // Phones get the OS share sheet; desktops (and webviews whose share sheet never opens) copy instead.
+  function canNativeShare() {
+    return typeof navigator.share === "function" && window.matchMedia("(pointer: coarse)").matches;
+  }
+
+  async function copyShareText() {
+    const box = document.getElementById("dailyQShareText");
+    try {
+      await navigator.clipboard.writeText(box.value);
+      showToast("📋 Đã chép tin nhắn, mở Zalo dán gửi anh nha!");
+      return;
+    } catch {
+      // Older webviews: select the text and try the legacy copy command
+    }
+    box.focus();
+    box.select();
+    let copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch {
+      copied = false;
+    }
+    showToast(copied ? "📋 Đã chép tin nhắn, mở Zalo dán gửi anh nha!" : "Em bấm giữ vào khung chữ rồi chọn Sao chép nha 🙏");
+  }
+
+  async function nativeShare() {
+    try {
+      await navigator.share({ text: document.getElementById("dailyQShareText").value });
+      showToast("💌 Chia sẻ xong rồi nè!");
+    } catch (e) {
+      if (e && e.name === "AbortError") return; // she closed the share sheet; the message box stays open
+      await copyShareText();
+    }
+  }
+
+  // Every tap shows the message box (with Chép / Chia sẻ), so the button never looks dead.
+  function shareDailyAnswer() {
     if (!saveDailyAnswer()) return;
     const a = state.dailyAnswers[window.SpecialDays.localDateKey()];
-    const text = `💭 Câu hỏi hôm nay: ${DATA.dailyQuestions[a.q]}\n💌 Ngọc trả lời: ${a.text}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ text });
-        return;
-      } catch (e) {
-        if (e && e.name === "AbortError") return; // she closed the share sheet
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(text);
-      showToast("📋 Đã chép câu trả lời, dán vào Zalo gửi anh nha!");
-    } catch {
-      showToast("Máy chưa cho chép tự động, em chép tay giúp anh nha 🙏");
-    }
+    document.getElementById("dailyQShareText").value = `💭 Câu hỏi hôm nay: ${DATA.dailyQuestions[a.q]}\n💌 Ngọc trả lời: ${a.text}`;
+    document.getElementById("dailyQSharePanel").classList.remove("hidden");
+    document.getElementById("btnNativeShareDailyQ").classList.toggle("hidden", !canNativeShare());
+    if (canNativeShare()) nativeShare();
+    else copyShareText();
   }
 
   // Room & Character Interactions (Strict Anti-Spam & Daily Rested Limit)
@@ -1441,6 +1468,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Nav Dock
   document.getElementById("navJars").addEventListener("click", () => {
+    document.getElementById("dailyQSharePanel").classList.add("hidden");
     renderDailyQuestion();
     renderMoodStrip();
     openModal("modalJars");
@@ -1449,6 +1477,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (saveDailyAnswer()) showToast("💾 Đã lưu câu trả lời hôm nay!");
   });
   document.getElementById("btnShareDailyQ").addEventListener("click", shareDailyAnswer);
+  document.getElementById("btnCopyDailyQ").addEventListener("click", copyShareText);
+  document.getElementById("btnNativeShareDailyQ").addEventListener("click", nativeShare);
   document.getElementById("navShop").addEventListener("click", () => {
     renderShop();
     openModal("modalShop");

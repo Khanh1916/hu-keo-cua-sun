@@ -342,6 +342,9 @@ check("daily question + mood log: data, saved state, safe text, one reward a day
   const save = extractFunction(app, "saveDailyAnswer");
   if (!/const first = !state\.dailyAnswers\[key\]/.test(save) || !/if \(first\) \{\s*addRewards/.test(save)) out.push("saveDailyAnswer must pay only the first answer of the day");
   if (!/state\.moodLog\[/.test(extractFunction(app, "drawNoteFromJar"))) out.push("opening a mood jar does not log the mood");
+  if (/showSpeech/.test(save)) out.push("saveDailyAnswer replies in the room bubble, which the modal hides");
+  const share = extractFunction(app, "shareDailyAnswer");
+  if (!/dailyQSharePanel"\)\.classList\.remove\("hidden"\)/.test(share)) out.push("Gửi cho anh must always show the message box (it looked dead when the share sheet did not open)");
   return out;
 })());
 check("letters only require decor counts that exist",

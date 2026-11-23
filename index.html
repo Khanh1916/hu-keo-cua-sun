@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=71" />
+  <link rel="stylesheet" href="css/style.css?v=72" />
 </head>
 <body>
   <!-- iOS Native Taptic Engine Haptic Bridge (iOS 18+ WebKit Switch Trick) -->
@@ -315,6 +315,14 @@
           <button class="pixel-btn btn-cream btn-sm" id="btnSaveDailyQ">💾 Lưu</button>
           <button class="pixel-btn btn-pink btn-sm" id="btnShareDailyQ">📤 Gửi cho anh</button>
         </div>
+        <div class="daily-q-share hidden" id="dailyQSharePanel">
+          <div class="daily-q-share-label">Tin nhắn gửi anh (dán vào Zalo nha):</div>
+          <textarea id="dailyQShareText" class="daily-q-input" rows="3" readonly aria-label="Tin nhắn gửi anh"></textarea>
+          <div class="daily-q-actions">
+            <button class="pixel-btn btn-gold btn-sm" id="btnCopyDailyQ">📋 Chép</button>
+            <button class="pixel-btn btn-pink btn-sm hidden" id="btnNativeShareDailyQ">📤 Chia sẻ…</button>
+          </div>
+        </div>
         <details class="daily-q-history hidden" id="dailyQHistoryWrap">
           <summary>📖 Những câu em đã trả lời (<span id="dailyQHistoryCount">0</span>)</summary>
           <div id="dailyQHistory"></div>
@@ -520,19 +528,19 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=71"></script>
-  <script defer src="js/lunar.js?v=71"></script>
-  <script defer src="js/weather.js?v=71"></script>
-  <script defer src="js/audio.js?v=71"></script>
-  <script defer src="js/sprites.js?v=71"></script>
-  <script defer src="js/room.js?v=71"></script>
-  <script defer src="js/minigame.js?v=71"></script>
-  <script defer src="js/game_crossing.js?v=71"></script>
-  <script defer src="js/game_flappy.js?v=71"></script>
-  <script defer src="js/game_nonla.js?v=71"></script>
-  <script defer src="js/game_memory.js?v=71"></script>
-  <script defer src="js/chinese.js?v=71"></script>
-  <script defer src="js/english.js?v=71"></script>
-  <script defer src="js/app.js?v=71"></script>
+  <script defer src="js/data.js?v=72"></script>
+  <script defer src="js/lunar.js?v=72"></script>
+  <script defer src="js/weather.js?v=72"></script>
+  <script defer src="js/audio.js?v=72"></script>
+  <script defer src="js/sprites.js?v=72"></script>
+  <script defer src="js/room.js?v=72"></script>
+  <script defer src="js/minigame.js?v=72"></script>
+  <script defer src="js/game_crossing.js?v=72"></script>
+  <script defer src="js/game_flappy.js?v=72"></script>
+  <script defer src="js/game_nonla.js?v=72"></script>
+  <script defer src="js/game_memory.js?v=72"></script>
+  <script defer src="js/chinese.js?v=72"></script>
+  <script defer src="js/english.js?v=72"></script>
+  <script defer src="js/app.js?v=72"></script>
 </body>
 </html>
