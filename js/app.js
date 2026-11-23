@@ -114,6 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   // Study modules call window.showToast; it used to be closure-private so their toasts never appeared.
   window.showToast = (msg) => showToast(msg);
+  // photos.js opens its modal through this (closing goes through the shared data-close / backdrop handlers)
+  window.openAppModal = (id) => openModal(id);
 
   function xpNeededForLevel(lvl) {
     // Polynomial cozy progression curve: 50 + 35*lvl + 12*lvl^1.55
@@ -1145,6 +1147,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // Just affection: no XP/candy (hug/pet already carry the daily rewards)
         AudioManager.playClick();
         showSpeech("Anh Khánh 💕", pickRandom(DATA.ngocCompliments || ["Em xinh lắm đó! 💕"]).item);
+      } else if (who === "photos") {
+        AudioManager.playClick();
+        if (window.PhotoWall) PhotoWall.open();
       } else if (who === "plant") {
         AudioManager.playClick();
         speakPlant();
@@ -1997,6 +2002,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   if (window.EnglishApp) {
     EnglishApp.init();
+  }
+  if (window.PhotoWall) {
+    PhotoWall.init();
   }
   // Auto-switch decorations, banner & music right when crossing 00:00 into/out of special dates!
   setInterval(syncClockAndEvents, 5000);

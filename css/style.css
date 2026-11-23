@@ -940,6 +940,72 @@ body {
   margin-top: 4px;
 }
 
+/* Photo wall */
+.photo-count {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.photo-add-btn {
+  align-self: flex-start;
+  cursor: pointer;
+}
+
+.photo-add-btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.photo-empty {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.photo-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 5px 5px 6px;
+  background: #fffdf7;
+  min-width: 0;
+}
+
+.photo-tile img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.photo-tile-cap {
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.photo-viewer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.photo-viewer img {
+  width: 100%;
+  max-height: 55vh;
+  object-fit: contain;
+  border: 2.5px solid var(--ink);
+  border-radius: 8px;
+  background: #fffdf7;
+}
+
 /* Mood Jars */
 .jar-grid {
   display: grid;

@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=78" />
+  <link rel="stylesheet" href="css/style.css?v=79" />
 </head>
 <body>
   <!-- iOS Native Taptic Engine Haptic Bridge (iOS 18+ WebKit Switch Trick) -->
@@ -93,7 +93,7 @@
 
         <!-- Quick Hint -->
         <div class="room-hint" id="roomHint">
-          Chạm vào anh, Ngọc, bé Bông, tờ lịch hoặc chậu cây để trò chuyện nè ✨
+          Chạm vào anh, Ngọc, bé Bông, tờ lịch, chậu cây hoặc dây ảnh trên tường nè ✨
         </div>
       </div>
 
@@ -520,22 +520,48 @@
     </div>
   </div>
 
+  <!-- MODAL: Photo wall (photos stay on this device, IndexedDB) -->
+  <div class="modal-backdrop hidden" id="modalPhotos">
+    <div class="modal-card pixel-box">
+      <div class="modal-header">
+        <h2>📷 Góc Ảnh Kỷ Niệm <span class="photo-count" id="photoCount">0/6</span></h2>
+        <button class="close-btn pixel-btn" aria-label="Đóng" data-close="modalPhotos">✕</button>
+      </div>
+      <p class="modal-subtitle">Chọn ảnh của hai đứa để treo lên tường phòng (3 tấm mới nhất được treo). Ảnh chỉ lưu trên máy này, không gửi đi đâu cả, và mã sao lưu không mang theo ảnh.</p>
+      <label class="pixel-btn btn-pink btn-sm photo-add-btn" id="photoAddLabel">➕ Thêm ảnh
+        <input type="file" id="photoInput" accept="image/*" class="sr-only" />
+      </label>
+      <div class="photo-grid" id="photoGrid"></div>
+      <div class="photo-viewer hidden" id="photoViewer">
+        <img id="photoViewerImg" alt="Ảnh kỷ niệm" />
+        <label class="sr-only" for="photoCaption">Ghi chú cho ảnh</label>
+        <input type="text" id="photoCaption" class="backup-input" maxlength="60" placeholder="Ghi chú cho ảnh (không bắt buộc)" />
+        <div class="daily-q-actions">
+          <button class="pixel-btn btn-cream btn-sm" id="btnPhotoBack">◀ Quay lại</button>
+          <button class="pixel-btn btn-pink btn-sm" id="btnPhotoSaveCaption">💾 Lưu ghi chú</button>
+          <button class="pixel-btn btn-danger btn-sm" id="btnPhotoDelete">🗑 Gỡ ảnh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=78"></script>
-  <script defer src="js/lunar.js?v=78"></script>
-  <script defer src="js/weather.js?v=78"></script>
-  <script defer src="js/audio.js?v=78"></script>
-  <script defer src="js/sprites.js?v=78"></script>
-  <script defer src="js/room.js?v=78"></script>
-  <script defer src="js/minigame.js?v=78"></script>
-  <script defer src="js/game_crossing.js?v=78"></script>
-  <script defer src="js/game_flappy.js?v=78"></script>
-  <script defer src="js/game_nonla.js?v=78"></script>
-  <script defer src="js/game_memory.js?v=78"></script>
-  <script defer src="js/chinese.js?v=78"></script>
-  <script defer src="js/english.js?v=78"></script>
-  <script defer src="js/app.js?v=78"></script>
+  <script defer src="js/data.js?v=79"></script>
+  <script defer src="js/lunar.js?v=79"></script>
+  <script defer src="js/weather.js?v=79"></script>
+  <script defer src="js/audio.js?v=79"></script>
+  <script defer src="js/sprites.js?v=79"></script>
+  <script defer src="js/room.js?v=79"></script>
+  <script defer src="js/minigame.js?v=79"></script>
+  <script defer src="js/game_crossing.js?v=79"></script>
+  <script defer src="js/game_flappy.js?v=79"></script>
+  <script defer src="js/game_nonla.js?v=79"></script>
+  <script defer src="js/game_memory.js?v=79"></script>
+  <script defer src="js/chinese.js?v=79"></script>
+  <script defer src="js/english.js?v=79"></script>
+  <script defer src="js/photos.js?v=79"></script>
+  <script defer src="js/app.js?v=79"></script>
 </body>
 </html>

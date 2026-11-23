@@ -100,6 +100,12 @@ window.RoomScene = (() => {
       return;
     }
 
+    // Photo string on the right wall
+    if (cx >= 158 && cx <= 208 && cy >= 15 && cy <= 38) {
+      if (onInteractFn) onInteractFn("photos");
+      return;
+    }
+
     // Shared plant in the front-left corner
     if (cx <= 24 && cy >= 150 && cy <= 194) {
       if (onInteractFn) onInteractFn("plant");
@@ -578,6 +584,7 @@ window.RoomScene = (() => {
     px(ctx, 39, beat ? 47 : 48, 3, 1, "#E46B94");
 
     drawWallCalendar(state);
+    drawPhotoString();
 
     // Cozy Bed on Left
     px(ctx, 8, 114, 56, 32, "#9B6747"); // headboard & frame
@@ -697,6 +704,30 @@ window.RoomScene = (() => {
         px(ctx, 18, 155, 1, 1, "#FFE066");
         px(ctx, 14, 152, 1, 1, "#FFFFFF");
       }
+    }
+  }
+
+  // Photo string on the right wall (x 160–206, y 18–35): three little polaroids with the newest photos from photos.js
+  // (empty frames until Ngọc adds some). Tap → onInteract("photos").
+  function drawPhotoString() {
+    const px = PixelSprites.px;
+    const thumbs = window.PhotoWall ? PhotoWall.getRoomThumbs() : [];
+    px(ctx, 160, 19, 47, 1, "#B08968"); // string
+    for (let i = 0; i < 3; i++) {
+      const fx = 163 + i * 15;
+      const fy = 21 + (i === 1 ? 1 : 0);
+      px(ctx, fx + 1, fy + 1, 13, 15, "rgba(110, 74, 66, 0.22)"); // shadow
+      px(ctx, fx, fy, 13, 15, "#FFFDF7");
+      if (thumbs[i]) {
+        ctx.drawImage(thumbs[i], fx + 1, fy + 1);
+      } else {
+        px(ctx, fx + 1, fy + 1, 11, 9, "#F3E3EA");
+        if (i === 0) {
+          px(ctx, fx + 6, fy + 3, 1, 5, "#E7B8C8"); // "+" invites the first photo
+          px(ctx, fx + 4, fy + 5, 5, 1, "#E7B8C8");
+        }
+      }
+      px(ctx, fx + 5, fy - 2, 3, 3, "#C9915F"); // clothespin
     }
   }
 
@@ -973,7 +1004,7 @@ window.RoomScene = (() => {
   function drawTrungThuDecor() {
     const px = PixelSprites.px;
     drawStarLantern(70, 14, 0);
-    drawStarLantern(170, 18, 2);
+    drawStarLantern(226, 18, 2); // right corner, clear of the photo string
 
     // Mooncakes on a plate on the stand (x: 158, y: 152)
     const cx = 158, cy = 152;

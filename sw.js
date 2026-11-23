@@ -1,6 +1,6 @@
 // Single source of truth for the cache/asset version.
 // When bumping: change ASSET_VERSION here AND every "?v=" in index.html to the same number.
-const ASSET_VERSION = "78";
+const ASSET_VERSION = "79";
 const CACHE_NAME = `hu-keo-sun-v${ASSET_VERSION}`;
 // Google Fonts (Pixelify Sans + Quicksand) live in their own cache that survives version bumps:
 // the font files never change for a given URL, and without them offline mode falls back to system fonts.
@@ -29,6 +29,7 @@ const CORE_ASSETS = [
   `./js/game_memory.js${q}`,
   `./js/chinese.js${q}`,
   `./js/english.js${q}`,
+  `./js/photos.js${q}`,
   `./js/app.js${q}`
 ];
 

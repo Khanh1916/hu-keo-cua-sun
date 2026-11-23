@@ -214,6 +214,27 @@
       return problems;
     });
 
+    await test("photo wall: a photo can be added, hangs in the room and is removed again", async () => {
+      const pw = w.PhotoWall;
+      const before = pw.count();
+      if (before >= pw.MAX_PHOTOS) return null; // the tester's wall is full: nothing to try without touching their photos
+      const c = doc.createElement("canvas");
+      c.width = 64;
+      c.height = 48;
+      const g = c.getContext("2d");
+      g.fillStyle = "#E46B94";
+      g.fillRect(0, 0, 64, 48);
+      const blob = await new Promise((r) => c.toBlob(r, "image/png"));
+      const id = await pw.addFromBlob(blob);
+      const problems = [];
+      if (!id) problems.push("addFromBlob returned no id");
+      if (pw.count() !== before + 1) problems.push(`count ${pw.count()}, want ${before + 1}`);
+      if (!pw.getRoomThumbs()[0]) problems.push("no room thumbnail for the newest photo");
+      if (id) await pw.remove(id); // only the photo this test added
+      if (pw.count() !== before) problems.push("test photo not removed");
+      return problems;
+    });
+
     await test("closing a modal from its ✕ goes through closeModal (modal hidden)", async () => {
       click($("btnQuickStudy"));
       await sleep(200);

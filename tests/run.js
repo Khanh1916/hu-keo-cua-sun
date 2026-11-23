@@ -430,6 +430,16 @@ check("shared plant: stages ascend, visits counted once per day, drawn and tappa
   if (/addRewards/.test(extractFunction(app, "speakPlant"))) out.push("the plant pays rewards (visits already pay via quests)");
   return out;
 })());
+check("photo wall: on-device only, safe captions, hung in the room", (() => {
+  const src = read("js/photos.js");
+  const out = [];
+  if (/innerHTML/.test(src)) out.push("photos.js uses innerHTML (captions are user text)");
+  if (/fetch\(|XMLHttpRequest|sendBeacon/.test(src)) out.push("photos.js talks to the network (photos must stay on the device)");
+  if (!/indexedDB\.open\(/.test(src)) out.push("photos.js does not use IndexedDB");
+  if (!/drawPhotoString\(\)/.test(room) || !/PhotoWall\.getRoomThumbs\(\)/.test(room)) out.push("room.js does not hang the photos");
+  if (!/onInteractFn\("photos"\)/.test(room) || !/PhotoWall\.open\(\)/.test(app)) out.push("tapping the photo string does nothing");
+  return out;
+})());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",
