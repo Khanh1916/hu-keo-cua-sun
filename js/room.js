@@ -103,6 +103,12 @@ window.RoomScene = (() => {
       return;
     }
 
+    // Wall calendar under the HN ↔ HP plaque
+    if (cx >= 30 && cx <= 54 && cy >= 56 && cy <= 84) {
+      if (onInteractFn) onInteractFn("calendar");
+      return;
+    }
+
     // Check MCK Vinyl Turntable hitbox (vx = 170, vy = 92)
     const state = getStateFn ? getStateFn() : {};
     const placed = state.placedDecor || [];
@@ -568,6 +574,8 @@ window.RoomScene = (() => {
     px(ctx, 38, beat ? 43 : 44, 5, 4, "#E46B94");
     px(ctx, 39, beat ? 47 : 48, 3, 1, "#E46B94");
 
+    drawWallCalendar(state);
+
     // Cozy Bed on Left
     px(ctx, 8, 114, 56, 32, "#9B6747"); // headboard & frame
     px(ctx, 10, 118, 52, 24, "#FFFDF7"); // mattress
@@ -597,6 +605,56 @@ window.RoomScene = (() => {
 
   function getActiveSpecialDay() {
     return window.SpecialDays.getActive();
+  }
+
+  function getMeetDays(state) {
+    return window.SpecialDays ? window.SpecialDays.daysUntil(state.nextMeetDate) : null;
+  }
+
+  // Tear-off calendar under the HN ↔ HP plaque (x 32–52, y 58–82): days left until they meet, a heart on the day,
+  // "?" when no date is set. Tapping it asks Khánh (onInteract("calendar")).
+  function drawWallCalendar(state) {
+    const px = PixelSprites.px;
+    const days = getMeetDays(state);
+    const x = 32, y = 60;
+    px(ctx, x + 1, y + 1, 20, 22, "rgba(110, 74, 66, 0.25)"); // shadow
+    px(ctx, x, y, 20, 22, "#FFFDF7");
+    px(ctx, x, y, 20, 6, "#E46B94");
+    px(ctx, x, y + 21, 20, 1, "#E8D5C4");
+    px(ctx, x + 4, y - 2, 2, 4, "#6E4A42"); // rings
+    px(ctx, x + 14, y - 2, 2, 4, "#6E4A42");
+    px(ctx, x + 3, y + 2, 14, 1, "#F9C8D9");
+    if (days === 0) {
+      const beat = Math.floor(frame / 20) % 2 === 0 ? 0 : 1;
+      px(ctx, x + 5, y + 9 + beat, 4, 3, "#E46B94");
+      px(ctx, x + 11, y + 9 + beat, 4, 3, "#E46B94");
+      px(ctx, x + 5, y + 11 + beat, 10, 3, "#E46B94");
+      px(ctx, x + 7, y + 14 + beat, 6, 2, "#E46B94");
+      px(ctx, x + 9, y + 16 + beat, 2, 1, "#E46B94");
+      return;
+    }
+    ctx.fillStyle = days === null ? "#B8A39A" : "#4A302C";
+    ctx.textAlign = "center";
+    ctx.font = days !== null && days > 99 ? "bold 7px monospace" : "bold 10px monospace";
+    ctx.fillText(days === null ? "?" : (days > 99 ? "99+" : String(days)), x + 10, y + 17);
+    ctx.textAlign = "start";
+  }
+
+  // Meeting day: a pink suitcase on the floor at the front right
+  function drawMeetSuitcase() {
+    const px = PixelSprites.px;
+    const sx = 206, sy = 164;
+    px(ctx, sx + 4, sy - 3, 6, 1, "#6E4A42"); // handle
+    px(ctx, sx + 4, sy - 3, 1, 3, "#6E4A42");
+    px(ctx, sx + 9, sy - 3, 1, 3, "#6E4A42");
+    px(ctx, sx, sy, 14, 14, "#F49CB8");
+    px(ctx, sx + 1, sy + 1, 12, 1, "#F9C8D9");
+    px(ctx, sx + 4, sy, 1, 14, "#E46B94"); // straps
+    px(ctx, sx + 9, sy, 1, 14, "#E46B94");
+    px(ctx, sx + 6, sy + 5, 2, 2, "#FFFFFF"); // heart sticker
+    px(ctx, sx + 6, sy + 6, 2, 1, "#E46B94");
+    px(ctx, sx + 1, sy + 14, 2, 2, "#4A302C"); // wheels
+    px(ctx, sx + 11, sy + 14, 2, 2, "#4A302C");
   }
 
   function drawTetDecor() {
@@ -1063,6 +1121,8 @@ window.RoomScene = (() => {
     } else if (specialDay === "trungthu") {
       drawTrungThuDecor();
     }
+
+    if (getMeetDays(state) === 0) drawMeetSuitcase();
 
     // 3. Depth-sorted characters (Khánh, Ngọc, Bông). While hugging, Khánh + Ngọc become ONE face-to-face sprite
     //    (pixel-game convention), mirrored when Ngọc is on his left.

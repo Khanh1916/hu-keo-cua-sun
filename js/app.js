@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     chineseDailyDoneDate: "",
     lastBackupAt: 0,
     lastBackupReminder: "",
+    nextMeetDate: "", // "YYYY-MM-DD" of the next time they meet (set in Cài đặt); drives the wall calendar
+    meetGreetedDate: "", // meeting day whose greeting was already shown
     dailyInteractions: {
       date: "",
       hugCount: 0,
@@ -281,7 +283,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Days until the next meeting (0 = today), or null when no future date is set.
+  function getMeetDays() {
+    return window.SpecialDays.daysUntil(state.nextMeetDate);
+  }
+
+  function meetCountdownLabel(days) {
+    if (days === 0) return "💕 Hôm nay gặp nhau!";
+    if (days === 1) return "📅 Mai gặp nhau rồi!";
+    return `📅 Còn ${days} ngày gặp nhau`;
+  }
+
+  // Meeting day: Khánh greets once (no candy — the date is player-set, so it must not become a reward door).
+  function checkMeetDay() {
+    if (getMeetDays() !== 0 || state.meetGreetedDate === state.nextMeetDate) return;
+    state.meetGreetedDate = state.nextMeetDate;
+    saveState();
+    RoomScene.triggerKhanhHappy("happy");
+    RoomScene.triggerBongHappy();
+    showSpeech("Anh Khánh 💕", DATA.meetLines.greeting);
+  }
+
+  function speakMeetCountdown() {
+    const days = getMeetDays();
+    if (days === null) {
+      showToast("📅 Đặt ngày gặp nhau tiếp theo để lịch đếm ngược nha!");
+      openModal("modalSettings");
+      return;
+    }
+    const lines = DATA.meetLines;
+    const list = days === 0 ? lines.today : (days === 1 ? lines.tomorrow : (days <= 7 ? lines.soon : lines.far));
+    showSpeech("Anh Khánh 📅", pickRandom(list).item.replace("{days}", String(days)));
+  }
+
   function updateGreetingBanner() {
+    if (getMeetDays() === 0) {
+      document.getElementById("greetingBanner").textContent = DATA.meetLines.banner;
+      return;
+    }
     const key = getActiveSpecialDay();
     if (key && DATA.specialDays && DATA.specialDays[key]) {
       document.getElementById("greetingBanner").textContent = DATA.specialDays[key].banner;
@@ -302,6 +341,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderHUD() {
     const days = getDaysTogether();
     document.getElementById("daysTogetherText").textContent = `Ngày thứ ${days} bên nhau`;
+    const meetDays = getMeetDays();
+    const meetEl = document.getElementById("meetCountdownText");
+    meetEl.classList.toggle("hidden", meetDays === null);
+    if (meetDays !== null) meetEl.textContent = meetCountdownLabel(meetDays);
 
     const need = xpNeededForLevel(state.level);
     const pct = Math.min(100, Math.round((state.xp / need) * 100));
@@ -873,6 +916,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // Just affection: no XP/candy (hug/pet already carry the daily rewards)
         AudioManager.playClick();
         showSpeech("Anh Khánh 💕", pickRandom(DATA.ngocCompliments || ["Em xinh lắm đó! 💕"]).item);
+      } else if (who === "calendar") {
+        AudioManager.playClick();
+        speakMeetCountdown();
       } else if (who === "mck_vinyl") {
         AudioManager.playVinylChill();
         const vinylQuotes = [
@@ -1307,6 +1353,38 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnClaimQuests").addEventListener("click", claimDailyQuests);
   document.getElementById("btnSettings").addEventListener("click", () => openModal("modalSettings"));
 
+  // Next meeting date (wall calendar + HUD countdown)
+  const meetInput = document.getElementById("meetDateInput");
+  function syncMeetInput() {
+    meetInput.min = window.SpecialDays.localDateKey();
+    meetInput.value = getMeetDays() === null ? "" : state.nextMeetDate;
+  }
+  syncMeetInput();
+  document.getElementById("btnSettings").addEventListener("click", syncMeetInput);
+  document.getElementById("btnSaveMeetDate").addEventListener("click", () => {
+    const value = meetInput.value;
+    const days = window.SpecialDays.daysUntil(value);
+    if (days === null) {
+      showToast(value ? "📅 Chọn ngày từ hôm nay trở đi nha!" : "📅 Em chọn ngày gặp trước đã nha!");
+      return;
+    }
+    state.nextMeetDate = value;
+    saveState();
+    AudioManager.playClick();
+    renderHUD();
+    updateGreetingBanner();
+    showToast(days === 0 ? "💕 Hôm nay gặp nhau luôn!" : `📅 Đã treo lịch: còn ${days} ngày nữa gặp nhau!`);
+    checkMeetDay();
+  });
+  document.getElementById("btnClearMeetDate").addEventListener("click", () => {
+    state.nextMeetDate = "";
+    saveState();
+    syncMeetInput();
+    renderHUD();
+    updateGreetingBanner();
+    showToast("Đã gỡ ngày gặp khỏi lịch.");
+  });
+
   // One "Ngoại Ngữ" tile opens whichever language was used last (default Chinese); the pill bar inside each
   // study modal switches to the other language.
   const STUDY_LANG_KEY = "hu_keo_study_lang";
@@ -1643,6 +1721,7 @@ document.addEventListener("DOMContentLoaded", () => {
       renderHUD();
       if (dateChanged) {
         checkSpecialDayEvent();
+        checkMeetDay();
       }
       if (window.WeatherEngine) {
         WeatherEngine.tryAutoLocate();

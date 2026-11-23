@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=69" />
+  <link rel="stylesheet" href="css/style.css?v=70" />
 </head>
 <body>
   <!-- iOS Native Taptic Engine Haptic Bridge (iOS 18+ WebKit Switch Trick) -->
@@ -42,6 +42,7 @@
             <span class="pulse-heart">♥</span>
             <span id="daysTogetherText">Ngày thứ 1 bên nhau</span>
             <span class="route-tag">HN ↔ HP</span>
+            <span class="meet-tag hidden" id="meetCountdownText"></span>
           </div>
         </div>
         <div class="hud-controls">
@@ -92,7 +93,7 @@
 
         <!-- Quick Hint -->
         <div class="room-hint" id="roomHint">
-          Chạm vào anh, Ngọc hoặc bé Bông để trò chuyện nè ✨
+          Chạm vào anh, Ngọc, bé Bông hoặc tờ lịch để trò chuyện nè ✨
         </div>
       </div>
 
@@ -456,6 +457,16 @@
       </div>
       <div class="settings-body">
         <div class="setting-block">
+          <label class="setting-label" for="meetDateInput">📅 Lần gặp nhau tiếp theo:</label>
+          <p class="setting-help">Chọn ngày hai đứa gặp nhau, phòng sẽ treo lịch đếm ngược (chạm vào lịch để nghe anh nói nha):</p>
+          <div class="backup-row">
+            <input type="date" id="meetDateInput" class="backup-input" />
+            <button class="pixel-btn btn-pink btn-sm" id="btnSaveMeetDate">Lưu</button>
+            <button class="pixel-btn btn-cream btn-sm" id="btnClearMeetDate" aria-label="Gỡ ngày gặp">✕</button>
+          </div>
+        </div>
+
+        <div class="setting-block">
           <label class="setting-label">🌅 Khung cảnh ngoài cửa sổ:</label>
           <p class="setting-help">Mặc định tự đổi theo giờ thật (Sáng / Chiều / Đêm), hoặc em có thể xem thử các buổi khác:</p>
           <div class="time-modes" id="timeModes">
@@ -488,19 +499,19 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=69"></script>
-  <script defer src="js/lunar.js?v=69"></script>
-  <script defer src="js/weather.js?v=69"></script>
-  <script defer src="js/audio.js?v=69"></script>
-  <script defer src="js/sprites.js?v=69"></script>
-  <script defer src="js/room.js?v=69"></script>
-  <script defer src="js/minigame.js?v=69"></script>
-  <script defer src="js/game_crossing.js?v=69"></script>
-  <script defer src="js/game_flappy.js?v=69"></script>
-  <script defer src="js/game_nonla.js?v=69"></script>
-  <script defer src="js/game_memory.js?v=69"></script>
-  <script defer src="js/chinese.js?v=69"></script>
-  <script defer src="js/english.js?v=69"></script>
-  <script defer src="js/app.js?v=69"></script>
+  <script defer src="js/data.js?v=70"></script>
+  <script defer src="js/lunar.js?v=70"></script>
+  <script defer src="js/weather.js?v=70"></script>
+  <script defer src="js/audio.js?v=70"></script>
+  <script defer src="js/sprites.js?v=70"></script>
+  <script defer src="js/room.js?v=70"></script>
+  <script defer src="js/minigame.js?v=70"></script>
+  <script defer src="js/game_crossing.js?v=70"></script>
+  <script defer src="js/game_flappy.js?v=70"></script>
+  <script defer src="js/game_nonla.js?v=70"></script>
+  <script defer src="js/game_memory.js?v=70"></script>
+  <script defer src="js/chinese.js?v=70"></script>
+  <script defer src="js/english.js?v=70"></script>
+  <script defer src="js/app.js?v=70"></script>
 </body>
 </html>

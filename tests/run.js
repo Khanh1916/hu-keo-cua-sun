@@ -310,6 +310,22 @@ check("special days: one shared calendar, right dates, data and decor for each",
   });
   return out;
 })());
+check("meeting countdown: day maths, wall calendar, no candy door", (() => {
+  const win = {};
+  // eslint-disable-next-line no-new-func
+  Function("window", read("js/lunar.js"))(win);
+  const sd = win.SpecialDays;
+  const now = new Date(2026, 10, 24, 23, 30); // late evening, local time
+  const cases = [["2026-11-24", 0], ["2026-11-25", 1], ["2026-12-06", 12], ["2027-11-24", 365], ["2026-11-23", null],
+    ["", null], ["24/11/2026", null]];
+  const out = cases.filter(([d, want]) => sd.daysUntil(d, now) !== want).map(([d, want]) => `daysUntil(${d}) = ${sd.daysUntil(d, now)}, want ${want}`);
+  if (sd.localDateKey(new Date(2026, 0, 5, 1, 0)) !== "2026-01-05") out.push("localDateKey is not the local day");
+  if (!/function drawWallCalendar\(/.test(room)) out.push("room.js lacks the wall calendar");
+  if (!/onInteractFn\("calendar"\)/.test(room) || !/who === "calendar"/.test(app)) out.push("tapping the calendar does nothing");
+  if (/addRewards/.test(extractFunction(app, "checkMeetDay"))) out.push("meeting day pays candy (player-set date = farmable)");
+  ["far", "soon", "tomorrow", "today"].forEach((k) => { if (!(data.meetLines && data.meetLines[k] && data.meetLines[k].length)) out.push(`meetLines.${k} empty`); });
+  return out;
+})());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",

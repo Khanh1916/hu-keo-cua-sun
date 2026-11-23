@@ -200,6 +200,16 @@ body {
   color: var(--ink);
 }
 
+.meet-tag {
+  background: #fff3c4;
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
 .hud-controls {
   display: flex;
   gap: 6px;

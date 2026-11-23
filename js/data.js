@@ -446,6 +446,30 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
     }
   ],
 
+  // Khánh's lines for the wall calendar (tap it). {days} = days left. Agent-written copy: the owner should proofread it.
+  meetLines: {
+    far: [
+      "Còn {days} ngày nữa là gặp em rồi, anh đếm từng ngày luôn đó 📅",
+      "{days} ngày nữa thôi, em nhớ ăn uống đầy đủ để gặp anh thật xinh nha 💕",
+      "Lịch trên tường còn {days} ngày, sáng nào anh cũng gạch thêm một ô ✏️"
+    ],
+    soon: [
+      "Chỉ còn {days} ngày nữa thôi! Em muốn đi ăn gì để anh tìm trước nè? 🍜",
+      "Tuần này gặp nhau rồi, Bông còn hồi hộp hơn cả anh 🐱",
+      "{days} ngày nữa thôi, anh bắt đầu thấy nôn nao rồi đó 💓"
+    ],
+    tomorrow: [
+      "Mai gặp nhau rồi! Tối nay ngủ sớm nha em 😴💕",
+      "Chỉ còn một đêm nữa thôi, anh hồi hộp không ngủ được luôn 🙈"
+    ],
+    today: [
+      "Hôm nay gặp nhau rồi! Đi đường cẩn thận, tới nơi nhắn anh liền nha 💕",
+      "Hà Nội ↔ Hải Phòng hôm nay chỉ còn 0 km thôi ✨"
+    ],
+    banner: "💕 Hôm nay hai đứa gặp nhau rồi! Hà Nội ↔ Hải Phòng chỉ còn 0 km ✨",
+    greeting: "Hôm nay gặp nhau rồi nè! Đi đường nhớ cẩn thận, tới nơi nhắn anh liền nha 💕"
+  },
+
   specialDays: {
     tet: {
       speaker: "Anh Khánh 🧧",

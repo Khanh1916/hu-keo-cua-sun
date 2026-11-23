@@ -227,5 +227,21 @@ window.SpecialDays = (() => {
     return null;
   }
 
-  return { getActive };
+  // Whole local days from today until a "YYYY-MM-DD" date (0 = today); null when unset, invalid or already past.
+  function daysUntil(dateStr, now = new Date()) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || "");
+    if (!m) return null;
+    const target = Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    const days = Math.round((target - today) / 86400000);
+    return days >= 0 ? days : null;
+  }
+
+  // Local "YYYY-MM-DD" (toISOString would give the UTC day, which is still yesterday before 7:00 in Vietnam).
+  function localDateKey(date = new Date()) {
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  }
+
+  return { getActive, daysUntil, localDateKey };
 })();
