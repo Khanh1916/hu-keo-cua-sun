@@ -150,6 +150,17 @@ window.GAME_DATA = {
     }
   ],
 
+  // Shared plant in the room corner: grows with the number of different days Ngọc opens the app (missing days never
+  // shrink it). Blooms fully on the 11/02 anniversary. `days` = visits needed for the stage.
+  plantStages: [
+    { days: 0, name: "hạt mầm" },
+    { days: 3, name: "mầm non" },
+    { days: 7, name: "cây con" },
+    { days: 14, name: "cây xanh" },
+    { days: 30, name: "nụ hoa" },
+    { days: 60, name: "cây nở hoa" }
+  ],
+
   // Wardrobe (shop tab "Tủ quần áo"): who = ngoc | khanh | bong. Looks live in sprites.js OUTFITS (same ids).
   outfits: [
     { id: "n_sweater", who: "ngoc", name: "Áo len hồng", emoji: "🧶", price: 300, desc: "Áo len hồng tay dài, mùa đông Hải Phòng mặc cho ấm." },

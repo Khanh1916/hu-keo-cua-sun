@@ -418,6 +418,18 @@ check("wardrobe: every outfit has a look, saved state is safe, room draws what i
     "frame, worn.bong)", "side < 0, worn.khanh, worn.ngoc)"].forEach((call) => { if (!room.includes(call)) out.push(`room.js does not pass outfits: ${call}`); });
   return out;
 })());
+check("shared plant: stages ascend, visits counted once per day, drawn and tappable", (() => {
+  const out = [];
+  const st = data.plantStages || [];
+  if (!st.length || st[0].days !== 0) out.push("plantStages must start at 0 days");
+  st.forEach((s, i) => { if (i && s.days <= st[i - 1].days) out.push(`plantStage ${s.name} (${s.days}) not after ${st[i - 1].name}`); });
+  const reset = extractFunction(app, "syncDailyReset");
+  if (!/state\.lastVisitDate !== visitKey/.test(reset) || !/state\.visitDays = \(state\.visitDays \|\| 0\) \+ 1/.test(reset)) out.push("syncDailyReset does not count one visit per day");
+  if (!/drawSharedPlant\(state, specialDay\)/.test(room)) out.push("room.js does not draw the plant");
+  if (!/onInteractFn\("plant"\)/.test(room) || !/who === "plant"/.test(app)) out.push("tapping the plant does nothing");
+  if (/addRewards/.test(extractFunction(app, "speakPlant"))) out.push("the plant pays rewards (visits already pay via quests)");
+  return out;
+})());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",

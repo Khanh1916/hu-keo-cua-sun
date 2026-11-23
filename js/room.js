@@ -100,6 +100,12 @@ window.RoomScene = (() => {
       return;
     }
 
+    // Shared plant in the front-left corner
+    if (cx <= 24 && cy >= 150 && cy <= 194) {
+      if (onInteractFn) onInteractFn("plant");
+      return;
+    }
+
     // Wall calendar under the HN ↔ HP plaque
     if (cx >= 30 && cx <= 54 && cy >= 56 && cy <= 84) {
       if (onInteractFn) onInteractFn("calendar");
@@ -637,6 +643,63 @@ window.RoomScene = (() => {
     ctx.textAlign = "start";
   }
 
+  // Shared plant in the front-left corner (pot x 4–17, y 178–189). Stage = index in GAME_DATA.plantStages reached by
+  // state.visitDays; on the 11/02 anniversary it is drawn in full bloom with sparkles. Tap → onInteract("plant").
+  function getPlantStage(state) {
+    const stages = (window.GAME_DATA && window.GAME_DATA.plantStages) || [];
+    let idx = 0;
+    stages.forEach((st, i) => { if ((state.visitDays || 0) >= st.days) idx = i; });
+    return idx;
+  }
+
+  function drawSharedPlant(state, specialDay) {
+    const px = PixelSprites.px;
+    const bloomDay = specialDay === "anniversary";
+    const stage = bloomDay ? 5 : getPlantStage(state);
+    const sway = Math.round(Math.sin(frame * 0.05));
+    const LEAF = "#5FB36B";
+    const LEAF_LT = "#7EC98A";
+    const STEM = "#3F8A4B";
+    // pot
+    px(ctx, 5, 180, 12, 9, "#C97B5A");
+    px(ctx, 4, 178, 14, 3, "#DE936F");
+    px(ctx, 5, 178, 12, 1, "#6B4A3A");
+    px(ctx, 6, 188, 10, 1, "#A9603F");
+    px(ctx, 10, 183, 2, 2, "#F9C8D9"); // little heart on the pot
+    if (stage === 0) {
+      px(ctx, 10, 176, 2, 2, LEAF_LT);
+      return;
+    }
+    const top = [0, 172, 166, 160, 160, 160][stage];
+    px(ctx, 10, top, 1, 178 - top, STEM);
+    // leaf pairs going up the stem
+    const leafRows = { 1: [172], 2: [168, 173], 3: [162, 166, 170, 174], 4: [162, 166, 170, 174], 5: [162, 166, 170, 174] }[stage];
+    leafRows.forEach((ly, i) => {
+      const left = i % 2 === 0;
+      px(ctx, (left ? 7 : 12) + sway, ly, 3, 2, i % 2 ? LEAF : LEAF_LT);
+      if (stage >= 3) px(ctx, (left ? 12 : 7) + sway, ly + 2, 3, 2, LEAF);
+    });
+    if (stage === 4) {
+      px(ctx, 9 + sway, 157, 3, 3, "#F49CB8"); // bud
+      px(ctx, 10 + sway, 156, 1, 1, "#E46B94");
+    }
+    if (stage === 5) {
+      const flower = (fx, fy, petal) => {
+        px(ctx, fx - 1, fy, 3, 1, petal);
+        px(ctx, fx, fy - 1, 1, 3, petal);
+        px(ctx, fx, fy, 1, 1, "#FFD166");
+      };
+      flower(10 + sway, 157, "#F49CB8");
+      flower(6 + sway, 163, "#FF8FAB");
+      flower(15 + sway, 165, "#F9C8D9");
+      if (bloomDay && Math.floor(frame / 20) % 2 === 0) {
+        px(ctx, 3, 158, 1, 1, "#FFE066");
+        px(ctx, 18, 155, 1, 1, "#FFE066");
+        px(ctx, 14, 152, 1, 1, "#FFFFFF");
+      }
+    }
+  }
+
   // Meeting day: a pink suitcase on the floor at the front right
   function drawMeetSuitcase() {
     const px = PixelSprites.px;
@@ -1120,6 +1183,7 @@ window.RoomScene = (() => {
     }
 
     if (getMeetDays(state) === 0) drawMeetSuitcase();
+    drawSharedPlant(state, specialDay);
 
     // 3. Depth-sorted characters (Khánh, Ngọc, Bông). While hugging, Khánh + Ngọc become ONE face-to-face sprite
     //    (pixel-game convention), mirrored when Ngọc is on his left.

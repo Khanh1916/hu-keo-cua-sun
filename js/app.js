@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     bestMemory: 0,
     ownedDecor: [],
     placedDecor: [],
+    visitDays: 0, // different local days the app was opened (the shared plant grows with it)
+    lastVisitDate: "",
     ownedOutfits: [], // wardrobe items bought (shop tab "Tủ quần áo")
     wornOutfits: { ngoc: "", khanh: "", bong: "" }, // outfit id each character wears ("" = default clothes)
     unlockedAchieve: [],
@@ -309,6 +311,24 @@ document.addEventListener("DOMContentLoaded", () => {
     showSpeech("Anh Khánh 💕", DATA.meetLines.greeting);
   }
 
+  // Shared plant: stage from visitDays (GAME_DATA.plantStages); Khánh says how far it is from the next stage.
+  function speakPlant() {
+    const stages = DATA.plantStages;
+    const days = state.visitDays || 0;
+    let idx = 0;
+    stages.forEach((st, i) => { if (days >= st.days) idx = i; });
+    let text;
+    if (getActiveSpecialDay() === "anniversary") {
+      text = `Hôm nay 11/02 nên cây của hai đứa nở hoa hết cỡ luôn nè 🌸 Em đã ghé thăm ${days} ngày rồi đó!`;
+    } else if (idx === stages.length - 1) {
+      text = `Cây của hai đứa nở hoa rồi nè 🌸 Em đã ghé thăm ${days} ngày, cảm ơn em chăm nó nha!`;
+    } else {
+      const next = stages[idx + 1];
+      text = `Cây của hai đứa đang là ${stages[idx].name} 🌱 Em đã ghé ${days} ngày, thêm ${next.days - days} ngày nữa là thành ${next.name} nha!`;
+    }
+    showSpeech("Anh Khánh 🌱", text);
+  }
+
   function speakMeetCountdown() {
     const days = getMeetDays();
     if (days === null) {
@@ -375,6 +395,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function syncDailyReset() {
     const todayStr = new Date().toDateString();
     let changed = false;
+    const visitKey = window.SpecialDays.localDateKey();
+    if (state.lastVisitDate !== visitKey) {
+      state.lastVisitDate = visitKey;
+      state.visitDays = (state.visitDays || 0) + 1;
+      changed = true;
+    }
     if (state.freeMealsDate !== todayStr) {
       state.freeMealsDate = todayStr;
       state.freeMealsLeft = 3;
@@ -1119,6 +1145,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // Just affection: no XP/candy (hug/pet already carry the daily rewards)
         AudioManager.playClick();
         showSpeech("Anh Khánh 💕", pickRandom(DATA.ngocCompliments || ["Em xinh lắm đó! 💕"]).item);
+      } else if (who === "plant") {
+        AudioManager.playClick();
+        speakPlant();
       } else if (who === "calendar") {
         AudioManager.playClick();
         speakMeetCountdown();
