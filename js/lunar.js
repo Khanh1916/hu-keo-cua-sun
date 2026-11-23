@@ -205,3 +205,27 @@ window.Amlich = (() => {
     jdToDate
   };
 })();
+
+// Calendar helpers shared by app.js and room.js (they used to keep two copies of the special-day rules).
+window.SpecialDays = (() => {
+  // Which special day a date falls on, or null. Single-day events are checked before the multi-day Noel / Tết windows,
+  // so 11/02 and 14/02 still get their own day in the years Tết covers them.
+  function getActive(date = new Date()) {
+    if (window.previewSpecialDay) return window.previewSpecialDay;
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    if (m === 4 && d === 15) return "ngoc";
+    if (m === 6 && d === 1) return "khanh";
+    if (m === 2 && d === 11) return "anniversary";
+    if (m === 2 && d === 14) return "valentine";
+    if (m === 3 && d === 8) return "women83";
+    if (m === 10 && d === 20) return "women2010";
+    const [lunarDay, lunarMonth, , lunarLeap] = window.Amlich.convertSolar2Lunar(d, m, date.getFullYear(), 7);
+    if (!lunarLeap && lunarMonth === 8 && lunarDay === 15) return "trungthu";
+    if (m === 12 && d >= 20 && d <= 26) return "noel";
+    if (window.Amlich.getTetInfo(date).isTet) return "tet";
+    return null;
+  }
+
+  return { getActive };
+})();

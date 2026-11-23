@@ -596,16 +596,7 @@ window.RoomScene = (() => {
   }
 
   function getActiveSpecialDay() {
-    if (window.previewSpecialDay) return window.previewSpecialDay;
-    const now = new Date();
-    const m = now.getMonth() + 1;
-    const d = now.getDate();
-    if (m === 4 && d === 15) return "ngoc";
-    if (m === 6 && d === 1) return "khanh";
-    if (m === 2 && d === 11) return "anniversary";
-    if (m === 12 && d >= 20 && d <= 26) return "noel";
-    if (window.Amlich && window.Amlich.getTetInfo(now).isTet) return "tet";
-    return null;
+    return window.SpecialDays.getActive();
   }
 
   function drawTetDecor() {
@@ -775,6 +766,110 @@ window.RoomScene = (() => {
       const cxPos = (c * 27 + Math.sin(frame * 0.04 + c) * 8 + 240) % 240;
       px(ctx, cxPos, cyPos, 2, 2, confColors[c % confColors.length]);
     }
+  }
+
+  // 8/3 and 20/10: a wrapped bouquet on the little stand, a ribbon banner with the date and drifting petals
+  function drawFlowerDayDecor(label) {
+    const px = PixelSprites.px;
+    // Ribbon banner above the window (x 92–148)
+    px(ctx, 92, 6, 56, 12, "#E46B94");
+    px(ctx, 93, 7, 54, 10, "#F9C8D9");
+    px(ctx, 88, 8, 5, 8, "#E46B94");
+    px(ctx, 147, 8, 5, 8, "#E46B94");
+    px(ctx, 86, 10, 3, 4, "#F9C8D9");
+    px(ctx, 151, 10, 3, 4, "#F9C8D9");
+    ctx.fillStyle = "#4A302C";
+    ctx.font = "bold 8px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText(label, 120, 15);
+    ctx.textAlign = "start";
+
+    // Bouquet on the stand (x: 158, y: 152): flowers on top of a paper cone that narrows down to the stand
+    const cx = 158, cy = 152;
+    px(ctx, cx - 2, cy + 8, 22, 3, "#C88E68");
+    px(ctx, cx + 6, cy + 11, 6, 6, "#9B6747");
+    px(ctx, cx + 2, cy - 2, 2, 3, "#52B788"); // leaves
+    px(ctx, cx + 14, cy - 3, 2, 3, "#52B788");
+    px(ctx, cx + 3, cy - 6, 4, 4, "#F25C54"); // roses
+    px(ctx, cx + 7, cy - 8, 4, 4, "#E46B94");
+    px(ctx, cx + 11, cy - 6, 4, 4, "#F25C54");
+    px(ctx, cx + 4, cy - 5, 1, 1, "#FF8FA3");
+    px(ctx, cx + 8, cy - 7, 1, 1, "#F9C8D9");
+    px(ctx, cx + 12, cy - 5, 1, 1, "#FF8FA3");
+    px(ctx, cx + 6, cy - 3, 2, 2, "#FFD166"); // little yellow buds
+    px(ctx, cx + 10, cy - 3, 2, 2, "#FFD166");
+    px(ctx, cx + 3, cy - 1, 12, 2, "#FFF3E0"); // paper cone
+    px(ctx, cx + 4, cy + 1, 10, 2, "#FFF3E0");
+    px(ctx, cx + 5, cy + 3, 8, 2, "#FFF3E0");
+    px(ctx, cx + 6, cy + 5, 6, 2, "#FFF3E0");
+    px(ctx, cx + 7, cy + 7, 4, 1, "#FFF3E0");
+    px(ctx, cx + 10, cy - 1, 1, 8, "#EAD7C0"); // fold
+    px(ctx, cx + 5, cy + 3, 8, 1, "#E46B94"); // ribbon
+
+    // Petals drifting down
+    for (let p = 0; p < 7; p++) {
+      const py = (frame * 0.35 + p * 26) % 165 + 22;
+      const pxPos = 22 + p * 31 + Math.sin(frame * 0.03 + p * 1.3) * 7;
+      px(ctx, pxPos, py, 3, 2, p % 3 === 0 ? "#FFD166" : (p % 3 === 1 ? "#F49CB8" : "#FFFFFF"));
+    }
+  }
+
+  // 14/02: the anniversary hearts + bouquet, plus a heart-shaped box of chocolates on the floor
+  function drawValentineDecor() {
+    const px = PixelSprites.px;
+    drawAnniversaryDecor();
+    const bx = 140, by = 160;
+    px(ctx, bx, by, 4, 3, "#C9184A");
+    px(ctx, bx + 5, by, 4, 3, "#C9184A");
+    px(ctx, bx - 1, by + 1, 11, 3, "#C9184A");
+    px(ctx, bx, by + 4, 9, 2, "#C9184A");
+    px(ctx, bx + 2, by + 6, 5, 1, "#C9184A");
+    px(ctx, bx + 3, by + 7, 3, 1, "#C9184A");
+    px(ctx, bx + 4, by, 1, 8, "#FFD166"); // gold ribbon
+    px(ctx, bx - 1, by + 2, 11, 1, "#FFD166");
+    px(ctx, bx + 1, by + 1, 1, 1, "#FF8FAB");
+  }
+
+  // Trung thu (15/8 âm lịch): two star lanterns hanging from the ceiling and a plate of mooncakes on the stand
+  function drawStarLantern(x, y, phase) {
+    const px = PixelSprites.px;
+    const sway = Math.round(Math.sin(frame * 0.04 + phase) * 1);
+    const lx = x + sway;
+    px(ctx, x, 0, 1, y - 1, "#6E4A42"); // string from the ceiling
+    const glow = Math.floor(frame / 14 + phase) % 3 !== 0;
+    if (glow) px(ctx, lx - 8, y - 3, 17, 15, "rgba(255, 209, 102, 0.22)");
+    const red = "#E63946";
+    px(ctx, lx - 1, y - 1, 3, 2, red); // top point
+    px(ctx, lx - 2, y + 1, 5, 2, red);
+    px(ctx, lx - 6, y + 3, 13, 2, red); // arms
+    px(ctx, lx - 4, y + 5, 9, 2, red);
+    px(ctx, lx - 3, y + 7, 7, 1, red);
+    px(ctx, lx - 4, y + 8, 3, 2, red); // legs
+    px(ctx, lx + 2, y + 8, 3, 2, red);
+    px(ctx, lx - 5, y + 10, 2, 1, red);
+    px(ctx, lx + 4, y + 10, 2, 1, red);
+    px(ctx, lx - 1, y + 3, 3, 3, glow ? "#FFE066" : "#FFC24D"); // candle light in the middle
+    px(ctx, lx, y + 11, 1, 4, "#FFD166"); // tassel
+  }
+
+  function drawTrungThuDecor() {
+    const px = PixelSprites.px;
+    drawStarLantern(70, 14, 0);
+    drawStarLantern(170, 18, 2);
+
+    // Mooncakes on a plate on the stand (x: 158, y: 152)
+    const cx = 158, cy = 152;
+    px(ctx, cx - 2, cy + 8, 22, 3, "#C88E68");
+    px(ctx, cx + 6, cy + 11, 6, 6, "#9B6747");
+    px(ctx, cx, cy + 6, 18, 2, "#FFFDF7"); // plate
+    px(ctx, cx + 1, cy + 1, 7, 5, "#C77D3A"); // bánh nướng
+    px(ctx, cx + 2, cy + 2, 5, 3, "#E09F5B");
+    px(ctx, cx + 4, cy + 3, 1, 1, "#8C4A1F");
+    px(ctx, cx + 10, cy + 1, 7, 5, "#F1E6D2"); // bánh dẻo
+    px(ctx, cx + 11, cy + 2, 5, 3, "#FFF8EC");
+    px(ctx, cx + 13, cy + 3, 1, 1, "#D4BFA0");
+    // Small cup of tea
+    px(ctx, cx + 19, cy + 3, 3, 3, "#9AD1B5");
   }
 
   function drawNoelDecor() {
@@ -950,7 +1045,7 @@ window.RoomScene = (() => {
     if (placed.includes("tea_table")) PixelSprites.drawDecor(ctx, "tea_table", frame, placed);
     if (placed.includes("couple_mugs")) PixelSprites.drawDecor(ctx, "couple_mugs", frame, placed);
 
-    // Hidden Special Day Decorations (15/04, 01/06 Birthdays, 11/02 Anniversary, Tết Âm Lịch & Noel)
+    // Hidden Special Day Decorations (birthdays, 11/02, 14/02, 8/3, 20/10, Trung thu, Noel, Tết)
     if (specialDay === "ngoc" || specialDay === "khanh") {
       drawBirthdayDecor(specialDay);
     } else if (specialDay === "anniversary") {
@@ -959,6 +1054,14 @@ window.RoomScene = (() => {
       drawTetDecor();
     } else if (specialDay === "noel") {
       drawNoelDecor();
+    } else if (specialDay === "valentine") {
+      drawValentineDecor();
+    } else if (specialDay === "women83") {
+      drawFlowerDayDecor("8 - 3");
+    } else if (specialDay === "women2010") {
+      drawFlowerDayDecor("20 - 10");
+    } else if (specialDay === "trungthu") {
+      drawTrungThuDecor();
     }
 
     // 3. Depth-sorted characters (Khánh, Ngọc, Bông). While hugging, Khánh + Ngọc become ONE face-to-face sprite

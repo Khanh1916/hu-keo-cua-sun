@@ -448,6 +448,9 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
 
   specialDays: {
     tet: {
+      speaker: "Anh Khánh 🧧",
+      giftLabel: "🧧 Lì xì Tết",
+      xp: 35,
       isLunar: true,
       music: "tet",
       giftCandy: 88,
@@ -463,6 +466,9 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
       ]
     },
     ngoc: {
+      speaker: "Anh Khánh 🎂",
+      giftLabel: "🎂 Quà sinh nhật",
+      xp: 25,
       month: 4,
       day: 15,
       music: "birthday",
@@ -471,6 +477,9 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
       speech: "Chúc mừng sinh nhật em nhé (15/04)! Thêm tuổi mới chúc Ngọc luôn vui vẻ, mạnh khỏe, bớt suy nghĩ linh tinh. Hôm nay không cần làm 'trẻ hiểu chuyện' nữa, thích gì cứ bảo anh nha! Tặng em +50 🍬 trong hũ trước nè 🎂"
     },
     khanh: {
+      speaker: "Anh Khánh 🎂",
+      giftLabel: "🎂 Quà sinh nhật",
+      xp: 25,
       month: 6,
       day: 1,
       music: "birthday",
@@ -479,6 +488,9 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
       speech: "Hôm nay sinh nhật anh nè! Sinh đúng ngày Quốc tế Thiếu nhi luôn. Tặng em +30 🍬 mừng sinh nhật anh cùng bé Bông nha! 🎂"
     },
     anniversary: {
+      speaker: "Anh Khánh 💕",
+      giftLabel: "💕 Quà kỷ niệm",
+      xp: 30,
       month: 2,
       day: 11,
       music: "anniversary",
@@ -487,6 +499,9 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
       speech: "Hôm nay lại tới 11/02 rồi nè! Tính từ ngày đầu nói chuyện trên Facebook Dating tới giờ cũng được {days} ngày rồi đó. Tặng em +50 🍬 với cả cái ôm thật chặt nha! 💕"
     },
     noel: {
+      speaker: "Anh Khánh 🎄",
+      giftLabel: "🎁 Quà Giáng Sinh",
+      xp: 30,
       month: 12,
       startDay: 20,
       endDay: 26,
@@ -501,6 +516,76 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
         "Giáng Sinh ấm áp nha cô gái nhỏ của anh 💕",
         "Noel năm nay dù hai đứa ở hai thành phố nhưng trái tim anh lúc nào cũng hướng về em ✨",
         "Cây thông Noel trong phòng sáng đèn lung linh ghê, chúc Ngọc lúc nào cũng rạng rỡ nha 🌟"
+      ]
+    },
+    // Vietnamese holidays (added 2026-11-24). Agent-written copy: the owner should proofread it.
+    valentine: {
+      month: 2,
+      day: 14,
+      music: "anniversary",
+      speaker: "Anh Khánh 🍫",
+      giftLabel: "🍫 Socola Valentine",
+      xp: 30,
+      giftCandy: 40,
+      banner: "💝 Valentine 14/02 — Chúc cô gái nhỏ của anh một ngày ngọt hơn cả socola! 🍫",
+      speech: "Valentine vui vẻ nha em! Hôm nay anh chưa ở cạnh được thì gửi tạm hộp socola +40 🍬 vào hũ trước, gặp nhau anh bù cho em cái ôm thật lâu nha 💝",
+      quotes: [
+        "Valentine này anh chỉ muốn được nắm tay em đi dạo thôi à 💝",
+        "Hộp socola trong phòng là của em hết, không chia cho Bông đâu nha 🍫",
+        "Hà Nội với Hải Phòng có xa mấy thì hôm nay anh vẫn nghĩ về em đầu tiên 💕",
+        "Bé Bông cũng chúc chị Ngọc Valentine vui vẻ nè, meo 🐱💝",
+        "Cảm ơn em đã chọn anh nha, cô gái của anh 🌹"
+      ]
+    },
+    women83: {
+      month: 3,
+      day: 8,
+      music: "anniversary",
+      speaker: "Anh Khánh 💐",
+      giftLabel: "💐 Quà 8/3",
+      xp: 25,
+      giftCandy: 30,
+      banner: "💐 Mùng 8/3 — Chúc Ngọc luôn xinh đẹp, vui vẻ và được yêu thương thật nhiều! 🌷",
+      speech: "8/3 vui vẻ nha em! Anh đặt sẵn bó hoa trong phòng với +30 🍬 cho em rồi đó. Hôm nay em không cần làm gì hết, chỉ cần vui thôi nha 💐",
+      quotes: [
+        "Bó hoa trong phòng là anh chọn cho em đó, thích không? 💐",
+        "Chúc cô gái của anh luôn cười tươi như hôm nay nha 🌷",
+        "Hôm nay em được quyền bắt nạt anh gấp đôi đó 😆",
+        "Bé Bông cũng tặng chị Ngọc một bông hoa nè 🐱🌸"
+      ]
+    },
+    women2010: {
+      month: 10,
+      day: 20,
+      music: "anniversary",
+      speaker: "Anh Khánh 🌷",
+      giftLabel: "🌷 Quà 20/10",
+      xp: 25,
+      giftCandy: 30,
+      banner: "🌷 20/10 — Chúc mừng ngày Phụ nữ Việt Nam! Chúc em luôn rạng rỡ và hạnh phúc 💕",
+      speech: "20/10 vui vẻ nha cô gái Hải Phòng của anh! Tặng em bó hoa với +30 🍬 nè. Cảm ơn em lúc nào cũng dễ thương với anh nha 🌷",
+      quotes: [
+        "Ngày của em mà, hôm nay em là nhất 🌷",
+        "Anh mong em lúc nào cũng được yêu thương, không chỉ riêng hôm nay đâu 💕",
+        "Hoa trong phòng nở đẹp như em vậy đó 💐",
+        "Bé Bông dặn anh hôm nay phải chiều chị Ngọc hết mức 🐱"
+      ]
+    },
+    trungthu: {
+      isLunar: true,
+      music: "normal",
+      speaker: "Anh Khánh 🏮",
+      giftLabel: "🥮 Bánh Trung thu",
+      xp: 25,
+      giftCandy: 30,
+      banner: "🏮 Trung thu rằm tháng Tám — Chúc Ngọc một đêm trăng tròn thật vui và ấm áp! 🥮",
+      speech: "Trung thu vui vẻ nha em! Anh treo đèn ông sao trong phòng với để sẵn đĩa bánh +30 🍬 rồi đó. Tối nay ngắm trăng nhớ nghĩ tới anh nha 🌕",
+      quotes: [
+        "Trăng rằm tháng Tám tròn ghê, ước gì được ngắm cùng em 🌕",
+        "Em thích bánh nướng hay bánh dẻo hơn? Lần sau anh mang xuống cho 🥮",
+        "Đèn ông sao anh treo trong phòng đó, đẹp không em? 🏮",
+        "Bé Bông đòi rước đèn mà sợ lửa nên chỉ đứng nhìn thôi 🐱",
+        "Hà Nội với Hải Phòng chung một ông trăng, nên anh thấy gần em hơn chút rồi ✨"
       ]
     }
   }

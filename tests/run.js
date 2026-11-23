@@ -287,6 +287,29 @@ check("Ngọc dances to the vinyl and reads by the bookshelf",
   [!/mode === "dance"/.test(room) && "room.js lacks the dance behaviour", !/ngoc\.mode = "dance"/.test(room.slice(room.indexOf("function triggerVinylSpin"))) && "tapping the vinyl doesn't start the dance",
    !/mode === "read"/.test(room) && "room.js lacks the reading behaviour", !/includes\("bookshelf"\)/.test(room) && "reading isn't tied to the bookshelf",
    !/state === "dance"/.test(sprites) && "drawNgoc lacks the dance pose", !/state === "read"/.test(sprites) && "drawNgoc lacks the reading pose"]);
+check("special days: one shared calendar, right dates, data and decor for each", (() => {
+  const win = {};
+  // eslint-disable-next-line no-new-func
+  Function("window", read("js/lunar.js"))(win);
+  const get = (d) => win.SpecialDays.getActive(new Date(`${d}T12:00:00`));
+  const want = { "2026-02-11": "anniversary", "2026-02-14": "valentine", "2026-02-17": "tet", "2026-03-08": "women83",
+    "2026-10-20": "women2010", "2026-09-25": "trungthu", "2027-09-15": "trungthu", "2026-09-24": null, "2026-12-24": "noel",
+    "2026-04-15": "ngoc", "2026-06-01": "khanh", "2026-11-24": null };
+  const out = Object.entries(want).filter(([d, k]) => get(d) !== k).map(([d, k]) => `${d}: got ${get(d)}, want ${k}`);
+  const keys = [...new Set(Object.values(want).filter(Boolean))];
+  keys.forEach((k) => {
+    const ev = data.specialDays[k];
+    if (!ev) return out.push(`GAME_DATA.specialDays.${k} missing`);
+    ["banner", "speech", "speaker", "giftLabel"].forEach((f) => { if (!ev[f]) out.push(`specialDays.${k}.${f} missing`); });
+    if (!(ev.giftCandy > 0)) out.push(`specialDays.${k}.giftCandy missing`);
+    if (!room.includes(`specialDay === "${k}"`)) out.push(`room.js draws nothing for ${k}`);
+  });
+  [["js/app.js", app], ["js/room.js", room]].forEach(([f, s]) => {
+    const fn = extractFunction(s, "getActiveSpecialDay");
+    if (!/SpecialDays\.getActive\(\)/.test(fn) || /getMonth/.test(fn)) out.push(`${f} keeps its own copy of the special-day rules`);
+  });
+  return out;
+})());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",

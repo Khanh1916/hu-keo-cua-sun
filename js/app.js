@@ -247,16 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getActiveSpecialDay() {
-    if (window.previewSpecialDay) return window.previewSpecialDay;
-    const now = new Date();
-    const m = now.getMonth() + 1;
-    const d = now.getDate();
-    if (m === 4 && d === 15) return "ngoc";
-    if (m === 6 && d === 1) return "khanh";
-    if (m === 2 && d === 11) return "anniversary";
-    if (m === 12 && d >= 20 && d <= 26) return "noel";
-    if (window.Amlich && window.Amlich.getTetInfo(now).isTet) return "tet";
-    return null;
+    return window.SpecialDays.getActive();
   }
 
   function syncMusicThemeForToday() {
@@ -280,15 +271,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const claimKey = `${key}_${claimYear}`;
     if (!state.claimedBirthdays.includes(claimKey)) {
       state.claimedBirthdays.push(claimKey);
-      addRewards(key === "tet" ? 35 : (key === "noel" ? 30 : (key === "anniversary" ? 30 : 25)), ev.giftCandy);
+      addRewards(ev.xp || 25, ev.giftCandy);
       AudioManager.playPowerup();
       RoomScene.triggerKhanhHappy("happy");
       RoomScene.triggerBongHappy();
       const speechText = ev.speech.replace("{days}", String(getDaysTogether()));
-      const title = key === "tet" ? "Anh Khánh 🧧" : (key === "noel" ? "Anh Khánh 🎄" : (key === "anniversary" ? "Anh Khánh 💕" : "Anh Khánh 🎂"));
-      showSpeech(title, speechText);
-      const giftLabel = key === "tet" ? "🧧 Lì xì Tết" : (key === "noel" ? "🎁 Quà Giáng Sinh" : (key === "anniversary" ? "💕 Quà kỷ niệm" : "🎂 Quà sinh nhật"));
-      showToast(`${giftLabel}: +${ev.giftCandy} 🍬!`);
+      showSpeech(ev.speaker || "Anh Khánh", speechText);
+      showToast(`${ev.giftLabel || "🎁 Quà"}: +${ev.giftCandy} 🍬!`);
     }
   }
 
@@ -861,12 +850,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (who === "khanh") {
         AudioManager.playClick();
         const specialDay = getActiveSpecialDay();
-        if (specialDay === "tet" && DATA.specialDays.tet && DATA.specialDays.tet.quotes) {
-          const { item } = pickRandom(DATA.specialDays.tet.quotes);
-          showSpeech("Anh Khánh 🧧", item);
-        } else if (specialDay === "noel" && DATA.specialDays.noel && DATA.specialDays.noel.quotes) {
-          const { item } = pickRandom(DATA.specialDays.noel.quotes);
-          showSpeech("Anh Khánh 🎄", item);
+        const ev = specialDay && DATA.specialDays ? DATA.specialDays[specialDay] : null;
+        if (ev && ev.quotes && ev.quotes.length) {
+          const { item } = pickRandom(ev.quotes);
+          showSpeech(ev.speaker || "Anh Khánh", item);
         } else {
           const { item } = pickRandom(DATA.khanhDialogues);
           showSpeech("Anh Khánh", item);
