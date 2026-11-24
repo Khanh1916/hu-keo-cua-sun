@@ -2276,6 +2276,7 @@ window.EnglishApp = (() => {
 
     srsMap[word] = entry;
     saveSRSMap(srsMap);
+    if (isSuccess && window.GameState && GameState.checkAchievements) GameState.checkAchievements(); // words_50 / words_200
   }
 
   // A word needs review when the last answer was wrong (reps back to 0) or its review date has come.
@@ -2369,6 +2370,12 @@ window.EnglishApp = (() => {
     const list = ENGLISH_DATA[level] || [];
     const srsMap = getSRSMap();
     return list.filter((w) => srsMap[w.word] && srsMap[w.word].reps > 0).length;
+  }
+
+  // Words answered right 3+ times (badge "Đã thuộc"); app.js sums both languages for words_50 / words_200.
+  function masteredCount() {
+    const map = getSRSMap();
+    return ["b1", "b2", "c1"].reduce((n, lvl) => n + (ENGLISH_DATA[lvl] || []).filter((w) => map[w.word] && map[w.word].reps >= 3).length, 0);
   }
 
   function getSRSBadge(word) {
@@ -3049,6 +3056,10 @@ window.EnglishApp = (() => {
     }
     const remaining = isReview ? getReviewWords().length : 0;
     updateReviewBadge();
+    if (window.GameState && GameState.markStudyFeat) {
+      if (!isReview && total >= 5 && quizScore === total && quizMode !== "meaning") GameState.markStudyFeat(`perfect_${quizMode}`);
+      if (isReview && remaining === 0) GameState.markStudyFeat("review_clear");
+    }
 
     container.innerHTML = `
       <div class="quiz-result-wrap">
@@ -3057,7 +3068,7 @@ window.EnglishApp = (() => {
         <p class="quiz-score-text">Ngọc đã trả lời đúng <strong>${quizScore}/${total}</strong> câu hỏi (${isReview ? "Ôn hôm nay" : `${getLevelLabel(currentLevel)} • ${quizModeLabel(quizMode)}`})!</p>
         ${isReview ? `<p class="quiz-score-text">${remaining ? `Còn <strong>${remaining}</strong> từ cần ôn nữa nha.` : "Hết sạch từ cần ôn rồi, giỏi quá 💕"}</p>` : ""}
         ${quizMissed.length ? `<div class="quiz-missed-box"><div class="quiz-missed-title">🔁 Từ cần ôn (sẽ quay lại ở lượt sau):</div><ul>${quizMissed.map((w) => `<li><strong>${w.word}</strong> [${w.ipa}]: ${w.meaning}</li>`).join("")}</ul></div>` : ""}
-        <p class="quiz-score-reward">${passed ? (quizRewardPaid ? `🎁 Thưởng nóng: +${STUDY_CANDY.quiz} 🍬 Kẹo & +8 XP!` : "Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕") : "Luyện tập mỗi ngày sẽ sớm lên tay nha em yêu!"}</p>
+        <p class="quiz-score-reward">${passed ? (quizRewardPaid ? `🎁 Thưởng nóng: +${STUDY_CANDY.quiz} 🍬 Kẹo & +8 XP!` : "Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕") : total < 4 && quizScore === total ? "Lượt ngắn dưới 4 câu chưa tính thưởng kẹo, nhưng em vừa nhớ thêm từ rồi đó 💕" : "Luyện tập mỗi ngày sẽ sớm lên tay nha em yêu!"}</p>
         <div class="quiz-actions-row">
           ${isReview
             ? `${remaining ? '<button class="btn-summary-action btn-summary-pink" id="btnRetryQuiz">🔁 Ôn Tiếp</button>' : ""}
@@ -3556,6 +3567,7 @@ window.EnglishApp = (() => {
     switchTab,
     speak,
     stopSpeech,
-    isWordStarred
+    isWordStarred,
+    masteredCount
   };
 })();

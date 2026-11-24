@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     visitDays: 0, // different local days the app was opened (the shared plant grows with it)
     lastVisitDate: "",
     ownedOutfits: [], // wardrobe items bought (shop tab "Tủ quần áo")
+    studyDays: 0, // different local days with a finished study activity (daily lesson, passed quiz, finished match)
+    lastStudyDay: "",
+    studyFeats: [], // one-off study feats reported by chinese.js / english.js (see STUDY_FEATS)
     wornOutfits: { ngoc: "", khanh: "", bong: "" }, // outfit id each character wears ("" = default clothes)
     unlockedAchieve: [],
     readLetters: [],
@@ -58,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Max rewarded quiz/match rounds per day across Chinese + English (daily 5-words lessons have their own once-a-day flag).
   const STUDY_DAILY_LIMIT = 4;
-  const ARRAY_KEYS = ["ownedDecor", "placedDecor", "ownedOutfits", "unlockedAchieve", "readLetters", "foodsFed", "claimedBirthdays"];
+  const ARRAY_KEYS = ["ownedDecor", "placedDecor", "ownedOutfits", "studyFeats", "unlockedAchieve", "readLetters", "foodsFed", "claimedBirthdays"];
   const NESTED_KEYS = ["dailyInteractions", "dailyQuests", "dailyStudy", "dailyAnswers", "moodLog", "wornOutfits"];
 
   // DEFAULT_STATE holds nested arrays/objects, so a shallow spread would share (and later mutate) them. Always deep-copy.
@@ -111,6 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
     addXP: (amt) => addRewards(amt, 0),
     // Study modules (chinese.js / english.js) must go through this so quiz/match rewards stay capped per day.
     grantStudyReward: (kind, xp, candy) => grantStudyReward(kind, xp, candy),
+    // Study modules report one-off feats (perfect fill-in / listening / tone round, review cleared); pays nothing itself.
+    markStudyFeat: (id) => markStudyFeat(id),
     // photos.js calls this after the wall changes (photo count is not in the save)
     checkAchievements: () => checkAchievements()
   };
@@ -206,14 +211,38 @@ document.addEventListener("DOMContentLoaded", () => {
   // anything else (quiz, match) counts against STUDY_DAILY_LIMIT. Returns { granted, remaining }.
   function grantStudyReward(kind, xp, candy) {
     syncDailyReset();
+    // A study day counts even when the reward is capped: the player still finished a lesson (study_days_7 / _30)
+    const today = window.SpecialDays.localDateKey();
+    if (state.lastStudyDay !== today) {
+      state.lastStudyDay = today;
+      state.studyDays = (state.studyDays || 0) + 1;
+    }
     if (kind !== "daily") {
       if (state.dailyStudy.count >= STUDY_DAILY_LIMIT) {
+        saveState();
+        checkAchievements();
         return { granted: false, remaining: 0 };
       }
       state.dailyStudy.count++;
     }
     addRewards(xp, candy);
     return { granted: true, remaining: Math.max(0, STUDY_DAILY_LIMIT - state.dailyStudy.count) };
+  }
+
+  const STUDY_FEATS = ["perfect_cloze", "perfect_listen", "perfect_tone", "review_clear"];
+  function markStudyFeat(id) {
+    if (!STUDY_FEATS.includes(id) || state.studyFeats.includes(id)) return;
+    state.studyFeats.push(id);
+    saveState();
+    checkAchievements();
+  }
+
+  // Words answered right 3+ times ("Đã thuộc") in both study modules; they keep SRS in their own storage keys.
+  function masteredStudyWords() {
+    let n = 0;
+    if (window.ChineseApp && ChineseApp.masteredCount) n += ChineseApp.masteredCount();
+    if (window.EnglishApp && EnglishApp.masteredCount) n += EnglishApp.masteredCount();
+    return n;
   }
 
   function isLetterUnlocked(letter) {
@@ -225,6 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkAchievements() {
+    const mastered = masteredStudyWords();
     const checks = {
       first_hug: state.hugCount >= 1,
       pet_bong_5: state.petCount >= 5,
@@ -245,7 +275,15 @@ document.addEventListener("DOMContentLoaded", () => {
       wardrobe_first: state.ownedOutfits.length >= 1,
       wardrobe_trio: ["ngoc", "khanh", "bong"].every((who) => state.wornOutfits && state.wornOutfits[who]),
       plant_bloom: (state.visitDays || 0) >= DATA.plantStages[DATA.plantStages.length - 1].days,
-      wardrobe_all: DATA.outfits.every((o) => state.ownedOutfits.includes(o.id))
+      wardrobe_all: DATA.outfits.every((o) => state.ownedOutfits.includes(o.id)),
+      study_days_7: (state.studyDays || 0) >= 7,
+      study_days_30: (state.studyDays || 0) >= 30,
+      words_50: mastered >= 50,
+      words_200: mastered >= 200,
+      perfect_cloze: state.studyFeats.includes("perfect_cloze"),
+      perfect_listen: state.studyFeats.includes("perfect_listen"),
+      perfect_tone: state.studyFeats.includes("perfect_tone"),
+      review_clear: state.studyFeats.includes("review_clear")
     };
 
     let newlyUnlocked = false;

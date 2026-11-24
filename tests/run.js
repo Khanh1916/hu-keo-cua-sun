@@ -529,6 +529,39 @@ return getReviewWords;`)(levels, () => srs);
   }
   return out;
 }));
+check("study achievements: study days counted once a day (capped or not), feats and mastered words re-check", (() => {
+  const out = [];
+  let run;
+  try {
+    // eslint-disable-next-line no-new-func
+    run = new Function("state", "STUDY_DAILY_LIMIT", "window", "addRewards", "saveState", "checkAchievements", "syncDailyReset",
+      `${extractFunction(app, "grantStudyReward")} return grantStudyReward;`);
+  } catch (e) {
+    return [`cannot load grantStudyReward (${e.message})`];
+  }
+  const st = { dailyStudy: { count: 0 }, studyDays: 0, lastStudyDay: "" };
+  let day = "2026-11-24";
+  let checks = 0;
+  const grant = run(st, 4, { SpecialDays: { localDateKey: () => day } }, () => {}, () => {}, () => checks++, () => {});
+  const paid = [1, 2, 3, 4, 5, 6].map(() => grant("quiz", 10, 4).granted);
+  if (paid.filter(Boolean).length !== 4) out.push(`quiz rewards paid ${paid.filter(Boolean).length} times in a day, want 4`);
+  if (st.studyDays !== 1) out.push(`six lessons in one day counted ${st.studyDays} study days, want 1`);
+  if (checks < 2) out.push("a capped study reward does not re-check achievements");
+  day = "2026-11-25";
+  st.dailyStudy.count = 4; // already capped today: the day must still count
+  grant("match", 5, 3);
+  if (st.studyDays !== 2) out.push(`a capped lesson on a new day counted ${st.studyDays} study days, want 2`);
+  if (!/"studyFeats"/.test(app.slice(app.indexOf("const ARRAY_KEYS"), app.indexOf("const NESTED_KEYS")))) out.push("studyFeats missing from ARRAY_KEYS");
+  if (!/markStudyFeat: \(id\) => markStudyFeat\(id\)/.test(app)) out.push("GameState.markStudyFeat is not exposed");
+  ["js/chinese.js", "js/english.js"].forEach((f) => {
+    const src = read(f);
+    if (!/GameState\.checkAchievements\(\)/.test(extractFunction(src, "recordSRSReview"))) out.push(`${f}: a learned word does not re-check words_50 / words_200`);
+    if (!/\bmasteredCount\b/.test(src.slice(src.lastIndexOf("return {")))) out.push(`${f}: masteredCount is not exported`);
+    if (!/markStudyFeat\(`perfect_\$\{quizMode\}`\)/.test(src)) out.push(`${f}: a perfect fill-in / listening round is not reported`);
+    if (!/markStudyFeat\("review_clear"\)/.test(src)) out.push(`${f}: clearing Ôn hôm nay is not reported`);
+  });
+  return out;
+})());
 check("study modules never pay rewards directly",
   ["js/chinese.js", "js/english.js"].flatMap((f) => {
     const s = read(f);

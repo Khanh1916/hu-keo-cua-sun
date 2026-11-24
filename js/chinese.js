@@ -3508,6 +3508,7 @@ window.ChineseApp = (() => {
 
     map[hanzi] = item;
     saveSRSMap(map);
+    if (isCorrect && window.GameState && GameState.checkAchievements) GameState.checkAchievements(); // words_50 / words_200
     return item;
   }
 
@@ -4509,6 +4510,10 @@ window.ChineseApp = (() => {
     const isReview = quizSource === "review";
     const remaining = isReview ? getReviewWords().length : 0;
     updateReviewBadge();
+    if (window.GameState && GameState.markStudyFeat) {
+      if (!isReview && total >= 5 && quizScore === total && quizMode !== "meaning") GameState.markStudyFeat(`perfect_${quizMode}`);
+      if (isReview && remaining === 0) GameState.markStudyFeat("review_clear");
+    }
 
     container.innerHTML = `
       <div class="quiz-result-wrap">
@@ -4516,7 +4521,7 @@ window.ChineseApp = (() => {
         <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${total}</strong> câu (${isReview ? "Ôn hôm nay" : `${getLevelLabel(currentLevel)} • ${quizModeLabel(quizMode)}`})</p>
         ${isReview ? `<p class="quiz-score-text">${remaining ? `Còn <strong>${remaining}</strong> từ cần ôn nữa nha.` : "Hết sạch từ cần ôn rồi, giỏi quá 💕"}</p>` : ""}
         ${quizMissedHtml()}
-        <p class="quiz-cheer">${passed ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 " + (quizPaid ? `(+${STUDY_CANDY.quiz} 🍬 & +15 XP)` : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)") : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
+        <p class="quiz-cheer">${passed ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 " + (quizPaid ? `(+${STUDY_CANDY.quiz} 🍬 & +15 XP)` : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)") : total < 4 && quizScore === total ? "Lượt ngắn dưới 4 câu chưa tính thưởng kẹo, nhưng em vừa nhớ thêm từ rồi đó 💕" : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
         <div class="quiz-actions">
           ${isReview && remaining ? '<button class="btn-summary-action btn-summary-pink" id="btnRestartQuiz">Ôn Tiếp 🔁</button>' : ""}
           ${isReview ? "" : '<button class="btn-summary-action btn-summary-pink" id="btnRestartQuiz">Làm Lại Lượt Mới</button>'}
@@ -5139,10 +5144,18 @@ window.ChineseApp = (() => {
     });
   }
 
+  // HSK words answered right 3+ times (badge "Đã thuộc"); app.js sums both languages for words_50 / words_200.
+  function masteredCount() {
+    const map = getSRSMap();
+    return Object.keys(HSK_DATA).filter((lvl) => lvl !== "love")
+      .reduce((n, lvl) => n + HSK_DATA[lvl].filter((w) => map[w.hanzi] && map[w.hanzi].repetition >= 3).length, 0);
+  }
+
   return {
     init,
     open,
     speak,
-    stopSpeech
+    stopSpeech,
+    masteredCount
   };
 })();

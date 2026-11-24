@@ -479,7 +479,16 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
     { id: "wardrobe_first", name: "Lên đồ lần đầu", desc: "Sắm một bộ đồ trong Tủ quần áo", reward: 20, emoji: "👗" },
     { id: "wardrobe_trio", name: "Cả nhà lên đồ", desc: "Ngọc, anh Khánh và bé Bông cùng mặc đồ mới", reward: 60, emoji: "👨‍👩‍👧" },
     { id: "plant_bloom", name: "Cây nở hoa", desc: "Ghé thăm 60 ngày để cây của hai đứa nở hoa", reward: 100, emoji: "🌸" },
-    { id: "wardrobe_all", name: "Tủ đồ đầy ắp", desc: "Sắm đủ tất cả quần áo và phụ kiện", reward: 150, emoji: "🧺" }
+    { id: "wardrobe_all", name: "Tủ đồ đầy ắp", desc: "Sắm đủ tất cả quần áo và phụ kiện", reward: 150, emoji: "🧺" },
+    // Study (added 2026-11-24, agent-written names: the owner should proofread)
+    { id: "study_days_7", name: "Chăm học 7 ngày", desc: "Hoàn thành bài học ngoại ngữ trong 7 ngày khác nhau", reward: 40, emoji: "📚" },
+    { id: "study_days_30", name: "Một tháng chăm chỉ", desc: "Hoàn thành bài học ngoại ngữ trong 30 ngày khác nhau", reward: 120, emoji: "🎓" },
+    { id: "words_50", name: "Thuộc 50 từ", desc: "Thuộc 50 từ tiếng Trung hoặc tiếng Anh (mỗi từ trả lời đúng 3 lần)", reward: 60, emoji: "🧠" },
+    { id: "words_200", name: "Kho từ vựng 200", desc: "Thuộc 200 từ tiếng Trung hoặc tiếng Anh", reward: 150, emoji: "🏛️" },
+    { id: "perfect_cloze", name: "Điền đâu trúng đó", desc: "Đúng 5/5 câu trắc nghiệm Điền từ", reward: 30, emoji: "✏️" },
+    { id: "perfect_listen", name: "Tai thính", desc: "Đúng 5/5 câu trắc nghiệm Nghe", reward: 30, emoji: "🎧" },
+    { id: "perfect_tone", name: "Bắt trúng thanh điệu", desc: "Đúng 5/5 câu trắc nghiệm Thanh điệu tiếng Trung", reward: 30, emoji: "🎵" },
+    { id: "review_clear", name: "Ôn sạch bách", desc: "Ôn hết mọi từ cần ôn trong tab Ôn hôm nay", reward: 40, emoji: "🔁" }
   ],
 
   // "Câu hỏi hôm nay" in the jar modal: one per day, same for the whole day. Agent-written: the owner should proofread.
