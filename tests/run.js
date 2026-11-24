@@ -110,6 +110,20 @@ check("page can be pinch-zoomed, game canvases cannot", [
   /user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(\.0)?/.test(viewport) && `viewport blocks zoom: ${viewport}`,
   !/\.minigame-canvas-wrap\s*\{[^}]*touch-action:\s*none/.test(css) && ".minigame-canvas-wrap lost touch-action: none",
   !/html\s*\{[^}]*touch-action:\s*manipulation/.test(css) && "html lost touch-action: manipulation (double-tap zoom on buttons)"]);
+{
+  const rule = (sel) => (css.match(new RegExp(`(?:^|\\n)${sel.replace(/[.]/g, "\\.")}\\s*\\{([^}]*)\\}`)) || [])[1] || "";
+  const hint = rule(".room-hint");
+  const hintText = ((html.match(/id="roomHint">([\s\S]*?)<\/div>/) || [])[1] || "").trim();
+  check("narrow-phone layout: room hint, mood strip, study pills stay inside their box", [
+    !hint && ".room-hint rule not found",
+    /white-space:\s*nowrap/.test(hint) && ".room-hint is nowrap again (overflowed the room frame on phones)",
+    !/max-width:/.test(hint) && ".room-hint has no max-width",
+    [...hintText].length > 48 && `room hint is ${[...hintText].length} chars; keep it ≤ 48 so it fits one line at 320 px and clears the plant pot`,
+    !/grid-template-columns:\s*repeat\(14,\s*minmax\(0,\s*1fr\)\)/.test(rule(".mood-strip")) &&
+      ".mood-strip must use repeat(14, minmax(0, 1fr)) (today's cell was pushed off-screen at 320 px)",
+    !/min-width:\s*0/.test(rule(".lang-pill-btn")) && ".lang-pill-btn needs min-width: 0",
+    /white-space:\s*nowrap/.test(rule(".fc-counter")) ? null : ".fc-counter must be nowrap (🧩 0/5 broke onto two lines)"]);
+}
 check("font cache survives activate", /k !== FONT_CACHE/.test(sw) ? null : "activate deletes FONT_CACHE");
 
 // ---------------------------------------------------------------------------------------------------------------
