@@ -440,6 +440,14 @@ check("photo wall: on-device only, safe captions, hung in the room", (() => {
   if (!/onInteractFn\("photos"\)/.test(room) || !/PhotoWall\.open\(\)/.test(app)) out.push("tapping the photo string does nothing");
   return out;
 })());
+check("new-feature achievements are re-checked on paths that pay no rewards", (() => {
+  const out = [];
+  if (!/if \(newVisit\) checkAchievements\(\)/.test(extractFunction(app, "syncDailyReset"))) out.push("a new visit day does not re-check achievements (visit_7, plant_bloom)");
+  if (!/saveState\(\);\s*checkAchievements\(\); \/\/ wardrobe_trio/.test(app)) out.push("wearing an outfit does not re-check achievements");
+  if (!/saveState\(\);\s*checkAchievements\(\); \/\/ meet_set/.test(app)) out.push("saving the meeting date does not re-check achievements");
+  if (!/GameState\.checkAchievements\(\)/.test(extractFunction(read("js/photos.js"), "refresh"))) out.push("photos.js does not re-check achievements after the wall changes");
+  return out;
+})());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
 check("study modules never pay rewards directly",

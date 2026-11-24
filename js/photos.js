@@ -80,6 +80,7 @@ window.PhotoWall = (() => {
       }
     }
     render();
+    if (window.GameState && GameState.checkAchievements) GameState.checkAchievements(); // photo_3
   }
 
   // Shrinks any image blob to MAX_SIDE JPEG and stores it. Returns the new id (or null if full / unreadable).

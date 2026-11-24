@@ -110,7 +110,9 @@ document.addEventListener("DOMContentLoaded", () => {
     renderHUD: () => renderHUD(),
     addXP: (amt) => addRewards(amt, 0),
     // Study modules (chinese.js / english.js) must go through this so quiz/match rewards stay capped per day.
-    grantStudyReward: (kind, xp, candy) => grantStudyReward(kind, xp, candy)
+    grantStudyReward: (kind, xp, candy) => grantStudyReward(kind, xp, candy),
+    // photos.js calls this after the wall changes (photo count is not in the save)
+    checkAchievements: () => checkAchievements()
   };
   // Study modules call window.showToast; it used to be closure-private so their toasts never appeared.
   window.showToast = (msg) => showToast(msg);
@@ -234,7 +236,16 @@ document.addEventListener("DOMContentLoaded", () => {
       level_5: state.level >= 5,
       crossing_100: state.bestCrossing >= 100,
       flappy_50: state.bestFlappy >= 50,
-      nonla_75: state.bestNonla >= 75
+      nonla_75: state.bestNonla >= 75,
+      meet_set: Boolean(state.nextMeetDate),
+      visit_7: (state.visitDays || 0) >= 7,
+      mood_7: Object.keys(state.moodLog || {}).length >= 7,
+      daily_q_7: Object.keys(state.dailyAnswers || {}).length >= 7,
+      photo_3: (window.PhotoWall ? PhotoWall.count() : 0) >= 3,
+      wardrobe_first: state.ownedOutfits.length >= 1,
+      wardrobe_trio: ["ngoc", "khanh", "bong"].every((who) => state.wornOutfits && state.wornOutfits[who]),
+      plant_bloom: (state.visitDays || 0) >= DATA.plantStages[DATA.plantStages.length - 1].days,
+      wardrobe_all: DATA.outfits.every((o) => state.ownedOutfits.includes(o.id))
     };
 
     let newlyUnlocked = false;
@@ -398,7 +409,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const todayStr = new Date().toDateString();
     let changed = false;
     const visitKey = window.SpecialDays.localDateKey();
-    if (state.lastVisitDate !== visitKey) {
+    const newVisit = state.lastVisitDate !== visitKey;
+    if (newVisit) {
       state.lastVisitDate = visitKey;
       state.visitDays = (state.visitDays || 0) + 1;
       changed = true;
@@ -429,6 +441,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (changed) {
       saveState();
     }
+    if (newVisit) checkAchievements(); // visit_7 / plant_bloom have no addRewards path
     updateQuestDot();
   }
 
@@ -725,6 +738,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Tapping the worn one takes it off (back to the default clothes)
         state.wornOutfits[item.who] = state.wornOutfits[item.who] === item.id ? "" : item.id;
         saveState();
+        checkAchievements(); // wardrobe_trio
         renderWardrobe();
       });
     });
@@ -1643,6 +1657,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     state.nextMeetDate = value;
     saveState();
+    checkAchievements(); // meet_set
     AudioManager.playClick();
     renderHUD();
     updateGreetingBanner();

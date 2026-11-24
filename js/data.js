@@ -469,7 +469,17 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
       desc: "Đạt từ 75 điểm trong Nón Lá L-N",
       reward: 35,
       emoji: "👒"
-    }
+    },
+    // Added 2026-11-24 for the newer features (agent-written names: the owner should proofread)
+    { id: "meet_set", name: "Đếm từng ngày", desc: "Đặt ngày gặp nhau tiếp theo trên tờ lịch", reward: 15, emoji: "📅" },
+    { id: "visit_7", name: "Ghé thăm đều đặn", desc: "Mở góc nhỏ trong 7 ngày khác nhau", reward: 25, emoji: "🌱" },
+    { id: "mood_7", name: "Nhật ký cảm xúc", desc: "Mở lọ lời nhắn theo tâm trạng trong 7 ngày", reward: 30, emoji: "🫙" },
+    { id: "daily_q_7", name: "Tâm sự 7 ngày", desc: "Trả lời câu hỏi hôm nay trong 7 ngày", reward: 50, emoji: "💭" },
+    { id: "photo_3", name: "Tường đầy kỷ niệm", desc: "Treo đủ 3 tấm ảnh lên dây ảnh trong phòng", reward: 40, emoji: "📷" },
+    { id: "wardrobe_first", name: "Lên đồ lần đầu", desc: "Sắm một bộ đồ trong Tủ quần áo", reward: 20, emoji: "👗" },
+    { id: "wardrobe_trio", name: "Cả nhà lên đồ", desc: "Ngọc, anh Khánh và bé Bông cùng mặc đồ mới", reward: 60, emoji: "👨‍👩‍👧" },
+    { id: "plant_bloom", name: "Cây nở hoa", desc: "Ghé thăm 60 ngày để cây của hai đứa nở hoa", reward: 100, emoji: "🌸" },
+    { id: "wardrobe_all", name: "Tủ đồ đầy ắp", desc: "Sắm đủ tất cả quần áo và phụ kiện", reward: 150, emoji: "🧺" }
   ],
 
   // "Câu hỏi hôm nay" in the jar modal: one per day, same for the whole day. Agent-written: the owner should proofread.
