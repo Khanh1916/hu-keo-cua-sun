@@ -173,6 +173,14 @@ hskAll.filter((w) => w.lvl !== "love").forEach((w) => (hanziLevels[w.hanzi] = ha
 check("each HSK word appears in one level only",
   Object.entries(hanziLevels).filter(([, l]) => l.length > 1).map(([h, l]) => `${h} (${l.join(", ")})`));
 check("HSK examples contain their word", hskAll.filter((w) => w.example && !w.example.includes(w.hanzi)).map((w) => `${w.lvl}: ${w.hanzi} → ${w.example}`));
+const hskMeanings = {};
+hskAll.filter((w) => w.lvl !== "love").forEach((w) => {
+  const k = `${w.lvl}|${w.meaning.trim().toLowerCase()}`;
+  hskMeanings[k] = (hskMeanings[k] || 0) + 1;
+});
+check("no two HSK words in a level share a meaning (quiz ambiguity)", Object.entries(hskMeanings).filter(([, n]) => n > 1).map(([k]) => k));
+check("each HSK level has at least 60 words (the 5-words-a-day rotation)",
+  Object.entries(hsk).filter(([lvl, list]) => lvl !== "love" && list.length < 60).map(([lvl, list]) => `${lvl}: ${list.length}`));
 // The name "Ngọc" may appear inside a Chinese sentence; any other Vietnamese text means a broken example.
 check("HSK examples are Chinese (no Vietnamese text besides the name Ngọc)",
   hskAll.filter((w) => w.example && /[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/i.test(w.example.replace(/Ngọc/g, "")))
