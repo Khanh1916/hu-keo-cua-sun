@@ -2002,7 +2002,7 @@ window.EnglishApp = (() => {
   };
 
   let currentLevel = "b1"; // "b1" | "b2" | "c1"
-  let currentTab = "daily"; // "daily" | "flashcard" | "quiz" | "match" | "starred" | "love"
+  let currentTab = "daily"; // "daily" | "flashcard" | "quiz" | "match" | "starred" | "love" | "review"
 
   let dailyWords = [];
   let dailySetOffset = 0;
@@ -2751,19 +2751,98 @@ window.EnglishApp = (() => {
   }
 
   // Tab: Quiz (Trắc Nghiệm)
-  function startQuiz() {
-    const list = ENGLISH_DATA[currentLevel] || ENGLISH_DATA.b1;
-    const selected = shuffleArray(pickQuizTargets(list, 5));
+  // Three modes on one engine: meaning (nghĩa → từ), cloze (điền từ vào câu ví dụ), listen (nghe → chọn từ). Every mode
+  // records SRS and pays through the one quiz reward in renderQuizSummary (shared daily study cap).
+  const QUIZ_MODES = [
+    { id: "meaning", label: "📖 Nghĩa" },
+    { id: "cloze", label: "✏️ Điền từ" },
+    { id: "listen", label: "🎧 Nghe" }
+  ];
+  const QUIZ_MODE_KEY = "hu_keo_cua_sun_english_quiz_mode_v1";
+  let quizMode = "meaning";
+  try {
+    const savedMode = localStorage.getItem(QUIZ_MODE_KEY);
+    if (QUIZ_MODES.some((m) => m.id === savedMode)) quizMode = savedMode;
+  } catch {}
+  let quizSource = "level"; // "level" = the chosen level, "review" = Ôn hôm nay
 
-    quizQuestions = selected.map(({ word: target, review }) => {
-      const others = list.filter((w) => w.word !== target.word);
-      const sameType = others.filter((w) => w.type === target.type);
-      const diffType = others.filter((w) => w.type !== target.type);
-      const candidates = [...shuffleArray(sameType), ...shuffleArray(diffType)];
-      const wrongOpts = candidates.slice(0, 3);
-      const options = shuffleArray([target, ...wrongOpts]);
-      return { target, options, review };
+  // The example sentence split around the word (or the inflected form it uses: "cherished" for "cherish").
+  function clozeParts(w) {
+    const ex = w.example || "";
+    const lw = w.word.toLowerCase();
+    const stem = lw.replace(/(e|y|ies|es|s|ed|ing)$/, "").slice(0, Math.max(4, lw.length - 3));
+    const tokens = [...ex.matchAll(/[A-Za-z][A-Za-z-]*/g)];
+    const tok = tokens.find((t) => t[0].toLowerCase() === lw) ||
+      tokens.find((t) => t[0].toLowerCase().includes(lw)) ||
+      tokens.find((t) => t[0].toLowerCase().startsWith(stem));
+    if (!tok) return null;
+    return { before: ex.slice(0, tok.index), answer: tok[0], after: ex.slice(tok.index + tok[0].length) };
+  }
+
+  const quizEligible = (mode) => (mode === "cloze" ? (w) => Boolean(clozeParts(w)) : () => true);
+  const quizModeLabel = (mode) => (QUIZ_MODES.find((m) => m.id === mode) || QUIZ_MODES[0]).label;
+
+  // Listening needs a voice: an English system voice, or a network for the stream fallback.
+  function canListen() {
+    if (typeof navigator === "undefined" || navigator.onLine !== false) return true;
+    if (!("speechSynthesis" in window)) return false;
+    if (!cachedVoices.length) loadVoices();
+    return Boolean(getBestEnglishVoice());
+  }
+
+  // Three wrong words: same part of speech first (so grammar alone doesn't give the answer away).
+  function pickWordDistractors(target, pool, mode, cloze) {
+    let cands = pool.filter((w) => w.word !== target.word && w.meaning !== target.meaning);
+    if (mode === "cloze" && cloze) {
+      const sentence = (target.example || "").toLowerCase();
+      const ans = cloze.answer.toLowerCase();
+      cands = cands.filter((w) => !sentence.includes(w.word.toLowerCase()) && !ans.startsWith(w.word.toLowerCase()));
+    }
+    const uniq = [];
+    cands.forEach((w) => {
+      if (!uniq.some((u) => u.word === w.word)) uniq.push(w);
     });
+    const sameType = uniq.filter((w) => w.type === target.type);
+    const rest = uniq.filter((w) => w.type !== target.type);
+    return [...shuffleArray(sameType), ...shuffleArray(rest)].slice(0, 3);
+  }
+
+  function buildQuizQuestion(target, mode, pool, review) {
+    const cloze = mode === "cloze" ? clozeParts(target) : null;
+    if (mode === "cloze" && !cloze) return null;
+    const wrong = pickWordDistractors(target, pool, mode, cloze);
+    if (wrong.length < 3) return null;
+    return { mode, target, review, cloze, options: shuffleArray([target, ...wrong]) };
+  }
+
+  function startQuiz(source) {
+    quizSource = source === "review" ? "review" : "level";
+    quizQuestions = [];
+    if (quizSource === "review") {
+      const due = getReviewWords();
+      if (!due.length) {
+        renderReviewTab();
+        return;
+      }
+      quizQuestions = shuffleArray(due.slice(0, REVIEW_ROUND)).map((w) => {
+        const pool = ENGLISH_DATA[w.level] || ENGLISH_DATA.b1;
+        const mode = clozeParts(w) && Math.random() < 0.5 ? "cloze" : "meaning";
+        return buildQuizQuestion(w, mode, pool, true) || buildQuizQuestion(w, "meaning", pool, true);
+      }).filter(Boolean);
+    } else {
+      const list = ENGLISH_DATA[currentLevel] || ENGLISH_DATA.b1;
+      if (quizMode === "listen" && !canListen()) {
+        renderQuizNotice("🎧", "Chế độ Nghe cần giọng đọc", "Máy chưa có giọng đọc tiếng Anh mà đang offline. Có mạng lại em chọn Nghe nha, giờ thử kiểu khác trước nhé 💕");
+        return;
+      }
+      quizQuestions = shuffleArray(pickQuizTargets(list.filter(quizEligible(quizMode)), 5))
+        .map(({ word, review }) => buildQuizQuestion(word, quizMode, list, review))
+        .filter(Boolean);
+    }
+    if (!quizQuestions.length) {
+      renderQuizNotice("🙈", "Chưa có từ hợp với kiểu này", "Cấp này chưa có từ nào làm được kiểu câu hỏi này, em đổi kiểu khác nha 💕");
+      return;
+    }
 
     quizIndex = 0;
     quizScore = 0;
@@ -2774,10 +2853,79 @@ window.EnglishApp = (() => {
     renderQuizTab();
   }
 
+  function quizModeBarHtml() {
+    return `<div class="quiz-mode-bar" role="group" aria-label="Kiểu trắc nghiệm">${QUIZ_MODES.map(
+      (m) => `<button class="quiz-mode-btn ${m.id === quizMode ? "active" : ""}" data-mode="${m.id}" aria-pressed="${m.id === quizMode}">${m.label}</button>`
+    ).join("")}</div>`;
+  }
+
+  function bindQuizModeBar(container) {
+    container.querySelectorAll(".quiz-mode-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (window.AudioManager) AudioManager.playClick();
+        quizMode = btn.dataset.mode;
+        try {
+          localStorage.setItem(QUIZ_MODE_KEY, quizMode);
+        } catch {}
+        startQuiz();
+      });
+    });
+  }
+
+  function renderQuizNotice(icon, title, text) {
+    const container = document.getElementById("englishTabContent");
+    container.innerHTML = `
+      <div class="chinese-quiz-wrap">
+        ${quizModeBarHtml()}
+        <div class="flashcard-empty-box">
+          <div style="font-size: 36px; margin-bottom: 8px;">${icon}</div>
+          <h3>${title}</h3>
+          <p>${text}</p>
+        </div>
+      </div>
+    `;
+    bindQuizModeBar(container);
+  }
+
+  function quizPromptHtml(q) {
+    const t = q.target;
+    if (q.mode === "cloze") {
+      const inflected = q.cloze.answer.toLowerCase() !== t.word.toLowerCase();
+      return `
+        <div class="qq-prompt">Chọn từ điền vào chỗ trống${inflected ? " (từ trong câu đã được chia)" : ""}</div>
+        <div class="qq-cloze qq-cloze-en">${q.cloze.before}<span class="qq-blank">_____</span>${q.cloze.after}</div>
+        ${t.exampleMeaning ? `<div class="qq-sub">💬 ${t.exampleMeaning}</div>` : ""}`;
+    }
+    if (q.mode === "listen") {
+      return `
+        <div class="qq-prompt">Nghe rồi chọn từ em nghe được</div>
+        <button class="btn-speak qq-listen-btn" id="btnSpeakQuiz" data-text="${t.word}">🔊 Nghe lại</button>`;
+    }
+    return `
+      <div class="qq-prompt">Từ tiếng Anh nào mang ý nghĩa dưới đây?</div>
+      <div class="qq-meaning-en">"${t.meaning}"</div>
+      <div class="cwc-badges-row" style="margin-top: 4px;">
+        <span class="fc-type-badge">${t.type}</span>
+      </div>`;
+  }
+
+  function quizFeedbackHtml(q, isRight) {
+    const t = q.target;
+    const head = isRight ? "✅ <strong>Chính xác!</strong>" : "❌ <strong>Chưa đúng rồi:</strong>";
+    if (q.mode === "cloze") {
+      return `${head} ${q.cloze.before}<strong>${q.cloze.answer}</strong>${q.cloze.after}
+        <span class="qq-fb-sub">💬 ${t.exampleMeaning || ""}</span>
+        <span class="qq-fb-sub">${t.word} [${t.ipa}]: ${t.meaning}</span>`;
+    }
+    return isRight
+      ? `${head} ${t.word} [${t.ipa}]: ${t.meaning}`
+      : `${head} ${t.word} [${t.ipa}] có nghĩa là <strong>${t.meaning}</strong>`;
+  }
+
   function renderQuizTab() {
     const container = document.getElementById("englishTabContent");
     if (!quizQuestions || quizQuestions.length === 0) {
-      startQuiz();
+      startQuiz(quizSource);
       return;
     }
 
@@ -2787,17 +2935,22 @@ window.EnglishApp = (() => {
     }
 
     const q = quizQuestions[quizIndex];
+    const isReview = quizSource === "review";
     quizAnswered = false;
+    const optText = (opt) => (q.mode === "listen"
+      ? `<strong>${opt.word}</strong>`
+      : `<strong>${opt.word}</strong> <em style="font-size: 11.5px; color: #8c7365; font-weight: normal; margin-left: 4px;">${opt.ipa}</em>`);
 
     container.innerHTML = `
       <div class="chinese-quiz-wrap">
+        ${isReview ? "" : quizModeBarHtml()}
         <div class="quiz-progress-track">
           <div class="quiz-progress-fill" style="width: ${((quizIndex + 1) / quizQuestions.length) * 100}%;"></div>
         </div>
 
         <div class="quiz-header">
           <div class="chinese-level-bar" style="margin-bottom: 0; padding: 0; background: none; border: none; box-shadow: none;">
-            <span class="quiz-level-inline">🏷️ Cấp: <strong>${getLevelLabel(currentLevel).split(" ")[0]}</strong></span>
+            <span class="quiz-level-inline">${isReview ? "🔁 Ôn hôm nay" : `🏷️ Cấp: <strong>${getLevelLabel(currentLevel).split(" ")[0]}</strong>`}</span>
           </div>
           <span class="fc-counter">Câu <strong>${quizIndex + 1}/${quizQuestions.length}</strong></span>
           <span class="fc-counter">🎯 Điểm: <strong>${quizScore}</strong></span>
@@ -2805,11 +2958,7 @@ window.EnglishApp = (() => {
 
         <div class="quiz-question-card">
           ${q.review ? '<div class="qq-review-tag">🔁 Từ cần ôn lại</div>' : ""}
-          <div class="qq-prompt">Từ tiếng Anh nào mang ý nghĩa dưới đây?</div>
-          <div class="qq-meaning-en">"${q.target.meaning}"</div>
-          <div class="cwc-badges-row" style="margin-top: 4px;">
-            <span class="fc-type-badge">${q.target.type}</span>
-          </div>
+          ${quizPromptHtml(q)}
         </div>
 
         <div class="quiz-options-grid" id="quizOptionsGrid">
@@ -2818,7 +2967,7 @@ window.EnglishApp = (() => {
               (opt, idx) => `
             <button class="quiz-opt-btn" data-word="${opt.word}">
               <span class="q-opt-label">${String.fromCharCode(65 + idx)}.</span>
-              <span class="q-opt-text"><strong>${opt.word}</strong> <em style="font-size: 11.5px; color: #8c7365; font-weight: normal; margin-left: 4px;">${opt.ipa}</em></span>
+              <span class="q-opt-text">${optText(opt)}</span>
             </button>
           `
             )
@@ -2833,6 +2982,15 @@ window.EnglishApp = (() => {
         </div>
       </div>
     `;
+
+    bindQuizModeBar(container);
+
+    const btnSpeakQuiz = document.getElementById("btnSpeakQuiz");
+    if (btnSpeakQuiz) {
+      btnSpeakQuiz.addEventListener("click", () => speak(q.target.word, btnSpeakQuiz));
+      // Listening plays the word straight away (rendering always follows a tap, so mobile browsers allow it)
+      if (q.mode === "listen") speak(q.target.word, btnSpeakQuiz);
+    }
 
     container.querySelectorAll(".quiz-opt-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -2850,20 +3008,19 @@ window.EnglishApp = (() => {
             AudioManager.playBonk();
           }
           btn.classList.add("btn-wrong");
-          document.querySelectorAll(".quiz-opt-btn").forEach((b) => {
+          container.querySelectorAll(".quiz-opt-btn").forEach((b) => {
             if (b.dataset.word === q.target.word) b.classList.add("btn-correct");
           });
         }
 
         recordSRSReview(q.target.word, isRight);
         if (!isRight && !quizMissed.includes(q.target)) quizMissed.push(q.target);
+        updateReviewBadge();
         speak(q.target.word);
 
         const fbBox = document.getElementById("quizFeedback");
         const fbText = document.getElementById("quizFeedbackText");
-        fbText.innerHTML = isRight
-          ? `✅ <strong>Chính xác!</strong> ${q.target.word} [${q.target.ipa}]: ${q.target.meaning}`
-          : `❌ <strong>Chưa đúng rồi:</strong> ${q.target.word} [${q.target.ipa}] có nghĩa là <strong>${q.target.meaning}</strong>`;
+        fbText.innerHTML = quizFeedbackHtml(q, isRight);
         fbBox.classList.remove("hidden");
       });
     });
@@ -2881,33 +3038,109 @@ window.EnglishApp = (() => {
     const container = document.getElementById("englishTabContent");
     const total = quizQuestions.length;
     const isPerfect = quizScore === total;
+    // Same bar as before (4 of 5), also for review rounds of up to 10 words; fewer than 4 questions never pays.
+    const passed = total >= 4 && quizScore >= Math.ceil(total * 0.8);
+    const isReview = quizSource === "review";
 
     // Reward once per finished round, capped per day by GameState.grantStudyReward.
-    if (quizScore >= 4 && !quizRewardDone && window.GameState) {
+    if (passed && !quizRewardDone && window.GameState) {
       quizRewardDone = true;
       quizRewardPaid = window.GameState.grantStudyReward("quiz", 8, STUDY_CANDY.quiz).granted;
     }
+    const remaining = isReview ? getReviewWords().length : 0;
+    updateReviewBadge();
 
     container.innerHTML = `
       <div class="quiz-result-wrap">
         <div class="quiz-result-icon">${isPerfect ? "🏆" : quizScore >= 3 ? "🎉" : "💪"}</div>
-        <h3 class="quiz-result-title">${isPerfect ? "Xuất sắc tuyệt đối!" : quizScore >= 3 ? "Làm bài rất tốt!" : "Cố gắng hơn nhé!"}</h3>
-        <p class="quiz-score-text">Ngọc đã trả lời đúng <strong>${quizScore}/${total}</strong> câu hỏi (${getLevelLabel(currentLevel)})!</p>
+        <h3 class="quiz-result-title">${isReview ? "Xong một lượt ôn!" : isPerfect ? "Xuất sắc tuyệt đối!" : quizScore >= 3 ? "Làm bài rất tốt!" : "Cố gắng hơn nhé!"}</h3>
+        <p class="quiz-score-text">Ngọc đã trả lời đúng <strong>${quizScore}/${total}</strong> câu hỏi (${isReview ? "Ôn hôm nay" : `${getLevelLabel(currentLevel)} • ${quizModeLabel(quizMode)}`})!</p>
+        ${isReview ? `<p class="quiz-score-text">${remaining ? `Còn <strong>${remaining}</strong> từ cần ôn nữa nha.` : "Hết sạch từ cần ôn rồi, giỏi quá 💕"}</p>` : ""}
         ${quizMissed.length ? `<div class="quiz-missed-box"><div class="quiz-missed-title">🔁 Từ cần ôn (sẽ quay lại ở lượt sau):</div><ul>${quizMissed.map((w) => `<li><strong>${w.word}</strong> [${w.ipa}]: ${w.meaning}</li>`).join("")}</ul></div>` : ""}
-        <p class="quiz-score-reward">${quizScore >= 4 ? (quizRewardPaid ? `🎁 Thưởng nóng: +${STUDY_CANDY.quiz} 🍬 Kẹo & +8 XP!` : "Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕") : "Luyện tập mỗi ngày sẽ sớm lên tay nha em yêu!"}</p>
+        <p class="quiz-score-reward">${passed ? (quizRewardPaid ? `🎁 Thưởng nóng: +${STUDY_CANDY.quiz} 🍬 Kẹo & +8 XP!` : "Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕") : "Luyện tập mỗi ngày sẽ sớm lên tay nha em yêu!"}</p>
         <div class="quiz-actions-row">
-          <button class="btn-summary-action btn-summary-pink" id="btnRetryQuiz">🔄 Làm Lại Ván Mới</button>
-          <button class="btn-summary-action btn-summary-cream" id="btnNextLevelQuiz">Đổi Cấp Độ</button>
+          ${isReview
+            ? `${remaining ? '<button class="btn-summary-action btn-summary-pink" id="btnRetryQuiz">🔁 Ôn Tiếp</button>' : ""}
+               <button class="btn-summary-action btn-summary-cream" id="btnReviewDoneEn">🎯 Về 5 từ hôm nay</button>`
+            : `<button class="btn-summary-action btn-summary-pink" id="btnRetryQuiz">🔄 Làm Lại Ván Mới</button>
+               <button class="btn-summary-action btn-summary-cream" id="btnNextLevelQuiz">Đổi Cấp Độ</button>`}
         </div>
       </div>
     `;
 
-    document.getElementById("btnRetryQuiz").addEventListener("click", () => {
-      startQuiz();
+    const btnRetry = document.getElementById("btnRetryQuiz");
+    if (btnRetry) btnRetry.addEventListener("click", () => startQuiz(quizSource));
+    const btnNextLevel = document.getElementById("btnNextLevelQuiz");
+    if (btnNextLevel) {
+      btnNextLevel.addEventListener("click", () => {
+        currentLevel = currentLevel === "b1" ? "b2" : currentLevel === "b2" ? "c1" : "b1";
+        startQuiz();
+      });
+    }
+    const btnDone = document.getElementById("btnReviewDoneEn");
+    if (btnDone) btnDone.addEventListener("click", () => switchTab("daily"));
+  }
+
+  // Tab: Ôn hôm nay — every word (all levels) answered wrong last time or whose review date has come.
+  const REVIEW_ROUND = 10;
+
+  function getReviewWords() {
+    const srsMap = getSRSMap();
+    const now = Date.now();
+    const out = [];
+    ["b1", "b2", "c1"].forEach((lvl) => {
+      (ENGLISH_DATA[lvl] || []).forEach((w) => {
+        const s = srsMap[w.word];
+        if (isWeakSRS(s, now)) out.push({ ...w, level: lvl, mistakes: s.mistakes || 0, dueAt: s.due || 0 });
+      });
     });
-    document.getElementById("btnNextLevelQuiz").addEventListener("click", () => {
-      currentLevel = currentLevel === "b1" ? "b2" : currentLevel === "b2" ? "c1" : "b1";
-      startQuiz();
+    return out.sort((a, b) => b.mistakes - a.mistakes || a.dueAt - b.dueAt);
+  }
+
+  function updateReviewBadge() {
+    const el = document.getElementById("enReviewCount");
+    if (!el) return;
+    const n = getReviewWords().length;
+    el.textContent = n > 99 ? "99+" : String(n);
+    el.classList.toggle("zero", n === 0);
+  }
+
+  function renderReviewTab() {
+    const container = document.getElementById("englishTabContent");
+    const words = getReviewWords();
+    updateReviewBadge();
+    if (!words.length) {
+      container.innerHTML = `
+        <div class="chinese-quiz-wrap">
+          <div class="flashcard-empty-box">
+            <div style="font-size: 36px; margin-bottom: 8px;">🎉</div>
+            <h3>Hôm nay không còn từ nào cần ôn!</h3>
+            <p>Từ nào em trả lời sai, hoặc đến ngày cần nhắc lại (sau 1, 3, 7 ngày…), sẽ tự gom về đây để em ôn một lượt nha 💕</p>
+            <div class="quiz-actions-row">
+              <button class="btn-summary-action btn-summary-pink" id="btnReviewToDailyEn">🎯 Học 5 từ hôm nay</button>
+              <button class="btn-summary-action btn-summary-cream" id="btnReviewToQuizEn">✍️ Làm trắc nghiệm</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnReviewToDailyEn").addEventListener("click", () => switchTab("daily"));
+      document.getElementById("btnReviewToQuizEn").addEventListener("click", () => switchTab("quiz"));
+      return;
+    }
+    const chips = words.slice(0, 24).map((w) => `<span class="review-chip" title="${w.meaning}">${w.word}</span>`).join("");
+    container.innerHTML = `
+      <div class="chinese-quiz-wrap">
+        <div class="review-box">
+          <h3>🔁 Có <strong>${words.length}</strong> từ cần ôn hôm nay</h3>
+          <p class="chinese-help-text">Gồm từ em từng trả lời sai và từ đến ngày nhắc lại. Mỗi lượt ôn tối đa ${REVIEW_ROUND} từ, trộn nhiều kiểu câu hỏi. Lượt ôn tính chung giới hạn thưởng học mỗi ngày.</p>
+          <div class="review-chips">${chips}${words.length > 24 ? `<span class="review-chip more">+${words.length - 24}</span>` : ""}</div>
+          <button class="btn-summary-action btn-summary-pink" id="btnStartReviewEn">Bắt đầu ôn (${Math.min(REVIEW_ROUND, words.length)} từ) ▶</button>
+        </div>
+      </div>
+    `;
+    document.getElementById("btnStartReviewEn").addEventListener("click", () => {
+      if (window.AudioManager) AudioManager.playClick();
+      startQuiz("review");
     });
   }
 
@@ -3278,6 +3511,8 @@ window.EnglishApp = (() => {
     else if (tabKey === "match") startMatchGame();
     else if (tabKey === "starred") renderStarredTab();
     else if (tabKey === "love") renderLoveTab();
+    else if (tabKey === "review") renderReviewTab();
+    updateReviewBadge();
   }
 
   function open() {

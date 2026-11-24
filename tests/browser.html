@@ -164,6 +164,7 @@
       w.localStorage.setItem("hu_keo_cua_sun_english_srs_v1",
         JSON.stringify(Object.fromEntries(words.map((x) => [x, { reps: 0, interval: 1, due, mistakes: 1 }]))));
       w.localStorage.setItem("hu_keo_cua_sun_english_level_v1", "b1");
+      w.localStorage.setItem("hu_keo_cua_sun_english_quiz_mode_v1", "meaning");
       w.localStorage.setItem("hu_keo_study_lang", "en");
       click($("btnQuickStudy"));
       await sleep(300);
@@ -180,6 +181,47 @@
       w.EnglishApp.stopSpeech();
       click(doc.querySelector("#modalEnglish [aria-label='Đóng']"));
       return [tags !== 3 && `${tags} review-tagged questions, want 3`, !summaryShown && "result screen not shown"];
+    });
+
+    await test("Chinese quiz modes (fill-in, tones, listening) and Ôn hôm nay", async () => {
+      const now = Date.now();
+      w.localStorage.setItem("hu_keo_sun_hsk_srs", JSON.stringify(Object.fromEntries(["爱", "喜欢", "想"].map((x) =>
+        [x, { repetition: 0, interval: 1, efactor: 2.3, dueDate: now, mistakes: 1, lastReviewed: now }]))));
+      w.localStorage.setItem("hu_keo_sun_hsk_quiz_mode", "cloze");
+      w.localStorage.setItem("hu_keo_study_lang", "zh");
+      click($("btnQuickStudy"));
+      await sleep(300);
+      const tab = (k) => click(doc.querySelector(`.chinese-nav-tab[data-tab="${k}"]`));
+      const opts = () => [...doc.querySelectorAll("#chineseTabContent .quiz-opt-btn")];
+      const problems = [];
+      tab("quiz");
+      await sleep(100);
+      // the saved mode is not read again after load, so pick it on the bar like a player would
+      click(doc.querySelector('.quiz-mode-btn[data-mode="cloze"]'));
+      if (!doc.querySelector("#chineseTabContent .qq-blank")) problems.push("fill-in question has no blank");
+      if (opts().length !== 4) problems.push(`fill-in has ${opts().length} options`);
+      click(opts()[0]);
+      if ($("quizFeedback").classList.contains("hidden")) problems.push("no feedback after answering");
+      click(doc.querySelector('.quiz-mode-btn[data-mode="tone"]'));
+      const keys = opts().map((b) => b.dataset.key);
+      const plain = (x) => x.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      if (keys.length !== 4 || new Set(keys).size !== 4) problems.push(`tone options not 4 distinct: ${keys}`);
+      if (new Set(keys.map(plain)).size !== 1) problems.push(`tone options differ in more than tones: ${keys}`);
+      click(doc.querySelector('.quiz-mode-btn[data-mode="listen"]'));
+      if (!$("btnSpeakQuiz") || opts().length !== 4) problems.push("listening question missing its play button or options");
+      w.ChineseApp.stopSpeech();
+      tab("review");
+      await sleep(100);
+      const badge = parseInt($("zhReviewCount").textContent, 10);
+      if (!(badge >= 3)) problems.push(`review badge ${badge}, want ≥ 3 (seeded 3 wrong words)`);
+      if (doc.querySelectorAll("#chineseTabContent .review-chip").length < 3) problems.push("review tab doesn't list the words");
+      click($("btnStartReview"));
+      if (!/Ôn hôm nay/.test(doc.querySelector("#chineseTabContent .quiz-level-inline")?.textContent || "")) problems.push("review round header missing");
+      if (doc.querySelector("#chineseTabContent .quiz-mode-bar")) problems.push("review round should not show the mode bar");
+      if (!doc.querySelector("#chineseTabContent .qq-review-tag")) problems.push("review questions are not tagged");
+      w.ChineseApp.stopSpeech();
+      click(doc.querySelector("#modalChinese [aria-label='Đóng']"));
+      return problems;
     });
 
     await test("daily question: short answer refused, first save pays once, text kept as text", async () => {

@@ -265,7 +265,7 @@ return pickQuizTargets;`);
   const allWords = out.map((o) => o.word[key]);
   if (new Set(allWords).size !== allWords.length) problems.push(`${f}: duplicate quiz target`);
   if (pick(() => ({}), (a) => [...a])(list.slice(0, 3), 5).length !== 3) problems.push(`${f}: short list should give all its words`);
-  if (!src.includes("pickQuizTargets(list, 5)")) problems.push(`${f}: startQuiz does not use pickQuizTargets`);
+  if (!/pickQuizTargets\((list|eligible|list\.filter\(quizEligible\(quizMode\)\)), 5\)/.test(extractFunction(src, "startQuiz"))) problems.push(`${f}: startQuiz does not use pickQuizTargets`);
   return problems;
 }));
 check("room decor does not overlap fixed furniture", (() => {
@@ -450,6 +450,77 @@ check("new-feature achievements are re-checked on paths that pay no rewards", ((
 })());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
+check("tone quiz: three wrong pinyin per word, differing from the answer only in tone marks", (() => {
+  const zh = read("js/chinese.js");
+  let fns;
+  try {
+    // eslint-disable-next-line no-new-func
+    fns = new Function("shuffleArray", `${zh.match(/const TONE_VOWELS = [^;]+;/)[0]}
+${extractFunction(zh, "toneMarks")}
+${extractFunction(zh, "toneVariants")}
+return { toneMarks, toneVariants };`)((a) => [...a].sort(() => Math.random() - 0.5));
+  } catch (e) {
+    return [`cannot load toneMarks/toneVariants (${e.message})`];
+  }
+  const plain = (x) => x.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const out = [];
+  hskAll.filter((w) => w.lvl !== "love").forEach((w) => {
+    const n = fns.toneMarks(w.pinyin).length;
+    if (n < 1 || n > 4) return;
+    for (let r = 0; r < 5; r++) {
+      const v = fns.toneVariants(w.pinyin, 3);
+      if (v.length !== 3 || new Set(v).size !== 3) out.push(`${w.hanzi} ${w.pinyin}: got ${JSON.stringify(v)}`);
+      if (v.includes(w.pinyin)) out.push(`${w.hanzi}: a wrong option equals the answer`);
+      if (v.some((x) => plain(x) !== plain(w.pinyin))) out.push(`${w.hanzi}: a variant changed more than the tone (${v.join(", ")})`);
+    }
+  });
+  const toneable = hskAll.filter((w) => w.lvl !== "love" && fns.toneMarks(w.pinyin).length >= 1 && fns.toneMarks(w.pinyin).length <= 4).length;
+  if (toneable < 100) out.push(`only ${toneable} HSK words can be tone questions`);
+  return [...new Set(out)];
+})());
+check("English fill-in quiz finds the word (or its inflection) in every example", (() => {
+  let cloze;
+  try {
+    // eslint-disable-next-line no-new-func
+    cloze = new Function(`${extractFunction(read("js/english.js"), "clozeParts")} return clozeParts;`)();
+  } catch (e) {
+    return [`cannot load clozeParts (${e.message})`];
+  }
+  return enAll.filter((w) => {
+    const c = cloze(w);
+    return !c || !c.answer || `${c.before}${c.answer}${c.after}` !== w.example;
+  }).map((w) => `${w.lvl}: ${w.word} → ${w.example}`);
+})());
+check("Ôn hôm nay lists only words that need review, and quiz modes share one quiz reward", ["js/chinese.js", "js/english.js"].flatMap((f) => {
+  const src = read(f);
+  const isZh = f.includes("chinese");
+  const out = [];
+  if ((src.match(/grantStudyReward\("quiz"/g) || []).length !== 1) out.push(`${f}: quiz modes must pay through one grantStudyReward("quiz") call`);
+  if (!/data-tab="review"/.test(read("index.html").slice(read("index.html").indexOf(isZh ? "chinese-tabs-nav" : "english-tabs-nav")))) out.push(`${f}: no Ôn hôm nay tab in index.html`);
+  if (!/tabKey === "review"\) renderReviewTab\(\)/.test(src)) out.push(`${f}: switchTab doesn't open the review tab`);
+  const key = isZh ? "hanzi" : "word";
+  const levels = isZh ? { hsk1: [], hsk2: [], love: [] } : { b1: [], b2: [], c1: [] };
+  const lvlKeys = Object.keys(levels).filter((k) => k !== "love");
+  for (let i = 0; i < 8; i++) levels[lvlKeys[i % lvlKeys.length]].push({ [key]: `w${i}`, meaning: `m${i}` });
+  levels.love && levels.love.push({ [key]: "w0love" });
+  const day = 86400000;
+  const now = Date.now();
+  const wrong = isZh ? { repetition: 0, mistakes: 2, dueDate: now + day } : { reps: 0, due: now + day, mistakes: 2 };
+  const learned = isZh ? { repetition: 3, mistakes: 0, dueDate: now + 7 * day } : { reps: 3, due: now + 7 * day };
+  const due = isZh ? { repetition: 2, mistakes: 0, dueDate: now - 1000 } : { reps: 2, due: now - 1000 };
+  const srs = { w0: wrong, w1: learned, w2: due, w3: learned, w0love: wrong };
+  try {
+    // eslint-disable-next-line no-new-func
+    const get = new Function(isZh ? "HSK_DATA" : "ENGLISH_DATA", "getSRSMap", `${extractFunction(src, "isWeakSRS")}
+${extractFunction(src, "getReviewWords")}
+return getReviewWords;`)(levels, () => srs);
+    const got = get().map((w) => w[key]);
+    if (got.join() !== "w0,w2") out.push(`${f}: review list = ${JSON.stringify(got)}, want ["w0","w2"] (wrong first, learned/new/love left out)`);
+  } catch (e) {
+    out.push(`${f}: cannot load getReviewWords (${e.message})`);
+  }
+  return out;
+}));
 check("study modules never pay rewards directly",
   ["js/chinese.js", "js/english.js"].flatMap((f) => {
     const s = read(f);

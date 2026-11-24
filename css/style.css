@@ -1895,6 +1895,10 @@ body {
   width: 100%;
 }
 
+.quiz-level-inline .pixel-select {
+  min-width: 96px;
+}
+
 .quiz-level-inline {
   display: flex;
   align-items: center;
@@ -2487,6 +2491,8 @@ body {
 
 .quiz-header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
   align-items: center;
   justify-content: space-between;
   font-size: 12px;
@@ -2510,6 +2516,140 @@ body {
 .qq-prompt {
   font-size: 12px;
   color: #8c6d66;
+}
+
+/* Quiz modes (Nghĩa / Điền từ / Nghe / Thanh điệu) */
+.quiz-mode-bar {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 5px;
+}
+
+/* Chinese has four modes: two rows on phones so "🎵 Thanh điệu" fits */
+@media (max-width: 440px) {
+  .quiz-mode-bar-4 {
+    grid-auto-flow: row;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.quiz-mode-btn {
+  min-width: 0;
+  padding: 6px 4px;
+  font-size: clamp(10.5px, 2.8vw, 12px);
+  font-weight: 700;
+  color: #2b1810;
+  background: #fffbf5;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 2px 0 var(--ink);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.quiz-mode-btn.active {
+  background: #ffccd5;
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.16), 0 1px 0 var(--ink);
+  transform: translateY(1px);
+}
+
+.qq-cloze {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2b1b17;
+  line-height: 1.6;
+}
+
+.qq-cloze-en {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.qq-blank {
+  display: inline-block;
+  min-width: 2.2em;
+  margin: 0 2px;
+  color: var(--pink-hot);
+  border-bottom: 2px solid var(--pink-hot);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.qq-sub {
+  font-size: 13px;
+  font-weight: 600;
+  color: #5a3825;
+}
+
+.qq-listen-btn {
+  font-size: 16px;
+  padding: 10px 18px;
+  margin: 6px 0;
+}
+
+.qq-fb-sub {
+  display: block;
+  margin-top: 3px;
+  font-size: 11.5px;
+  color: #6b4f47;
+}
+
+/* Ôn hôm nay */
+.review-nav-tab {
+  grid-column: 1 / -1;
+}
+
+.review-count {
+  min-width: 18px;
+  padding: 0 5px;
+  font-size: 10.5px;
+  line-height: 16px;
+  color: #fff;
+  background: var(--pink-hot);
+  border-radius: 999px;
+}
+
+.review-count.zero {
+  color: #6b4f47;
+  background: #eadfd6;
+}
+
+.review-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1.5px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 0 3px 0 var(--ink);
+}
+
+.review-box h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.review-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.review-chip {
+  padding: 2px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  background: #fff1e0;
+  border: 1px solid #e8b48a;
+  border-radius: 999px;
+}
+
+.review-chip.more {
+  background: #f3ece6;
+  border-color: #d8c8bb;
 }
 
 /* Quiz: a word that was answered wrong before and came back for review */

@@ -1971,7 +1971,7 @@ window.ChineseApp = (() => {
     ]
   };
 
-  let currentTab = "daily"; // "daily" | "flashcard" | "quiz" | "match" | "starred" | "love"
+  let currentTab = "daily"; // "daily" | "flashcard" | "quiz" | "match" | "starred" | "love" | "review"
   let currentLevel = localStorage.getItem("hu_keo_sun_hsk_level") || "hsk4";
   let dailyOffset = 0;
   let flashcardIndex = 0;
@@ -2831,62 +2831,216 @@ window.ChineseApp = (() => {
     });
   }
 
+  // ---------- Trắc nghiệm ----------
+  // Four modes, all on the same engine: meaning (chữ → nghĩa), cloze (điền từ vào câu ví dụ), listen (nghe → chọn từ),
+  // tone (chọn pinyin đúng thanh điệu). Every mode records SRS and pays through the one quiz reward in
+  // renderQuizResult (shared daily study cap), so a new mode is not a new candy door.
+  const QUIZ_MODES = [
+    { id: "meaning", label: "🈯 Nghĩa" },
+    { id: "cloze", label: "✏️ Điền từ" },
+    { id: "listen", label: "🎧 Nghe" },
+    { id: "tone", label: "🎵 Thanh điệu" }
+  ];
+  const QUIZ_MODE_KEY = "hu_keo_sun_hsk_quiz_mode";
+  let quizMode = "meaning";
+  try {
+    const savedMode = localStorage.getItem(QUIZ_MODE_KEY);
+    if (QUIZ_MODES.some((m) => m.id === savedMode)) quizMode = savedMode;
+  } catch {}
+  let quizSource = "level"; // "level" = the chosen HSK level / notebook, "review" = Ôn hôm nay
   let quizRewarded = false;
   let quizRewardResult = null;
   let quizMissed = [];
 
-  function startQuiz() {
-    const list = currentLevel === "starred" ? getAllStarredWords() : (HSK_DATA[currentLevel] || HSK_DATA.hsk4);
-    if (!list || list.length === 0) {
-      const container = document.getElementById("chineseTabContent");
-      container.innerHTML = `
-        <div class="chinese-quiz-wrap">
-          <div class="chinese-level-bar">
-            <div class="clb-left">
-              <label>🏷️ Cấp:</label>
-              <select id="selQuizLevel" class="pixel-select">
-                <option value="hsk4">HSK 4 💕</option>
-                <option value="hsk5">HSK 5</option>
-                <option value="hsk6">HSK 6</option>
-                <option value="hsk3">HSK 3</option>
-                <option value="hsk2">HSK 2</option>
-                <option value="hsk1">HSK 1</option>
-                <option value="starred" selected>⭐ Sổ Tay (0 từ)</option>
-              </select>
-            </div>
-          </div>
-          <div class="flashcard-empty-box">
-            <div style="font-size: 36px; margin-bottom: 8px;">✍️</div>
-            <h3>Sổ tay từ vựng đang trống nè!</h3>
-            <p>Em hãy lưu thêm từ vào sổ tay hoặc chọn một cấp HSK khác để bắt đầu bài trắc nghiệm nhé 💕</p>
+  const TONE_VOWELS = { a: "āáǎà", e: "ēéěè", i: "īíǐì", o: "ōóǒò", u: "ūúǔù", "ü": "ǖǘǚǜ" };
+
+  // Tone-marked vowels of a pinyin string: [{ at, base, tone (1–4) }]
+  function toneMarks(pinyin) {
+    const out = [];
+    for (let i = 0; i < pinyin.length; i++) {
+      for (const base of Object.keys(TONE_VOWELS)) {
+        const t = TONE_VOWELS[base].indexOf(pinyin[i]);
+        if (t >= 0) out.push({ at: i, base, tone: t + 1 });
+      }
+    }
+    return out;
+  }
+
+  // Wrong spellings of the same pinyin where one (sometimes two) syllables carry another tone: the real confusion.
+  function toneVariants(pinyin, count = 3) {
+    const marks = toneMarks(pinyin);
+    if (!marks.length) return [];
+    const withTone = (m, tone) => pinyin.slice(0, m.at) + TONE_VOWELS[m.base][tone - 1] + pinyin.slice(m.at + 1);
+    if (marks.length === 1) {
+      return shuffleArray([1, 2, 3, 4].filter((t) => t !== marks[0].tone).map((t) => withTone(marks[0], t))).slice(0, count);
+    }
+    const seen = new Set([pinyin]);
+    const out = [];
+    for (let tries = 0; tries < 80 && out.length < count; tries++) {
+      const chars = pinyin.split("");
+      const change = marks.length >= 2 && Math.random() < 0.35 ? 2 : 1;
+      shuffleArray(marks).slice(0, change).forEach((m) => {
+        let tone = m.tone;
+        while (tone === m.tone) tone = 1 + Math.floor(Math.random() * 4);
+        chars[m.at] = TONE_VOWELS[m.base][tone - 1];
+      });
+      const v = chars.join("");
+      if (!seen.has(v)) {
+        seen.add(v);
+        out.push(v);
+      }
+    }
+    return out;
+  }
+
+  const canCloze = (w) => Boolean(w.example && w.example.includes(w.hanzi) && w.example !== w.hanzi);
+  const canTone = (w) => {
+    const n = toneMarks(w.pinyin || "").length;
+    return n >= 1 && n <= 4;
+  };
+  const quizEligible = (mode) => (mode === "cloze" ? canCloze : mode === "tone" ? canTone : () => true);
+  const quizFallbackPool = () => [...(HSK_DATA.hsk4 || []), ...(HSK_DATA.hsk3 || []), ...(HSK_DATA.hsk2 || [])];
+
+  // Listening needs a voice: a Chinese system voice, or a network for the Youdao fallback.
+  function canListen() {
+    if (typeof navigator === "undefined" || navigator.onLine !== false) return true;
+    if (!("speechSynthesis" in window)) return false;
+    if (!cachedVoices.length) loadVoices();
+    return Boolean(getBestMandarinVoice());
+  }
+
+  // Three wrong words for a word-based question, taken from the quizzed list first (other levels only to fill up).
+  // Fill-in questions prefer the same part of speech above the same level, so grammar alone doesn't give it away.
+  function pickWordDistractors(target, primary, mode) {
+    const ok = (w) => {
+      if (!w.hanzi || !w.pinyin || w.hanzi === target.hanzi || w.meaning === target.meaning) return false;
+      if (mode === "cloze" && (target.example.includes(w.hanzi) || w.hanzi.includes(target.hanzi) || target.hanzi.includes(w.hanzi))) return false;
+      if (mode === "listen" && w.pinyin === target.pinyin) return false; // same sound would be ambiguous
+      return true;
+    };
+    const near = primary.filter(ok);
+    const far = quizFallbackPool().filter(ok);
+    const same = (list) => shuffleArray(list.filter((w) => w.type && w.type === target.type));
+    const other = (list) => shuffleArray(list.filter((w) => !(w.type && w.type === target.type)));
+    const ordered = mode === "cloze"
+      ? [...same(near), ...same(far), ...other(near), ...other(far)]
+      : [...same(near), ...other(near), ...same(far), ...other(far)];
+    const out = [];
+    ordered.forEach((w) => {
+      if (out.length < 3 && !out.some((u) => u.hanzi === w.hanzi)) out.push(w);
+    });
+    return out;
+  }
+
+  function buildQuizQuestion(target, mode, pool, review) {
+    if (mode === "tone") {
+      const wrong = toneVariants(target.pinyin, 3);
+      if (wrong.length < 3) return null;
+      return { mode, target, review, answer: target.pinyin, options: shuffleArray([target.pinyin, ...wrong]).map((p) => ({ key: p, text: p })) };
+    }
+    const wrong = pickWordDistractors(target, pool, mode);
+    if (wrong.length < 3) return null;
+    const label = (w) => (mode === "meaning" ? `${w.meaning} (${w.pinyin})` : mode === "listen" ? `${w.hanzi} · ${w.meaning}` : `${w.hanzi} (${w.pinyin})`);
+    return { mode, target, review, answer: target.hanzi, options: shuffleArray([target, ...wrong]).map((w) => ({ key: w.hanzi, text: label(w) })) };
+  }
+
+  const quizModeLabel = (mode) => (QUIZ_MODES.find((m) => m.id === mode) || QUIZ_MODES[0]).label;
+
+  function quizLevelSelectHtml() {
+    return `
+      <select id="selQuizLevel" class="pixel-select">
+        <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 💕</option>
+        <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5</option>
+        <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6</option>
+        <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3</option>
+        <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2</option>
+        <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1</option>
+        <option value="starred" ${currentLevel === "starred" ? "selected" : ""}>⭐ Sổ Tay (${getAllStarredWords().length})</option>
+      </select>`;
+  }
+
+  function quizModeBarHtml() {
+    return `<div class="quiz-mode-bar quiz-mode-bar-4" role="group" aria-label="Kiểu trắc nghiệm">${QUIZ_MODES.map(
+      (m) => `<button class="quiz-mode-btn ${m.id === quizMode ? "active" : ""}" data-mode="${m.id}" aria-pressed="${m.id === quizMode}">${m.label}</button>`
+    ).join("")}</div>`;
+  }
+
+  function bindQuizControls(container) {
+    container.querySelectorAll(".quiz-mode-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (window.AudioManager) AudioManager.playClick();
+        quizMode = btn.dataset.mode;
+        try {
+          localStorage.setItem(QUIZ_MODE_KEY, quizMode);
+        } catch {}
+        startQuiz();
+      });
+    });
+    const selQ = container.querySelector("#selQuizLevel");
+    if (selQ) {
+      selQ.addEventListener("change", (e) => {
+        setLevel(e.target.value);
+        startQuiz();
+      });
+    }
+  }
+
+  function renderQuizNotice(icon, title, text) {
+    const container = document.getElementById("chineseTabContent");
+    container.innerHTML = `
+      <div class="chinese-quiz-wrap">
+        ${quizModeBarHtml()}
+        <div class="chinese-level-bar">
+          <div class="clb-left">
+            <label>🏷️ Cấp:</label>
+            ${quizLevelSelectHtml()}
           </div>
         </div>
-      `;
-      const selQ = document.getElementById("selQuizLevel");
-      if (selQ) {
-        selQ.addEventListener("change", (e) => {
-          setLevel(e.target.value);
-          startQuiz();
-        });
+        <div class="flashcard-empty-box">
+          <div style="font-size: 36px; margin-bottom: 8px;">${icon}</div>
+          <h3>${title}</h3>
+          <p>${text}</p>
+        </div>
+      </div>
+    `;
+    bindQuizControls(container);
+  }
+
+  // source: "level" (default) or "review". Also used directly as a click handler, so anything else means "level".
+  function startQuiz(source) {
+    quizSource = source === "review" ? "review" : "level";
+    quizQuestions = [];
+    if (quizSource === "review") {
+      const due = getReviewWords();
+      if (!due.length) {
+        renderReviewTab();
+        return;
       }
+      quizQuestions = shuffleArray(due.slice(0, REVIEW_ROUND)).map((w) => {
+        const pool = HSK_DATA[w.level] || [];
+        const modes = ["meaning", canCloze(w) && "cloze", canTone(w) && "tone"].filter(Boolean);
+        const mode = modes[Math.floor(Math.random() * modes.length)];
+        return buildQuizQuestion(w, mode, pool, true) || buildQuizQuestion(w, "meaning", pool, true);
+      }).filter(Boolean);
+    } else {
+      const list = currentLevel === "starred" ? getAllStarredWords() : (HSK_DATA[currentLevel] || HSK_DATA.hsk4);
+      if (!list || list.length === 0) {
+        renderQuizNotice("✍️", "Sổ tay từ vựng đang trống nè!", "Em hãy lưu thêm từ vào sổ tay hoặc chọn một cấp HSK khác để bắt đầu bài trắc nghiệm nhé 💕");
+        return;
+      }
+      if (quizMode === "listen" && !canListen()) {
+        renderQuizNotice("🎧", "Chế độ Nghe cần giọng đọc", "Máy chưa có giọng đọc tiếng Trung mà đang offline. Có mạng lại em chọn Nghe nha, giờ thử kiểu khác trước nhé 💕");
+        return;
+      }
+      const eligible = list.filter(quizEligible(quizMode));
+      quizQuestions = shuffleArray(pickQuizTargets(eligible, 5))
+        .map(({ word, review }) => buildQuizQuestion(word, quizMode, list, review))
+        .filter(Boolean);
+    }
+    if (!quizQuestions.length) {
+      renderQuizNotice("🙈", "Chưa có từ hợp với kiểu này", "Danh sách này chưa có từ nào làm được kiểu câu hỏi này, em đổi cấp độ hoặc kiểu khác nha 💕");
       return;
     }
-
-    // High quality distractor fallback pool to guarantee exactly 4 unique options
-    const fallbackPool = [...(HSK_DATA.hsk4 || []), ...(HSK_DATA.hsk3 || []), ...(HSK_DATA.hsk2 || [])];
-
-    const questionTargets = shuffleArray(pickQuizTargets(list, 5));
-
-    quizQuestions = questionTargets.map(({ word: target, review }) => {
-      let pool = list.filter((item) => item.hanzi !== target.hanzi && item.meaning !== target.meaning);
-      if (pool.length < 3) {
-        const extra = fallbackPool.filter((item) => item.hanzi !== target.hanzi && item.meaning !== target.meaning && !pool.some((p) => p.hanzi === item.hanzi));
-        pool = [...pool, ...extra];
-      }
-      const randomWrong = shuffleArray(pool).slice(0, 3);
-      const options = shuffleArray([target, ...randomWrong]);
-      return { target, options, review };
-    });
 
     quizIndex = 0;
     quizScore = 0;
@@ -2903,67 +3057,112 @@ window.ChineseApp = (() => {
     return `<div class="quiz-missed-box"><div class="quiz-missed-title">🔁 Từ cần ôn (sẽ quay lại ở lượt sau):</div><ul>${items}</ul></div>`;
   }
 
+  function quizPromptHtml(q) {
+    const t = q.target;
+    if (q.mode === "cloze") {
+      return `
+        <div class="qq-prompt">Chọn từ điền vào chỗ trống</div>
+        <div class="qq-cloze">${t.example.split(t.hanzi).join('<span class="qq-blank">＿＿</span>')}</div>
+        ${t.exampleMeaning ? `<div class="qq-sub">💬 ${t.exampleMeaning}</div>` : ""}`;
+    }
+    if (q.mode === "listen") {
+      return `
+        <div class="qq-prompt">Nghe rồi chọn từ em nghe được</div>
+        <button class="btn-speak qq-listen-btn" id="btnSpeakQuiz" data-text="${t.hanzi}">🔊 Nghe lại</button>`;
+    }
+    if (q.mode === "tone") {
+      return `
+        <div class="qq-prompt">Chọn pinyin đúng thanh điệu</div>
+        <div class="qq-hanzi">${t.hanzi}</div>
+        <div class="qq-sub">👉 ${t.meaning}</div>
+        <div class="fc-actions-row"><button class="btn-speak" id="btnSpeakQuiz" data-text="${t.hanzi}">🔊 Nghe gợi ý</button></div>`;
+    }
+    return `
+      <div class="qq-prompt">Từ này có nghĩa là gì?</div>
+      <div class="qq-hanzi">${t.hanzi}</div>
+      <div class="fc-actions-row">
+        <button class="btn-speak" id="btnSpeakQuiz" data-text="${t.hanzi}">🔊 Nghe phát âm</button>
+        <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(t.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
+      </div>`;
+  }
+
+  function quizFeedbackHtml(q, isRight) {
+    const t = q.target;
+    const head = isRight ? "✅ <strong>Chính xác!</strong>" : "❌ <strong>Chưa đúng rồi:</strong>";
+    if (q.mode === "cloze") {
+      return `${head} ${t.example.split(t.hanzi).join(`<strong>${t.hanzi}</strong>`)}
+        <span class="qq-fb-sub">${t.examplePinyin || ""}</span>
+        <span class="qq-fb-sub">💬 ${t.exampleMeaning || ""}</span>
+        <span class="qq-fb-sub">${t.hanzi} [${t.pinyin}]: ${t.meaning}</span>`;
+    }
+    return isRight
+      ? `${head} ${t.hanzi} [${t.pinyin}]: ${t.meaning}`
+      : `${head} ${t.hanzi} [${t.pinyin}] có nghĩa là <strong>${t.meaning}</strong>`;
+  }
+
+  function renderQuizResult(container) {
+    const total = quizQuestions.length;
+    // Same bar as before (4 of 5), also for review rounds of up to 10 words; fewer than 4 questions never pays.
+    const passed = total >= 4 && quizScore >= Math.ceil(total * 0.8);
+    if (passed && !quizRewarded) {
+      quizRewarded = true;
+      if (window.GameState) {
+        quizRewardResult = window.GameState.grantStudyReward("quiz", 15, STUDY_CANDY.quiz);
+      }
+    }
+    const quizPaid = Boolean(quizRewardResult && quizRewardResult.granted);
+    const isReview = quizSource === "review";
+    const remaining = isReview ? getReviewWords().length : 0;
+    updateReviewBadge();
+
+    container.innerHTML = `
+      <div class="quiz-result-wrap">
+        <h3>${isReview ? "🔁 Xong Một Lượt Ôn!" : "🎉 Hoàn Thành Bài Trắc Nghiệm!"}</h3>
+        <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${total}</strong> câu (${isReview ? "Ôn hôm nay" : `${getLevelLabel(currentLevel)} • ${quizModeLabel(quizMode)}`})</p>
+        ${isReview ? `<p class="quiz-score-text">${remaining ? `Còn <strong>${remaining}</strong> từ cần ôn nữa nha.` : "Hết sạch từ cần ôn rồi, giỏi quá 💕"}</p>` : ""}
+        ${quizMissedHtml()}
+        <p class="quiz-cheer">${passed ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 " + (quizPaid ? `(+${STUDY_CANDY.quiz} 🍬 & +15 XP)` : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)") : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
+        <div class="quiz-actions">
+          ${isReview && remaining ? '<button class="btn-summary-action btn-summary-pink" id="btnRestartQuiz">Ôn Tiếp 🔁</button>' : ""}
+          ${isReview ? "" : '<button class="btn-summary-action btn-summary-pink" id="btnRestartQuiz">Làm Lại Lượt Mới</button>'}
+          <button class="btn-summary-action btn-summary-cream" id="btnBackToDaily">Quay lại 5 từ mỗi ngày</button>
+        </div>
+      </div>
+    `;
+
+    const btnRestart = document.getElementById("btnRestartQuiz");
+    if (btnRestart) btnRestart.addEventListener("click", () => startQuiz(quizSource));
+    document.getElementById("btnBackToDaily").addEventListener("click", () => {
+      switchTab("daily");
+    });
+  }
+
   function renderQuizQuestion() {
     const container = document.getElementById("chineseTabContent");
     if (quizIndex >= quizQuestions.length) {
-      // Quiz Complete
-      if (quizScore >= 4 && !quizRewarded) {
-        quizRewarded = true;
-        if (window.GameState) {
-          quizRewardResult = window.GameState.grantStudyReward("quiz", 15, STUDY_CANDY.quiz);
-        }
-      }
-      const quizPaid = Boolean(quizRewardResult && quizRewardResult.granted);
-
-      container.innerHTML = `
-        <div class="quiz-result-wrap">
-          <h3>🎉 Hoàn Thành Bài Trắc Nghiệm!</h3>
-          <p class="quiz-score-text">Em trả lời đúng: <strong>${quizScore} / ${quizQuestions.length}</strong> câu (${getLevelLabel(currentLevel)})</p>
-          ${quizMissedHtml()}
-          <p class="quiz-cheer">${quizScore >= 4 ? "Xuất sắc lắm Ngọc ơi! Em nhớ từ vựng siêu đỉnh luôn 💕 " + (quizPaid ? `(+${STUDY_CANDY.quiz} 🍬 & +15 XP)` : "(Hôm nay em đã nhận đủ thưởng học rồi, mai nhận tiếp nha 💕)") : "Rất cố gắng rồi em! Cứ luyện mỗi ngày một chút là nhớ dai lắm nha ✨"}</p>
-          <div class="quiz-actions">
-            <button class="btn-summary-action btn-summary-pink" id="btnRestartQuiz">Làm Lại Lượt Mới</button>
-            <button class="btn-summary-action btn-summary-cream" id="btnBackToDaily">Quay lại 5 từ mỗi ngày</button>
-          </div>
-        </div>
-      `;
-
-      document.getElementById("btnRestartQuiz").addEventListener("click", startQuiz);
-      document.getElementById("btnBackToDaily").addEventListener("click", () => {
-        switchTab("daily");
-      });
+      renderQuizResult(container);
       return;
     }
 
     const q = quizQuestions[quizIndex];
-    let optsHtml = "";
-    q.options.forEach((opt, idx) => {
-      optsHtml += `
-        <button class="quiz-opt-btn" data-hanzi="${opt.hanzi}">
+    const isReview = quizSource === "review";
+    const optsHtml = q.options.map((opt, idx) => `
+        <button class="quiz-opt-btn" data-key="${opt.key}">
           <span class="q-opt-label">${String.fromCharCode(65 + idx)}.</span>
-          <span class="q-opt-text">${opt.meaning} (${opt.pinyin})</span>
+          <span class="q-opt-text">${opt.text}</span>
         </button>
-      `;
-    });
+      `).join("");
 
     container.innerHTML = `
       <div class="chinese-quiz-wrap">
+        ${isReview ? "" : quizModeBarHtml()}
         <div class="quiz-progress-track">
           <div class="quiz-progress-fill" style="width: ${((quizIndex + 1) / quizQuestions.length) * 100}%"></div>
         </div>
 
         <div class="quiz-header">
           <div class="quiz-level-inline">
-            <label>Cấp:</label>
-            <select id="selQuizLevel" class="pixel-select">
-              <option value="hsk4" ${currentLevel === "hsk4" ? "selected" : ""}>HSK 4 💕</option>
-              <option value="hsk5" ${currentLevel === "hsk5" ? "selected" : ""}>HSK 5</option>
-              <option value="hsk6" ${currentLevel === "hsk6" ? "selected" : ""}>HSK 6</option>
-              <option value="hsk3" ${currentLevel === "hsk3" ? "selected" : ""}>HSK 3</option>
-              <option value="hsk2" ${currentLevel === "hsk2" ? "selected" : ""}>HSK 2</option>
-              <option value="hsk1" ${currentLevel === "hsk1" ? "selected" : ""}>HSK 1</option>
-              <option value="starred" ${currentLevel === "starred" ? "selected" : ""}>⭐ Sổ Tay (${getAllStarredWords().length})</option>
-            </select>
+            ${isReview ? "<span>🔁 Ôn hôm nay</span>" : `<label>Cấp:</label>${quizLevelSelectHtml()}`}
           </div>
           <span>Câu ${quizIndex + 1} / ${quizQuestions.length}</span>
           <span>🎯 Điểm: ${quizScore}</span>
@@ -2971,12 +3170,7 @@ window.ChineseApp = (() => {
 
         <div class="quiz-question-card">
           ${q.review ? '<div class="qq-review-tag">🔁 Từ cần ôn lại</div>' : ""}
-          <div class="qq-prompt">Từ này có nghĩa là gì?</div>
-          <div class="qq-hanzi">${q.target.hanzi}</div>
-          <div class="fc-actions-row">
-            <button class="btn-speak" id="btnSpeakQuiz" data-text="${q.target.hanzi}">🔊 Nghe phát âm</button>
-            <a class="btn-dict" href="https://hanzii.net/search/word/${encodeURIComponent(q.target.hanzi)}?hl=vi" target="_blank" rel="noopener">📖 Tra Hanzii</a>
-          </div>
+          ${quizPromptHtml(q)}
         </div>
 
         <div class="quiz-options-grid" id="quizOptionsGrid">
@@ -2985,32 +3179,27 @@ window.ChineseApp = (() => {
 
         <div class="quiz-feedback-box hidden" id="quizFeedback">
           <div id="quizFeedbackText"></div>
-          <button class="btn-next-quiz" id="btnNextQuiz">Câu tiếp theo ▶</button>
+          <button class="btn-next-quiz" id="btnNextQuiz">${quizIndex < quizQuestions.length - 1 ? "Câu tiếp theo ▶" : "Xem kết quả 🎉"}</button>
         </div>
       </div>
     `;
 
-    const selQ = document.getElementById("selQuizLevel");
-    if (selQ) {
-      selQ.addEventListener("change", (e) => {
-        setLevel(e.target.value);
-        startQuiz();
-      });
-    }
+    bindQuizControls(container);
 
     const btnSpeakQuiz = document.getElementById("btnSpeakQuiz");
     if (btnSpeakQuiz) {
       btnSpeakQuiz.addEventListener("click", () => {
         speak(q.target.hanzi, btnSpeakQuiz);
       });
+      // Listening plays the word straight away (rendering always follows a tap, so mobile browsers allow it)
+      if (q.mode === "listen") speak(q.target.hanzi, btnSpeakQuiz);
     }
 
-    document.querySelectorAll(".quiz-opt-btn").forEach((btn) => {
+    container.querySelectorAll(".quiz-opt-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         if (quizAnswered) return;
         quizAnswered = true;
-        const chosen = btn.dataset.hanzi;
-        const isRight = chosen === q.target.hanzi;
+        const isRight = btn.dataset.key === q.answer;
 
         if (isRight) {
           quizScore++;
@@ -3021,20 +3210,19 @@ window.ChineseApp = (() => {
             AudioManager.playBonk();
           }
           btn.classList.add("btn-wrong");
-          document.querySelectorAll(".quiz-opt-btn").forEach((b) => {
-            if (b.dataset.hanzi === q.target.hanzi) b.classList.add("btn-correct");
+          container.querySelectorAll(".quiz-opt-btn").forEach((b) => {
+            if (b.dataset.key === q.answer) b.classList.add("btn-correct");
           });
         }
 
-        // Update SRS review status (a wrong word comes back in the next quizzes and daily lessons)
+        // Update SRS review status (a wrong word comes back in the next quizzes, daily lessons and Ôn hôm nay)
         recordSRSReview(q.target.hanzi, isRight);
         if (!isRight && !quizMissed.includes(q.target)) quizMissed.push(q.target);
+        updateReviewBadge();
 
         const fbBox = document.getElementById("quizFeedback");
         const fbText = document.getElementById("quizFeedbackText");
-        fbText.innerHTML = isRight
-          ? `✅ <strong>Chính xác!</strong> ${q.target.hanzi} [${q.target.pinyin}]: ${q.target.meaning}`
-          : `❌ <strong>Chưa đúng rồi:</strong> ${q.target.hanzi} [${q.target.pinyin}] có nghĩa là <strong>${q.target.meaning}</strong>`;
+        fbText.innerHTML = quizFeedbackHtml(q, isRight);
         fbBox.classList.remove("hidden");
       });
     });
@@ -3047,6 +3235,70 @@ window.ChineseApp = (() => {
         renderQuizQuestion();
       });
     }
+  }
+
+  // ---------- Ôn hôm nay ----------
+  // Every HSK word (all levels) that was answered wrong and not re-learned yet, or whose review date has come.
+  const REVIEW_ROUND = 10;
+
+  function getReviewWords() {
+    const srsMap = getSRSMap();
+    const now = Date.now();
+    const out = [];
+    Object.keys(HSK_DATA).filter((lvl) => lvl !== "love").forEach((lvl) => {
+      HSK_DATA[lvl].forEach((w) => {
+        const s = srsMap[w.hanzi];
+        if (isWeakSRS(s, now)) out.push({ ...w, level: lvl, mistakes: s.mistakes || 0, dueAt: s.dueDate || 0 });
+      });
+    });
+    return out.sort((a, b) => b.mistakes - a.mistakes || a.dueAt - b.dueAt);
+  }
+
+  function updateReviewBadge() {
+    const el = document.getElementById("zhReviewCount");
+    if (!el) return;
+    const n = getReviewWords().length;
+    el.textContent = n > 99 ? "99+" : String(n);
+    el.classList.toggle("zero", n === 0);
+  }
+
+  function renderReviewTab() {
+    const container = document.getElementById("chineseTabContent");
+    const words = getReviewWords();
+    updateReviewBadge();
+    if (!words.length) {
+      container.innerHTML = `
+        <div class="chinese-quiz-wrap">
+          <div class="flashcard-empty-box">
+            <div style="font-size: 36px; margin-bottom: 8px;">🎉</div>
+            <h3>Hôm nay không còn từ nào cần ôn!</h3>
+            <p>Từ nào em trả lời sai, hoặc đến ngày cần nhắc lại (sau 1, 3, 7 ngày…), sẽ tự gom về đây để em ôn một lượt nha 💕</p>
+            <div class="quiz-actions">
+              <button class="btn-summary-action btn-summary-pink" id="btnReviewToDaily">🎯 Học 5 từ hôm nay</button>
+              <button class="btn-summary-action btn-summary-cream" id="btnReviewToQuiz">✍️ Làm trắc nghiệm</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnReviewToDaily").addEventListener("click", () => switchTab("daily"));
+      document.getElementById("btnReviewToQuiz").addEventListener("click", () => switchTab("quiz"));
+      return;
+    }
+    const chips = words.slice(0, 24).map((w) => `<span class="review-chip" title="${w.meaning}">${w.hanzi}</span>`).join("");
+    container.innerHTML = `
+      <div class="chinese-quiz-wrap">
+        <div class="review-box">
+          <h3>🔁 Có <strong>${words.length}</strong> từ cần ôn hôm nay</h3>
+          <p class="chinese-help-text">Gồm từ em từng trả lời sai và từ đến ngày nhắc lại. Mỗi lượt ôn tối đa ${REVIEW_ROUND} từ, trộn nhiều kiểu câu hỏi. Lượt ôn tính chung giới hạn thưởng học mỗi ngày.</p>
+          <div class="review-chips">${chips}${words.length > 24 ? `<span class="review-chip more">+${words.length - 24}</span>` : ""}</div>
+          <button class="btn-summary-action btn-summary-pink" id="btnStartReview">Bắt đầu ôn (${Math.min(REVIEW_ROUND, words.length)} từ) ▶</button>
+        </div>
+      </div>
+    `;
+    document.getElementById("btnStartReview").addEventListener("click", () => {
+      if (window.AudioManager) AudioManager.playClick();
+      startQuiz("review");
+    });
   }
 
   let matchWords = [];
@@ -3473,6 +3725,8 @@ window.ChineseApp = (() => {
     else if (tabKey === "match") startMatchGame();
     else if (tabKey === "starred") renderStarredTab();
     else if (tabKey === "love") renderLoveTab();
+    else if (tabKey === "review") renderReviewTab();
+    updateReviewBadge();
   }
 
   function open() {
