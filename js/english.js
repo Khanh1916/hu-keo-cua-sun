@@ -481,6 +481,166 @@ window.EnglishApp = (() => {
             "meaning": "Vui vẻ, tươi tắn",
             "example": "One cheerful good-morning message can brighten the whole day.",
             "exampleMeaning": "Chỉ một tin nhắn chào buổi sáng vui vẻ cũng đủ làm sáng bừng cả ngày."
+        },
+        {
+            "word": "affectionate",
+            "ipa": "/əˈfek.ʃən.ət/",
+            "type": "Tính từ",
+            "meaning": "Trìu mến, giàu tình cảm",
+            "example": "Bông is always affectionate when Ngọc comes home.",
+            "exampleMeaning": "Bông lúc nào cũng quấn quýt trìu mến mỗi khi Ngọc về nhà."
+        },
+        {
+            "word": "considerate",
+            "ipa": "/kənˈsɪd.ɚ.ət/",
+            "type": "Tính từ",
+            "meaning": "Chu đáo, biết nghĩ cho người khác",
+            "example": "It was considerate of you to text me before you slept.",
+            "exampleMeaning": "Em thật chu đáo khi nhắn cho anh trước lúc đi ngủ."
+        },
+        {
+            "word": "encourage",
+            "ipa": "/ɪnˈkɝː.ɪdʒ/",
+            "type": "Động từ",
+            "meaning": "Động viên, khích lệ",
+            "example": "I always encourage Ngọc to practise a little English every day.",
+            "exampleMeaning": "Anh luôn động viên Ngọc luyện tiếng Anh một chút mỗi ngày."
+        },
+        {
+            "word": "honest",
+            "ipa": "/ˈɑː.nɪst/",
+            "type": "Tính từ",
+            "meaning": "Thật thà, trung thực",
+            "example": "Be honest: did you eat the last piece of my bánh mì?",
+            "exampleMeaning": "Nói thật đi: em ăn miếng bánh mì cuối của anh rồi phải không?"
+        },
+        {
+            "word": "journey",
+            "ipa": "/ˈdʒɝː.ni/",
+            "type": "Danh từ",
+            "meaning": "Chuyến đi, hành trình",
+            "example": "The journey from Hà Nội to Hải Phòng feels shorter when I think of you.",
+            "exampleMeaning": "Chuyến đi từ Hà Nội xuống Hải Phòng như ngắn lại khi anh nghĩ về em."
+        },
+        {
+            "word": "miss",
+            "ipa": "/mɪs/",
+            "type": "Động từ",
+            "meaning": "Nhớ (một người)",
+            "example": "I miss you a little more every evening.",
+            "exampleMeaning": "Mỗi tối anh lại nhớ em thêm một chút."
+        },
+        {
+            "word": "surprise",
+            "ipa": "/sɚˈpraɪz/",
+            "type": "Danh từ",
+            "meaning": "Sự bất ngờ, món quà bất ngờ",
+            "example": "I have a little surprise for you this weekend.",
+            "exampleMeaning": "Cuối tuần này anh có một bất ngờ nho nhỏ cho em."
+        },
+        {
+            "word": "comfort",
+            "ipa": "/ˈkʌm.fɚt/",
+            "type": "Động từ",
+            "meaning": "An ủi, vỗ về",
+            "example": "Let me comfort you whenever you feel sad.",
+            "exampleMeaning": "Để anh vỗ về em mỗi khi em thấy buồn nha."
+        },
+        {
+            "word": "promise",
+            "ipa": "/ˈprɑː.mɪs/",
+            "type": "Danh từ",
+            "meaning": "Lời hứa",
+            "example": "A promise is a promise, so I will be there on Saturday.",
+            "exampleMeaning": "Đã hứa là phải giữ lời, nên thứ Bảy anh sẽ có mặt."
+        },
+        {
+            "word": "appreciate",
+            "ipa": "/əˈpriː.ʃi.eɪt/",
+            "type": "Động từ",
+            "meaning": "Trân trọng, đánh giá cao",
+            "example": "I really appreciate the little notes you leave me.",
+            "exampleMeaning": "Anh rất trân trọng những lời nhắn nhỏ em để lại cho anh."
+        },
+        {
+            "word": "adorable",
+            "ipa": "/əˈdɔːr.ə.bəl/",
+            "type": "Tính từ",
+            "meaning": "Đáng yêu",
+            "example": "Your sleepy face in the morning is adorable.",
+            "exampleMeaning": "Gương mặt ngái ngủ buổi sáng của em đáng yêu lắm."
+        },
+        {
+            "word": "calm",
+            "ipa": "/kɑːm/",
+            "type": "Tính từ",
+            "meaning": "Bình tĩnh, điềm tĩnh",
+            "example": "Stay calm, the exam is easier than you think.",
+            "exampleMeaning": "Bình tĩnh nha em, bài thi dễ hơn em nghĩ đó."
+        },
+        {
+            "word": "forgive",
+            "ipa": "/fɚˈɡɪv/",
+            "type": "Động từ",
+            "meaning": "Tha thứ",
+            "example": "Please forgive me for replying so late again.",
+            "exampleMeaning": "Em tha lỗi cho anh vì lại trả lời tin nhắn muộn nha."
+        },
+        {
+            "word": "habit",
+            "ipa": "/ˈhæb.ɪt/",
+            "type": "Danh từ",
+            "meaning": "Thói quen",
+            "example": "Drinking a glass of water every morning is a good habit.",
+            "exampleMeaning": "Uống một cốc nước mỗi sáng là một thói quen tốt."
+        },
+        {
+            "word": "hug",
+            "ipa": "/hʌɡ/",
+            "type": "Danh từ",
+            "meaning": "Cái ôm",
+            "example": "I owe you a very long hug when we meet.",
+            "exampleMeaning": "Gặp nhau anh nợ em một cái ôm thật lâu."
+        },
+        {
+            "word": "laughter",
+            "ipa": "/ˈlæf.tɚ/",
+            "type": "Danh từ",
+            "meaning": "Tiếng cười",
+            "example": "Your laughter is my favourite sound in the world.",
+            "exampleMeaning": "Tiếng cười của em là âm thanh anh thích nhất trên đời."
+        },
+        {
+            "word": "peaceful",
+            "ipa": "/ˈpiːs.fəl/",
+            "type": "Tính từ",
+            "meaning": "Thanh bình, êm đềm",
+            "example": "Sunday mornings with you feel so peaceful.",
+            "exampleMeaning": "Những sáng Chủ nhật bên em thật êm đềm."
+        },
+        {
+            "word": "support",
+            "ipa": "/səˈpɔːrt/",
+            "type": "Động từ",
+            "meaning": "Ủng hộ, hỗ trợ",
+            "example": "I will always support your dreams, big or small.",
+            "exampleMeaning": "Anh sẽ luôn ủng hộ ước mơ của em, dù lớn hay nhỏ."
+        },
+        {
+            "word": "homesick",
+            "ipa": "/ˈhoʊm.sɪk/",
+            "type": "Tính từ",
+            "meaning": "Nhớ nhà",
+            "example": "Ngọc felt homesick during her first week in a new city.",
+            "exampleMeaning": "Ngọc thấy nhớ nhà trong tuần đầu ở thành phố mới."
+        },
+        {
+            "word": "kindness",
+            "ipa": "/ˈkaɪnd.nəs/",
+            "type": "Danh từ",
+            "meaning": "Lòng tốt, sự tử tế",
+            "example": "Your kindness makes everyone around you smile.",
+            "exampleMeaning": "Sự tử tế của em làm mọi người xung quanh đều mỉm cười."
         }
     ],
     "b2": [
@@ -963,6 +1123,166 @@ window.EnglishApp = (() => {
             "meaning": "Hữu hình, cảm nhận được rõ",
             "example": "Her love felt tangible in every handwritten card she sent.",
             "exampleMeaning": "Tình yêu của em như có thể chạm vào được trong từng tấm thiệp viết tay em gửi."
+        },
+        {
+            "word": "resplendent",
+            "ipa": "/rɪˈsplen.dənt/",
+            "type": "Tính từ",
+            "meaning": "Lộng lẫy, rực rỡ",
+            "example": "You looked resplendent in your red áo dài at Tết.",
+            "exampleMeaning": "Tết em mặc áo dài đỏ trông thật lộng lẫy."
+        },
+        {
+            "word": "serene",
+            "ipa": "/səˈriːn/",
+            "type": "Tính từ",
+            "meaning": "Thanh thản, điềm đạm",
+            "example": "Her serene smile calmed me down before the interview.",
+            "exampleMeaning": "Nụ cười thanh thản của em làm anh bình tâm trước buổi phỏng vấn."
+        },
+        {
+            "word": "cajole",
+            "ipa": "/kəˈdʒoʊl/",
+            "type": "Động từ",
+            "meaning": "Dỗ ngọt, nài nỉ",
+            "example": "I had to cajole Bông out from under the bed with a treat.",
+            "exampleMeaning": "Anh phải dỗ ngọt bằng đồ ăn mới lôi được Bông ra khỏi gầm giường."
+        },
+        {
+            "word": "demure",
+            "ipa": "/dɪˈmjʊr/",
+            "type": "Tính từ",
+            "meaning": "E lệ, nhu mì",
+            "example": "She gave a demure smile when I complimented her dress.",
+            "exampleMeaning": "Em cười e lệ khi anh khen chiếc váy."
+        },
+        {
+            "word": "endearing",
+            "ipa": "/ɪnˈdɪr.ɪŋ/",
+            "type": "Tính từ",
+            "meaning": "Dễ mến, khiến người ta thương",
+            "example": "Your little mix-ups between L and N are oddly endearing.",
+            "exampleMeaning": "Mấy lần em lẫn L với N nghe lại dễ thương lạ kỳ."
+        },
+        {
+            "word": "forlorn",
+            "ipa": "/fɚˈlɔːrn/",
+            "type": "Tính từ",
+            "meaning": "Buồn bã, lẻ loi",
+            "example": "Bông looked forlorn by the door after you left.",
+            "exampleMeaning": "Em đi rồi, Bông ngồi bên cửa trông buồn thiu."
+        },
+        {
+            "word": "indelible",
+            "ipa": "/ɪnˈdel.ə.bəl/",
+            "type": "Tính từ",
+            "meaning": "Không thể phai mờ",
+            "example": "Our first date left an indelible memory in my heart.",
+            "exampleMeaning": "Buổi hẹn đầu tiên để lại trong tim anh một kỷ niệm không phai."
+        },
+        {
+            "word": "jubilant",
+            "ipa": "/ˈdʒuː.bəl.ənt/",
+            "type": "Tính từ",
+            "meaning": "Hân hoan, mừng rỡ",
+            "example": "I was jubilant when you passed your exam.",
+            "exampleMeaning": "Anh mừng rỡ khi em thi đỗ."
+        },
+        {
+            "word": "lament",
+            "ipa": "/ləˈment/",
+            "type": "Động từ",
+            "meaning": "Than thở, tiếc nuối",
+            "example": "We often lament the distance between our two cities.",
+            "exampleMeaning": "Tụi mình hay than thở về khoảng cách giữa hai thành phố."
+        },
+        {
+            "word": "nurture",
+            "ipa": "/ˈnɝː.tʃɚ/",
+            "type": "Động từ",
+            "meaning": "Nuôi dưỡng, vun đắp",
+            "example": "We nurture our relationship a little every day.",
+            "exampleMeaning": "Mỗi ngày tụi mình lại vun đắp tình cảm thêm một chút."
+        },
+        {
+            "word": "placate",
+            "ipa": "/ˈpleɪ.keɪt/",
+            "type": "Động từ",
+            "meaning": "Xoa dịu, làm nguôi giận",
+            "example": "A bowl of bánh đa cua can placate even the grumpiest girlfriend.",
+            "exampleMeaning": "Một bát bánh đa cua có thể làm nguôi cả cô người yêu khó tính nhất."
+        },
+        {
+            "word": "rapport",
+            "ipa": "/ræˈpɔːr/",
+            "type": "Danh từ",
+            "meaning": "Sự hòa hợp, ăn ý",
+            "example": "We built an easy rapport from our very first chat.",
+            "exampleMeaning": "Tụi mình ăn ý với nhau ngay từ lần nói chuyện đầu tiên."
+        },
+        {
+            "word": "reticent",
+            "ipa": "/ˈret̬.ə.sənt/",
+            "type": "Tính từ",
+            "meaning": "Kín đáo, ít bộc lộ",
+            "example": "Ngọc is reticent with strangers but hilarious with friends.",
+            "exampleMeaning": "Ngọc kín đáo với người lạ nhưng lại cực vui tính với bạn bè."
+        },
+        {
+            "word": "solace",
+            "ipa": "/ˈsɑː.lɪs/",
+            "type": "Danh từ",
+            "meaning": "Niềm an ủi",
+            "example": "Your voice is my solace after a long day at work.",
+            "exampleMeaning": "Giọng em là niềm an ủi của anh sau một ngày dài làm việc."
+        },
+        {
+            "word": "tenderness",
+            "ipa": "/ˈten.dɚ.nəs/",
+            "type": "Danh từ",
+            "meaning": "Sự dịu dàng, âu yếm",
+            "example": "He tucked the blanket around her with great tenderness.",
+            "exampleMeaning": "Anh dịu dàng kéo chăn đắp cho em."
+        },
+        {
+            "word": "vivacious",
+            "ipa": "/vɪˈveɪ.ʃəs/",
+            "type": "Tính từ",
+            "meaning": "Hoạt bát, tràn đầy sức sống",
+            "example": "Her vivacious personality lights up every room.",
+            "exampleMeaning": "Tính cách hoạt bát của em làm căn phòng nào cũng bừng sáng."
+        },
+        {
+            "word": "whimsical",
+            "ipa": "/ˈwɪm.zɪ.kəl/",
+            "type": "Tính từ",
+            "meaning": "Ngộ nghĩnh, hay có ý tưởng kỳ quặc đáng yêu",
+            "example": "She has a whimsical habit of naming every mood of our cat.",
+            "exampleMeaning": "Em có thói quen ngộ nghĩnh là đặt tên cho từng tâm trạng của con mèo."
+        },
+        {
+            "word": "yearn",
+            "ipa": "/jɝːn/",
+            "type": "Động từ",
+            "meaning": "Khao khát, mong mỏi",
+            "example": "I yearn to see you again after this long week.",
+            "exampleMeaning": "Sau một tuần dài, anh mong được gặp lại em biết bao."
+        },
+        {
+            "word": "allure",
+            "ipa": "/əˈlʊr/",
+            "type": "Danh từ",
+            "meaning": "Sức quyến rũ",
+            "example": "The allure of Đồ Sơn beach at sunset is hard to resist.",
+            "exampleMeaning": "Sức quyến rũ của biển Đồ Sơn lúc hoàng hôn thật khó cưỡng."
+        },
+        {
+            "word": "cherubic",
+            "ipa": "/tʃəˈruː.bɪk/",
+            "type": "Tính từ",
+            "meaning": "Bầu bĩnh, dễ thương như thiên thần nhỏ",
+            "example": "Bông has a cherubic little face when she sleeps.",
+            "exampleMeaning": "Lúc ngủ, Bông có gương mặt bầu bĩnh như thiên thần nhỏ."
         }
     ],
     "c1": [
@@ -1445,6 +1765,166 @@ window.EnglishApp = (() => {
             "meaning": "Hát tình ca tặng người yêu",
             "example": "He tried to serenade her, but the cat howled louder.",
             "exampleMeaning": "Anh cố hát tình ca tặng em, nhưng con mèo còn gào to hơn."
+        },
+        {
+            "word": "aubade",
+            "ipa": "/oʊˈbɑːd/",
+            "type": "Danh từ",
+            "meaning": "Khúc ca/bài thơ lúc bình minh (thường là lời chia tay buổi sớm)",
+            "example": "He wrote her an aubade before catching the early train.",
+            "exampleMeaning": "Anh viết tặng em một bài thơ bình minh trước khi bắt chuyến tàu sớm."
+        },
+        {
+            "word": "besotted",
+            "ipa": "/bɪˈsɑː.t̬ɪd/",
+            "type": "Tính từ",
+            "meaning": "Mê mẩn, say đắm",
+            "example": "Everyone can see he is completely besotted with her.",
+            "exampleMeaning": "Ai cũng thấy anh mê mẩn em hoàn toàn."
+        },
+        {
+            "word": "coruscate",
+            "ipa": "/ˈkɔːr.ə.skeɪt/",
+            "type": "Động từ",
+            "meaning": "Lấp lánh, lóe sáng",
+            "example": "City lights coruscate across the harbour at night.",
+            "exampleMeaning": "Ánh đèn thành phố lấp lánh trên mặt cảng về đêm."
+        },
+        {
+            "word": "empyrean",
+            "ipa": "/ˌem.paɪˈriː.ən/",
+            "type": "Danh từ",
+            "meaning": "Bầu trời cao thẳm, cõi trời",
+            "example": "The sky lanterns drifted slowly into the empyrean.",
+            "exampleMeaning": "Những chiếc đèn trời chầm chậm bay lên bầu trời cao thẳm."
+        },
+        {
+            "word": "felicitous",
+            "ipa": "/fəˈlɪs.ə.t̬əs/",
+            "type": "Tính từ",
+            "meaning": "Khéo léo, đắt giá (lời nói, lựa chọn)",
+            "example": "Calling the cat Bông was a felicitous choice.",
+            "exampleMeaning": "Đặt tên con mèo là Bông đúng là một lựa chọn quá khéo."
+        },
+        {
+            "word": "inamorata",
+            "ipa": "/ɪˌnæm.əˈrɑː.t̬ə/",
+            "type": "Danh từ",
+            "meaning": "Người yêu (nữ)",
+            "example": "He proudly introduced Ngọc as his inamorata.",
+            "exampleMeaning": "Anh tự hào giới thiệu Ngọc là người yêu của mình."
+        },
+        {
+            "word": "lissome",
+            "ipa": "/ˈlɪs.əm/",
+            "type": "Tính từ",
+            "meaning": "Mềm mại, uyển chuyển",
+            "example": "Her lissome steps made the old dance look new.",
+            "exampleMeaning": "Những bước chân uyển chuyển của em làm điệu nhảy cũ trông mới hẳn."
+        },
+        {
+            "word": "nepenthe",
+            "ipa": "/nɪˈpen.θi/",
+            "type": "Danh từ",
+            "meaning": "Thứ giúp quên đi muộn phiền",
+            "example": "Your hug is my nepenthe after a stressful week.",
+            "exampleMeaning": "Cái ôm của em là liều thuốc giúp anh quên hết muộn phiền sau một tuần căng thẳng."
+        },
+        {
+            "word": "opalescent",
+            "ipa": "/ˌoʊ.pəlˈes.ənt/",
+            "type": "Tính từ",
+            "meaning": "Óng ánh nhiều màu như đá opal",
+            "example": "The sea turned opalescent just before dawn.",
+            "exampleMeaning": "Mặt biển chuyển sang óng ánh ngay trước bình minh."
+        },
+        {
+            "word": "paean",
+            "ipa": "/ˈpiː.ən/",
+            "type": "Danh từ",
+            "meaning": "Bài ca ngợi, khúc tụng ca",
+            "example": "This silly letter is really a paean to your smile.",
+            "exampleMeaning": "Lá thư ngớ ngẩn này thật ra là một bài ca ngợi nụ cười của em."
+        },
+        {
+            "word": "quiescent",
+            "ipa": "/kwiˈes.ənt/",
+            "type": "Tính từ",
+            "meaning": "Yên lặng, tĩnh tại",
+            "example": "The whole street was quiescent after midnight.",
+            "exampleMeaning": "Cả con phố lặng im sau nửa đêm."
+        },
+        {
+            "word": "ravishing",
+            "ipa": "/ˈræv.ɪ.ʃɪŋ/",
+            "type": "Tính từ",
+            "meaning": "Đẹp mê hồn",
+            "example": "You look absolutely ravishing tonight.",
+            "exampleMeaning": "Tối nay em đẹp mê hồn."
+        },
+        {
+            "word": "scintilla",
+            "ipa": "/sɪnˈtɪl.ə/",
+            "type": "Danh từ",
+            "meaning": "Một chút xíu, mảy may",
+            "example": "There is not a scintilla of doubt in my heart about us.",
+            "exampleMeaning": "Trong tim anh không có lấy một chút nghi ngờ nào về hai đứa mình."
+        },
+        {
+            "word": "tremulous",
+            "ipa": "/ˈtrem.jə.ləs/",
+            "type": "Tính từ",
+            "meaning": "Run run, rụt rè",
+            "example": "She said yes in a tremulous, happy voice.",
+            "exampleMeaning": "Em nói đồng ý bằng giọng run run mà hạnh phúc."
+        },
+        {
+            "word": "uxorious",
+            "ipa": "/ʌkˈsɔːr.i.əs/",
+            "type": "Tính từ",
+            "meaning": "Quá mực yêu chiều vợ",
+            "example": "His friends already tease him for being uxorious.",
+            "exampleMeaning": "Bạn bè đã trêu anh là kiểu chồng chiều vợ hết mực rồi."
+        },
+        {
+            "word": "vespertine",
+            "ipa": "/ˈves.pɚ.taɪn/",
+            "type": "Tính từ",
+            "meaning": "Thuộc về buổi chiều tối",
+            "example": "We love our vespertine walks around the lake.",
+            "exampleMeaning": "Tụi mình thích những buổi dạo quanh hồ lúc chiều tối."
+        },
+        {
+            "word": "winsome",
+            "ipa": "/ˈwɪn.səm/",
+            "type": "Tính từ",
+            "meaning": "Duyên dáng, có sức hút ngây thơ",
+            "example": "She flashed a winsome smile and I forgot what I was saying.",
+            "exampleMeaning": "Em nở một nụ cười duyên làm anh quên mất mình đang nói gì."
+        },
+        {
+            "word": "raconteur",
+            "ipa": "/ˌræk.ɑːnˈtɝː/",
+            "type": "Danh từ",
+            "meaning": "Người kể chuyện có duyên",
+            "example": "Ngọc is a natural raconteur at family dinners.",
+            "exampleMeaning": "Ngọc là người kể chuyện có duyên bẩm sinh trong những bữa cơm gia đình."
+        },
+        {
+            "word": "gloaming",
+            "ipa": "/ˈɡloʊ.mɪŋ/",
+            "type": "Danh từ",
+            "meaning": "Lúc chạng vạng",
+            "example": "We sat on the balcony in the gloaming, sharing one cup of tea.",
+            "exampleMeaning": "Tụi mình ngồi ngoài ban công lúc chạng vạng, chung nhau một tách trà."
+        },
+        {
+            "word": "lucent",
+            "ipa": "/ˈluː.sənt/",
+            "type": "Tính từ",
+            "meaning": "Sáng trong, ánh lên dịu nhẹ",
+            "example": "Her eyes were lucent with happy tears.",
+            "exampleMeaning": "Mắt em ánh lên những giọt nước mắt hạnh phúc."
         }
     ],
     "love": [
