@@ -399,8 +399,8 @@ Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi 
 
 Dạo này em có đang ổn đấy chứ? Công việc và mọi chuyện xung quanh có làm em mệt lắm không, nhớ ăn uống với nghỉ ngơi đầy đủ nha.
 
-Anh ở đây vẫn hay nghĩ tới em, không biết bây giờ em còn nhớ anh không? Thấy nhớ thì nhắn lại anh ná, anh vẫn chờ em.`,
-      sign: "— Khánh (Hà Nội) —"
+Anh ở đây vẫn hay nghĩ tới em, không biết bây giờ em còn nhớ anh không? Thấy nhớ thì nhắn lại anh ná, anh vẫn chờ em đấy.`,
+      sign: "Lâm Thanh Cao"
     }
   ],
 
