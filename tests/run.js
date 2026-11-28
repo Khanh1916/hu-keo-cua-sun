@@ -472,6 +472,21 @@ check("new-feature achievements are re-checked on paths that pay no rewards", ((
 })());
 check("letters only require decor counts that exist",
   data.secretLetters.filter((l) => (l.reqDecor || 0) > data.decorItems.length).map((l) => l.id));
+check("check-in letter is unlocked from day 1 and app notifies unread letters on entry", (() => {
+  const out = [];
+  const l6 = data.secretLetters.find((l) => l.id === "letter_6");
+  if (!l6) return ["letter_6 missing from GAME_DATA.secretLetters"];
+  if (l6.unlockLevel !== 1 || l6.reqHugs || l6.reqDecor || l6.reqJars) out.push("letter_6 must be unlocked at level 1 with no extra requirements");
+  if (!/^Em thân mến/i.test(l6.body.trim())) out.push("letter_6 must open with 'Em thân mến'");
+  if (!/ổn/i.test(l6.body) || !/nhớ anh không/i.test(l6.body)) out.push("letter_6 missing expected check-in message");
+  ["id=\"letterNotice\"", "id=\"btnOpenUnreadLetter\"", "id=\"btnDismissLetterNotice\""].forEach((attr) => {
+    if (!html.includes(attr)) out.push(`index.html missing ${attr}`);
+  });
+  if (!/\.letter-notice-text\s*\{[^}]*min-width:\s*0/.test(css)) out.push(".letter-notice-text needs min-width: 0");
+  if (!/updateLetterNotice\(unreadLetters\)/.test(extractFunction(app, "renderHUD"))) out.push("renderHUD does not call updateLetterNotice");
+  if (!/maybeNotifyUnreadLetters\(/.test(app)) out.push("app.js does not call maybeNotifyUnreadLetters on boot");
+  return out;
+})());
 check("tone quiz: three wrong pinyin per word, differing from the answer only in tone marks", (() => {
   const zh = read("js/chinese.js");
   let fns;

@@ -389,6 +389,18 @@ Anh tự tay làm cái app nhỏ này, ngồi vẽ từng nét áo polo đen, g�
 
 Cảm ơn em vì đã đến bên anh, cho anh một người để nhớ mỗi ngày, một lý do để cố gắng hơn trong cuộc sống. Dù sau này có thế nào, anh vẫn luôn ở đây làm điểm tựa vững chãi cho em. Chúc Sún của anh luôn bình an và mỉm cười thật nhiều nhé.`,
       sign: "— Khánh (Hà Nội) —"
+    },
+    {
+      id: "letter_6",
+      title: "Thư 6: Em có đang ổn đấy chứ?",
+      unlockLevel: 1,
+      unlockDesc: "Mở sẵn để gửi lời hỏi thăm tới em",
+      body: `Em thân mến,
+
+Dạo này em có đang ổn đấy chứ? Công việc và mọi chuyện xung quanh có làm em mệt lắm không, nhớ ăn uống với nghỉ ngơi đầy đủ nha.
+
+Anh ở đây vẫn hay nghĩ tới em, không biết bây giờ em còn nhớ anh không? Dù thế nào thì lúc nào rảnh em cũng nhớ ghé lại góc nhỏ này nhé, anh vẫn chờ em.`,
+      sign: "— Khánh (Hà Nội) —"
     }
   ],
 

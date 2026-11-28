@@ -610,6 +610,15 @@ body {
   font-family: var(--font-pixel);
 }
 
+.unread-dot:not(.hidden) {
+  animation: dotPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.16); }
+}
+
 /* Modals */
 .modal-backdrop {
   position: fixed;
@@ -1403,6 +1412,12 @@ body {
 }
 
 /* Secret Letters */
+.letter-row.unread {
+  background: #fff1f6;
+  border-color: var(--pink-accent);
+  box-shadow: 0 2px 0 rgba(228, 107, 148, 0.25);
+}
+
 .letter-row.locked {
   opacity: 0.72;
   background: var(--cream-dark);
@@ -1500,6 +1515,34 @@ body {
   gap: 8px;
   font-size: 12px;
   line-height: 1.35;
+}
+
+.letter-notice {
+  background: linear-gradient(135deg, #fff5f8 0%, #ffe6ef 100%);
+  border-color: var(--pink-hot);
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.letter-notice-text {
+  flex: 1 1 170px;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.letter-notice-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .backup-actions {

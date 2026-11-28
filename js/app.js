@@ -253,6 +253,36 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
+  function getUnreadUnlockedLetters() {
+    return DATA.secretLetters.filter((l) => isLetterUnlocked(l) && !state.readLetters.includes(l.id));
+  }
+
+  let letterNoticeDismissed = false;
+  const seenUnreadLetterIds = new Set();
+
+  function updateLetterNotice(unread) {
+    const notice = document.getElementById("letterNotice");
+    const textEl = document.getElementById("letterNoticeText");
+    if (!notice || !textEl) return;
+
+    // Bring the notice back if a previously unseen unread letter becomes unlocked mid-session.
+    const hasNewUnread = unread.some((l) => !seenUnreadLetterIds.has(l.id));
+    if (hasNewUnread) {
+      unread.forEach((l) => seenUnreadLetterIds.add(l.id));
+      letterNoticeDismissed = false;
+    }
+
+    if (unread.length === 0 || letterNoticeDismissed) {
+      notice.classList.add("hidden");
+      return;
+    }
+
+    textEl.textContent = unread.length === 1
+      ? "💌 Em có thư mới chưa đọc từ anh Khánh!"
+      : `💌 Em có ${unread.length} bức thư mới chưa đọc từ anh Khánh!`;
+    notice.classList.remove("hidden");
+  }
+
   function checkAchievements() {
     const mastered = masteredStudyWords();
     const checks = {
@@ -318,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function checkSpecialDayEvent() {
     const key = getActiveSpecialDay();
-    if (!key || !DATA.specialDays || !DATA.specialDays[key]) return;
+    if (!key || !DATA.specialDays || !DATA.specialDays[key]) return false;
     const ev = DATA.specialDays[key];
 
     const now = new Date();
@@ -338,7 +368,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const speechText = ev.speech.replace("{days}", String(getDaysTogether()));
       showSpeech(ev.speaker || "Anh Khánh", speechText);
       showToast(`${ev.giftLabel || "🎁 Quà"}: +${ev.giftCandy} 🍬!`);
+      return true;
     }
+    return false;
   }
 
   // Days until the next meeting (0 = today), or null when no future date is set.
@@ -433,10 +465,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("decorCountBadge").textContent = `${state.placedDecor.length}/${DATA.decorItems.length}`;
 
     // Check unread unlocked letters
-    const hasUnreadLetter = DATA.secretLetters.some(
-      (l) => isLetterUnlocked(l) && !state.readLetters.includes(l.id)
-    );
-    document.getElementById("letterDot").classList.toggle("hidden", !hasUnreadLetter);
+    const unreadLetters = getUnreadUnlockedLetters();
+    document.getElementById("letterDot").classList.toggle("hidden", unreadLetters.length === 0);
+    updateLetterNotice(unreadLetters);
 
     updateQuestDot();
 
@@ -791,6 +822,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Render Secret Letters
+  function openLetterReader(letter) {
+    if (!letter) return;
+    AudioManager.playNote();
+
+    if (!state.readLetters.includes(letter.id)) {
+      state.readLetters.push(letter.id);
+      saveState();
+      renderHUD();
+    }
+
+    document.getElementById("letterReaderTitle").textContent = letter.title;
+    document.getElementById("letterReaderBody").textContent = letter.body;
+    document.getElementById("letterReaderSign").textContent = letter.sign;
+
+    document.getElementById("letterList").classList.add("hidden");
+    document.getElementById("letterReader").classList.remove("hidden");
+  }
+
   function renderLetters() {
     const listEl = document.getElementById("letterList");
     const readerEl = document.getElementById("letterReader");
@@ -798,7 +847,13 @@ document.addEventListener("DOMContentLoaded", () => {
     readerEl.classList.add("hidden");
     listEl.innerHTML = "";
 
-    DATA.secretLetters.forEach((letter) => {
+    // Float unread unlocked letters to the top so new mail is visible right away.
+    const ordered = [
+      ...DATA.secretLetters.filter((l) => isLetterUnlocked(l) && !state.readLetters.includes(l.id)),
+      ...DATA.secretLetters.filter((l) => !isLetterUnlocked(l) || state.readLetters.includes(l.id))
+    ];
+
+    ordered.forEach((letter) => {
       const unlocked = isLetterUnlocked(letter);
       const isRead = state.readLetters.includes(letter.id);
 
@@ -824,7 +879,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const row = document.createElement("div");
-      row.className = `letter-row ${unlocked ? "" : "locked"}`;
+      row.className = `letter-row ${unlocked ? (isRead ? "" : "unread") : "locked"}`.trim();
       row.innerHTML = `
         <div class="item-left">
           <span class="item-emoji">${unlocked ? (isRead ? "📖" : "💌") : "🔒"}</span>
@@ -840,22 +895,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     listEl.querySelectorAll("[data-read]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const letter = DATA.secretLetters.find((l) => l.id === btn.dataset.read);
-        if (!letter) return;
-        AudioManager.playNote();
-
-        if (!state.readLetters.includes(letter.id)) {
-          state.readLetters.push(letter.id);
-          saveState();
-          renderHUD();
-        }
-
-        document.getElementById("letterReaderTitle").textContent = letter.title;
-        document.getElementById("letterReaderBody").textContent = letter.body;
-        document.getElementById("letterReaderSign").textContent = letter.sign;
-
-        listEl.classList.add("hidden");
-        readerEl.classList.remove("hidden");
+        openLetterReader(DATA.secretLetters.find((l) => l.id === btn.dataset.read));
       });
     });
   }
@@ -1667,6 +1707,19 @@ document.addEventListener("DOMContentLoaded", () => {
     renderLetters();
     openModal("modalLetters");
   });
+  document.getElementById("btnOpenUnreadLetter").addEventListener("click", () => {
+    const unread = getUnreadUnlockedLetters();
+    renderLetters();
+    openModal("modalLetters");
+    if (unread.length === 1) {
+      openLetterReader(unread[0]);
+    }
+  });
+  document.getElementById("btnDismissLetterNotice").addEventListener("click", () => {
+    AudioManager.playClick();
+    letterNoticeDismissed = true;
+    document.getElementById("letterNotice").classList.add("hidden");
+  });
   document.getElementById("navAchieve").addEventListener("click", () => {
     renderAchievements();
     openModal("modalAchieve");
@@ -1848,6 +1901,8 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       state = decodeSaveCode(rawCode);
       saveState();
+      seenUnreadLetterIds.clear();
+      letterNoticeDismissed = false;
       updateGreetingBanner();
       renderHUD();
       input.value = "";
@@ -1864,6 +1919,8 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem(SAVE_KEY);
       state = freshDefaults();
       saveState();
+      seenUnreadLetterIds.clear();
+      letterNoticeDismissed = false;
       renderHUD();
       updateGreetingBanner();
       closeModal("modalSettings");
@@ -2002,7 +2059,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // At most once a day, only for players with real progress, only outside the installed app,
   // and only if no backup code was copied in the last 7 days.
-  function maybeRemindBackup() {
+  function maybeRemindBackup(delayMs = 4200) {
     if (isInstalledApp()) return;
     const hasProgress = state.level >= 2 || (state.ownedDecor || []).length > 0;
     if (!hasProgress) return;
@@ -2013,12 +2070,28 @@ document.addEventListener("DOMContentLoaded", () => {
     saveState();
     setTimeout(() => {
       showToast("💾 Nhớ vào ⚙️ → Sao chép mã lưu (hoặc thêm game vào màn hình chính) để giữ tiến trình nha!");
-    }, 4000);
+    }, delayMs);
+  }
+
+  function maybeNotifyUnreadLetters(specialToastFired = false) {
+    const unread = getUnreadUnlockedLetters();
+    if (unread.length === 0) return;
+    const delay = specialToastFired ? 3400 : 700;
+    setTimeout(() => {
+      const currentUnread = getUnreadUnlockedLetters();
+      if (currentUnread.length === 0) return;
+      showToast(
+        currentUnread.length === 1
+          ? "💌 Em có thư mới chưa đọc trong Hộp Thư Bí Mật!"
+          : `💌 Em có ${currentUnread.length} bức thư mới chưa đọc trong Hộp Thư Bí Mật!`
+      );
+    }, delay);
   }
 
   // Boot
   let lastObservedDateStamp = "";
   let lastObservedHour = -1;
+  let specialToastAtBoot = false;
 
   function syncClockAndEvents() {
     const now = new Date();
@@ -2035,7 +2108,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateGreetingBanner();
       renderHUD();
       if (dateChanged) {
-        checkSpecialDayEvent();
+        if (checkSpecialDayEvent()) specialToastAtBoot = true;
         checkMeetDay();
       }
       if (window.WeatherEngine) {
@@ -2046,7 +2119,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   syncClockAndEvents();
   requestPersistentStorage();
-  maybeRemindBackup();
+  maybeNotifyUnreadLetters(specialToastAtBoot);
+  maybeRemindBackup(specialToastAtBoot && getUnreadUnlockedLetters().length > 0 ? 6600 : 4200);
   if (window.WeatherEngine) {
     WeatherEngine.init();
   }

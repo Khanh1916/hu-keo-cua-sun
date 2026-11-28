@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=85" />
+  <link rel="stylesheet" href="css/style.css?v=86" />
 </head>
 <body>
   <!-- iOS Native Taptic Engine Haptic Bridge (iOS 18+ WebKit Switch Trick) -->
@@ -28,6 +28,15 @@
     <div id="webviewTip" class="webview-tip pixel-box hidden">
       <span>💡 Đang mở trong app quét QR/Zalo! Bấm <strong>⋮ → Mở bằng Chrome / Safari</strong> rồi <strong>Thêm vào màn hình chính</strong> để không bị mất điểm kẹo nhé.</span>
       <button class="pixel-btn btn-cream btn-sm" id="btnDismissTip" aria-label="Ẩn gợi ý">✕</button>
+    </div>
+
+    <!-- Unread Letter Notice (shown on entry whenever unlocked unread letters exist) -->
+    <div id="letterNotice" class="letter-notice pixel-box hidden" role="status">
+      <span class="letter-notice-text" id="letterNoticeText">💌 Em có thư mới chưa đọc từ anh Khánh!</span>
+      <div class="letter-notice-actions">
+        <button class="pixel-btn btn-pink btn-sm" id="btnOpenUnreadLetter">Đọc ngay</button>
+        <button class="pixel-btn btn-cream btn-sm" id="btnDismissLetterNotice" aria-label="Ẩn thông báo thư">✕</button>
+      </div>
     </div>
 
     <!-- Top HUD -->
@@ -550,20 +559,20 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <script defer src="js/data.js?v=85"></script>
-  <script defer src="js/lunar.js?v=85"></script>
-  <script defer src="js/weather.js?v=85"></script>
-  <script defer src="js/audio.js?v=85"></script>
-  <script defer src="js/sprites.js?v=85"></script>
-  <script defer src="js/room.js?v=85"></script>
-  <script defer src="js/minigame.js?v=85"></script>
-  <script defer src="js/game_crossing.js?v=85"></script>
-  <script defer src="js/game_flappy.js?v=85"></script>
-  <script defer src="js/game_nonla.js?v=85"></script>
-  <script defer src="js/game_memory.js?v=85"></script>
-  <script defer src="js/chinese.js?v=85"></script>
-  <script defer src="js/english.js?v=85"></script>
-  <script defer src="js/photos.js?v=85"></script>
-  <script defer src="js/app.js?v=85"></script>
+  <script defer src="js/data.js?v=86"></script>
+  <script defer src="js/lunar.js?v=86"></script>
+  <script defer src="js/weather.js?v=86"></script>
+  <script defer src="js/audio.js?v=86"></script>
+  <script defer src="js/sprites.js?v=86"></script>
+  <script defer src="js/room.js?v=86"></script>
+  <script defer src="js/minigame.js?v=86"></script>
+  <script defer src="js/game_crossing.js?v=86"></script>
+  <script defer src="js/game_flappy.js?v=86"></script>
+  <script defer src="js/game_nonla.js?v=86"></script>
+  <script defer src="js/game_memory.js?v=86"></script>
+  <script defer src="js/chinese.js?v=86"></script>
+  <script defer src="js/english.js?v=86"></script>
+  <script defer src="js/photos.js?v=86"></script>
+  <script defer src="js/app.js?v=86"></script>
 </body>
 </html>

@@ -301,6 +301,43 @@
         now.ownedOutfits.length && `ownedOutfits kept ${now.ownedOutfits}`, now.wornOutfits.bong && `Bông still wears ${now.wornOutfits.bong}`];
     });
 
+    await test("unread letter notice shows on entry, opens the letter and hides once read", async () => {
+      const problems = [];
+      if (!visible($("letterNotice"))) problems.push("#letterNotice not visible with unread letters");
+      if (!visible($("letterDot"))) problems.push("#letterDot not visible with unread letters");
+      click($("btnOpenUnreadLetter"));
+      await sleep(100);
+      if (!visible($("modalLetters"))) problems.push("#modalLetters did not open from notice");
+      if (!doc.querySelector("#letterList .letter-row.unread")) problems.push("unread letter row not highlighted");
+      const btnL1 = doc.querySelector('#letterList [data-read="letter_1"]');
+      if (!btnL1) problems.push("letter_1 button missing");
+      else click(btnL1);
+      click($("btnBackLetters"));
+      await sleep(80);
+      click(doc.querySelector("#modalLetters [aria-label='Đóng']"));
+      await sleep(80);
+      if (!visible($("letterNotice"))) problems.push("#letterNotice hid while letter_6 is still unread");
+      click($("btnOpenUnreadLetter"));
+      await sleep(100);
+      if (visible($("letterList")) || !visible($("letterReader"))) problems.push("1 unread letter did not open straight into reader");
+      if (!/^Em thân mến/.test($("letterReaderBody").textContent.trim())) problems.push("letter_6 body unexpected");
+      if (visible($("letterNotice"))) problems.push("#letterNotice still visible after reading all unlocked letters");
+      if (visible($("letterDot"))) problems.push("#letterDot still visible after reading all unlocked letters");
+      click(doc.querySelector("#modalLetters [aria-label='Đóng']"));
+      const st = w.GameState.get();
+      st.readLetters = st.readLetters.filter((id) => id !== "letter_6");
+      w.GameState.renderHUD();
+      if (!visible($("letterNotice"))) problems.push("#letterNotice did not reappear when letter_6 is unread");
+      click($("btnDismissLetterNotice"));
+      if (visible($("letterNotice"))) problems.push("dismiss did not hide #letterNotice");
+      if (!visible($("letterDot"))) problems.push("#letterDot hid when notice was only dismissed");
+      click($("navLetters"));
+      await sleep(80);
+      click(doc.querySelector('#letterList [data-read="letter_6"]'));
+      click(doc.querySelector("#modalLetters [aria-label='Đóng']"));
+      return problems;
+    });
+
     await test("no uncaught errors in the app", () => errors.map((e) => e));
 
     // ---- finish: drop the app frame (it saves on pagehide), then put the real save back ----
